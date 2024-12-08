@@ -1,0 +1,73 @@
+{
+  "configurations": [
+    {
+      "name": "Listen tests",
+      "port": 9000,
+      "request": "launch",
+      "type": "php"
+    },
+    {
+      "args": [
+        "--configuration",
+        "${workspaceFolder}/services/api/phpunit.xml"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "XDEBUG_CONFIG": "idekey=VSCODE",
+        "XDEBUG_MODE": "debug"
+      },
+      "name": "Debug All Tests",
+      "port": 9000,
+      "program": "${workspaceFolder}/services/api/vendor/bin/phpunit",
+      "request": "launch",
+      "type": "php"
+    },
+    {
+      "cwd": "${workspaceRoot}/services/api",
+      "name": "Run API",
+      "port": 9003,
+      "program": "",
+      "request": "launch",
+      "runtimeArgs": [
+        "-dxdebug.mode=debug",
+        "-dxdebug.start_with_request=yes",
+        "-S",
+        "0.0.0.0:3000",
+        "-t",
+        "public"
+      ],
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
+        "uriFormat": "http://localhost:%s"
+      },
+      "type": "php"
+    },
+    {
+      "cwd": "${workspaceRoot}/services/api",
+      "env": {
+        "XDEBUG_CONFIG": "client_port=${port}",
+        "XDEBUG_MODE": "debug,develop,profile,trace"
+      },
+      "name": "Debug API",
+      "port": 9003,
+      "program": "",
+      "request": "launch",
+      "runtimeArgs": [
+        "-dxdebug.mode=debug",
+        "-dxdebug.start_with_request=yes",
+        "-S",
+        "0.0.0.0:3000",
+        "-t",
+        "public"
+      ],
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Development Server \\(http://localhost:([0-9]+)\\) started",
+        "uriFormat": "http://localhost:%s"
+      },
+      "type": "php"
+    }
+  ],
+  "version": "0.2.0"
+}
