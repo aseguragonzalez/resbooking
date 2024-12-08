@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<application>
+    <references>
+
+        <!-- Clases Base -->
+        <reference name="BaseManagement"
+                   path="lib/BaseManagement.php" />
+        <reference name="BaseAggregate"
+                   path="lib/BaseAggregate.php" />
+        <reference name="BaseServices"
+                   path="lib/BaseServices.php" />
+        <reference name="BaseRepository"
+                   path="lib/BaseRepository.php" />
+
+        <!-- Capa de aplicación -->
+        <reference name="IBaseLineManagement"
+                   path="application/contracts/IBaseLineManagement.php" />
+        <reference name="ICategoriesManagement"
+                   path="application/contracts/ICategoriesManagement.php" />
+        <reference name="IDiscountsManagement"
+                   path="application/contracts/IDiscountsManagement.php" />
+        <reference name="IEventsManagement"
+                   path="application/contracts/IEventsManagement.php" />
+        <reference name="IOrderManagement"
+                   path="application/contracts/IOrderManagement.php" />
+        <reference name="IProductsManagement"
+                   path="application/contracts/IProductsManagement.php" />
+        <reference name="IRequestsManagement"
+                   path="application/contracts/IRequestsManagement.php" />
+        <reference name="ISlotsOfDeliveryManagement"
+                   path="application/contracts/ISlotsOfDeliveryManagement.php" />
+        <reference name="IConfigurationManagement"
+                   path="application/contracts/IConfigurationManagement.php" />
+
+
+        <reference name="BaseLineManagement"
+                   path="application/managements/BaseLineManagement.php" />
+        <reference name="CategoriesManagement"
+                   path="application/managements/CategoriesManagement.php" />
+        <reference name="DiscountsManagement"
+                   path="application/managements/DiscountsManagement.php" />
+        <reference name="EventsManagement"
+                   path="application/managements/EventsManagement.php" />
+        <reference name="OrderManagement"
+                   path="application/managements/OrderManagement.php" />
+        <reference name="ProductsManagement"
+                   path="application/managements/ProductsManagement.php" />
+        <reference name="RequestsManagement"
+                   path="application/managements/RequestsManagement.php" />
+        <reference name="SlotsOfDeliveryManagement"
+                   path="application/managements/SlotsOfDeliveryManagement.php" />
+
+         <reference name="ConfigurationManagement"
+                   path="application/managements/ConfigurationManagement.php" />
+
+        <!-- Capa de infraestructura -->
+        <reference name="IBaseLineRepository"
+                   path="infrastructure/contracts/IBaseLineRepository.php" />
+        <reference name="ICategoriesRepository"
+                   path="infrastructure/contracts/ICategoriesRepository.php" />
+        <reference name="IDiscountsRepository"
+                   path="infrastructure/contracts/IDiscountsRepository.php" />
+        <reference name="IEventsRepository"
+                   path="infrastructure/contracts/IEventsRepository.php" />
+        <reference name="IOrderRepository"
+                   path="infrastructure/contracts/IOrderRepository.php" />
+        <reference name="IProductsRepository"
+                   path="infrastructure/contracts/IProductsRepository.php" />
+        <reference name="IRequestsRepository"
+                   path="infrastructure/contracts/IRequestsRepository.php" />
+        <reference name="ISlotsOfDeliveryRepository"
+                   path="infrastructure/contracts/ISlotsOfDeliveryRepository.php" />
+        <reference name="IConfigurationRepository"
+                   path="infrastructure/contracts/IConfigurationRepository.php" />
+
+        <reference name="BaseLineRepository"
+                   path="infrastructure/repositories/BaseLineRepository.php" />
+        <reference name="CategoriesRepository"
+                   path="infrastructure/repositories/CategoriesRepository.php" />
+        <reference name="DiscountsRepository"
+                   path="infrastructure/repositories/DiscountsRepository.php" />
+        <reference name="EventsRepository"
+                   path="infrastructure/repositories/EventsRepository.php" />
+        <reference name="OrderRepository"
+                   path="infrastructure/repositories/OrderRepository.php" />
+        <reference name="ProductsRepository"
+                   path="infrastructure/repositories/ProductsRepository.php" />
+        <reference name="RequestsRepository"
+                   path="infrastructure/repositories/RequestsRepository.php" />
+        <reference name="SlotsOfDeliveryRepository"
+                   path="infrastructure/repositories/SlotsOfDeliveryRepository.php" />
+        <reference name="ConfigurationRepository"
+                   path="infrastructure/repositories/ConfigurationRepository.php" />
+
+
+        <!-- Capa de dominio -->
+
+        <!-- servicios -->
+        <reference name="IBaseLineServices"
+                   path="domain/contracts/IBaseLineServices.php" />
+        <reference name="ICategoriesServices"
+                   path="domain/contracts/ICategoriesServices.php" />
+        <reference name="IDiscountsServices"
+                   path="domain/contracts/IDiscountsServices.php" />
+        <reference name="IEventsServices"
+                   path="domain/contracts/IEventsServices.php" />
+        <reference name="IOrderServices"
+                   path="domain/contracts/IOrderServices.php" />
+        <reference name="IProductsServices"
+                   path="domain/contracts/IProductsServices.php" />
+        <reference name="IRequestsServices"
+                   path="domain/contracts/IRequestsServices.php" />
+        <reference name="ISlotsOfDeliveryServices"
+                   path="domain/contracts/ISlotsOfDeliveryServices.php" />
+        <reference name="IConfigurationServices"
+                   path="domain/contracts/IConfigurationServices.php" />
+
+
+        <reference name="BaseLineServices"
+                   path="domain/services/BaseLineServices.php" />
+        <reference name="CategoriesServices"
+                   path="domain/services/CategoriesServices.php" />
+        <reference name="DiscountsServices"
+                   path="domain/services/DiscountsServices.php" />
+        <reference name="EventsServices"
+                   path="domain/services/EventsServices.php" />
+        <reference name="OrderServices"
+                   path="domain/services/OrderServices.php" />
+        <reference name="ProductsServices"
+                   path="domain/services/ProductsServices.php" />
+        <reference name="RequestsServices"
+                   path="domain/services/RequestsServices.php" />
+        <reference name="SlotsOfDeliveryServices"
+                   path="domain/services/SlotsOfDeliveryServices.php" />
+        <reference name="ConfigurationServices"
+                   path="domain/services/ConfigurationServices.php" />
+
+        <!-- agregados -->
+        <reference name="BaseLineAggregate"
+                   path="domain/aggregates/BaseLineAggregate.php" />
+        <reference name="CategoriesAggregate"
+                   path="domain/aggregates/CategoriesAggregate.php" />
+        <reference name="DiscountsAggregate"
+                   path="domain/aggregates/DiscountsAggregate.php" />
+        <reference name="EventsAggregate"
+                   path="domain/aggregates/EventsAggregate.php" />
+        <reference name="OrderAggregate"
+                   path="domain/aggregates/OrderAggregate.php" />
+        <reference name="ProductsAggregate"
+                   path="domain/aggregates/ProductsAggregate.php" />
+        <reference name="RequestsAggregate"
+                   path="domain/aggregates/RequestsAggregate.php" />
+        <reference name="SlotsOfDeliveryAggregate"
+                   path="domain/aggregates/SlotsOfDeliveryAggregate.php" />
+        <reference name="ConfigurationAggregate"
+                   path="domain/aggregates/ConfigurationAggregate.php" />
+
+        <!-- entidades -->
+        <reference name="Category"
+                   path="domain/entities/Category.php" />
+        <reference name="Comment"
+                   path="domain/entities/Comment.php" />
+        <reference name="DayOfWeek"
+                   path="domain/entities/DayOfWeek.php" />
+        <reference name="DeliveryMethod"
+                   path="domain/entities/DeliveryMethod.php" />
+        <reference name="DiscountOn"
+                   path="domain/entities/DiscountOn.php" />
+        <reference name="DiscountOnConfiguration"
+                   path="domain/entities/DiscountOnConfiguration.php" />
+        <reference name="DiscountOnEvent"
+                   path="domain/entities/DiscountOnEvent.php" />
+        <reference name="HistProduct"
+                   path="domain/entities/HistProduct.php" />
+        <reference name="HourOfDay"
+                   path="domain/entities/HourOfDay.php" />
+        <reference name="Image"
+                   path="domain/entities/Image.php" />
+        <reference name="Likes"
+                   path="domain/entities/Likes.php" />
+        <reference name="Log"
+                   path="domain/entities/Log.php" />
+        <reference name="PageLog"
+                   path="domain/entities/PageLog.php" />
+        <reference name="PaymentMethod"
+                   path="domain/entities/PaymentMethod.php" />
+        <reference name="PostCode"
+                   path="domain/entities/PostCode.php" />
+        <reference name="Product"
+                   path="domain/entities/Product.php" />
+        <reference name="ProductSuscriber"
+                   path="domain/entities/ProductSuscriber.php" />
+        <reference name="Request"
+                   path="domain/entities/Request.php" />
+        <reference name="RequestItem"
+                   path="domain/entities/RequestItem.php" />
+        <reference name="ServiceDeliveryMethod"
+                   path="domain/entities/ServiceDeliveryMethod.php" />
+        <reference name="ServicePaymentMethod"
+                   path="domain/entities/ServicePaymentMethod.php" />
+        <reference name="ServicePostCode"
+                   path="domain/entities/ServicePostCode.php" />
+        <reference name="SlotConfigured"
+                   path="domain/entities/SlotConfigured.php" />
+        <reference name="SlotEvent"
+                   path="domain/entities/SlotEvent.php" />
+        <reference name="SlotOfDelivery"
+                   path="domain/entities/SlotOfDelivery.php" />
+        <reference name="Suscriber"
+                   path="domain/entities/Suscriber.php" />
+        <reference name="WorkFlow"
+                   path="domain/entities/WorkFlow.php" />
+
+        <reference name="ProjectInformation"
+                   path="domain/entities/ProjectInformation.php" />
+
+        <!-- dtos -->
+        <reference name="CommentLikeDTO"
+                   path="domain/dtos/CommentLikeDTO.php" />
+        <reference name="DeliveryMethodDTO"
+                   path="domain/dtos/DeliveryMethodDTO.php" />
+        <reference name="DiscountDTO"
+                   path="domain/dtos/DiscountDTO.php" />
+        <reference name="OrderDTO"
+                   path="domain/dtos/OrderDTO.php" />
+        <reference name="PaymentMethodDTO"
+                   path="domain/dtos/PaymentMethodDTO.php" />
+        <reference name="PostCodeDTO"
+                   path="domain/dtos/PostCodeDTO.php" />
+        <reference name="ProductDTO"
+                   path="domain/dtos/ProductDTO.php" />
+        <reference name="RequestDTO"
+                   path="domain/dtos/RequestDTO.php" />
+        <reference name="RequestNotificationDTO"
+                   path="domain/dtos/RequestNotificationDTO.php" />
+        <reference name="RequestItemNotificationDTO"
+                   path="domain/dtos/RequestItemNotificationDTO.php" />
+        <reference name="SlotDTO"
+                   path="domain/dtos/SlotDTO.php" />
+    </references>
+
+
+</application>

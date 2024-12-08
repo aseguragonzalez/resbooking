@@ -1,0 +1,47 @@
+<!--Layout={_layout_public.html}-->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <form action="{Path}/Accounts/Recovery" method="post" role="form">
+                <fieldset>
+                    <h2>Recuperación de contraseñas</h2>
+                    <div class="form-group">
+                        <p class="help-block">
+                            Introduzca su nombre de usuario (e-mail) y se le enviará un correo electrónico
+                            con sus nuevas credenciales de acceso.
+                        </p>
+                        <p class="help-block">
+                            Este proceso puede tardar varios minutos, tenga paciencia.
+                            Si pasado un tiempo no recibe la notificación, por favor revise la bandeja de "SPAN" o póngase en
+                            contacto con el administrador.
+                        </p>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="Email">
+                            ¿Cuál es tu e-mail?</label>
+                        <div class="controls">
+                            <input id="Email" name="Email" type="email"
+                                   value="{Email}" placeholder="email@mydomain.es"
+                                   maxlength="50" class="form-control" required="required">
+                            <p class="help-block">
+                                Introduzca el e-mail de contacto asociado a su cuenta
+                            </p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-primary"
+                                    role="button">Enviar</button>
+                            <a href="{Path}/Home" class="btn btn-default"
+                                role="button">Cancelar</a>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="control-group {ResultCss} ?>">
+                        <p class="help-block">{Result}</p>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

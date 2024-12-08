@@ -1,0 +1,63 @@
+<!--Layout={_layout.html}-->
+
+<!-- Contenedor principal -->
+<div class="container">
+    <!-- cabecera -->
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Disponibilidad</h2>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-striped tabla-semanal">
+            <!-- cabecera de la tabla -->
+            <thead>
+                <tr>
+                    <th>Turno</th>
+                    <!--DaysOfWeek-->
+                    <th class="day" data-id="{item.Id}">{item.Name}</th>
+                    <!--DaysOfWeek-->
+                </tr>
+            </thead>
+            <!-- cuerpo de la tabla -->
+            <tbody>
+                <!--SlotsOfDelivery-->
+                <tr data-sod="{item.Id}">
+                    <td>{item.Name}</td>
+                </tr>
+                <!--SlotsOfDelivery-->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="{Columns}">&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <input type="hidden" id="jsonslots" value='{JSONSlots}' />
+        <input type="hidden" id="error" value="{Error}" />
+
+        <form action="{Path}/Slots/Set" id="frm" method="POST" >
+            <input type="hidden" name="Id" value="" />
+            <input type="hidden" name="SlotOfDelivery" value="" />
+            <input type="hidden" name="DayOfWeek" value="" />
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Resultado de la operación -->
+<div class="container">
+    <div class="alert alert-dismissible {eResultClass} hide"
+        data-class="{eResultClass}" role="alert">
+        <button type="button" class="close"
+               data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span></button>
+        <p class="help-block">{eResult}</p>
+    </div>
+</div>
+
+<script type="text/javascript" src="{Resources}/js/slots.js"></script>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description>
+    <database name="" server="" user="" password="" scheme="" />
+    <objects>
+
+        <object type="table" name="users" entity="User" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="username" property ="Username" dataType="string"
+                       required="true" maxLength="50"  columnType="normal"/>
+            <attribute name="password" property ="Password" dataType="string"
+                       required="true" maxLength="128" columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="roles" entity="Role" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="services" entity="Service" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="path" property ="Path" 	dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="platform" property ="Platform" dataType="string"
+                       required="true" maxLength="200" columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="projects" entity="Project" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="path" property ="Path" 	dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="date" property ="Date" dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="project_services" entity="ProjectServices" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="idProject" property ="IdProject" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="service_roles" entity="ServiceRole" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idRole" property ="IdRole" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="project_users" entity="ProjectUsers" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="idProject" property ="IdProject" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idUser" property ="IdUser" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="user_role_service" entity="UserRoleService" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="idUser" property ="IdUser" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idRole" property ="IdRole" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="user_role_service_project"
+                entity="UserRoleServiceProject" >
+            <attribute name="id" property ="Id" dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="idUser" property ="IdUser" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idRole" property ="IdRole" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idProject" property ="IdProject" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+    </objects>
+</description>

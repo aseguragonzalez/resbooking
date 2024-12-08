@@ -1,0 +1,61 @@
+<!--Layout={_layout.html}-->
+<div class="container">
+
+	<h2>
+		Secciones
+		<a href="{Path}/Section/Create"
+			class="btn btn-primary"
+			title="Crear una nueva sección"
+			role="button">Nueva Sección</a>
+	</h2>
+
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped" >
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nombre</th>
+					<th>Enlace</th>
+					<th>Autor</th>
+					<th>Posición</th>
+					<th>Es raíz</th>
+					<th>Es Borrador</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Entities-->
+				<tr>
+					<td>{item.Id}</td>
+					<td>{item.Name}</td>
+					<td>{item.Link}</td>
+					<td>{item.Author}</td>
+					<td>{item.Position}</td>
+					<td>
+						<input type="checkbox" disabled="disabled" checked="checked" name="root" data-root="{item.Root}" />
+					</td>
+					<td>
+						<input type="checkbox" disabled="disabled" checked="checked" name="draft" data-draft="{item.Draft}" />
+					</td>
+					<td>
+						<a href="{Path}/Section/Edit/{item.Id}"
+							 title="Editar la sección" class="btn btn-primary btn-sm" >Editar</a>
+						<a href="{Path}/Section/Delete/{item.Id}"
+							 title="Eliminar sección" class="btn btn-default btn-sm"
+							 onclick="return confirm('¿Desea eliminar la sección');" >Eliminar</a>
+					</td>
+				</tr>
+				<!--Entities-->
+			</tbody>
+		</table>
+	</div>
+	<div class="error-container">
+		<ul>
+			<!--ErrorList-->
+			<li>{item.Text}</li>
+			<!--ErrorList-->
+		</ul>
+	</div>
+</div>
+
+<script type="text/javascript" src="{Resources}/scripts/js-lcms/jquery.section.js" ></script>

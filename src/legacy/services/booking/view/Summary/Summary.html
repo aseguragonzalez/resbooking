@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <title>{Title}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css" >
+            body{
+            font-family: Arial, Verdana;
+            width: 90%;
+            margin: auto;
+            padding-top: 1em;
+            }
+            table{width:100%;}
+            th, td{ border:1px solid #2f2f2f;}
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+                <h2>Resumen mensual</h2>
+                <table cellspacing="1" cellpadding="1">
+                        <tbody>
+                                <tr>
+                                        <th colspan="2" >{ProjectName}</th>
+                                        <th colspan="2">{Month} - {Year}</th>
+                                </tr>
+                                <tr>
+                                        <td>Reservas Cursadas</td>
+                                        <td>{TotalCursados}</td>
+                                        <td>Reservas Perdidas</td>
+                                        <td>{TotalPerdidos}</td>
+                                </tr>
+                        </tbody>
+                </table>
+        </div>
+
+        <div class="container">
+                <h2>Detalle de las reservas</h2>
+                <div>
+                        <h3>Reservas cursadas</h3>
+                        <table cellspacing="1" cellpadding="1">
+                                <thead>
+                                        <tr>
+                                                <th><strong>Fecha Reserva</strong></th>
+                                                <th><strong>Nombre</strong></th>
+                                                <th><strong>Comensales</strong></th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                                <td colspan="3">Reservados</td>
+                                        </tr>
+                                    <!--Reservados-->
+                                        <tr data-state="{item.State}">
+                                                <td>{item.Date}</td>
+                                                <td>{item.ClientName}</td>
+                                                <td>{item.Diners}</td>
+                                        </tr>
+                                    <!--Reservados-->
+                                        <tr><td colspan="3">Sentados</td></tr>
+                                    <!--Sentados-->
+                                        <tr data-state="{item.State}">
+                                                <td>{item.Date}</td>
+                                                <td>{item.ClientName}</td>
+                                                <td>{item.Diners}</td>
+                                        </tr>
+                                    <!--Sentados-->
+                                        <tr><td colspan="3">Terminados</td></tr>
+                                    <!--Terminados-->
+                                        <tr data-state="{item.State}">
+                                                <td>{item.Date}</td>
+                                                <td>{item.ClientName}</td>
+                                                <td>{item.Diners}</td>
+                                        </tr>
+                                    <!--Terminados-->
+                                <tbody>
+                                <tfoot>
+                                        <tr>
+                                                <td colspan="3"><span id="rowCount">{NCursados}</span> registros encontrados. Total : {TotalCursados} reservas tuvieron éxito.</td>
+                                        </tr>
+                                </tfoot>
+                        </table>
+                </div>
+
+                <div>
+                        <h3>Reservas Perdidas</h3>
+                        <table cellspacing="1" cellpadding="1">
+                                <thead>
+                                        <tr>
+                                                <th><strong>Fecha Reserva</strong></th>
+                                                <th><strong>Nombre</strong></th>
+                                                <th><strong>Comensales</strong></th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr><td colspan="3">Anuladas</td></tr>
+                                    <!--Anulados-->
+                                        <tr data-state="{item.State}">
+                                                <td>{item.Date}</td>
+                                                <td>{item.ClientName}</td>
+                                                <td>{item.Diners}</td>
+                                        </tr>
+                                    <!--Anulados-->
+                                        <tr><td colspan="3">No Show</td></tr>
+                                        <!--NoShows-->
+                                        <tr data-state="{item.State}">
+                                                <td>{item.Date}</td>
+                                                <td>{item.ClientName}</td>
+                                                <td>{item.Diners}</td>
+                                        </tr>
+                                    <!--NoShows-->
+                                <tbody>
+                                <tfoot>
+                                        <tr>
+                                                <td colspan="4"><span id="rowCount">{NPerdidos}</span> registros encontrados. Total : {TotalPerdidos} reservas no tuvieron éxito.</td>
+                                        </tr>
+                                </tfoot>
+                        </table>
+                </div>
+                <div style="padding:1em"></div>
+        </div>
+
+    </body>
+</html>

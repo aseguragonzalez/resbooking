@@ -1,0 +1,332 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript" src="{Resources}/js/jquery.xmlform.js"></script>
+
+<div class="container">
+
+    <!-- cabecera -->
+    <div class="row">
+        <div class="col-lg-6">
+            <h3>Categorías | Ficha de categoría</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <form onclick="javascript:getXml()" method="post"
+              action="{Path}/Categories/Save" >
+            <input type="hidden" name="Id" value="{Entity.Id}" />
+            <input type="hidden" id="xmldoc" name="Xml" value='{Entity.Xml}' />
+
+            <div class="col-md-6">
+
+                <label>Definición</label>
+
+                <div class="table-responsive">
+                    <table id="attrs" class="table table-bordered
+                           table-striped catalog-table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Texto</th>
+                                <th>Tipo</th>
+                                <th>Obligatorio</th>
+                                <th>
+                                    <a class="btn btn-primary btn-xs"
+                                       data-toggle="modal"
+                                       data-target="#dialogform"
+                                       onclick="javascript:newForm();">Nuevo</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="form-group {eXmlClass}">
+                    <p class="help-block">{eXml}</p>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="form-group {eParentClass}">
+                    <label>Categoría padre</label>
+                    <select name="Parent"
+                            class="form-control"
+                            data-selected="{Entity.Parent}"
+                            onchange="onChangeSelectCategory(this);">
+                        <option selected="selected" value="null">Seleccione</option>
+                        <!--Entities-->
+                        <option value="{item.Id}" data-xml='{item.Xml}'>
+                            {item.Name}
+                        </option>
+                        <!--Entities-->
+                    </select>
+
+                    <p class="help-block">
+                        Seleccione una categoría padre si corresponde. {eParent}
+                    </p>
+                </div>
+
+                <div class="form-group {eCodeClass}" >
+                    <label>Código</label>
+                    <input type="text"
+                           name="Code"
+                           required="required"
+                           maxlength="10"
+                           class="form-control"
+                           value="{Entity.Code}" />
+                    <p class="help-block">
+                        Introduzca un código de categoría. {eCode}
+                    </p>
+                </div>
+
+                <div class="form-group {eNameClass}" >
+                    <label>Nombre</label>
+                    <input type="text"
+                           name="Name"
+                           required="required"
+                           maxlength="100"
+                           class="form-control"
+                           value="{Entity.Name}" />
+                    <p class="help-block">
+                        Introduzca un nombre para la categoría. {eName}
+                    </p>
+                </div>
+
+                <div class="form-group {eDescClass}">
+                    <label>Descripción</label>
+                    <textarea name="Description"
+                              required="required"
+                              class="form-control"
+                              rows="6"
+                              maxlength="500">{Entity.Description}</textarea>
+                    <p class="help-block">{eDesc}</p>
+                </div>
+
+                <div class="form-group" >
+                    <button type="submit"
+                            class="btn btn-primary"
+                            role="button" >Guardar</button>
+                    <a  href="{Path}/Categories/Index"
+                        class="btn btn-default"
+                        role="button">Volver</a>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+
+    <div class="alert alert-dismissible {eResultClass} hide"
+        data-class="{eResultClass}" role="alert">
+        <button type="button" class="close"
+               data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span></button>
+        <p class="help-block">{eResult}</p>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade"
+     id="dialogform"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog">
+        <form id="frm" role="form" onsubmit="javascript:onSubmit();">
+            <div class="modal-content">
+
+                <div class="modal-header titulo-modal-dialog-rb">
+                  <button type="button"
+                          class="close"
+                          data-dismiss="modal"
+                          onclick="javascript:clearForm();">
+                      <span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">Propiedad</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- indica si estamos en modo edición -->
+                    <input type="hidden" id="mode" value="new" />
+
+                    <!-- Título subsección -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Atributos básicos</h5>
+                        </div>
+                    </div>
+
+                    <!-- Atributos descriptivos -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <!-- tipología -->
+                            <div class="form-group">
+                                <select id="nodetype"
+                                        required="required"
+                                        class="form-control" >
+                                    <option value="" >Tipología</option>
+                                    <option value="1">Texto</option>
+                                    <option value="2">Número</option>
+                                    <option value="3">Fecha</option>
+                                    <option value="4">Email</option>
+                                    <option value="5">Check list</option>
+                                    <option value="6">Lista Opciones</option>
+                                    <option value="7">Desplegable</option>
+                                </select>
+                            </div>
+
+                            <!-- Nombre del campo -->
+                            <div class="form-group">
+                                <input id="name"
+                                    type="text"
+                                    required="required"
+                                    class="form-control"
+                                    title="Nombre con el que se clasifica el campo."
+                                    placeHolder="Nombre del campo"
+                                    onchange="javascript:ValidateName(this);"
+                                    data-errormsg="El nombre de campo introducido es una palabra restringida."
+                                    data-keywords="-Id-Category-Reference-Name-Link-Description-Keywords-Price-Ord-" />
+                                <p class="help-block"></p>
+                            </div>
+
+                            <!-- Texto del campo -->
+                            <div class="form-group">
+                                <input id="label"
+                                    type="text"
+                                    required="required"
+                                    class="form-control"
+                                    title="Es el texto que aparece como etiqueta del campo"
+                                    placeHolder="Texto del campo" />
+                            </div>
+
+                            <!-- PlaceHolder -->
+                            <div class="form-group">
+                                <input id="placeholder"
+                                    type="text"
+                                    class="form-control"
+                                    placeHolder="Valor de ejemplo" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <!-- Mensaje de error -->
+                            <div class="form-group">
+                                <textarea id="error"
+                                    rows="2"
+                                    class="form-control"
+                                    placeHolder="Mensaje de error"></textarea>
+                            </div>
+
+                            <!-- Texto de ayuda -->
+                            <div class="form-group">
+                                <textarea id="help"
+                                    rows="2"
+                                    class="form-control"
+                                    placeHolder=
+                                    "Indicaciones del formulario"></textarea>
+                            </div>
+
+                            <!-- Title -->
+                            <div class="form-group">
+                                <textarea id="title"
+                                    rows="2"
+                                    class="form-control"
+                                    placeHolder="Texto ayuda emergente"></textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Título subsección -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Atributos de Validación</h5>
+                        </div>
+                    </div>
+
+                    <!-- Atributos de validación -->
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group form-inline ">
+                                <!-- max value -->
+                                <input id="maxvalue"
+                                    type="number"
+                                    class="form-control attr-validation"
+                                    placeHolder="Máximo" />
+                                <!-- min value -->
+                                <input id="minvalue"
+                                    type="number"
+                                    class="form-control attr-validation"
+                                    placeHolder="Mínimo" />
+                                <!-- maxlength -->
+                                <input id="maxlength"
+                                    type="number"
+                                    placeHolder="Longitud Máxima"
+                                    class="form-control  attr-validation"/>
+                                <!-- regex -->
+                                <input id="regex"
+                                    type="text"
+                                    placeHolder="Expresión Regular"
+                                    class="form-control  attr-validation"/>
+                                <!-- Required -->
+                                <div class="checkbox">
+                                    <label for="required">
+                                        <input id="required" type="checkbox" />
+                                        Obligatorio
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- list value -->
+                            <div class="form-group attr-validation">
+                                <h5>Lista de valores</h5>
+                                <textarea id="list"
+                                        class="form-control"
+                                        placeHolder="opcion-1, opcion-2.."
+                                        rows="6"></textarea>
+                                <p class="help-block">
+                                    Introduzca una lista de valores separados
+                                    por comas.
+                                </p>
+                            </div>
+
+                        </div><!-- end col -->
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button"
+                          class="btn btn-default"
+                          data-dismiss="modal"
+                          onclick="javascript:clearForm();">Cancelar</button>
+                  <button type="submit"
+                          class="btn btn-primary"
+                          role="button" >Guardar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>

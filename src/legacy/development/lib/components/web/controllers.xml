@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<application>
+
+    <controllers>
+
+        <controller name="Home" action="Index" roles="" title="" text="" visible="true|false" >
+            <actions>
+                <!-- acción directa del controlador -->
+                <action name="xxxx" roles="" param=""/>
+                <!-- Opción visible en un menú para acceder a otro controlador -->
+                <action name="xxxx" controller="xxx" action="xxx"
+                        visible="true|false" text="xxx" title="xxx"
+                        roles="xxxx" param="" />
+            </actions>
+        </controller>
+
+    </controllers>
+
+</application>

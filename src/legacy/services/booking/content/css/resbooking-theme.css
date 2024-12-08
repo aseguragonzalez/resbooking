@@ -1,0 +1,638 @@
+.zapper-btn{
+    display:none;
+    font-size: 1.5em;
+}
+
+.zapper-btn[data-zapper='0']{
+    display: inline-block;
+}
+
+.zapper-btn[data-zapper='1']{
+    display: inline-block;
+    color:#e8cc00;
+}
+
+#historial span[data-state=''],
+#historial span[data-state=' '],
+#historial span[data-state='0'],
+#historial span[data-state='1'],
+#historial span[data-state='2'],
+#historial span[data-state='3'],
+#historial span[data-state='4'],
+#historial span[data-state='7']{
+    color:#638b66;
+}
+
+
+#historial span[data-state='5'],
+#historial span[data-state='6']{
+    color: #ef4d55;
+}
+
+@media (max-width: 767px){
+    .table-responsive>.table>thead>tr>th,
+    .table-responsive>.table>tbody>tr>th,
+    .table-responsive>.table>tfoot>tr>th,
+    .table-responsive>.table>thead>tr>td,
+    .table-responsive>.table>tbody>tr>td,
+    .table-responsive>.table>tfoot>tr>td {
+        white-space: normal;
+    }
+}
+
+#historial-visitas{
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+#historial{
+    margin:0;
+    padding:0;
+}
+
+#historial li{
+    margin:0;
+    padding:0;
+    list-style: none;
+}
+
+.mesa {
+    width:65px;
+}
+
+.comments{
+    font-size: 1.3em;
+    margin: auto 0 auto 4px;
+}
+
+.comments[data-comments=""]{
+    display:none;
+}
+
+.badge[data-total="0"], .badge[data-total="1"],
+
+.bullet[data-count="0"], .bullet[data-count="1"]{display:none;}
+a[data-disabled="1"]:active,
+a[data-disabled="1"]:hover,
+a[data-disabled="1"]{color:#ccc; text-decoration: none; cursor:not-allowed;}
+tr[data-disabled="1"] .bullet{background: #ccc; cursor:not-allowed;}
+tr[data-disabled="1"]{color:#ccc; cursor:not-allowed;}
+
+
+/************* Estilos tabla clientes ***********/
+.ico-vip[data-vip='1']{color:#AEB404;}
+.ico-vip[data-vip='0']{color:gray;}
+.badge[data-total='']{color:red}
+/************************************************/
+
+
+.comunicaciones[data-email='']{
+    display:none;
+}
+
+[data-preorder]:not([data-preorder=""]),
+[data-notes]:not([data-notes=""]){
+color:#D7DF01;
+}
+
+[data-preorder=""]{
+    display:none;
+}
+
+.state-select{
+    width:120px;
+}
+
+#avatar{
+    height: 65px;
+    width: 65px;
+    background: gray;
+    display: inline;
+    vertical-align: top;
+    margin: 0 10px;
+}
+
+#cabecera-cliente{
+    display: inline-block;
+}
+
+.control-accion{
+font-size: 1.5em;
+color: #585858;
+text-decoration: none;
+margin:0px 5px;
+}
+
+.control-accion[data-disabled='1']{
+color:#ccc; text-decoration: none;
+}
+
+.control-accion:hover, .control-accion:active{
+text-decoration: none;
+}
+
+.link-email{
+}
+
+.link-ficha{
+    color: #585858;
+}
+
+.ul-datos-cliente{
+    padding: 0;
+}
+
+.ul-datos-cliente li{
+    list-style: none;
+    margin: 10px 0px;
+}
+
+.bullet{
+    background: #D80201;
+    border-radius: 100%;
+    font-weight: bolder;
+    color: #fff;
+    margin: 0 5px;
+    display: inline-block;
+    width: 1.7em;
+    height: 1.7em;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 5px;
+    cursor:pointer;
+}
+
+.bullet[data-count='2']{
+    background: #DEB201;
+}
+
+.bullet[data-count='3']{
+    background: #DEB201;
+}
+
+.bullet[data-count='4']{
+    background: #DEB201;
+}
+
+.bullet[data-count='5']{
+    background: #DEB201;
+}
+
+.bullet[data-count='6']{
+    background: #D80303;
+}
+
+.bullet[data-count='7']{
+    background: #D80303;
+}
+
+.bullet[data-count='8']{
+    background: #D80303;
+}
+
+.bullet[data-count='9']{
+    background: #D80303;
+}
+
+.bullet[data-count='10']{
+    background: #D80303;
+}
+
+.bullet[data-count='1']{
+    background: transparent;
+    color:transparent;
+}
+
+#control{
+    text-align: right;
+}
+
+.tabla-checks{
+
+}
+
+.tabla-checks .help-block{
+    font-weight: normal;
+}
+
+.tabla-checks th{
+    text-align: center;
+}
+
+.tabla-checks tbody td, #tabla-bloqueos thead th{
+    text-align: center;
+}
+
+
+#control{
+text-align: right;
+}
+
+.texto-turno{
+height: 30px;
+width: 40px;
+position: relative;
+font-size: 14px;
+display: inline-block;
+vertical-align: top;
+margin-top: 5px;
+}
+
+.cuota{
+max-width: 80px;
+display:inline;
+}
+
+.cool_checkbox, .cool_checkbox *{
+    height:30px; margin:0; padding:0;
+    display:inline-block;
+    white-space:nowrap; user-select: none;
+}
+
+.cool_checkbox{
+    font-family:sans-serif;
+    width:65px; position:relative; overflow:hidden;
+    border:1px solid gray; border-radius:6px;
+    background:gray;
+}
+
+.cool_checkbox input{
+    display:none;
+}
+.cool_checkbox label{
+    position:absolute; width:120px;
+    cursor:pointer;
+    transition: left 0.2s ease-in-out;
+    vertical-align:top;
+    line-height:100%;
+    left:-56px;
+    display:block;
+}
+.cool_checkbox > input:checked + label{
+    left:0px;
+}
+
+.cool_checkbox > input:disabled + label{
+    opacity:0.8;
+}
+
+.cool_checkbox label > span{
+    text-align:left; text-transform:uppercase;
+    font-weight:bolder; font-family:sans;
+    width:50px; position:relative; z-index:0;
+    box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    vertical-align:middle;
+    line-height:30px;
+}
+.cool_checkbox label > span:nth-child(1){
+    padding-right:15px; text-align:right;
+    background:#4085EC;
+    background-image: linear-gradient(bottom, #76AEFC 0%, #4D8EEF 49%, #4085EC 50%, #336ED4 100%);
+    color:white; text-shadow: 0px -1px 0.5px #1b3d72;
+}
+
+.cool_checkbox label > span:nth-child(2){
+    width:40px; margin:-2px -10px; z-index:1; border-radius: 6px;height:32px;
+    background:gray;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+}
+
+.cool_checkbox label > span:nth-child(2) > span{
+    width:38px; height:29px; margin:1px;
+    border-top:1px solid white;
+    overflow:hidden; text-indent:-999em;
+    border-radius: 5px;
+    background:#e4e4e4; background-image: linear-gradient(bottom, #FBFBFB 0%, #CECECE 100%);
+}
+
+.cool_checkbox label > span:nth-child(3){
+    padding-left:15px; text-align:left;
+    color:#7e7e7e;
+    background:#EFEFEF; background-image: linear-gradient(bottom, #FEFEFE 0%, #F9F9F9 49%, #EFEFEF 50%, #E7E7E7 100%);
+}
+
+/* A partir de aquí: arreglos temporales hasta que CSS3 esté bien soportado */
+.cool_checkbox{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+.cool_checkbox label{
+    -moz-transition: left 0.2s ease-in-out;
+    -webkit-transition: left 0.2s ease-in-out;
+    -o-transition: left 0.2s ease-in-out;
+}
+.cool_checkbox label > span{
+    -moz-box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.cool_checkbox label > span:nth-child(1){
+    background-image: -o-linear-gradient(bottom, #76AEFC 0%, #4D8EEF 49%, #4085EC 50%, #336ED4 100%);
+    background-image: -moz-linear-gradient(bottom, #76AEFC 0%, #4D8EEF 49%, #4085EC 50%, #336ED4 100%);
+    background-image: -webkit-linear-gradient(bottom, #76AEFC 0%, #4D8EEF 49%, #4085EC 50%, #336ED4 100%);
+    background-image: -ms-linear-gradient(bottom, #76AEFC 0%, #4D8EEF 49%, #4085EC 50%, #336ED4 100%);
+}
+.cool_checkbox label > span:nth-child(2){
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+}
+.cool_checkbox label > span:nth-child(2) > span{
+    background-image: -o-linear-gradient(bottom, #FBFBFB 0%, #CECECE 100%);
+    background-image: -moz-linear-gradient(bottom, #FBFBFB 0%, #CECECE 100%);
+    background-image: -webkit-linear-gradient(bottom, #FBFBFB 0%, #CECECE 100%);
+    background-image: -ms-linear-gradient(bottom, #FBFBFB 0%, #CECECE 100%);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+.cool_checkbox label > span:nth-child(3){
+    background-image: -o-linear-gradient(bottom, #FEFEFE 0%, #F9F9F9 49%, #EFEFEF 50%, #E7E7E7 100%);
+    background-image: -moz-linear-gradient(bottom, #FEFEFE 0%, #F9F9F9 49%, #EFEFEF 50%, #E7E7E7 100%);
+    background-image: -webkit-linear-gradient(bottom, #FEFEFE 0%, #F9F9F9 49%, #EFEFEF 50%, #E7E7E7 100%);
+    background-image: -ms-linear-gradient(bottom, #FEFEFE 0%, #F9F9F9 49%, #EFEFEF 50%, #E7E7E7 100%);
+}
+
+#menu-control-bloqueos{
+padding-right:0;
+}
+
+#menu-control-reservas{
+margin: 20px 0 10px 0;
+float: left;
+width: 100%;
+}
+
+#menu-control-reservas .navbar-left{
+margin-right:10px;
+}
+
+#menu-control-reservas h2{
+margin-top:10px;
+margin-left:5px;
+}
+
+#menu-control-reservas .navbar-form{
+margin:10px 0;
+padding:0 0 0 0;
+}
+
+#booking-date-lbl{
+padding: 7px 12px;
+font-size: 14px;
+font-weight: 400;
+line-height: 1;
+color: #555;
+text-align: center;
+background-color: #eee;
+border: 1px solid #ccc;
+border-radius: 0px;
+display: inline-block;
+width: 44px;
+height: 34px;
+margin: 0px -4px 0 0;
+vertical-align: bottom;
+}
+
+#booking-date{
+width:83%;
+}
+
+#frmReserva input, #frmReserva select{
+border-radius: 0;
+}
+
+.modal-sm {
+width: 330px;
+}
+
+.unchecked-item{
+padding:10px 6px;;
+}
+
+.blocks-date-col{
+min-width: 250px;
+width:20%;
+}
+
+.blocks-control-col{
+text-align: right;
+}
+
+.titulo-modal-dialog-rb{
+background-color:#000;
+color:#fff;
+}
+
+.titulo-modal-dialog-rb button, .titulo-modal-dialog-rb span{
+color:#fff;
+}
+
+#block-date{
+width:100%;
+}
+
+.hasDatepicker{
+width:100px;
+}
+
+.diners{
+width:61px;
+}
+
+#ui-datepicker-div{display:none;}
+
+.delete-link{	color: #000;}
+
+.table-resbooking tbody tr td{ vertical-align:middle }
+
+.table-resbooking {
+	width: 100%;
+	font-size: 0.9em;
+	border: solid #ccc 1px;
+	border-radius: 5px;
+	border-spacing: 1px
+}
+
+.table-resbooking caption {
+	color: #555;
+	font-style: italic;
+	margin-bottom: 8px;
+}
+
+.table-resbooking tfoot tr:last-child {
+	background:#1dabb8;
+	color:#fff;
+}
+
+.table-resbooking tr:first-child th:first-child
+{
+		border-top-left-radius: 5px;
+}
+
+.table-resbooking tr:first-child th:last-child
+{
+		border-top-right-radius: 5px;
+}
+
+.table-resbooking tr:last-child td
+{
+/*
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+*/
+}
+
+.table-resbooking th {
+  text-align: left;
+	cursor:pointer;
+}
+
+.table-resbooking td:last-child, .table-resbooking th:last-child {
+  /*text-align:right;*/
+}
+
+.table-resbooking td, .table-resbooking th {
+  padding: 6px 12px;
+}
+
+.table-resbooking tr:nth-child(odd), .table-resbooking tr:nth-child(odd) {
+  background: #eee;
+}
+
+.table-resbooking tr:nth-child(even) {
+  background: #fff;
+}
+
+.table-resbooking thead tr:first-child, .table-resbooking thead tr:first-child {
+background: #282830;
+color:white;
+}
+
+.table-resbooking  td:empty { /* background:white; */}
+
+/* error al visualizar el calendario*/
+#ui-datepicker-div{display:none;}
+/* Pie de página */
+#footer{ text-align:center; }
+/* Calendario sólo con icono */
+.hide-calendar{width: 0px; border: 0px; vertical-align: top;}
+/* Estilos para el icono de calendario */
+.ui-datepicker-trigger {vertical-align: middle; cursor:pointer;}
+/* Estilos para no visualizar la barra de título del calendario */
+/* .ui-dialog-titlebar-close{display:none;} */
+/* Clase burbuja pendientes */
+.advertencia {color: #F86F4D; margin: 5px; font-weight: bold;}
+
+/********************************************************/
+.rwd-table {
+  min-width: 275px;
+}
+.rwd-table th {
+  display: none;
+}
+.rwd-table td {
+  display: block;
+}
+.rwd-table td:before {
+  content: attr(data-th) ": ";
+  font-weight: bold;
+  width: 6.5em;
+  display: inline-block;
+}
+
+.rwd-table tfoot td:before {
+  content: attr(data-th) "";
+  font-weight: bold;
+  width: 6.5em;
+  display: inline-block;
+}
+
+@media (min-width: 1024px) {
+  .rwd-table td:before {
+    display: none;
+  }
+}
+.rwd-table th, .rwd-table td {
+  text-align: left;
+}
+@media (min-width: 1024px) {
+  .rwd-table th, .rwd-table td {
+    display: table-cell;
+  }
+}
+.rwd-table {
+  overflow: hidden;
+}
+.rwd-table th, .rwd-table td {
+  margin: .5em 1em;
+}
+@media (min-width: 1024px) {
+  .rwd-table th, .rwd-table td {
+    padding: 1em !important;
+  }
+}
+
+/********************************************************/
+html{
+background-color:#000000;
+}
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+	background-color:#ffffff;
+}
+
+#wrap > .container {
+  padding: 60px 15px 0;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+	padding:10px;
+	background-color:#000;
+	text-align:center;
+	width:100%;
+	color:#ffffff;
+}
+
+#footer p{
+	margin:10px 0;
+}
+
+#footer a{
+	color:#ffffff;
+	text-decoration:none;
+}
+
+#footer a:hover{
+	text-decoration:underline;
+}
+
+#places td:nth-child(2){
+	text-align:right;
+}
+
+#blocks td:nth-child(3){
+	text-align:right;
+}

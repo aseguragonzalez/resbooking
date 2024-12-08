@@ -1,0 +1,138 @@
+<!--Layout={_layout.html}-->
+
+<div class="container">
+
+	<form id="section-form" action="{Path}/Section/Save" method="post" role="form" >
+
+		<h2>Nueva sección</h2>
+
+		<div class="row">
+
+			<div class="col-lg-5">
+
+				<input type="hidden" name="Id" value="0" />
+
+				<div class="form-group">
+					<label>Nombre</label>
+					<input type="text" name="Name" class="form-control" required="required" max-lenght="20" />
+					<p class="help-block">
+						Introduzca el nombre para la sección.
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Enlace</label>
+					<input type="text" name="Link" class="form-control" required="required" max-lenght="20" />
+					<p class="help-block">
+						Defina el texto que aparece en el link.
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Autor</label>
+					<input type="text" name="Author" class="form-control" required="required" max-lenght="50" />
+					<p class="help-block">
+						Introduzca el nombre del autor de la sección
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Posición</label>
+					<input type="number" name="Position" class="form-control" required="required" max-lenght="2" min="0" />
+					<p class="help-block">
+						¿En qué posición del menú debe aparecer?
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Plantilla</label>
+					<select name="Template" class="form-control" required="required">
+						<!--Templates-->
+						<option value="{item.Name}" >{item.Name}</option>
+						<!--Templates-->
+					</select>
+					<p class="help-block">
+						Seleccione una plantilla para la sección
+					</p>
+				</div>
+
+			</div><!-- end col-lg-5 -->
+			<div class="col-lg-1"></div>
+
+			<div class="col-lg-6">
+
+				<div class="form-group">
+					<label>Padre</label>
+					<select name="Root" class="form-control" required="required">
+						<option value="null" selected="selected">Es root</option>
+						<!--Sections-->
+						<option value="{item.Id}" >{item.Link}</option>
+						<!--Sections-->
+					</select>
+					<p class="help-block">
+						Seleccione una sección padre si lo desea
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>ToolTip</label>
+					<textarea name="Tooltip"
+						class="form-control"
+						row="3"
+						required="required"
+						max-lenght="50" ></textarea>
+					<p class="help-block">
+						Introduzca el texto que aparecerá en la ayuda
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Keywords</label>
+					<textarea name="Keywords"
+						class="form-control"
+						row="4"
+						required="required"
+						max-lenght="140" ></textarea>
+					<p class="help-block">
+						Determine un conjunto de palabras claves para facilitar el posicionamiento
+					 en buscadores
+					</p>
+				</div>
+
+				<div class="form-group">
+					<label>Descripción</label>
+					<textarea name="Description"
+						class="form-control"
+						row="4"
+						required="required"
+						max-lenght="140" ></textarea>
+					<p class="help-block">
+						Introduzca una descripción del tema de la sección para que los buscadores cataloguen
+						la sección mejor.
+					</p>
+				</div>
+
+				<div class="form-group">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="Draft" checked="checked" />
+						Es Borrador</label>
+					</div>
+
+					<input type="hidden" name="Draft" value="true" />
+
+					<button type="submit" class="btn btn-primary" role="button">Guardar</button>
+
+				</div>
+
+				<div class="form-group">
+					<p class="help-block"></p>
+				</div>
+
+			</div><!-- end col-lg-6 -->
+		</div><!-- end row -->
+	</form>
+</div>
+
+<br />
+<script type="text/javascript" src="{Resources}/scripts/js-lcms/jquery.section.form.js" ></script>

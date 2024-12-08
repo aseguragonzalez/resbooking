@@ -1,0 +1,91 @@
+/*		Por ID		*/
+#urs { text-align : center; }
+#section-form {}
+#section-index {}
+#gallery-form {}
+#news-form {}
+#content-form {}
+#content-index {}
+
+/*		General		*/
+html{	font-family: Arial, Verdana; color: #585858; }
+body{}
+table {border-collapse:collapse; border: none;}
+th, td{ border : 1px solid #585858; }
+th,td {padding: 2px 5px;}
+
+
+/*		Clases		*/
+.page{	width: 1024px;	margin: auto; }
+.layout-headers{	text-align : center; }
+.entity-list-container{}
+.entity-form-container{}
+
+/*		Formularios	*/
+.form-left-container{
+
+}
+
+.form-right-container{
+
+}
+
+/* Contenedor de imágenes en la galería*/
+.images-container{
+
+}
+
+/* Contenedor de una imagen		*/
+.img-container{ display: inline-block; }
+
+/*	Clase para una imágen de la galería		*/
+.image-gallery{
+
+}
+
+/*	Check selección de imágen de la galería		*/
+.image-check{
+
+}
+
+.form-class{
+	margin: 30px auto;
+}
+
+fieldset, .form-class fieldset{
+	padding: 20px;
+	border: 1px solid #ccc;
+}
+
+.property-name, .field-text{
+	padding: 10px 0px;
+}
+
+.property-control input, .field-control input{
+	width: 90%;
+	padding: 5px 10px;
+	border: 1px solid #cccccc;
+}
+
+.property-control textarea, .field-control textarea{
+	width: 90%;
+	padding: 5px 10px;
+	border: 1px solid #cccccc;
+	resizable:none;
+}
+
+.property-control-val{
+
+}
+
+.error-container{
+
+}
+
+.error-container ul{
+
+}
+
+.error-container ul li{
+
+}

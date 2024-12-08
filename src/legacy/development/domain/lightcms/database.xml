@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description>
+    <database name="" server="" user="" password="" scheme="" />
+    <objects>
+
+        <object type="table" name="lcms_content_type" entity="ContentType" >
+            <attribute name="lcms_cnt_type_id" property="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="lcms_cnt_type_name" property="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_type_desc" property="Description"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_type_default" property="DefaultTemplate"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_type_active" property="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="lcms_section" entity="Section" >
+            <attribute name="lcms_sec_id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="lcms_sec_idProj" property ="Project" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="lcms_sec_idRoot" property ="Root" dataType="int"
+                       required="false" columnType="fk"/>
+            <attribute name="lcms_sec_name" property ="Name" dataType="string"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_sec_link" property ="Link" dataType="string"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_sec_author" property ="Author"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_keywords" property ="Keywords"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_desc" property ="Description"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_tooltip" property ="Tooltip"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_template" property ="Template"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_position" property ="Position"
+                       dataType="int" required="true" columnType="normal"/>
+            <attribute name="lcms_sec_draft" property ="Draft" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_sec_active" property ="State" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="lcms_content" entity="Content" >
+            <attribute name="lcms_cnt_id" property="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="lcms_cnt_section" property="Section" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="lcms_cnt_type" property="Type" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="lcms_cnt_title" property="Title" dataType="string"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_keywords" property="Keywords"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_desc" property="Description"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_ltxt" property="LinkText"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_link" property="Link" dataType="string"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_ext_link" property="ExtLink"
+                       dataType="int" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_cnt" property="Content" dataType="string"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_author" property="Author"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_template" property="Template"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_draft" property="Draft" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="lcms_cnt_active" property="State" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+    </objects>
+</description>

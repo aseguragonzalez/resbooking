@@ -1,0 +1,5 @@
+# Encender el motor de reescritura de las URL
+RewriteEngine On
+RewriteBase /
+# Crear una regla que redirija todas las peticiones (excepto las realizadas al directorio static) hacia el Global.php
+RewriteRule  !(.(css|js|jpg|png|ico|gif|ttf|eot|woff|svg)$) Global.php

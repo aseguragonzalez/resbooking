@@ -1,0 +1,155 @@
+<!--Layout={_layout.html}-->
+
+<div class="container">
+	<form id="news-form"
+		action="{Path}/Content/Save"
+		method="post"
+		role="form" >
+
+		<h3>Noticia</h3>
+
+		<!-- campos ocultos -->
+		<input type="hidden" name="Id" value="{Entity.Id}" />
+		<input type="hidden" name="Type" value="{Entity.Type}" />
+		<input type="hidden" name="Draft" value="{Entity.Draft}" />
+		<input type="hidden" name="Link" value="{Entity.Link}" />
+		<input type="hidden" name="ExtLink" value="{Entity.ExtLink}" />
+		<input type="hidden" name="Content" value="" />
+		<input type="hidden" id="Section" value="{Entity.Section}" />
+		<input type="hidden" id="Template" value="{Entity.Template}" />
+		<!-- campos ocultos -->
+
+		<div class="row">
+			<div class="col-lg-6">
+
+				<div class="form-group">
+					<label>Sección</label>
+					<select name="Section" required="required" class="form-control">
+						<!--Sections-->
+						<option value="{item.Id}" >{item.Name}</option>
+						<!--Sections-->
+					</select>
+					<p class="help-block"></p>
+				</div>
+
+				<div class="form-group">
+					<label>Plantilla</label>
+					<select name="Template" required="required" class="form-control">
+						<!--Templates-->
+						<option value="{item.Name}" >{item.Name}</option>
+						<!--Templates-->
+					</select>
+					<p class="help-block">Seleccione la plantilla a utilizar</p>
+				</div>
+
+				<div class="form-group">
+					<label>Autor</label>
+					<input type="text"
+						name="Author"
+						value="{Entity.Author}"
+						required="required"
+						maxlength="50"
+						class="form-control" />
+					<p class="help-block">Introduce el nombre del autor.</p>
+				</div>
+
+				<div class="form-group">
+					<label>Texto del enlace</label>
+					<input type="text"
+						id="LinkText"
+						name="LinkText"
+						value="{Entity.LinkText}"
+						required="required"
+						maxlength="50"
+						class="form-control" />
+					<p class="help-block">Introduce el texto que aparecerá en el enlace.</p>
+				</div>
+
+				<div class="form-group">
+					<label>Enlace</label>
+					<input id="Link"
+						list="data-links"
+						required="required"
+						maxlength="50"
+						class="form-control" />
+					<datalist id="data-links">
+						<!--DataLinks-->
+						<option value="{item.Link}">
+						<!--DataLinks-->
+					</datalist>
+					<div class="checkbox">
+						<label><input type="checkbox" id="ExtLink" />¿Es un enlace externo?</label>
+					</div>
+					<!-- <p class="help-block">Introduzca un texto para el link</p> -->
+				</div>
+
+				<div class="form-group">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="Draft" checked="checked" />¿Es Borrador?</label>
+					</div>
+					<!-- <p class="help-block">Indíca si la noticia ya puede ser publicada</p> -->
+				</div>
+
+				<div class="form-group">
+					<button type="submit"
+						class="btn btn-primary"
+						role="button">Guardar</button>
+					<a href="{Path}/Content/Index"
+						class="btn btn-default"
+						role="button">Cancelar</a>
+				</div>
+
+			</div><!-- end col -->
+
+			<div class="col-lg-6">
+
+				<div class="form-group">
+					<label>Título</label>
+					<input type="text"
+						name="Title"
+						value="{Entity.Title}"
+						required="required"
+						maxlength="20"
+						class="form-control" />
+					<p class="help-block">Defina un título para la noticia</p>
+				</div>
+
+				<div class="form-group">
+					<label>Keywords</label>
+					<textarea name="Keywords"
+						required="required"
+						maxlength="140"
+						class="form-control"
+						rows="4" >{Entity.Keywords}</textarea>
+					<p class="help-block">Introduce una lista de palabras claves relacionadas.</p>
+				</div>
+
+				<div class="form-group">
+					<label>Descripción</label>
+					<textarea name="Description"
+						required="required"
+						maxlength="140"
+						class="form-control"
+						rows="4" >{Entity.Description}</textarea>
+					<p class="help-block">Introduce una breve descripción de la noticia.</p>
+				</div>
+
+				<div class="form-group">
+					<label>Contenido</label>
+					<textarea id="Content"
+						required="required"
+						maxlength="10000"
+						class="form-control"
+						rows="6" >{Entity.Content}</textarea>
+					<p class="help-block">Introduce el contenido de la noticia</p>
+				</div>
+
+			</div><!-- end col -->
+
+		</div><!-- end row -->
+	</form><!-- end form -->
+</div><!-- end container -->
+
+<script type="text/javascript" src="{Resources}/scripts/js-plugins/jquery.base64.js"></script>
+<script type="text/javascript" src="{Resources}/scripts/js-lcms/jquery.news.js" ></script>

@@ -1,0 +1,61 @@
+<!--Layout={_layout_iframe.html}-->
+
+<form action="{Path}/Accounts/SaveChanges" method="POST" role="form" class="container">
+
+    <div class="row">
+
+        <div class="col-xs-12 col-md-4 col-md-offset-0">
+
+            <h3>Modificación de contraseñas</h3>
+
+            <div class="form-group {ePassClass}">
+                <label class="sr-only"></label>
+                <input type="password" name="Password"
+                       placeholder="¿Cuál es tu contraseña actual?" maxlength="50"
+                       class="form-control" required="required"
+                       value="{AccountDTO.Password}"/>
+                <p class="help-block">
+                    Introduzca su contraseña actual. {ePass}
+                </p>
+            </div>
+
+            <div class="form-group {eNewPassClass}">
+                <label class="sr-only">Nueva contraseña</label>
+                <input type="password" name="NewPassword"
+                       placeholder="Nueva contraseña" maxlength="50"
+                       class="form-control" required="required"
+                       value="{AccountDTO.NewPassword}"/>
+                <p class="help-block">
+                    Introduzca su nueva contraseña. {eNewPass}
+                </p>
+            </div>
+
+            <div class="form-group {eReNewPassClass}">
+                <label class="sr-only">Repetir contraseña</label>
+                <input type="password" name="RepeatNewPassword"
+                       placeholder="Repetir contraseña" maxlength="50"
+                       class="form-control" required="required"
+                       value="{AccountDTO.RepeatNewPassword}"/>
+                <p class="help-block">
+                    Repita la nueva contraseña. {eReNewPass}
+                </p>
+            </div>
+
+            <div class="form-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary"
+                            role="button">Enviar</button>
+                    <button type="reset" class="btn btn-default"
+                            role="button">Borrar</button>
+                </div>
+            </div>
+
+
+
+            <div class="control-group {eResultClass} ?>">
+                <p class="help-block">{eResult}</p>
+            </div>
+
+        </div>
+    </div>
+ </form>

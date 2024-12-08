@@ -1,0 +1,50 @@
+<!--Layout={_layout.html}-->
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-5 col-lg-offset-1">
+
+        </div>
+
+        <div class="col-lg-4">
+            <h2>&nbsp;</h2>
+            <form id="frm-prj" method="POST" role="form"
+                  action="{Path}/Home/SetProject">
+
+                <input type="hidden" id="projectId" value="{Project}" />
+
+                <div class="form-group">
+                    <label>Proyecto</label>
+                    <select id="project"
+                            name="Id"
+                            required="required"
+                            class="form-control"
+                            data-value="{Project}" >
+                        <option value="0">Seleccione un proyecto</option>
+                        <!--Projects-->
+                        <option value="{item.Id}">{item.Name}</option>
+                        <!--Projects-->
+                    </select>
+                    <p class="help-block">
+                        Seleccione uno de los proyectos en los que es gestor
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"
+                            role="button">Seleccionar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" >
+    $(function(){
+        setSelectedItem();
+        if($( "#project option" ).length <= 2){
+            $( "#frm-prj" ).remove();
+        }
+    });
+</script>

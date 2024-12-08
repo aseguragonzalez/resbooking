@@ -1,0 +1,61 @@
+<?php
+
+/*
+ * Copyright (C) 2015 manager
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ *
+ * @author manager
+ */
+interface ISlotsOfDeliveryManagement {
+
+    /**
+     * Proceso para cargar la información del turno de reparto indicado
+     * mediante su identidad en el agregado.
+     * @param int $id Identidad del turno de reparto
+     * @return int Código de operación
+     */
+    public function GetSlot($id = 0);
+
+    /**
+     * Proceso para almacenar la información de un turno de reparto
+     * @param \SlotOfDelivery $slot Referencia a la entidad a guardar
+     * @return array Códigos de operación
+     */
+    public function SetSlot($slot = NULL);
+
+    /**
+     * Proceso para eliminar el registro de un turno de reparto
+     * @param int $id Identidad del turno de reparto
+     * @return int Código de operación
+     */
+    public function RemoveSlot($id = 0);
+
+    /**
+     * Obtiene una referencia al agregado del contexto
+     * @return \BaseAggregate
+     */
+    public function GetAggregate();
+
+    /**
+     * Obtiene una instancia del Management de turnos de reparto
+     * @param int $project Referencia al proyecto
+     * @param int $service Referencia al servicio
+     * @return \ISlotsOfDeliveryManagement
+     */
+    public static function GetInstance($project = 0, $service = 0);
+}

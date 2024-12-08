@@ -1,0 +1,90 @@
+/*************************************/
+
+#logo{
+margin:auto;
+}
+
+/* Modificación contenedor mensaje cookies */
+#aviso-cookies{
+margin-bottom:0;
+border-radius:0;
+display:none;
+}
+
+/* Modificación para la barra de menú centrada */
+.navbar .navbar-nav {
+display: inline-block;
+float: none;
+vertical-align: top;
+}
+.navbar .navbar-collapse {
+text-align: center;
+}
+.navbar-default{
+border-radius:0;
+border:0;
+}
+
+/* Modificación para las cajas de texto de formularios */
+form .btn, form .form-control{
+	border-radius:0;
+}
+
+/* Contenedor formulario de reservas */
+.contenedor{
+	width:100%;
+	max-width:390px;
+	min-height:600px;
+	height:auto !important;
+	margin:auto;
+	border:0;
+}
+
+/* contenedor de los títulos de sección */
+.contenedor-titulo-seccion{
+padding:2.5%;
+}
+
+/* contenedor de la info de cada sección */
+.contenedor-info-seccion{
+
+}
+
+/* contenedor pie de sección */
+.contenedor-pie-seccion{
+text-align:center;
+padding:5%;
+margin-top:20px;
+}
+
+/* Enlaces del pie de sección */
+.contenedor-pie-seccion a{
+color: #ffffff;
+padding: 20px;
+background-color: #2F2F2F;
+}
+
+.contenedor-pie-seccion a:hover{
+background-color:#cccccc;
+}
+
+
+/* contiene el texto de la sección */
+.articulo{
+
+}
+
+/* separador de contenidos(horizontal)en una sección */
+.separador{
+padding:1%;
+}
+
+/* Pie de la página */
+.pie-pagina{
+text-align:center;
+}
+
+/* Enlaces del pie de la página */
+.pie-pagina a{
+color:#2f2f2f;
+}

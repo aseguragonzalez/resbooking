@@ -1,0 +1,88 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript">
+ $(function(){
+		$( ".carousel-inner .item:first" ).addClass( "active" );
+		$.each( $( ".gallery" ), function (index, item){
+			var $path = $(item).data( "path" );
+			var src = $(item).data( "content" ).toString().split(";");
+			if(src != undefined && $.isArray(src)){
+				$.each( $(src), function(i,img){
+					if(img != "" && img != undefined){
+						var div = $( "<div />" )
+							.addClass( "col-xs-6 col-md-3" );
+						var image = $( "<img />" )
+							.addClass( "img-thumbnail img-responsive" )
+							.attr( "src", $path + img );
+						$(div).append(image);
+						$(item).append(div);
+					}
+				});
+			}
+		});
+	});
+</script>
+
+<link href="http://getbootstrap.com/examples/carousel/carousel.css" rel="stylesheet" />
+
+<div class="container">
+	<!-- contenidos -->
+	<div class="row">
+    <div class="col-lg-12">
+			<div id="myCarousel" class="carousel slide" data-ride="carousel">
+				<div class="carousel-inner">
+					<!--Contents-->
+				  <div class="item">
+				    <div class="container">
+				      <div class="carousel-caption">
+				        <h1>{item.Title}</h1>
+				        <p>{item.Description}</p>
+				        <p>
+									<a class="btn btn-lg btn-primary"
+										href="{Path}/{item.Link}" role="button">{item.LinkText}</a>
+								</p>
+				      </div>
+				    </div>
+				  </div>
+					<!--Contents-->
+				</div>
+				  <a class="left carousel-control" href="{Path}/#myCarousel" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left"></span>
+					</a>
+				  <a class="right carousel-control" href="{Path}/#myCarousel" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right"></span>
+					</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Noticias -->
+	<div class="row">
+		<!--News-->
+    <div class="col-lg-3">
+      <h4>{item.Title}</h4>
+      <p>{item.Description}</p>
+      <a href="{Path}/{item.Link}" class="btn btn-primary btn-sm" role="button">{item.LinkText}</a>
+    </div>
+		<!--News-->
+	</div>
+
+	<br />
+	<br />
+
+	<!--Gallery-->
+	<br />
+	<div class="row">
+		<div class="col-lg-12">
+			<p>
+				<strong><em>{item.Title}</em></strong> {item.Description}. <a href="{Path}/{item.Link}" >{item.LinkText}</a>
+			</p>
+		</div>
+	</div>
+	<div class="row gallery"
+			data-content="{item.Content}"
+			data-path="{Resources}/content/images/">
+	</div>
+	<!--Gallery-->
+	<br />
+</div>

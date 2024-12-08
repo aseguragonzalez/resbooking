@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<application>
+
+    <settings>
+        <add key="configFile" value="config.xml" />
+        <add key="controllers" value="controllers.xml" />
+        <add key="path" value="/resbooking/services/takeaway/Global.php?url=" />
+        <add key="resources" value="/resbooking/services/takeaway" />
+        <add key="connectionString" value="conStr-local" />
+        <add key="img-path" value="products/{Reference}/" />
+    </settings>
+
+    <passwordfactory>
+        <alphabet value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890" />
+        <minlength value="8" />
+        <maxlength value="20" />
+        <default value="12" />
+    </passwordfactory>
+
+    <connectionStrings>
+
+        <connectionString
+            name="conStr-local"
+            server="localhost"
+            user="root"
+            password="BZX55C4v5"
+            scheme="db500249808"
+            filename="database.xml" />
+
+    </connectionStrings>
+
+    <references>
+        <reference name="TakeawayController"
+                   path="controller/TakeawayController.php" />
+        <reference name="TakeawayModel"
+                   path="model/TakeawayModel.php" />
+    </references>
+
+    <interfaces>
+        <interface name="IHttpModule" mapTo="SaasHttpModule" src=" " />
+        <interface name="IHttpHandler" mapTo="HttpHandler" src=" " />
+        <interface name="ISecurity" mapTo="SaasSecurity" src=" " />
+        <interface name="INotificator" mapTo="MailNotificator" src=" " />
+        <interface name="ILogManager" mapTo="LogManager" src=" " />
+        <interface name="IDataAccessObject" mapTo="StmtBaseDAO" src=" " />
+        <interface name="IValidatorClient" mapTo="ValidatorClient" src=" " />
+    </interfaces>
+
+</application>

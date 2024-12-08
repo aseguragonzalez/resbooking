@@ -1,0 +1,62 @@
+<table class="table table-striped table-bordered" >
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Nombre</th>
+			<th>Path</th>
+			<th>Plataforma</th>
+			<th>Descripción</th>
+			<th>
+				<a onclick="clearServiceData();"
+					data-toggle="modal"
+					data-target="#modalService"
+					class="btn btn-primary btn-xs"
+					title="Dar de alta un nuevo servicio" >Nuevo</a>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--Entities-->
+		<tr>
+			<td>{item.Id}</td>
+			<td>{item.Name}</td>
+			<td>{item.Path}</td>
+			<td>{item.Platform}</td>
+			<td title="{item.Title}" >{item.Description}</td>
+			<td>
+
+				<a class="btn btn-primary btn-xs"
+					data-id="{item.Id}"
+					data-name="{item.Name}"
+					data-path="{item.Path}"
+					data-platform="{item.Platform}"
+					data-desc="{item.Title}"
+					data-toggle="modal"
+					data-target="#modalService"
+					onclick="setServiceData(this)"
+					title="" ><span class="glyphicon glyphicon-pencil" ></span>
+				</a>
+
+				<a href="{Path}/Service/Roles/{item.Id}"
+					class="btn btn-primary btn-xs"
+					title="Roles asociados" >
+						<span class="glyphicon glyphicon-list-alt" ></span>
+				</a>
+
+				<a class="btn btn-danger btn-xs"
+					title="Eliminar Servicio"
+					data-toggle="modal"
+					data-target="#modal"
+					data-title="Eliminar"
+					data-msg="¿Desea eliminar el servicio?"
+					data-id="{item.Id}"
+					data-selector="#btnDelete"
+					data-url="{Path}/Service/Delete/"
+					onclick="setDataModal(this);" ><span class="glyphicon glyphicon-remove" ></span>
+				</a>
+
+			</td>
+		</tr>
+		<!--Entities-->
+	</tbody>
+</table>

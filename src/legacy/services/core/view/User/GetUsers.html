@@ -1,0 +1,61 @@
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nombre de usuario</th>
+					<th>
+						<a class="btn btn-primary btn-xs"
+							data-toggle="modal"
+							data-target="#modalUser"
+							onclick="clearUserData(this);"
+							title="Crear un nuevo Usuario" >Nuevo</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Entities-->
+				<tr>
+					<td>{item.Id}</td>
+					<td>{item.Username}</td>
+					<td>
+						<a role="button"
+							class="btn btn-primary btn-xs"
+							data-id="{item.Id}"
+							data-username="{item.Username}"
+							data-toggle="modal"
+							data-target="#modalUser"
+							title="Editar usuario"
+							onclick="setUserData(this);" ><span class="glyphicon glyphicon-pencil" ></a>
+
+						<a role="button"
+							href="{Path}/User/Relations/{item.Id}"
+							class="btn btn-primary btn-xs"
+							title="Asociaciones de usuario" ><span class="glyphicon glyphicon-list-alt" >
+						</a>
+
+						<a role="button"
+							class="btn btn-warning btn-xs"
+							title="Resetear contraseña"
+							data-id="{item.Id}"
+							data-url="{Path}/User/Reset/"
+							onclick="resetUserPass(this);" ><span class="glyphicon glyphicon-refresh"></span>
+						</a>
+
+						<a role="button"
+							class="btn btn-danger btn-xs"
+							title="Eliminar usuario"
+							data-toggle="modal"
+							data-target="#modal"
+							data-title="Eliminar"
+							data-msg="¿Desea eliminar el usuario?"
+							data-id="{item.Id}"
+							data-selector="#btnDelete"
+							data-url="{Path}/User/Delete/"
+							onclick="setDataModal(this);" ><span class="glyphicon glyphicon-remove" ></span>
+						</a>
+
+					</td>
+				</tr>
+				<!--Entities-->
+			</tbody>
+		</table>

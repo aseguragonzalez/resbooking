@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Resbooking</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="icon" href="{Resources}/content/images/resb-ico.png" type="image/png" />
+        <link rel="stylesheet prefetch" href="{Resources}/content/css/login.css" />
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{Resources}/js/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="{Resources}/js/libs/sha512.js"></script>
+
+        <script type="text/javascript">
+
+            function utf8_to_b64(str) {
+                return window.btoa(encodeURIComponent(escape(str)));
+            }
+
+            function b64_to_utf8(str) {
+                return unescape(decodeURIComponent(window.atob(str)));
+            }
+
+            function processForm(){
+                var pass = $("input[name='tp_password']").val();
+                if($("input[name='hash']").length === 0){
+                    pass = CryptoJS.SHA512(pass);
+                }
+                $("input[name='password']").val(pass);
+
+                if($("input[name='remember']").is(":checked")){
+                    var value = serializeInputsJSON("#form");
+                    setCookie("res-remember", value);
+                }
+            }
+
+            function setForm(){
+
+                var cookie = getCookie("res-remember");
+
+                if(cookie !== ""){
+                    cookie =  b64_to_utf8(cookie);
+                    var o = $.parseJSON(cookie);
+                    $.makeArray(o);
+                    $.each(o, function(i, o){
+                       $("input[name='" + i + "']").val(o);
+                    });
+                }
+            }
+
+            function serializeInputsJSON(selector){
+                var json = "";
+                var inputs = $(selector).find("input");
+                var length = $(inputs).length;
+                $.each(inputs,function(i,o){
+                    var types = [ "email", "text", "password", "hidden"];
+                    var type = $(o).attr("type");
+                    if($.inArray(type, types) > -1){
+                        var name = $(o).attr("name");
+                        if(name !== "" && name !== undefined){
+                            json += ' "' + $(o).attr("name") + '":"'
+                                    + $(o).val() + '"';
+                            if(i < length - 2){
+                                json += ',';
+                            }
+                        }
+                    }
+                });
+
+                json =  "{" + json.substring(0, json.length - 1) + "}";
+
+                return utf8_to_b64(json);
+            }
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0; i<ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)===' ') c = c.substring(1);
+                    if (c.indexOf(name) === 0)
+                        return c.substring(name.length,c.length);
+                }
+                return "";
+            }
+
+            function setCookie(cname, cvalue) {
+                var d = new Date();
+                d.setTime(d.getTime() + (24*60*60*365));
+                var expires = "expires="+d.toUTCString();
+                document.cookie = cname + "=" + cvalue + "; " + expires;
+            }
+
+            $(function(){
+                $( "#form" )
+                    .attr( "action", document.URL )
+                    .on( "submit", function(){
+                        processForm();
+                });
+                setForm();
+            });
+
+        </script>
+
+    </head>
+
+    <body>
+        <input type="hidden" id="current_path" value="{Path}" />
+        <input type="hidden" id="current_resource_path" value="{Resources}" />
+
+        <div id="wrap" class="wrapper">
+            <div class="container">
+                <div id="login-form">
+                    <h3>
+                        <img src="{Resources}/content/images/logo-resBooking.png"
+                             alt="Resbooking" />
+                    </h3>
+
+                    <fieldset>
+                        <form id="form" action="" method="post" role="form">
+
+                            <input type="email"
+                                   id="username"
+                                   name="username"
+                                   required="required"
+                                   placeholder="Email"/>
+
+                            <input type="password"
+                                   id="password"
+                                   required="required"
+                                   name="tp_password"
+                                   placeholder="Password" />
+
+                            <input type="hidden" name="password"  value="" />
+
+                            <!--
+                            <input type="hidden" name="hash" value="SHA512" />
+                            -->
+
+                            <input type="submit" value="Login" />
+
+                            <p class="help" >
+                                <label>
+                                    <input type="checkbox"
+                                           name="remember"
+                                           checked="checked"/>
+                                    ¿Recordar contraseña?
+                                </label>
+                                <br />
+                                <a id="recovery-password"
+                                   href="{Path}/Accounts/Recovery">
+                                    Recuperar contraseña de acceso</a>
+                                <br />
+                                <span class="error">{eLogin}</span>
+                            </p>
+
+                        </form>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <p>
+                <a href="{Path}/Home/Privacity">Terminos y condiciones del servicio</a>
+            </p>
+        </div>
+    </body>
+</html>

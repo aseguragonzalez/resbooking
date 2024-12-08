@@ -1,0 +1,50 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript" src="{Resources}/scripts/js-core/jquery.service.js" ></script>
+
+<input type="hidden" id="relations" value='{Relations}' />
+
+<div class="container">
+	<div class="table-responsive">
+		<h4>Roles asociados al servicio - <small>{Entity.Name}</small></h4>
+		<table class="table table-bordered table-striped" >
+			<thead>
+				<tr>
+					<th></th>
+					<th>Nombre</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<!--Roles-->
+				<tr>
+					<td>
+						<input type="checkbox"
+							id="chk_{Entity.Id}_{item.Id}"
+							data-url="{Path}/Service/"
+							data-role="{item.Id}"
+							data-service="{Entity.Id}"
+							onchange="changeRoleService(this);"
+							name="roles" />
+					</td>
+					<td>{item.Name}</td>
+					<td>{item.Description}</td>
+				</tr>
+				<!--Roles-->
+			</tbody>
+		</table>
+	</div>
+
+	<div id="result"></div>
+
+	<div id="msg-result">
+		<div class="alert alert-success alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+			</button>
+			<strong>Servicio actualizado</strong> la operación se ha realizado correctamente.
+		</div>
+	</div>
+
+</div><!-- end container -->

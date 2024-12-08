@@ -1,0 +1,60 @@
+<!--Layout={_layout.html}-->
+
+<div class="container">
+
+	<h2>Notificaciones</h2>
+
+	<div class="table-responsive">
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Tipología</th>
+					<th>Proyecto</th>
+					<th>Servicio</th>
+					<th>Asunto</th>
+					<th>Remitente</th>
+					<th>Destino</th>
+					<th>
+						<a href="{Path}/Notifications/Create"
+							class="btn btn-primary btn-xs"
+							role="button"
+							title="Crear una nueva configuración" >Nueva</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Entities-->
+				<tr>
+					<td data-value="{item.Id}" >{item.Id}</td>
+					<td data-value="{item.Subject}" >{item.Subject}</td>
+					<td data-value="{item.Project}" >{item.ProjectName}</td>
+					<td data-value="{item.Service}" >{item.ServiceName}</td>
+					<td data-value="{item.Text}" >{item.Text}</td>
+					<td data-value="{item.From}" >{item.From}</td>
+					<td data-value="{item.To}" >{item.To}</td>
+					<td>
+						<a href="{Path}/Notifications/Edit/{item.Id}"
+							class="btn btn-primary btn-xs"
+							title="Editar configuración" ><span class="glyphicon glyphicon-pencil" ></span>
+						</a>
+
+						<a href="javascript:void(0);"
+							class="btn btn-danger btn-xs"
+							title="Eliminar configuración"
+							data-toggle="modal"
+							data-target="#modal"
+							data-title="Eliminar"
+							data-msg="¿Desea eliminar la configuración?"
+							data-id="{item.Id}"
+							data-selector="#btnDelete"
+							data-url="{Path}/Notifications/Delete/"
+							onclick="setDataModal(this);" ><span class="glyphicon glyphicon-remove" ></span>
+						</a>
+					</td>
+				</tr>
+				<!--Entities-->
+			</tbody>
+		</table>
+	</div><!-- end table-responsive -->
+</div><!-- end container -->

@@ -1,0 +1,82 @@
+<!--Layout={_layout.html}-->
+
+<style type="text/css" >
+    .enlace-detalles{color:#000; text-decoration:underline;}
+    .contenedor-diagrama{width:370px; height:250px; display:inline-block; }
+    .contenedor-diagrama h4{text-align:center;padding: 0;margin: 0;}
+    .diagramas{width:370px; height:250px; display:inline-block; }
+        .barras { width: 100%; }
+</style>
+
+<link type="text/css" rel="stylesheet" href="{Resources}/content/css/dhtmlxchart.css" />
+<script type="text/javascript" src="{Resources}/js/libs/dhtmlxchart.js"  ></script>
+<script type="text/javascript" src="{Resources}/js/report.js?r={Random}" ></script>
+
+<div class="container">
+
+    <br />
+
+    <div class="row">
+        <div class="col-lg-4">
+            <h4>Reservas</h4>
+            <div id="reservas"
+                 class="diagramas barras" ></div>
+        </div><!-- end col -->
+        <div class="col-lg-4">
+            <h4>Clientes</h4>
+            <div id="clientes"
+                 class="diagramas"
+                 data-n="{NoRepite}"
+                 data-r="{Repite}"
+                 data-a="{Asiduo}"></div>
+        </div><!-- end col -->
+        <div class="col-lg-4">
+            <h4>Ocupación</h4>
+            <div id="ocupacion"
+                 class="diagramas"
+                 data-p={Days} ></div>
+        </div><!-- end col -->
+    </div><!-- end row -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Resumen</h3>
+            <div class="table-responsive" >
+                <table class="table table-bordered table-striped table-resbooking">
+                    <thead>
+                        <tr>
+                            <th>Año</th>
+                            <th>Mes</th>
+                            <th>Cursadas</th>
+                            <th>Perdidas</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--Reports-->
+                        <tr class="rowdata visible-row"
+                            data-year="{item.Anyo}"
+                            data-month="{item.Mes}"
+                            data-cursadas="{item.Cursadas}"
+                            data-perdidas="{item.Perdidas}" >
+                            <td>{item.Anyo}</td>
+                            <td>{item.Mes}</td>
+                            <td>{item.Cursadas}</td>
+                            <td>{item.Perdidas}</td>
+                            <td>
+                                <a class="enlace-detalles"
+                                    href="{Path}/Summary/Index?d=1&month={item.Month}&year={item.Year}" >Detalles</a>
+                            </td>
+                        </tr>
+                        <!--Reports-->
+                    <tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">&nbsp;</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div><!-- end col -->
+    </div><!-- end row -->
+</div>

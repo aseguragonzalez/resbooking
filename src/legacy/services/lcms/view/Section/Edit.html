@@ -1,0 +1,161 @@
+<!--Layout={_layout.html}-->
+
+<div class="container">
+	<form id="section-form"
+			action="{Path}/Section/Save"
+			method="post"
+			role="form" >
+
+			<input type="hidden" id="Root" value="{Entity.Root}" />
+			<input type="hidden" id="Template" value="{Entity.Template}" />
+			<input type="hidden" name="Id" value="{Entity.Id}" />
+
+			<h2>Editar</h2>
+
+			<div class="row">
+				<div class="col-lg-5">
+					<div class="form-group">
+						<label>Nombre</label>
+						<input type="text"
+							name="Name"
+							value="{Entity.Name}"
+							required="required"
+							max-lenght="20"
+							class="form-control" />
+						<p class="help-block">
+							Introduzca el nombre para la sección.
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Enlace</label>
+						<input type="text"
+							name="Link"
+							value="{Entity.Link}"
+							required="required"
+							max-lenght="20"
+							class="form-control" />
+						<p class="help-block">
+							Defina el texto que aparece en el link.
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Autor</label>
+						<input type="text"
+							name="Author"
+							value="{Entity.Author}"
+							required="required"
+							max-lenght="50"
+							class="form-control" />
+						<p class="help-block">
+							Introduzca el nombre del autor de la sección
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Posición</label>
+						<input type="number"
+							name="Position"
+							value="{Entity.Position}"
+							required="required"
+							class="form-control"
+							max-lenght="2" min="0" />
+						<p class="help-block">
+							¿En qué posición del menú debe aparecer?
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Plantilla</label>
+						<select name="Template"
+							required="required"
+							class="form-control">
+							<!--Templates-->
+							<option value="{item.Name}" >{item.Name}</option>
+							<!--Templates-->
+						</select>
+						<p class="help-block">
+							Seleccione una plantilla para la sección
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Padre</label>
+						<select name="Root"
+							required="required"
+							class="form-control">
+							<option value="null" >Es root</option>
+							<!--Sections-->
+							<option value="{item.Id}" >{item.Link}</option>
+							<!--Sections-->
+						</select>
+						<p class="help-block">
+							Seleccione una sección padre si lo desea
+						</p>
+					</div>
+
+
+				</div><!-- end col-lg-5 -->
+				<div class="col-lg-1"></div>
+				<div class="col-lg-6">
+
+					<div class="form-group">
+						<label>ToolTip</label>
+						<textarea name="Tooltip"
+							required="required"
+							max-lenght="50"
+							rows="3"
+							class="form-control" >{Entity.Tooltip}</textarea>
+						<p class="help-block">
+							Introduzca el texto que aparecerá en la ayuda
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Keywords</label>
+						<textarea name="Keywords"
+							required="required"
+							max-lenght="140"
+							rows="4"
+							class="form-control">{Entity.Keywords}</textarea>
+						<p class="help-block">
+							Determine un conjunto de palabras claves para facilitar el posicionamiento
+						 en buscadores
+						</p>
+					</div>
+
+					<div class="form-group">
+						<label>Descripción</label>
+						<textarea name="Description"
+							required="required"
+							max-lenght="140"
+							rows="4"
+							class="form-control">{Entity.Description}</textarea>
+						<p class="help-block">
+							Introduzca una descripción del tema de la sección para que los buscadores cataloguen
+							la sección mejor.
+						</p>
+					</div>
+
+					<div class="form-group">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="chkDraft" checked="checked" />Es Borrador</label>
+						</div>
+						<input type="hidden" name="Draft" value="{Entity.Draft}" />
+						<button type="submit" class="btn btn-primary" role="button">Guardar</button>
+					</div>
+
+					<div class="form-group">
+						<p class="help-block"></p>
+					</div>
+				</div><!-- end col-lg-6 -->
+			</div><!-- end row -->
+
+	</form>
+</div>
+
+<br />
+
+<script type="text/javascript" src="{Resources}/scripts/js-lcms/jquery.section.form.js" ></script>

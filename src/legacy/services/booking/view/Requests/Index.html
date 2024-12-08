@@ -1,0 +1,110 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript" src="{Resources}/js/requests.js?r={Random}" ></script>
+
+<div class="container">
+    <!-- cabecera de sección-->
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+            <h2>Reservas Pendientes</h2>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <!-- tabla de solicitudes -->
+        <table class="table table-striped table-resbooking rwd-table">
+            <thead>
+                <tr>
+                    <th title="Fecha de la reserva" >Fecha de la reserva</th>
+                    <th title="Nombre al que se ha hecho la reserva" >Nombre y Apellidos</th>
+                    <th title="Teléfono de contacto" >Teléfono</th>
+                    <th title="Comensales reservados" >Comensales</th>
+                    <th title="Hora de la reserva" >Turno</th>
+                    <th title="Comentarios de la reserva">Comentarios</th>
+                    <th title="Oferta seleccionada" >Oferta</th>
+                    <th>Sala</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Entities-->
+                <tr>
+                    <td data-th="Fecha">{item.Date}</td>
+                    <td data-th="Nombre">{item.ClientName}</td>
+                    <td data-th="Teléfono">{item.Phone}</td>
+                    <td data-th="Comensales">{item.Diners}</td>
+                    <td data-th="Turno">{item.TurnStart}</td>
+                    <td data-th="Comentarios" title="{item.Comment}">{item.sComment}</td>
+                    <td data-th="Oferta" title="{item.OfferTitle}">{item.sOfferTitle}</td>
+                    <td data-th="Sala">{item.PlaceName}</td>
+                    <td data-th="Acciones">
+
+                        <a class="btn btn-danger btn-sm"
+                           data-toggle="modal" data-target="#anular"
+                           onclick="$('#btnAnulacion').data('id',{item.Id});"
+                           title="Cancelar Reserva">
+                            <span class="glyphicon glyphicon-remove" ></span> Anular
+                        </a>
+
+                        <a class="btn btn-primary btn-sm" data-id="{item.Id}"
+                           title="Aceptar Reserva" onclick="aceptarReserva(this);">
+                            <span class="glyphicon glyphicon-ok" ></span> Cursar
+                        </a>
+                    </td>
+                </tr>
+                <!--Entities-->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="9" data-th="Resultado:">
+                       <span id="total_filas">{Counts}</span> Reservas pendientes
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <!-- resultado de operacion -->
+        <div id="resultado"></div>
+    </div>
+</div>
+
+<!-- Ventana modal anulación de reserva -->
+<div id="anular" class="modal fade bs-example-modal-sm" tabindex="-1"
+     role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header titulo-modal-dialog-rb">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Cerrar</span>
+                </button>
+                <h4 class="modal-title"
+                    id="myModalLabel">Anulación de reserva</h4>
+            </div>
+            <div class="modal-body">
+                <h4>¿Está seguro que desea anular la reserva?</h4>
+                <p class="help-block">
+                    Al anular la reserva el cliente recibirá una
+                    notificación de Anulación de la reserva. Este proceso es
+                    irreversible.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">Cancelar</button>
+                <button id="btnAnulacion" type="button"
+                        class="btn btn-danger" data-id="0"
+                        onclick="anularReserva(this);">
+                            SI, anular la reserva
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alert de operación -->
+<div id="alert" class="alert alert-dismissible hide" role="alert">
+    <button type="button" class="close" data-dismiss="alert"
+            aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <p></p>
+</div>

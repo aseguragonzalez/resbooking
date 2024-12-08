@@ -1,0 +1,162 @@
+<!--Layout={_layout.html}-->
+<script type="text/javascript" src="{Resources}/scripts/js-core/jquery.service.js"></script>
+
+<div class="container">
+
+	<h2>Servicios</h2>
+
+	<div class="table-responsive">
+		<table class="table table-striped table-bordered" >
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nombre</th>
+					<th>Path</th>
+					<th>Plataforma</th>
+					<th>Descripción</th>
+					<th>
+						<a onclick="clearServiceData();"
+							data-toggle="modal"
+							data-target="#modalService"
+							class="btn btn-primary btn-xs"
+							title="Dar de alta un nuevo servicio" >Nuevo</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Entities-->
+				<tr>
+					<td>{item.Id}</td>
+					<td>{item.Name}</td>
+					<td>{item.Path}</td>
+					<td>{item.Platform}</td>
+					<td title="{item.Title}" >{item.Description}</td>
+					<td>
+
+						<a class="btn btn-primary btn-xs"
+							data-id="{item.Id}"
+							data-name="{item.Name}"
+							data-path="{item.Path}"
+							data-platform="{item.Platform}"
+							data-desc="{item.Title}"
+							data-toggle="modal"
+							data-target="#modalService"
+							onclick="setServiceData(this)"
+							title="" ><span class="glyphicon glyphicon-pencil" ></span>
+						</a>
+
+						<a href="{Path}/Service/Roles/{item.Id}"
+							class="btn btn-primary btn-xs"
+							title="Roles asociados" >
+								<span class="glyphicon glyphicon-list-alt" ></span>
+						</a>
+
+						<a class="btn btn-danger btn-xs"
+							title="Eliminar Servicio"
+							data-toggle="modal"
+							data-target="#modal"
+							data-title="Eliminar"
+							data-msg="¿Desea eliminar el servicio?"
+							data-id="{item.Id}"
+							data-selector="#btnDelete"
+							data-url="{Path}/Service/Delete/"
+							onclick="setDataModal(this);" ><span class="glyphicon glyphicon-remove" ></span>
+						</a>
+
+					</td>
+				</tr>
+				<!--Entities-->
+			</tbody>
+		</table>
+	</div>
+</div> <!-- End Container -->
+
+
+<!-- ventana modal para editar-->
+<div id="modalService" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+				</button>
+				<h4 class="modal-title">Servicio</h4>
+			</div>
+
+			<!-- Formulario -->
+			<form id="frmService"
+					action="{Path}/Service/Save"
+					data-success="{Path}/Service/GetServices"
+					method="post"
+					role="form"
+					onsubmit="saveService(this);" >
+
+				<div class="modal-body">
+
+					<input type="hidden" name="Id" value="0" />
+
+					<div class="form-group {eNameClass}" >
+						<label>Nombre</label>
+						<input type="text"
+							name="Name"
+							class="form-control"
+							required="required"
+							maxlength="50"
+							placeHolder="Resbooking" />
+						<p id="eName" class="help-block" data-msg="Defina un nombre para el servicio. " >
+							Defina un nombre para el servicio. {eName}
+						</p>
+					</div>
+
+					<div class="form-group {ePathClass}">
+						<label>Ruta del Cliente</label>
+						<input type="text"
+							name="Path"
+							class="form-control"
+							maxlength="50"
+							placeHolder="/path/rbclient/.." />
+						<p id="ePath" class="help-block" data-msg="Introduzca la ruta de acceso a la aplicación cliente a desplegar. ">
+							Introduzca la ruta de acceso a la aplicación cliente a desplegar. {ePath}
+						</p>
+					</div>
+
+					<div class="form-group {ePlatformClass}">
+						<label>Url Plataforma cliente</label>
+						<input type="url"
+							name="Platform"
+							class="form-control"
+							maxlength="200"
+							placeHolder="http://resbooking.es" />
+						<p id="ePlatform" class="help-block" data-msg="Introduzca la url de acceso al servicio desde el cliente. " >
+							Introduzca la url de acceso al servicio. {ePlatform}
+						</p>
+					</div>
+
+					<div class="form-group {eDescClass}">
+						<label>Descripción</label>
+						<textarea name="Description"
+							rows="5"
+							class="form-control"
+							required="required"
+							maxlength="500"
+							placeHolder="Servicio de reservas..." ></textarea>
+						<p id="eDesc" class="help-block" data-msg="Introduzca una breve descripción del servicio. " >
+							Introduzca una breve descripción del servicio. {eDesc}
+						</p>
+					</div>
+
+					<div class="form-group {eResultClass}">
+						<p id="eResult" class="help-block" data-msg=" " >{eResult}</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button"
+						class="btn btn-default"
+						data-dismiss="modal" >Cancelar</button>
+					<button type="submit"	class="btn btn-primary" >Guardar</button>
+				</div>
+			</form>
+			<!-- Formulario fin -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

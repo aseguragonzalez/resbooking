@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<application>
+
+    <settings>
+        <add key="configFile" value="config.xml" />
+        <add key="path" value="/resbooking/services/core/Global.php?url=" />
+        <add key="resources" value="/resbooking/services/core" />
+        <add key="connectionString" value="conStr-local" />
+        <add key="projectPath" value="../../projects/{Project}/{Client}" />
+        <add key="clientPath" value="clients/{Client}" />
+    </settings>
+
+    <connectionStrings>
+        <connectionString name="conStr-local"
+                          server="localhost"
+                          user="root"
+                          password="BZX55C4v5"
+                          scheme="db500249808"
+                          filename="database.xml" />
+    </connectionStrings>
+
+    <passwordfactory>
+        <alphabet value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890" />
+        <minlength value="8" />
+        <maxlength value="20" />
+        <default value="12" />
+    </passwordfactory>
+
+    <references>
+        <reference name="CoreModel" path="model/CoreModel.php" />
+        <reference name="ChangeDTO" path="model/dto/ChangeDTO.php" />
+    </references>
+
+    <interfaces>
+        <interface name="IHttpModule" mapTo="SaasHttpModule" src=" " />
+        <interface name="IHttpHandler" mapTo="HttpHandler" src=" " />
+        <interface name="ISecurity" mapTo="SaasSecurity" src=" " />
+        <interface name="INotificator" mapTo="MailNotificator" src=" " />
+        <interface name="ILogManager" mapTo="LogManager" src=" " />
+        <interface name="IDataAccessObject" mapTo="StmtBaseDAO" src=" " />
+        <interface name="IValidatorClient" mapTo="ValidatorClient" src=" " />
+    </interfaces>
+
+    <controllers>
+
+        <controller name="Home" action="Index"
+                    roles="Administrador, Gestor de proyectos"
+                    title="Inicio" text="Home" visible="false" >
+            <actions>
+                <action name="Index" roles="" param="" />
+                <action name="About" roles="" param="" />
+                <action name="Privacity" roles="" param="" />
+                <action name="Legal" roles="" param="" />
+            </actions>
+        </controller>
+
+        <controller name="Project" action="Index"
+                    roles="Gestor de proyectos"
+                    title="Gestión de Proyectos" text="Proyectos" >
+            <actions>
+                <action name="Index" roles="Gestor de proyectos" param="" />
+                <action name="GetProjects" roles="Gestor de proyectos" param="" />
+                <action name="Users" roles="Gestor de proyectos" param="" />
+                <action name="Services" roles="Gestor de proyectos" param="" />
+                <action name="Save" roles="Gestor de proyectos" param="" />
+                <action name="Delete" roles="Gestor de proyectos" param="" />
+                <action name="AddService" roles="Gestor de proyectos" param="" />
+                <action name="RemoveService" roles="Gestor de proyectos" param="" />
+                <action name="AddUser" roles="Gestor de proyectos" param="" />
+                <action name="RemoveUser" roles="Gestor de proyectos" param="" />
+            </actions>
+        </controller>
+
+        <controller name="User" action="Index"
+                    roles="Administrador, Gestor de proyectos"
+                    title="Gestión de Usuarios" text="Usuarios" >
+            <actions>
+                <action name="Index" roles="Gestor de proyectos" param="" />
+                <action name="GetUsers"	roles="Gestor de proyectos"	param="" />
+                <action name="Save"	roles="Gestor de proyectos" param="" />
+                <action name="Delete" roles="Gestor de proyectos" param="" />
+                <action name="Reset" roles="Gestor de proyectos" param="" />
+                <action name="Relations" roles="Gestor de proyectos" param="" />
+                <action name="SetRelation" roles="Gestor de proyectos" param="" />
+            </actions>
+        </controller>
+
+        <controller name="Notifications" action="Index"
+                    roles="Gestor de proyectos"
+                    title="Configuración de notificaciones" text="Notificaciones" >
+            <actions>
+                <action name="Index" roles="Gestor de proyectos" param="" />
+                <action name="Create" roles="Gestor de proyectos" param="" />
+                <action name="Edit" roles="Gestor de proyectos" param="" />
+                <action name="Save" roles="Gestor de proyectos" param="" />
+                <action name="Delete" roles="Gestor de proyectos" param="" />
+            </actions>
+        </controller>
+
+        <controller name="Role" action="Index" roles="Administrador"
+                    title="Gestión de Roles" text="Roles" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="GetRoles"	roles="Administrador"	param="" />
+                <action name="Services"	roles="Administrador"	param="" />
+                <action name="Save" roles="Administrador"	param="" />
+                <action name="Delete" roles="Administrador"	param="" />
+                <action name="Add" roles="Administrador" param="" />
+                <action name="Remove" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <controller name="Service" action="Index" roles="Administrador"
+                    title="Gestión de Servicios" text="Servicios" >
+            <actions>
+                    <action name="Index" roles="Administrador" param="" />
+                    <action name="GetServices" roles="Administrador" param="" />
+                    <action name="Save" roles="Administrador" param="" />
+                    <action name="Roles" roles="Administrador" param="" />
+                    <action name="Delete" roles="Administrador" param="" />
+                    <action name="AddRole" roles="Administrador" param="" />
+                    <action name="RemoveRole" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <controller name="Accounts" action="Logout"
+                    roles="Administrador, Gestor de proyectos"
+                    text="Logout" visible="false" >
+            <actions>
+                <action name="Index" roles="" param="" />
+                <action name="Recovery" roles="" param="" />
+                <action name="ChangePass" roles="Administrador, Gestor de proyectos" param="" />
+                <action name="Change" roles="Administrador, Gestor de proyectos" param="" />
+                <action name="Login" roles="Administrador, Gestor de proyectos" param="" />
+                <action name="Logout" roles="Administrador, Gestor de proyectos" param="" />
+            </actions>
+        </controller>
+
+    </controllers>
+
+</application>

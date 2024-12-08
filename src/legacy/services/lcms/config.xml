@@ -1,0 +1,141 @@
+<?xml version="1.0" ?>
+<application>
+
+	<!-- <language default="es-ES" /> -->
+
+	<settings>
+		<add key="configFile" value="config.xml" />
+		<add key="path" value="/try-catch/des/services/lcms/Global.php?url=" />
+		<add key="resources" value="/try-catch/des/services/lcms" />
+		<add key="connectionString" value="conStr-local" />
+		<add key="mail-from" value="inet@try-catch.es" />
+
+		<add key="templatePath" value="../../projects/{Project}/ClientCMS/view/{Entity}" />
+		<add key="imagesPath" value="../../projects/{Project}/ClientCMS/content/images" />
+		<add key="cssPath" value="../../projects/{Project}/ClientCMS/content/css" />
+		<add key="scriptPath" value="../../projects/{Project}/ClientCMS/scripts" />
+		<add key="layoutPath" value="../../projects/{Project}/ClientCMS/view/shared" />
+	</settings>
+
+	<connectionStrings>
+		<connectionString
+				name="conStr-local"
+				server="localhost"
+				user="root"
+				password="BZX55C4v5"
+				scheme="db500249808"
+				filename="database.xml" />
+	</connectionStrings>
+
+	<references>
+
+		<!-- Interfaces -->
+		<reference name="IDataAccessObject" path="../../references/interfaces/IDataAccessObject-v1.0.0.0.php" />
+		<reference name="ILogManager" path="../../references/interfaces/ILogManager-v1.0.0.0.php" />
+		<reference name="IValidatorClient" path="../../references/interfaces/IValidatorClient.php" />
+		<reference name="IHttpModule"  path="../../references/interfaces/IHttpModule-v1.0.1.0.php" />
+		<reference name="IHttpHandler" path="../../references/interfaces/IHttpHandler-v1.0.0.0.php" />
+		<reference name="ISecurity" 	 path="../../references/interfaces/ISecurity-v1.0.0.0.php" />
+		<reference name="INotificator"  path="../../references/interfaces/INotificator-v1.0.0.0.php" />
+		<!-- Interfaces -->
+
+		<!-- Clases -->
+		<reference name="Core" path="../../references/componentes/General/Core.php" />
+		<reference name="Injector" path="../../references/componentes/General/Injector.php" />
+		<reference name="LogManager" path="../../references/componentes/General/LogManager.php" />
+		<reference name="PasswordFactory" path="../../references/componentes/Crypto/PasswordFactory.php" />
+		<reference name="FileManager"  path="../../references/componentes/IO/FileManager.php" />
+		<reference name="UserUtilities"  path="../../references/utilidades/UserUtilities.php" />
+		<reference name="Security" path="../../references/componentes/Seguridad/Security.php" />
+		<reference name="StmtClient" path="../../references/componentes/DAO/StmtClient.php" />
+		<reference name="ValidatorClient" path="../../references/componentes/DAO/ValidatorClient.php" />
+		<reference name="HttpModule" path="../../references/componentes/Web/HttpModule.php" />
+		<reference name="Model" path="../../references/componentes/MVC/Models/Model.php" />
+		<reference name="SaasModel" path="../../references/componentes/MVC/Models/SaasModel.php" />
+		<reference name="Controller" path="../../references/componentes/MVC/Controllers/Controller.php" />
+		<reference name="SaasController" path="../../references/componentes/MVC/Controllers/SaasController.php" />
+		<reference name="LcmsController" path="controller/LcmsController.php" />
+		<!-- Clases -->
+
+		<!-- Entidades base de datos -->
+		<reference name="AuthEntity"	path="../../references/entities/security/AuthEntity.php" />
+		<reference name="Service" path="../../references/entities/common/Service.php" />
+		<reference name="Role" path="../../references/entities/common/Role.php" />
+		<reference name="Project" path="../../references/entities/common/Project.php" />
+		<reference name="User"	 path="../../references/entities/common/User.php" />
+		<reference name="ProjectServices" path="../../references/entities/common/ProjectServices.php" />
+		<reference name="ProjectInfo" path="../../references/entities/security/ProjectInfo.php" />
+		<reference name="ProjectUsers" path="../../references/entities/common/ProjectUsers.php" />
+		<reference name="ServiceRole"	 path="../../references/entities/common/ServiceRole.php" />
+		<reference name="UserRoleService"	 path="../../references/entities/common/UserRoleService.php" />
+		<reference name="Notification"	path="../../references/entities/common/Notification.php" />
+		<reference name="Content"	path="../../references/entities/lightcms/Content.php" />
+		<reference name="ContentType"	path="../../references/entities/lightcms/ContentType.php" />
+		<reference name="Section"	path="../../references/entities/lightcms/Section.php" />
+	</references>
+
+	<interfaces>
+		<interface name="IHttpModule" mapTo="SaasHttpModule" src="../../references/componentes/Web/SaasHttpModule.php" />
+		<interface name="IHttpHandler" mapTo="HttpHandler" 	src="../../references/componentes/Web/HttpHandler.php" />
+		<interface name="ISecurity" mapTo="SaasSecurity" src="../../references/componentes/Seguridad/SaasSecurity.php" />
+		<interface name="INotificator" mapTo="MailNotificator" src="../../references/componentes/General/MailNotificator.php" />
+		<interface name="ILogManager" mapTo="LogManager" src="../../references/componentes/General/LogManager.php" />
+		<interface name="IDataAccessObject" mapTo="StmtBaseDAO" src="../../references/componentes/DAO/StmtBaseDAO.php" />
+		<interface name="IValidatorClient" mapTo="ValidatorClient" src="../../references/componentes/DAO/ValidatorClient.php" />
+	</interfaces>
+
+	<controllers>
+		<controller name="Home" action="Index" roles="" title="Inicio" text="Home" visible="true" >
+			<actions>
+				<action name="Index" roles="" param="" />
+				<action name="SetProject" roles="Editor" param="" />
+				<action name="About" roles="" param="" />
+				<action name="Legal" roles="" param="" />
+				<action name="Privacity" roles="" param="" />
+				<action name="Logout" roles="Editor" param="" />
+			</actions>
+		</controller>
+
+		<controller name="Section" action="Index" roles="Editor" title="Gestión de secciones" text="Secciones" visible="true">
+			<actions>
+				<action name="Index" 	roles="Editor" 	param="" />
+				<action name="Create" roles="Editor" 	param="" />
+				<action name="Edit" 	roles="Editor" 	param="" />
+				<action name="Save" 	roles="Editor" 	param="" />
+				<action name="Delete" roles="Editor" 	param="" />
+			</actions>
+		</controller>
+		<controller name="Content" action="Index" roles="Editor" title="Gestión de contenidos" text="Contenidos" visible="true">
+			<actions>
+				<action name="Index" 	roles="Editor" 	param="" />
+				<action name="Create" roles="Editor" 	param="" />
+				<action name="Edit" 	roles="Editor" 	param="" />
+				<action name="Save" 	roles="Editor" 	param="" />
+				<action name="Delete" roles="Editor" 	param="" />
+			</actions>
+		</controller>
+
+		<controller name="Resources" action="Index" roles="Editor" title="Gestión de recursos" text="Recursos" visible="true">
+			<actions>
+				<action name="Index" 		roles="Editor" 	param="" />
+				<action name="Save" 		roles="Editor" 	param="" />
+				<action name="Rename" 	roles="Editor" 	param="" />
+				<action name="Download"	roles="Editor" 	param="" />
+				<action name="Delete" 	roles="Editor" 	param="" />
+			</actions>
+		</controller>
+
+		<controller name="Accounts" action="Logout" roles="Editor" title="Cerrar la sesión actual" text="Logout" visible="true" >
+			<actions>
+				<action name="Index" roles="" param="" />
+				<action name="Recovery" roles="" param="" />
+				<action name="ChangePass" roles="Editor" param="" />
+				<action name="Change" roles="Editor" param="" />
+				<action name="Login" roles="Editor" param="" />
+				<action name="Logout" roles="Editor" param="" />
+			</actions>
+		</controller>
+
+	</controllers>
+
+</application>

@@ -1,0 +1,113 @@
+/*
+Copyright (C) 2015 alfonso
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*
+    Created on : 23-jun-2015, 19:34:38
+    Author     : alfonso
+*/
+
+.menu-categorias{
+    padding: 0;
+}
+
+.menu-categorias small{
+    font-size: 0.6em;
+    color:#ccc;
+}
+
+.menu-categorias li{
+    list-style: none;
+    margin: 5px 0px;
+    text-transform: uppercase;
+}
+
+.menu-categorias li a{
+    color: #2f2f2f;
+}
+
+.table-takeaway{}
+.table-takeaway thead tr{}
+.table-takeaway thead tr th{}
+
+.table-takeaway thead tr th h4{
+    text-transform: uppercase;
+}
+
+#resultado{font-weight: bolder;}
+
+#detalles{
+    padding:0;
+}
+
+#detalles li{
+    list-style: none;
+}
+
+.producto{
+    margin: 0 0 5px 0;
+    border-top: 1px solid #ccc;
+}
+
+.modal-footer{
+    text-align: left;
+}
+
+#detalles-pedido tfoot{
+    text-align: right;
+}
+
+html,body{
+    height: 100%;
+}
+
+#catalogo{
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
+#page-footer{
+    background:#ccc;
+    color:#2f2f2f;
+    padding:20px 0px;
+    text-align: center;
+}
+
+.logo-cliente{}
+
+#carrito .panel, #navegacion .categories-discounts{
+    position:fixed;
+}
+
+#cabecera{
+    background:#fff;
+}
+
+#header img, #header h3{
+    display:inline-block;
+}
+
+#header nav{
+    margin-bottom: 0px;
+}
+
+.screen{
+min-height: 100%;
+height: auto !important;
+height: 100%;
+background-color: #f2f2f2;
+padding-top:40px;
+}

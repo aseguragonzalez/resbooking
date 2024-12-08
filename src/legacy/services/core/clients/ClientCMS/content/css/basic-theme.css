@@ -1,0 +1,28 @@
+#header{
+
+}
+
+#main-container{
+
+}
+
+#footer {
+text-align: center;
+}
+
+#frame-contacto{
+width:100%;
+min-height: 70%;
+height: auto !important;
+height: 50%;
+border:0;
+overflow:hidden;
+margin:0;
+}
+
+#legal-contacto-form{
+font-size:0.7em;
+}
+
+#social{
+}

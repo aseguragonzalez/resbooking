@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<description>
+    <database name="db500249808" server="localhost" user="root"
+              password="BZX55C4v5" scheme="db500249808" />
+    <objects>
+        <!-- CORE -->
+        <object type="view" name="notification_dtos" entity="NotificationDTO" >
+            <attribute name="notifications_id" property="Id" dataType="int"
+                       required="true" columnType="pk"/>
+            <attribute name="notifications_project" property="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_service" property="Service"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_to" property="_To" dataType="string"
+                       required="false" columnType="normal"/>
+            <attribute name="notifications_subject" property="_Subject"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notifications_content" property="Content"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notifications_dispatched" property="Dispatched"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="notification_config_subject" property="confSubject"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_subject_text"
+                       property="confSubjectText" dataType="string"
+                       required="false" columnType="normal"/>
+            <attribute name="notification_config_from" property="_From"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_to" property="confTo"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_template" property="confTemplate"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_state" property="confState"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="notifications" entity="Notification" >
+            <attribute name="notifications_id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="notifications_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_service" property ="Service"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_to" property ="_To" dataType="string"
+                       required="true" maxLength="100" columnType="normal"/>
+            <attribute name="notifications_subject" property ="_Subject"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="notifications_header" property ="Header"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="notifications_content" property ="Content"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="notifications_date" property ="Date"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="notifications_dispatched" property ="Dispatched"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+        <!-- FIN CORE -->
+    </objects>
+</description>

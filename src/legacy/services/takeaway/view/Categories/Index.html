@@ -1,0 +1,126 @@
+<!--Layout={_layout.html}-->
+
+<!-- Contenedor principal -->
+<div class="container">
+    <!-- cabecera -->
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Categorías</h2>
+        </div>
+        <div id="control" class="col-lg-6">
+            <h2>
+                <a href="{Path}/Categories/Edit" title="Crear nueva categoría"
+                    class="btn btn-primary" >+ Nueva Categoría</a>
+            </h2>
+        </div>
+    </div>
+    <!-- Tabla de categorías -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped data-table ">
+            <!-- cabecera de la tabla -->
+            <thead>
+                <tr>
+                    <th class="col-id" data-th="#">#</th>
+                    <th class="col-parent" data-th="Padre">Padre</th>
+                    <th class="col-code" data-th="Código">Código</th>
+                    <th class="col-name" data-th="Nombre">Nombre</th>
+                    <th class="col-desc" data-th="Descripción">Descripción</th>
+                    <th class="col-control"></th>
+                </tr>
+            </thead>
+            <!-- cuerpo de la tabla -->
+            <tbody>
+                <!--Entities-->
+                <tr class="rwdata">
+                    <td class="col col-id" data-th="#" >
+                        {item.Id}
+                    </td>
+                    <td class="col col-parent" data-th="Padre" >
+                        {item.ParentName}
+                    </td>
+                    <td class="col col-code" data-th="Código" >
+                        {item.Code}
+                    </td>
+                    <td class="col col-name" data-th="Nombre" >
+                        {item.Name}
+                    </td>
+                    <td class="col col-desc"
+                        data-th="Descripción"
+                        title="{item.Description}">
+                        {item.Desc}
+                    </td>
+                    <td class="col col-control" >
+                        <a href="{Path}/Categories/Edit/{item.Id}"
+                           title="Editar categoría"
+                           class="btn btn-primary btn-xs" >
+                           <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+
+                        <a class="btn btn-danger btn-xs"
+                           title="Eliminar la categoría"
+                           data-id="{item.Id}"
+                           data-selector="#btnDelete"
+                           data-target="#myModal"
+                           data-toggle="modal"
+                           onclick="javascript:deleteRowItem(this);">
+                           <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+                <!--Entities-->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="alert alert-dismissible {eResultClass} hide"
+        data-class="{eResultClass}" role="alert">
+        <button type="button" class="close"
+               data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span></button>
+        <p class="help-block">{eResult}</p>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header titulo-modal-dialog-rb">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Cerrar</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Eliminar categoría</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                ¿Desea eliminar la categoría seleccionada? Se eliminarán también
+                las subcategorías creadas y todos los productos asociados a dichas
+                categorías.
+            </p>
+        </div>
+        <div class="modal-footer">
+
+            <button type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal">Cerrar</button>
+
+            <a id="btnDelete" data-url="{Path}/Categories/Delete/"
+                data-id="0" class="btn btn-danger"
+                onclick="javascript:deleteButton(this);">Eliminar</a>
+        </div>
+    </div>
+  </div>
+</div>

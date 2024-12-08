@@ -1,0 +1,70 @@
+/*		General		*/
+
+html{
+	font-family: Arial, Verdana;
+	color: #585858;
+}
+
+body{
+
+}
+
+/*		Clases		*/
+.page{
+	width: 1024px;
+	margin: auto;
+/*	padding: 20px;*/
+}
+
+
+
+.layout-headers{
+	text-align : center;
+}
+
+.entity-list-container{
+
+}
+
+.entity-form-container{
+
+}
+
+#urs { text-align:center; }
+
+table {border-collapse:collapse; border: none;}
+th, td{ border : 1px solid #585858; }
+th,td {padding: 2px 5px;}
+
+/*		Formularios	*/
+
+.form-class{
+	width: 350px;
+	margin: 30px auto;
+}
+
+fieldset, .form-class fieldset{
+	padding: 20px;
+	border: 1px solid #ccc;
+}
+
+.property-name, .field-text{
+	padding: 10px 0px;
+}
+
+.property-control input, .field-control input{
+	width: 90%;
+	padding: 5px 10px;
+	border: 1px solid #cccccc;
+}
+
+.property-control textarea, .field-control textarea{
+	width: 90%;
+	padding: 5px 10px;
+	border: 1px solid #cccccc;
+	resizable:none;
+}
+
+.login-form-submit {
+	margin: 20px 0px 0px 0px;
+}

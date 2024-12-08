@@ -1,0 +1,157 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript" src="{Resources}/js/places.js?r={Random}"></script>
+<input type="hidden" id="err" value="{Error}" />
+
+<div class="container">
+    <!-- cabecera de sección-->
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+            <h2>Salas disponibles</h2>
+        </div>
+        <div id="control" class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+            <h2>
+                <a href="#" class="btn btn-primary" data-toggle="modal"
+                   data-target="#formulario"
+                   onclick="nuevoEspacio();" >+ Nueva Sala</a>
+            </h2>
+        </div>
+    </div>
+
+    <!-- tabla de espacios-->
+    <div class="table-responsive" >
+        <table class="table table-striped table-resbooking rwd-table" data-id="{item.Id}">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--Entities-->
+                <tr>
+                    <td>{item.Id}</td>
+                    <td title="{item.Name}">{item.sName}</td>
+                    <td title="{item.Description}">{item.sDescription}</td>
+                    <td>
+                        <a href="#" class="btn btn-default btn-xs"
+                           data-toggle="modal" data-target="#formulario"
+                           data-id="{item.Id}" data-name="{item.Name}"
+                           data-desc="{item.Description}"
+                           onclick="editarEspacio(this);">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="#" class="btn btn-danger btn-xs" data-id="{item.Id}"
+                           data-toggle="modal" data-target="#eliminar"
+                           onclick="$('#btnEliminar').data('id', '{item.Id}');">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+                <!--Entities-->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="alert {eGenResultClass} alert-dismissible hide" role="alert">
+            <button type="button" class="close" data-dismiss="alert"
+                    aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>
+            <p id="resultado">{eGenResult}</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Formulario de edición y creación de salas -->
+<div class="modal fade" id="formulario" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <form action="{Path}/Places/Save" method="post" role="form" >
+        <input type="hidden" id="Id" name="Id" value="{Entity.Id}" />
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header titulo-modal-dialog-rb">
+                    <button type="button" class="close"
+                          data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >Sala</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group {eNameClass}">
+                        <label>Nombre</label>
+                        <input type="text" name="Name" required="required"
+                               placeHolder="Terraza" maxlength="100" value="{Entity.Name}"
+                               class="form-control" />
+                        <p class="help-block"
+                           data-msg="Introduzca un nombre para designar la sala.">
+                            Introduzca un nombre para designar la sala. {eName}
+                        </p>
+                    </div>
+
+                    <div class="form-group {eDescClass}">
+                        <label>Descripción</label>
+                        <textarea name="Description" rows="4" maxlength="500"
+                                  placeHolder="Espacio climatizado en plena calle..."
+                                  class="form-control" required="required">{Entity.Description}</textarea>
+                        <p class="help-block"
+                           data-msg="Introduzca una descripción de la sala.">
+                            Introduzca una descripción de la sala. {eDesc}
+                        </p>
+                    </div>
+
+                    <div class="form-group {eResultClass}">
+                        <p class="help-block">{eResult}</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">Cancelar</button>
+                    <button type="submit"
+                            class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Formulario Eliminación de salas -->
+<div class="modal fade" id="eliminar" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header titulo-modal-dialog-rb">
+                <button type="button" class="close"
+                      data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Sala</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    La eliminación de salas es un proceso irreversible.
+                    Una vez eliminada, no podrá ser seleccionada en el formulario
+                    de reservas y será desconfigurada.
+                </p>
+                <p>¿Está seguro que desea eliminar la sala?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnEliminar"
+                        data-id="0" data-url="{Path}/Places/Delete/"
+                        onclick="eliminarEspacio(this);">
+                    Sí, deseo eliminar la sala</button>
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

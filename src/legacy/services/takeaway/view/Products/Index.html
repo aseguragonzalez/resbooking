@@ -1,0 +1,205 @@
+<!--Layout={_layout.html}-->
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>Productos</h2>
+        </div>
+        <div id="control" class="col-lg-6">
+            <h2>
+                <a href="{Path}/Products/Edit" title="Crear nuevo producto"
+                   class="btn btn-primary" >+Nuevo Producto</a>
+            </h2>
+        </div>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div id="productos-container">
+
+        <table id="productos-table"
+               class="table table-bordered table-striped display">
+
+            <!-- cabecera de la tabla -->
+            <thead>
+                <tr>
+                    <th class="col-id" data-th="#">#</th>
+                    <th class="col-cat" data-th="Categoría">Categoría</th>
+                    <th class="col-ref" data-th="Referencia">Referencia</th>
+                    <th data-th="Visible">Visible</th>
+                    <th class="col-name" data-th="Nombre">Nombre</th>
+                    <th class="col-desc" data-th="Descripción">Descripción</th>
+                    <th class="col-kw" data-th="Keywords">Keywords</th>
+                    <th class="col-price" data-th="Precio">Precio</th>
+                    <th class="col-order" data-th="Orden">Orden</th>
+                    <th class="col-control"></th>
+                </tr>
+            </thead>
+
+            <!-- cuerpo de la tabla -->
+            <tbody>
+                <!--Entities-->
+                <tr class="rwdata">
+                    <td class="col col-id" data-th="#" >
+                        {item.Id}
+                    </td>
+                    <td class="col col-cat"
+                        data-th="Categoría"
+                        data-category="{item.Category}">
+                        {item.CategoryName}
+                    </td>
+                    <td class="col col-ref" data-th="Referencia" >
+                        {item.Reference}
+                    </td>
+                    <td data-th="Visible">
+                        <input type="checkbox" disabled="disabled"
+                               data-checked="{item.Visible}" />
+                    </td>
+                    <td class="col col-name" data-th="Nombre"
+                        title="{item.Name}">{item.ResName}
+                    </td>
+                    <td class="col col-desc" data-th="Descripción"
+                        title="{item.Description}">{item.Desc}
+                    </td>
+                    <td class="col col-kw" data-th="Keywords"
+                        title="{item.Keywords}">{item.Keys}
+                    </td>
+                    <td class="col col-price" data-th="Precio" >
+                        {item.Price} €
+                    </td>
+                    <td class="col col-order" data-th="Orden" >
+                        {item.Ord}
+                    </td>
+
+                    <td class="col col-control" >
+
+                        <a href="{Path}/Images/Index/{item.Id}?&Page={Page}"
+                           title="Galería"
+                           onclick="javascript:updatePage(this);"
+                           class="btn btn-default btn-xs" >
+                           <span class="glyphicon glyphicon-picture"></span>
+                        </a>
+
+                        <a href="{Path}/Products/Edit/{item.Id}?&Page={Page}"
+                           title="Editar producto"
+                           onclick="javascript:updatePage(this);"
+                           class="btn btn-primary btn-xs" >
+                           <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+
+                        <a class="btn btn-danger btn-xs"
+                           title="Eliminar el producto"
+                           data-id="{item.Id}"
+                           data-selector="#btnDelete"
+                           data-target="#myModal"
+                           data-toggle="modal"
+                           onclick="javascript:deleteRowItem(this);">
+                           <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+
+                    </td>
+                </tr>
+                <!--Entities-->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="10">&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+        <input id="page" type="hidden" value="" />
+    </div>
+</div>
+
+<!-- Resultado de la operación -->
+<div class="container">
+    <div class="alert alert-dismissible {eResultClass} hide"
+        data-class="{eResultClass}" role="alert">
+        <button type="button" class="close"
+               data-dismiss="alert" aria-label="Close">
+               <span aria-hidden="true">&times;</span></button>
+        <p class="help-block">{eResult}</p>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header titulo-modal-dialog-rb">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Cerrar</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Producto</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    ¿Desea eliminar el producto seleccionado?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">Cerrar</button>
+                <a id="btnDelete"
+                    data-url="{Path}/Products/Delete/"
+                    data-id="0"
+                    class="btn btn-danger"
+                    onclick="javascript:deleteButton(this);">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function() {
+
+        var language = {
+            "emptyTable":     "No hay registros",
+            "info":           "Cargados del _START_ al _END_ de _TOTAL_ registros",
+            "infoEmpty":      "0 de 0 de un total de 0 registros",
+            "infoFiltered":   "(filtrados de un total de _MAX_ registros)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Ver _MENU_ registros por página",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "La búsqueda no tiene resultados",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       ">>",
+                "previous":   "<<"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        };
+
+        $('#productos-table')
+            .dataTable({ language:language })
+            .removeClass("display");
+
+        var page = $("#page").val();
+        var iPage = parseInt(page);
+        if( page !== undefined && page !== "" && iPage !== NaN && iPage > 1){
+
+            if($( ".paginate_button[data-dt-idx='" + iPage + "']" )
+                    .length === 1){
+                $( ".paginate_button[data-dt-idx='" + iPage + "']" )
+                        .click();
+            }
+        }
+
+        $( ".paginate_button" ).on( "click" ,function(){
+            $("#page").val($(this).data("dt-idx"));
+        });
+    });
+
+</script>

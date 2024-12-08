@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<application>
+    <references>
+        <!-- entidades -->
+        <reference name="Notification" path="domain/entities/Notification.php" />
+        <reference name="NotificationConfig" path="domain/entities/NotificationConfig.php" />
+        <reference name="NotificationType" path="domain/entities/NotificationType.php" />
+        <reference name="Project" path="domain/entities/Project.php" />
+        <reference name="ProjectServices" path="domain/entities/ProjectServices.php" />
+        <reference name="ProjectUsers" path="domain/entities/ProjectUsers.php" />
+        <reference name="Role" path="domain/entities/Role.php" />
+        <reference name="Service" path="domain/entities/Service.php" />
+        <reference name="ServiceRole" path="domain/entities/ServiceRole.php" />
+        <reference name="User" path="domain/entities/User.php" />
+        <reference name="UserRoleService"
+                   path="domain/entities/UserRoleService.php" />
+        <reference name="UserRoleServiceProject"
+                   path="domain/entities/UserRoleServiceProject.php" />
+        <!-- dtos -->
+        <reference name="AuthEntity"
+                   path="domain/dtos/AuthEntity.php" />
+        <reference name="NotificationConfigDTO"
+                   path="domain/dtos/NotificationConfigDTO.php" />
+        <reference name="NotificationDTO"
+                   path="domain/dtos/NotificationDTO.php" />
+        <reference name="ProjectInfo"
+                   path="domain/dtos/ProjectInfo.php" />
+    </references>
+</application>

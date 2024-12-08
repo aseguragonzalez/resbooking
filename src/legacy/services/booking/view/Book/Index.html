@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Resbooking</title>
+        <link href="{Resources}/content/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+        <link href="{Resources}/content/css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
+        <link rel="stylesheet" href="{Resources}/content/css/jquery-ui-1.8.4.custom.css" />
+        <link rel="stylesheet" href="{Resources}/content/css/resbooking-form.css?r={Random}" />
+        <!-- librerías opcionales que activan el soporte de HTML5 para IE8 -->
+        <!--[if lt IE 9]>
+          <script type="text/javascript" src="{Resources}/js/libs/html5shiv.js"></script>
+          <script type="text/javascript" src="{Resources}/js/libs/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{Resources}/js/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="{Resources}/js/libs/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="{Resources}/js/libs/datepicker-es.js"></script>
+        <script type="text/javascript" src="{Resources}/js/libs/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{Resources}/js/form.common.js?r={Random}"></script>
+
+        <script type="text/javascript" src="{Resources}/scripts/js-rb/jquery.resbooking.form.js?r={Random}"></script>
+
+        <style>
+            .rb-service-conditions{
+                margin:0;
+                font-weight: normal;
+            }
+
+            .cantidad{
+                max-width: 50px;
+                margin-left:10px;
+                display: inline;
+            }
+            .contenedor{
+                max-width: 400px;
+                margin:auto;
+            }
+        </style>
+
+        <script type="text/javascript">
+
+            function setPrepedido(callback){
+                var checks = $("#prepedido-formulario")
+                        .find("input[type='checkbox']:checked");
+                var prepedido = "";
+                $.each($(checks),function(i,o){
+                    var selector = "#cnt_" + $(o).data("id");
+                    if(parseInt($(selector).val()) > 0){
+                        prepedido += $(o).data("text") + ": " + $(selector).val()
+                            + " uds;";
+                    }
+                });
+                $("input[name='PreOrder']").val(prepedido);
+                if($.isFunction(callback)){
+                    callback();
+                }
+            }
+
+            function setFormularioPrepedido(){
+                var url = $("#current_path").val() + "/Order/Index/"
+                        + $("input[name='Project']").val();
+                $.get(url,function(data){
+                    if(data.Error === false){
+                        $("#frm-prepedido").html(data.Content);
+                    }
+                });
+            }
+
+            $(function(){
+                if($("#preorder").val()==="1"){
+                    setFormularioPrepedido();
+                    $("#preorder-btn").removeClass("hide");
+                    $("form").on("submit", function(){
+                        setPrepedido();
+                    });
+                }
+                else{
+                    $("#preorder-btn").addClass("hide");
+                }
+            });
+
+            function abrirCarta(obj){
+                $('#frmMenu').attr("data-step",4);
+                $('#frmConfirm').attr("data-step",5);
+                nextStep(obj);
+            }
+
+            function saltarCarta(obj){
+                $('#frmMenu').attr("data-step",-1);
+                $('#frmConfirm').attr("data-step",4);
+                nextStep(obj);
+            }
+
+            function actualizarSinOferta(){
+
+                try{
+
+                    $(".offer").find("input").prop("checked",false);
+
+                    var project = parseInt($("input[name='project']").val());
+                    var arrayP = $.parseJSON($("#proyectos").val());
+
+                    if($.inArray(project, arrayP) === -1){
+                        $("#sin_oferta").show();
+                        $("#sin_oferta").find("input").prop("checked",true);
+                        return;
+                    }
+
+                    var fecha = getBookingDate();
+                    var sFecha = fecha.getDate() + "-"
+                        + parseInt(fecha.getMonth() +1) + "-"
+                        + fecha.getFullYear();
+
+                    if(sFecha !== $("#fechaFiltro").val()){
+                        $("#sin_oferta").show();
+                        $("#sin_oferta").find("input").prop("checked",true);
+                        return;
+                    }
+
+                    var turno = parseInt($("[name='Turn']").val());
+                    var turnos = $.parseJSON($("#turnos").val());
+
+                    if($.inArray(turno, turnos) === -1){
+                        $("#sin_oferta").show();
+                        $("#sin_oferta").find("input").prop("checked",true);
+                        return;
+                    }
+
+                    $("#sin_oferta").find("input[type='checkbox']")
+                            .removeAttr("checked");
+                    $("#sin_oferta").hide();
+
+                    $.each( $(".offer"), function(i,o) {
+                        if($(o).css("display") !== "none") {
+                            $(o).find("input").prop("checked",true);
+                            return;
+                        }
+                    });
+                }
+                catch(err){
+                    $("#sin_oferta").show();
+                }
+            }
+
+        </script>
+
+    </head>
+
+    <body>
+        <div id="main">
+            <!-- filtro sin oferta -->
+            <input type="hidden" id="proyectos" value="[1,2,4,12]" />
+            <input type="hidden" id="turnos" value="[10,12]" />
+            <input type="hidden" id="fechaFiltro" value="12-5-2015" />
+            <!-- filtro sin oferta -->
+
+            <input type="hidden" id="current_path" value="{Path}" />
+            <input type="hidden" id="preorder" value="{Preorder}" />
+            <input type="hidden" id="blocks_array" value='{Blocks}' />
+            <input type="hidden" id="offers_events_array" value='{OffersEvents}' />
+            <input type="hidden" id="offers_share_array" value='{OffersShare}' />
+            <input type="hidden" id="turns_share_array" value='{TurnsShare}' />
+
+            <form action="{Path}/Book/Save/{Project}" method="post" role="form">
+
+                <input type="hidden" name="Project"  value="{Project}" />
+                <input type="hidden" name="PreOrder" value="{Entity.PreOrder}" />
+
+                <div class="rb-module visible" data-step="1"
+                     data-validate="valStep1" data-callback="callbackStep1">
+
+                    <div id="wrap">
+
+                        <div class="rb-module-header">
+                            <h3>Datos de la reserva</h3>
+                        </div>
+
+                        <div class="rb-module-form">
+
+                            <div class="form-group {eDateClass}" >
+                                <label>Fecha</label>
+                                <input type="text" name="Date" readonly="readonly" required="required"
+                                       title = "Introduzca una fecha para la reserva"
+                                       placeHolder="Fecha de la reserva" data-value="{Entity.Date}"
+                                       class="form-control calendar" />
+                                <p class="help-block" id="Date-Error" >
+                                    Seleccione una fecha para la reserva. {eDate}
+                                </p>
+                            </div>
+
+                            <div class="form-group {eDinersClass}">
+                                <label>Número de personas</label>
+                                <select name="Diners" required="required" data-value="{Entity.Diners}"
+                                        title="Introduzca el número de comensales" class="form-control" >
+                                    <!--DinersLst-->
+                                    <option value="{item.Value}" >{item.Text}</option>
+                                    <!--DinersLst-->
+                                </select>
+                                <p class="help-block" id="Diners-Error" >
+                                    Introduzca el número de comensales. {eDiners}
+                                </p>
+                            </div>
+
+                            <div class="form-group {eTurnClass}">
+                                <label>Hora</label>
+                                <select name="Turn" class="form-control" data-value="{Entity.Turn}">
+                                    <!--Turns-->
+                                    <option value="{item.Id}" data-slot="{item.Slot}"
+                                            data-days="{item.Days}">{item.Start}</option>
+                                    <!--Turns-->
+                                </select>
+                                <p class="help-block" id="Turn-Error" >
+                                    Seleccione la hora para la reserva. {eTurn}
+                                </p>
+                            </div>
+
+                            <div class="form-group {ePlaceClass}">
+                                <label>Lugar</label>
+                                <select name="Place" data-value="{Entity.Place}" class="form-control">
+                                    <!--Places-->
+                                    <option value="{item.Id}" >{item.Name}</option>
+                                    <!--Places-->
+                                </select>
+                                <p class="help-block" id="Place-Error" >
+                                    Seleccione uno de los espacios disponibles. {ePlace}
+                                </p>
+                            </div>
+
+                            <div class="form-group {eResultClass}">
+                                <p class="help-block" id="Result" >{eResult}</p>
+                            </div>
+
+                        </div><!-- end rb-module-form -->
+
+                    </div><!-- end wrap -->
+
+                    <div id="footer" class="rb-module-footer" >
+                        <a href="javascript:void(0);" onclick="nextStep(this);"
+                           class="btn btn-default" role="button" >Siguiente</a>
+                    </div><!-- end footer -->
+
+                </div>
+
+                <div class="rb-module" data-step="2" data-validate="valStep2"
+                     data-callback="callbackStep2" >
+
+                    <div id="wrap">
+                        <div class="rb-module-header">
+                            <h3>Datos de contacto</h3>
+                        </div>
+
+                        <div class="rb-module-form">
+
+                            <div class="form-group {eClientNameClass}">
+                                <label>Nombre y apellidos</label>
+                                <input type="text" name="ClientName" required="required"
+                                       placeHolder="Nombre y Apellidos" class="form-control"
+                                       title="Introduzca el nombre al que se realiza la reserva"
+                                       value="{Entity.ClientName}" maxlength="100" />
+                                <p class="help-block" id="ClientName-Error" >
+                                    Introduzca el nombre asociado a la reserva. {eClientName}
+                                </p>
+                            </div>
+
+                            <div class="form-group {eEmailClass}">
+                                <label>e-mail</label>
+                                <input type="email" name="Email" class="form-control"
+                                       placeHolder="email@dominio.es" required="required" maxlength="100"
+                                       title="Introduzca un e-mail de contacto" value="{Entity.Email}" />
+                                <p class="help-block" id="Email-Error" >
+                                    Introduzca un e-mail de contacto. {eEmail}
+                                </p>
+                            </div>
+
+                            <div class="form-group {ePhoneClass}">
+                                <label>Teléfono</label>
+                                <input type="text" name="Phone" required="required"
+                                       class="form-control" placeHolder="555-555-555" maxlength="15"
+                                       title="Introduzca un número de contacto" value="{Entity.Phone}" />
+                                <p class="help-block" id="Phone-Error" >
+                                    Introduzca un número de contacto. {ePhone}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="footer" class="rb-module-footer">
+                        <a href="javascript:void(0);" class="btn btn-default"
+                           onclick="prevStep(this);" >Anterior</a>
+                        <a href="javascript:void(0);" class="btn btn-default"
+                           onclick="nextStep(this);actualizarSinOferta();" >Siguiente</a>
+                    </div>
+
+                </div>
+
+                <div class="rb-module" id="frmOffer" data-step="3"
+                     data-validate="valStep3" data-callback="callbackStep3" >
+
+                    <div id="wrap">
+                        <div class="rb-module-header" >
+                            <h3>¿Alguna oferta?</h3>
+                        </div>
+
+                        <div class="rb-module-form" >
+
+                            <div class="form-group">
+                                <label>Comentarios</label>
+                                <textarea rows="4" name="Comment"
+                                          class="form-control">{Entity.Comment}</textarea>
+                                    <p class="help-block">
+                                        Introduzca algún comentario si lo desea.
+                                        P.e: "Necesitamos espacio para carrito"
+                                    </p>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ofertas</label>
+                                <!--Offers-->
+                                <div class="offer radio" >
+                                    <label for="rb_offer_{item.Id}" data-title="{item.Title}">
+                                        <input type="radio" name="Offer" class="offer-item"
+                                               id="rb_offer_{item.Id}" value="{item.Id}"
+                                               data-start="{item.Start}" data-end="{item.End}"
+                                               data-config={item.Config} />{item.Title}</label>
+                                    <p data-desc="{item.Description}" class="offer-desc" style="font-size:0.8em;" >
+                                        {item.Description}
+                                    </p>
+                                </div>
+                                <!--Offers-->
+                                <div id="sin_oferta" class="offer radio" >
+                                    <label for="rb_offer_0"
+                                           title="Sin Oferta">
+                                    <input type="radio" name="Offer" id="rb_offer_0"
+                                           value="-1" title="Sin oferta" checked="checked"
+                                           data-config="[]" />Sin Oferta</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group {eOfferClass}">
+                                <p class="help-block" id="Offer-Error">{eOffer}</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div id="preorder-btn" class="help-block text-center hide">
+                        <a class="btn btn-primary" onclick="abrirCarta(this);">
+                            Realiza tu pedido anticipado</a>
+                    </div>
+
+                    <div id="footer" class="rb-module-footer" >
+                        <a href="javascript:void(0);" class="btn btn-default"
+                           onclick="prevStep(this);" >Anterior</a>
+                        <a href="javascript:void(0);" class="btn btn-default"
+                           onclick="saltarCarta(this);" >Siguiente</a>
+                    </div>
+                </div>
+
+                <div class="rb-module" id="frmMenu" data-step="6"
+                     data-validate="" data-callback="callbackStep3" >
+
+                    <div id="wrap">
+                        <div class="rb-module-header" >
+                            <h3>Tu pedido</h3>
+                        </div>
+
+                        <div id="frm-prepedido" class="rb-module-form" >
+
+
+
+                        </div>
+                    </div>
+                    <div id="footer" class="rb-module-footer" >
+                        <a href="javascript:void(0);"
+                           class="btn btn-default"
+                           onclick="prevStep(this);" >Anterior</a>
+                        <a href="javascript:void(0);"
+                           class="btn btn-default"
+                           onclick="nextStep(this);" >Siguiente</a>
+                    </div>
+                </div>
+
+
+                <div class="rb-module" id="frmConfirm" data-step="4"
+                     data-validate="valStep4" data-callback="callbackStep4" >
+
+                    <div id="wrap">
+                        <div class="rb-module-header">
+                            <h3>Confirmar</h3>
+                        </div>
+                        <div class="rb-module-form">
+
+                            <div id="standard" class="hide">
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Nombre: <span id="nombre" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Telefono: <span id="telefono" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Email: <span id="email" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Fecha: <span id="fecha" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Comensales: <span id="comensales" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Hora: <span id="hora" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Oferta: <span id="oferta" ></span>
+                                    </p>
+                                </div>
+                                <div class="rb-form-group">
+                                    <p class="help-block">
+                                        Lugar: <span id="lugar" ></span>
+                                    </p>
+                                </div>
+                                <div class="form-group" style="border:1px solid #fdd361; padding: 3px; font-size: 12px; margin-bottom: 8px;">
+                                    <p style="margin: 0 0 0px; color: #6e6e6e">
+                                        IMPORTANTE: Para canjear cupones Groupon, Groupalia o Lets Bonus,
+                                        las reservas solo pueden realizarse a través del medio que
+                                        facilite el proveedor del cupón.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="zapper" class="hide">
+                                <div class="form-group" style="border:1px solid #fdd361; padding: 3px; font-size: 12px; margin-bottom: 8px;">
+									<p align="center">
+										 <img src="/content/images/pay-icon.png" class="img-responsive" />
+                                    </p>
+									<p style="margin: 0 0 0px; color: #6e6e6e" class="text-center">
+							            <strong>ESTA RESERVA REQUIRE PREPAGO</strong>
+                                    </p>
+                                    <p style="margin: 0 0 0px; color: #6e6e6e" class="text-justify">
+                                        Con el fin de ofecerle un excelente servicio y
+                                        asegurarle la disponibilidad y disfrute de su mesa,
+                                        para hacer efectiva esta reserva, es necesario un
+                                        prepago de <span id="sAmount"></span>€.<br>
+                                        Recibirá un correo electrónico indicándole las
+                                        opciones para poder llevarla a cabo. Muchas gracias.
+                                    </p>
+                                </div>
+                                <p class="help-block">
+                                    <span id="sName"></span><br />
+                                    <span id="sEmail"></span><br />
+                                    <span id="sPhone"></span><br />
+                                    <span id="sDate"></span>, a las
+									<span id="sTime"></span> horas<br />
+									<span id="sOffer"></span><br />
+                                    <span id="sDiners"></span> comensales<br />
+                                </p>
+                            </div>
+
+                            <div id="confirm-container" class="controls">
+                                <button class="btn btn-primary" type="submit" id="confirm"
+                                        onclick="return $('#Terminos').is(':checked');">
+                                    Confirmar</button>
+                            </div>
+
+                            <div class="form-group">
+                                <small>
+                                    <span id="terms">
+                                        <label class="rb-service-conditions">
+                                            <input type="checkbox" name="Terminos" checked="checked"
+                                                    onclick="$('#confirm').prop('disabled', !$(this).is(':checked'))"
+                                                    id="Terminos" />
+                                            He leído y acepto los </label>
+                                        <a href="#" data-toggle="modal" data-target="#myModal">
+                                            términos y condiciones del servicio.
+                                        </a>
+                                    </span>
+                                    <label class="rb-service-conditions">
+                                        <input type="checkbox" name="Legal" id="Legal" checked="checked" />
+                                            Deseo estar informado de los descuentos
+                                            y promociones.
+                                    </label>
+                                </small>
+                            </div>
+                            <!--
+                            <div id="zapper-container" class="form-group hide">
+                                <p class="help-block"> <span id="precio"></span>
+                                    Le informamos que para formalizar la reserva
+                                    es necesario que realice un prepago utilizando
+                                    la aplicación Zapper.
+                                </p>
+                                <img src="/content/images/zapper_logo.png"
+                                     class="img-responsive" />
+                            </div>
+                            -->
+                        </div>
+                    </div>
+
+                    <div id="footer" class="rb-module-footer">
+                        <a href="javascript:void(0);" class="btn btn-default"
+                           onclick="prevStep(this);" >Anterior</a>
+                    </div>
+
+                </div>
+            </form><!-- end form -->
+        </div><!-- end container -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1"
+             role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header rb-module-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Términos y condiciones</h4>
+              </div>
+              <div class="modal-body">
+                  <iframe id="private" src="http://resbooking.es/privacity.html"></iframe>
+              </div>
+              <div class="modal-footer rb-module-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </body>
+</html>

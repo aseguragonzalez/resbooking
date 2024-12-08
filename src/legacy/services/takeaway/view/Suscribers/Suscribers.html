@@ -1,0 +1,143 @@
+<!--Layout={_layout.html}-->
+
+<link rel="stylesheet" type="text/css"
+      href="{Resources}/css/dataTables.bootstrap.css" />
+<script type="text/javascript" language="javascript"
+    src="{Resources}/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+
+    $(function() {
+
+        var language = {
+            "emptyTable":     "No hay registros",
+            "info":           "Cargados del _START_ al _END_ de _TOTAL_ registros",
+            "infoEmpty":      "0 de 0 de un total de 0 registros",
+            "infoFiltered":   "(filtrados de un total de _MAX_ registros)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Ver   _MENU_ registros por página",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:  ",
+            "zeroRecords":    "La búsqueda no tiene resultados",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       ">>",
+                "previous":   "<<"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        };
+
+        $('#solicitudes-table')
+            .dataTable({ language:language })
+            .removeClass("display");
+        var page = $("#page").val();
+        var iPage = parseInt(page);
+        if( page !== undefined
+            && page !== ""
+            && iPage !== NaN
+            && iPage > 1){
+
+            if($( ".paginate_button[data-dt-idx='" + iPage + "']" )
+                    .length === 1){
+                $( ".paginate_button[data-dt-idx='" + iPage + "']" )
+                        .click();
+            }
+        }
+
+        $( ".paginate_button" ).on( "click" ,function(){
+            $("#page").val($(this).data("dt-idx"));
+        });
+    });
+
+</script>
+
+<div class="container">
+
+    <div class="page-header">
+        <h2>Solicitudes</h2>
+    </div>
+
+    <div id="solicitudes-container" class="table-responsive">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th class="col-id" data-th="#">#</th>
+                    <th data-th="Referencia">Referencia</th>
+                    <th class="col-name" data-th="Nombre">Nombre</th>
+                    <th class="col-email" data-th="Email">Email</th>
+                    <th class="col-ip" data-th="IP">IP</th>
+                    <th class="col-date" data-th="Fecha">Fecha</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <!--Entities-->
+                <tr class="rwdata">
+                    <td class="col col-id" data-th="#" >
+                        {item.Id}
+                    </td>
+                    <td>
+                        <a href="{item.ProdLink}" target="_blank">
+                            {item.Reference}
+                        </a>
+                    </td>
+                    <td class="col col-ticket"
+                        data-th="Nombre"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="{item.SuscriberName}">
+                        {item.SuscriberName}
+                    </td>
+                    <td class="col col-email"
+                        data-th="Email"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="{item.Email}" >
+                        {item.Email}
+                    </td>
+                    <td class="col col-ip"
+                        data-th="IP"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="{item.IP}">
+                        {item.IP}
+                    </td>
+                    <td class="col col-date"
+                        data-th="Fecha"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="{item.CreateDate}">
+                        {item.CreateDate}
+                    </td>
+
+                    <td class="col col-state"
+                        data-th="Eliminar" >
+                        <a href="{Path}/Suscribers/Delete/{item.Id}"
+                           class="btn btn-danger btn-xs">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+
+                </tr>
+                <!--Entitites-->
+
+            </tbody>
+        </table>
+
+        <div class="{eResultClass}">
+            <p class="help-block">{eResult}</p>
+        </div>
+
+    </div>
+
+</div>

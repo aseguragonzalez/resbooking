@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{Template-1}</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="./css/template1-theme.css" rel="stylesheet" media="screen" />
+    <link href="./css/social.css" rel="stylesheet" media="screen" />
+		<link type="text/css" rel="stylesheet" href="http://pre-admin.resbooking.es/content/css/resbooking.css" />
+
+    <!-- librerías opcionales que activan el soporte de HTML5 para IE8 -->
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+      <script src="./js/respond.min.js"></script>
+    <![endif]-->
+
+	  <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+	  <script type="text/javascript" src="./js/jquery.easing.min.js"></script>
+		<script type="text/javascript" src="./js/jquery.scrollTo.js"></script>
+		<script type="text/javascript" src="./js/holder.js"></script>
+		<script type="text/javascript" src="./js/cookies.js"></script>
+		<script type="text/javascript" src="http://pre-admin.resbooking.es/scripts/js-rb/jquery.resbooking.js"></script>
+		<script type="text/javascript" src="./js/website.js"></script>
+		<script type="text/javascript" src="./js/website-tp1.js"></script>
+
+  </head>
+
+  <body id="start">
+
+		<div id="aviso-cookies" class="alert  alert-danger alert-dismissible" role="alert" >
+			<button type="button" class="close" data-dismiss="alert">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+			</button>
+			<p>
+				<strong>Política de cookies</strong>. Utilizamos cookies propias y de terceros para mejorar
+				nuestros servicios y mostrarle publicidad relacionada con sus preferencias mediante el análisis
+				de sus hábitos de navegación. Si continua navegando, consideramos que acepta su uso.
+				<a class="btn btn-primary btn-xs" onclick="$('#aviso-cookies').AceptarCookies('cookies-ws');" role="button" >Aceptar</a>
+				<a href="./cookies.html" target="_blank" class="btn btn-default btn-xs" role="button" >Saber más >></a>
+			</p>
+		</div>
+
+		<div id="header">
+			<header>
+				<img id="logo" src="holder.js/100%x150" class="img-responsive" alt="logo-website" />
+			</header>
+		</div>
+
+		<div id="menu">
+			<nav class="navbar navbar-default" role="navigation">
+				<div>
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-options">
+						  <span class="sr-only"></span>
+						  <span class="icon-bar"></span>
+						  <span class="icon-bar"></span>
+						  <span class="icon-bar"></span>
+						</button>
+					</div>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="menu-options">
+						<ul class="nav navbar-nav">
+						  <li><a href="#el-restaurante" class="scroll" >El Restaurante</a></li>
+						  <li><a href="#la-cocina" class="scroll" >La Cocina</a></li>
+						  <li><a href="#galeria" class="scroll" >Galería</a></li>
+						  <li><a href="#reservas" class="scroll" >Reservar</a></li>
+							<li><a href="#contacto" class="scroll" >Contacto</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</div>
+
+		<div id="home">
+			<div class="container">
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+						<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+						<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+						<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+					</ol>
+
+					<!-- Wrapper for slides -->
+					<div class="carousel-inner">
+						<div class="item active">
+							<div style="width:100%; height:350px; background-color:#2f2f2f;"></div>
+							<!-- <img src="..." alt="..." /> -->
+							<div class="carousel-caption">
+								img-1
+							</div>
+						</div>
+						<div class="item">
+							<div style="width:100%; height:350px; background-color:#2f2f2f;"></div>
+							<!-- <img src="..." alt="..." /> -->
+							<div class="carousel-caption">
+								img-2
+							</div>
+						</div>
+						<div class="item">
+							<div style="width:100%; height:350px; background-color:#2f2f2f;"></div>
+							<!-- <img src="..." alt="..." /> -->
+							<div class="carousel-caption">
+								img-3
+							</div>
+						</div>
+					</div>
+
+					<!-- Controls -->
+					<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+						<span class="glyphicon glyphicon-chevron-left"></span>
+					</a>
+					<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+						<span class="glyphicon glyphicon-chevron-right"></span>
+					</a>
+				</div>
+
+				<div class="separador"></div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<h2>Ofertas</h2>
+						<p>
+							Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+							eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+							id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+						</p>
+						<a href="#ofertas" class="btn btn-default scroll">Conocer ofertas >></a>
+					</div>
+
+					<div class="col-md-4">
+						<h2>Reservas</h2>
+						<p>
+							Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+							eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+							id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+						</p>
+						<a href="#reservas" class="btn btn-default scroll">Reservar >></a>
+					</div>
+
+					<div class="col-md-4">
+						<h2>¿Dónde estamos?</h2>
+						<p>
+							Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+							eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+							id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+						</p>
+						<a href="#contacto" class="btn btn-default scroll">Saber más >></a>
+					</div>
+				</div>
+
+				<div class="separador"></div>
+
+			</div>
+		</div>
+
+		<div id="el-restaurante" >
+			<div class="container">
+				<section>
+					<div class="contenedor-titulo-seccion">
+						<header>
+							<!--<h1>El Restaurante</h1>-->
+						</header>
+					</div>
+
+					<div class="contenedor-info-seccion">
+
+						<div class="row">
+							<div class="col-md-4 col-md-offset-1">
+								<div class="articulo">
+									<article>
+										<header>
+											<h2>El Restaurante</h2>
+										</header>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+									</article>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<img src="holder.js/100%x450" class="img-responsive" alt="..." />
+							</div>
+
+						</div>
+
+					</div>
+
+					<div class="contenedor-pie-seccion">
+						<footer>
+							<p>
+								<a href="#start" class="scroll"><span class="glyphicon glyphicon-chevron-up"></span></a>
+								<a href="#la-cocina" class="scroll"><span class="glyphicon glyphicon-chevron-down"></span></a>
+							</p>
+						<footer>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<div id="la-cocina" >
+			<div class="container">
+				<section>
+					<div class="contenedor-titulo-seccion">
+						<header>
+							<!--<h1>La cocina</h1>-->
+						</header>
+					</div>
+
+					<div class="contenedor-info-seccion">
+						<div class="row">
+							<div class="col-md-6">
+								<img src="holder.js/100%x450" class="img-responsive" alt="..." />
+							</div>
+							<div class="col-md-4 col-md-offset-1">
+								<div class="articulo">
+									<article>
+										<header>
+											<h2>La cocina</h2>
+										</header>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+										<p>
+											Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+											eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+											id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+										</p>
+									</article>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="contenedor-pie-seccion">
+						<footer>
+							<p>
+								<a href="#start" class="scroll"><span class="glyphicon glyphicon-chevron-up"></span></a>
+								<a href="#galeria" class="scroll"><span class="glyphicon glyphicon-chevron-down"></span></a>
+							</p>
+						<footer>
+					</div>
+				</section>
+			</div>
+		</div>
+
+
+		<div id="galeria" >
+			<div class="container">
+				<section>
+					<div class="contenedor-titulo-seccion">
+						<header>
+							<!--<h1>Galería</h1>-->
+						</header>
+					</div>
+
+					<div class="contenedor-info-seccion">
+
+						<article>
+							<h2>Galería</h2>
+							<p>
+								Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+								eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+								id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+							</p>
+						</article>
+
+						<div class="separador"></div>
+
+						<div class="row">
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-2">
+								<div class="thumbnail">
+									<img data-src="holder.js/100%x180" alt="...">
+									<div class="caption">
+										<p>Lorem ipsum ad his</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="contenedor-pie-seccion">
+						<footer>
+							<p>
+								<a href="#start" class="scroll"><span class="glyphicon glyphicon-chevron-up"></span></a>
+							  <a href="#reservas" class="scroll"><span class="glyphicon glyphicon-chevron-down"></span></a>
+							</p>
+						<footer>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<div id="reservas" >
+			<div class="container">
+				<section>
+					<div class="contenedor-titulo-seccion">
+						<header>
+						<!-- <h1>Reservas</h1> -->
+						</header>
+					</div>
+
+					<div class="contenedor-info-seccion">
+						<div class="row">
+
+							<div class="col-md-5 col-md-offset-1">
+								<div id="frmReservas" class="embed-responsive"></div>
+							</div>
+
+							<div class="col-md-4">
+								<article>
+									<header>
+										<h2>¡Haz tu reserva!</h2>
+									</header>
+									<p>
+										Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+										eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+										id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+									</p>
+									<p>
+										Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+										eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+										id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+									</p>
+									<p>
+										Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+										eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+										id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+									</p>
+								</article>
+							</div>
+						</div>
+					</div>
+
+					<div class="contenedor-pie-seccion">
+						<footer>
+							<p>
+								<a href="#start" class="scroll"><span class="glyphicon glyphicon-chevron-up"></span></a>
+							  <a href="#contacto" class="scroll"><span class="glyphicon glyphicon-chevron-down"></span></a>
+							</p>
+						<footer>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<div id="contacto" >
+			<div class="container">
+				<section>
+					<div class="contenedor-titulo-seccion">
+						<header>
+							<h1>Contacto</h1>
+						</header>
+					</div>
+
+					<div class="contenedor-info-seccion">
+						<div class="row">
+							<div class="col-md-12">
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12141.67285147442!2d-3.689367!3d40.466012!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x48844ca2c90cf67!2sPlaza+de+Castilla!5e0!3m2!1ses!2ses!4v1411407585988" width="100%" height="250" frameborder="0"></iframe>
+							</div>
+						</div>
+
+						<div class="separador"></div>
+
+						<div class="row">
+							<div class="col-md-4">
+								<h3>¿Dónde estamos?</h3>
+								<p>
+									Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+									eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+									id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+								</p>
+
+								<address>C/Lorem ipsum ad, his scripta, blandit partiendo</address>
+
+								<p>e-mail: <a href="mailto:info@alfazulo.es">info@xxxxxxx.xxx</a></p>
+
+								<p>Teléfono: <a href="phone:+34913102027">(+34) xx xxx xx xx</a></p>
+
+							</div>
+
+							<div class="col-md-4">
+								<h3>¿Tienes dudas?</h3>
+								<form action="" method="post" role="form">
+									<div class="form-group">
+										<label>Tu e-mail</label>
+										<div class="input-group">
+											<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+											<input type="email" name="from" class="form-control" required="true" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label>¿Cuál es tu duda?</label>
+										<input type="text" name="subject" class="form-control" required="true" />
+									</div>
+									<div class="form-group">
+										<label>Dinos algo más</label>
+										<textarea name="text"  class="form-control" required="true" rows="6" ></textarea>
+									</div>
+									<div class="form-group">
+										<button type="submit" class="btn btn-default" role="button" >Enviar</button>
+									</div>
+								</form>
+							</div>
+							<div class="col-md-4">
+								<h3>¡Síguenos en la red!</h3>
+								<p>
+									Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+									eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+									id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+								</p>
+								<p>
+									Lorem ipsum ad his scripta blandit partiendo, eum fastidii accumsan euripidis in,
+									eum liber hendrerit an. Qui ut wisi vocibus suscipiantur, quo dicit ridens inciderint
+									id. Quo mundi lobortis reformidans eu, legimus senserit definiebas an eos.
+								</p>
+
+								<p>
+									<div class="social-link fb-link" data-url="" ></div>
+									<div class="social-link google-link" data-url=""></div>
+									<div class="social-link twitter-link" data-url=""></div>
+								</p>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="contenedor-pie-seccion">
+						<footer>
+							<p>
+								<!-- <a href="#start" class="scroll"><span class="glyphicon glyphicon-chevron-up"></span></a> -->
+							</p>
+						<footer>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<div class="pie-pagina">
+			<footer>
+				<p>
+					xxxxxx &copy 2014
+					 | <a href="#start" class="scroll"><span class="glyphicon glyphicon-home"></span> Inicio</a>
+					 | <a href="mailto:info@xxxxxx.com">info@xxxxxx.com</a>
+					 | <a href="./legal.html">Aviso Legal</a>
+				</p>
+			</footer>
+		</div>
+  </body>
+</html>

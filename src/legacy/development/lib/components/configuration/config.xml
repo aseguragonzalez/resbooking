@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<application>
+
+    <settings>
+        <add key="nombre_clave" value="valor_clave" />
+    </settings>
+
+    <references>
+        <reference name="nombre_clase" path="ruta..." />
+    </references>
+
+</application>

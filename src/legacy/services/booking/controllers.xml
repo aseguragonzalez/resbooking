@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<application>
+
+    <controllers>
+
+        <!-- Controlador Home -->
+        <controller name="Home" action="Index" roles=""
+                    title="" text="" >
+            <actions>
+                <action name="Index"
+                        roles="Gestor de reservas, Gerente de cuentas" param=""/>
+                <action name="SetProject" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"
+                        visible="false" />
+                <action name="Privacity" roles="" param=""/>
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de cuentas -->
+        <controller name="Accounts" action="Logout" text="Logout"
+                    roles="Gestor de reservas, Gerente de cuentas"
+                    title="Cerrar la sesión actual" visible="false" >
+            <actions>
+                <action name="Index" roles="" param="" />
+                <action name="Recovery" roles="" param="" />
+                <action name="ChangePass" param=""
+                        roles="Gestor de reservas, Gerente de cuentas" />
+                <action name="Change" param=""
+                        roles="Gestor de reservas, Gerente de cuentas" />
+                <action name="Login" param=""
+                        roles="Gestor de reservas, Gerente de cuentas" />
+                <action name="Logout" param=""
+                        roles="Gestor de reservas, Gerente de cuentas" />
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de reservas -->
+        <controller name="Book" action="Index" roles="" title=""
+                    text="Reserva" visible="false">
+            <actions>
+                <action name="Index" roles="" param="" />
+                <action name="Save" roles="" param="" />
+                <action name="GetPreOrder" roles="" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de zapper -->
+        <controller name="Zapper" action="Index" roles="" title=""
+                    text="Zapper" visible="false">
+            <actions>
+                <action name="Index" roles="" param="" />
+                <action name="SetState" roles="" param="" />
+                <action name="RequiredPrePay" roles="" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de reservas -->
+        <controller name="Order" action="Index" roles="" title=""
+                    text="Pre-Pedido" visible="false">
+            <actions>
+                <action name="Index" roles="" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de solicitudes -->
+        <controller name="Requests" action="Index" text="Pendientes"
+                    roles="Gestor de reservas, Gerente de cuentas"
+                    title="Gestión de solicitudes" visible="true">
+            <actions>
+                <action name="Index" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="GetCount" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="Accept" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="Cancel" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de reservas -->
+        <controller name="Booking" action="Index" text="Reservas"
+                    roles="Gestor de reservas, Gerente de cuentas"
+                    title="Gestión de reservas" visible="true">
+            <actions>
+                <action name="Index" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="Summary" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SetState" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SetDiners" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SetTable" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SetNotes" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SendMessage" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="SendReminder" param=""
+                        roles="Gestor de reservas, Gerente de cuentas"/>
+                <action name="Save" param=""
+                        roles="Gestor de reservas, Gerente de cuentas" />
+                <action name="Cancel" param="" roles="" />
+                <action name="SetCancel" param="" roles="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador gestión de reservas -->
+        <controller name="BookForm" action="Index" text="Reserva" visible="false"
+                    roles="Gestor de reservas, Gerente de cuentas" title="">
+            <actions>
+                <action name="Index"
+                        roles="Gestor de reservas, Gerente de cuentas" param="" />
+                <action name="Save"
+                        roles="Gestor de reservas, Gerente de cuentas" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la configuración de espacios -->
+        <controller name="Clients" action="Index" text="Clientes" visible="true"
+                    roles="Administrador" title="" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="GetClient" roles="Administrador" param="" />
+                <action name="Save" roles="Administrador" param="" />
+                <action name="Delete" roles="Administrador" param="" />
+                <action name="SetVip" roles="Gestor de reservas, Gerente de cuentas" param="" />
+                <action name="SetNotes" roles="Gestor de reservas, Gerente de cuentas" param="" />
+                <action name="FindClientByName" roles="Gestor de reservas, Gerente de cuentas" param="" />
+                <action name="FindClientByPhone" roles="Gestor de reservas, Gerente de cuentas" param="" />
+                <action name="FindClientByEmail" roles="Gestor de reservas, Gerente de cuentas" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador de informes -->
+        <controller name="Report" action="Index" roles="Gerente de cuentas"
+                    title="Gestión de informes" text="Informes"  visible="true">
+            <actions>
+                <action name="Index" roles="Gerente de cuentas" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador impresión de informes -->
+        <controller name="Summary" action="Index" roles="Gerente de cuentas"
+                    title="Gestión de detalles" text="Detalles" visible="false">
+            <actions>
+                <action name="Index" roles="Gerente de cuentas" param="" />
+                <action name="Summary" roles="Gerente de cuentas" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la gestión de ofertas -->
+        <controller name="Offers" action="Index" text="Ofertas" visible="false"
+                    roles="Administrador" title="Gestión de ofertas" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="Save" roles="Administrador" param="" />
+                <action name="Delete" roles="Administrador" param="" />
+                <action name="Configuration" roles="Administrador" param="" />
+                <action name="GetConfig" roles="Administrador" param="" />
+                <action name="SetConfig" roles="Administrador" param="" />
+                <action name="GetOffers" roles="" param="" />
+                <action name="Share" roles="Administrador" param="" />
+                <action name="SetShare" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la gestión de eventos de ofertas -->
+        <controller name="OffersEvents" action="Index" text="" visible="false"
+                    roles="Administrador" title="" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="SetEvent" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la configuración de espacios -->
+        <controller name="Places" action="Index" text="Salas" visible="false"
+                    roles="Administrador" title="" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="Save" roles="Administrador" param="" />
+                <action name="Delete" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la configuración de turnos -->
+        <controller name="Turns" action="Index" text="Turnos" visible="false"
+                    roles="Administrador" title="" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="SetTurn" roles="Administrador" param="" />
+                <action name="Share" roles="Administrador" param="" />
+                <action name="SetShare" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador para la configuración de bloqueos -->
+        <controller name="Blocks" action="Index" text="Bloqueos" visible="false"
+                    roles="Administrador" title="" >
+            <actions>
+                <action name="Index" roles="Administrador" param="" />
+                <action name="SetBlock" roles="Administrador" param="" />
+            </actions>
+        </controller>
+
+        <!-- Controlador de configuraciones -->
+        <controller name="Configuration" action="Index" text="Configuración"
+                    roles="Gestor de reservas, Administrador"
+                    title="Gestión de configuraciones" visible="true">
+            <actions>
+                <action name="Configuration" controller="Configuration" action="Index"
+                        visible="true" text="Servicio" title="Configuración del servicio"
+                        roles="Administrador" param="" />
+                <action name="Index" roles="Administrador" param="" />
+                <action name="Save" roles="Administrador" param="" />
+
+                <action name="Places" controller="Places" action="Index"
+                        visible="true" text="Salas" title="Configuración de salas"
+                        roles="Administrador" param="" />
+
+                <action name="Offers" controller="Offers" action="Index"
+                        visible="true" text="Ofertas" title="Gestión de ofertas"
+                        roles="Administrador" param="" />
+
+
+                <action name="Turns" controller="Turns" action="Index" visible="true"
+                        text="Configuración de Turnos" title="Gestión de los turnos de apertura"
+                        roles="Administrador" param="" />
+
+                <action name="Blocks" controller="Blocks" action="Index"
+                        visible="true" text="Bloqueo de Turnos"
+                        title="Configuración de los bloqueos de reservas"
+                        roles="Gerente de cuentas, Administrador" param="" />
+
+                <action name="Share" controller="Turns" action="Share" visible="true"
+                        text="Cupos" title="Gestión de cupos"
+                        roles="Administrador" param="" />
+            </actions>
+
+        </controller>
+    </controllers>
+
+</application>

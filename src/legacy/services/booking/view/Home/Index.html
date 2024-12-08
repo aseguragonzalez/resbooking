@@ -1,0 +1,70 @@
+<!--Layout={_layout.html}-->
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-5 col-lg-offset-1">
+            <h2>Bienvenido a RESBOOKING</h2>
+            <br />
+            <p>
+                Con nuestro sistema usted incorpora la tecnología apropiada a su
+                sitio web para obtener reservas en línea, tal como hoy en día se
+                hace a través del teléfono y email.
+            </p>
+            <br />
+            <p>
+                Al incorporar nuestro motor de reservas online, los clientes
+                potenciales tendrán acceso a sus servicios y disponibilidad de
+                los mismos de forma rápida y efectiva, lo que le permitirá
+                economizar su tiempo y el del comensal, por tanto captar de
+                forma rápida y eficiente a clientes realmente interesados en
+                el buen servicio de su establecimiento, lo que se traducirá en
+                un valor fundamental para su negocio.
+            </p>
+            <br />
+            <p>
+                Gracias por confiar en nosotros.
+            </p>
+        </div>
+
+        <div class="col-lg-4">
+            <h2>&nbsp;</h2>
+            <form id="frm-prj" method="GET" role="form"
+                  action="{Path}/Home/SetProject">
+
+                <input type="hidden" id="projectId" value="{Project}" />
+
+                <div class="form-group">
+                    <label>Proyecto</label>
+                    <select id="project"
+                            name="Id"
+                            required="required"
+                            class="form-control"
+                            data-value="{Project}" >
+                        <option value="0">Seleccione un proyecto</option>
+                        <!--Projects-->
+                        <option value="{item.Id}">{item.Name}</option>
+                        <!--Projects-->
+                    </select>
+                    <p class="help-block">
+                        Seleccione uno de los proyectos en los que es gestor
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"
+                            role="button">Seleccionar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" >
+    $(function(){
+        setSelectedItem();
+        if($( "#project option" ).length <= 2){
+            $( "#frm-prj" ).remove();
+        }
+    });
+</script>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<application>
+
+    <connectionStrings>
+        <connectionString
+            name="conStr-local"
+            server="localhost"
+            user="uuuuuu"
+            password="*******"
+            scheme="xxxxxxxxx"
+            filename="database.xml" />
+    </connectionStrings>
+
+</application>

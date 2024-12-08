@@ -1,0 +1,137 @@
+<!--Layout={_layout.html}-->
+
+<script type="text/javascript" src="{Resources}/scripts/js-core/jquery.users.js" ></script>
+
+<div class="container">
+
+	<h2>Usuarios</h2>
+
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nombre de usuario</th>
+					<th>
+						<a class="btn btn-primary btn-xs"
+							data-toggle="modal"
+							data-target="#modalUser"
+							onclick="clearUserData(this);"
+							title="Crear un nuevo Usuario" >Nuevo</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Entities-->
+				<tr>
+					<td>{item.Id}</td>
+					<td>{item.Username}</td>
+					<td>
+						<a role="button"
+							class="btn btn-primary btn-xs"
+							data-id="{item.Id}"
+							data-username="{item.Username}"
+							data-toggle="modal"
+							data-target="#modalUser"
+							title="Editar usuario"
+							onclick="setUserData(this);" ><span class="glyphicon glyphicon-pencil" ></a>
+
+						<a role="button"
+							href="{Path}/User/Relations/{item.Id}"
+							class="btn btn-primary btn-xs"
+							title="Asociaciones de usuario" ><span class="glyphicon glyphicon-list-alt" >
+						</a>
+
+						<a role="button"
+							class="btn btn-warning btn-xs"
+							title="Resetear contraseña"
+							data-id="{item.Id}"
+							data-url="{Path}/User/Reset/"
+							onclick="resetUserPass(this);" ><span class="glyphicon glyphicon-refresh"></span>
+						</a>
+
+						<a role="button"
+							class="btn btn-danger btn-xs"
+							title="Eliminar usuario"
+							data-toggle="modal"
+							data-target="#modal"
+							data-title="Eliminar"
+							data-msg="¿Desea eliminar el usuario?"
+							data-id="{item.Id}"
+							data-selector="#btnDelete"
+							data-url="{Path}/User/Delete/"
+							onclick="setDataModal(this);" ><span class="glyphicon glyphicon-remove" ></span>
+						</a>
+
+					</td>
+				</tr>
+				<!--Entities-->
+			</tbody>
+		</table>
+	</div><!-- end table-responsive -->
+
+	<div id="result"></div>
+
+	<div id="msg-result">
+		<div class="alert alert-success alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert">
+				<span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+			</button>
+			<span id="msg-result-data" ></span>
+		</div>
+	</div>
+
+</div><!-- end container -->
+
+<!-- ventana modal para editar-->
+<div id="modalUser" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span>
+				</button>
+				<h4 class="modal-title">Usuario</h4>
+			</div>
+
+			<!-- Formulario -->
+			<form id="frmUser"
+					action="{Path}/User/Save"
+					data-success="{Path}/User/GetUsers"
+					method="post"
+					role="form"
+					onsubmit="saveUser(this);" >
+
+				<div class="modal-body">
+
+					<input type="hidden" name="Id" value="0" />
+
+					<div class="form-group {eUsernameClass}" >
+						<label>Nombre de usuario</label>
+						<input type="email"
+							name="Username"
+							class="form-control"
+							require2d="require2d"
+							maxlength="50"
+							placeHolder="minombre@domain.com" />
+						<p id="eUsername" class="help-block" data-msg="Introduzca la dirección de e-mail del nuevo usuario. " >
+							Introduzca la dirección de e-mail del nuevo usuario. {eUserName}
+						</p>
+					</div>
+
+					<div class="form-group {eResultClass}">
+						<p id="eResult" class="help-block" data-msg=" " >{eResult}</p>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button"
+						class="btn btn-default"
+						data-dismiss="modal" >Cancelar</button>
+					<button type="submit"	class="btn btn-primary" >Guardar</button>
+				</div>
+			</form>
+			<!-- Formulario fin -->
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

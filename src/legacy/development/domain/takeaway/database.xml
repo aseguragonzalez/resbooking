@@ -1,0 +1,654 @@
+<?xml version="1.0"?>
+<description>
+    <database name="db500249808" server="localhost" user="root"
+              password="BZX55C4v5" scheme="db500249808" />
+    <objects>
+
+        <object type="table" name="projects" entity="Project" >
+            <attribute name="id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="path" property ="Path" dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="date" property ="Date" dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="users" entity="User" >
+            <attribute name="id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="username" property ="Username"
+                       dataType="string" required="true" maxLength="50"
+                       columnType="normal"/>
+            <attribute name="password" property ="Password"
+                       dataType="string" required="true" maxLength="128"
+                       columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="services" entity="Service" >
+            <attribute name="id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50"
+                       columnType="normal"/>
+            <attribute name="path" property ="Path" dataType="string"
+                       required="true" maxLength="50"
+                       columnType="normal"/>
+            <attribute name="platform" property ="Platform"
+                       dataType="string" required="true" maxLength="200"
+                       columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="auth_view" entity="AuthEntity" >
+            <attribute name="idUser" property ="IdUser" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="idRole" property ="IdRole" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="username" property ="Username"
+                       dataType="string" required="true" maxLength="50"
+                       columnType="normal"/>
+            <attribute name="password" property ="Password"
+                       dataType="string" required="true" maxLength="128"
+                       columnType="normal"/>
+            <attribute name="rolename" property ="Role" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="svrname" property ="Service" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="idProject" property ="IdProject" dataType="int"
+                       required="true" columnType="normal"/>
+        </object>
+
+        <object type="table" name="project_filter" entity="ProjectInfo" >
+            <attribute name="id" property ="Id" dataType="int"
+                       required="true" columnType="pk-auto"/>
+            <attribute name="name" property ="Name" dataType="string"
+                       required="true" maxLength="50" columnType="normal"/>
+            <attribute name="description" property ="Description"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="path" property ="Path" dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="idService" property ="IdService" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="idUser" property ="IdUser" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="date" property ="Date" dataType="string"
+                       required="true" maxLength="500" columnType="normal"/>
+            <attribute name="username" property ="Username"
+                       dataType="string" required="true" maxLength="50"
+                       columnType="normal"/>
+            <attribute name="active" property ="Active" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="notifications" entity="Notification" >
+            <attribute name="notifications_id" property ="Id"
+                       dataType="int" required="true"
+                       columnType="pk-auto"/>
+            <attribute name="notifications_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_service" property ="Service"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_to" property ="To"
+                       dataType="string" required="true" maxLength="100"
+                       columnType="normal"/>
+            <attribute name="notifications_subject" property ="Subject"
+                       dataType="string" required="true" maxLength="500"
+                       columnType="normal"/>
+            <attribute name="notifications_header" property ="Header"
+                       dataType="string" required="true"
+                       columnType="normal"/>
+            <attribute name="notifications_content" property ="Content"
+                       dataType="string" required="true"
+                       columnType="normal"/>
+            <attribute name="notifications_date" property ="Date"
+                       dataType="string" required="true"
+                       columnType="normal"/>
+            <attribute name="notifications_dispatched"
+                       property ="Dispatched" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="view" name="notification_dtos" entity="NotificationDTO" >
+            <attribute name="notifications_id" property="Id" dataType="int"
+                       required="true" columnType="pk"/>
+            <attribute name="notifications_project" property="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_service" property="Service"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="notifications_to" property="_To" dataType="string"
+                       required="false" columnType="normal"/>
+            <attribute name="notifications_subject" property="_Subject"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notifications_content" property="Content"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notifications_dispatched" property="Dispatched"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="notification_config_subject" property="confSubject"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_subject_text"
+                       property="confSubjectText" dataType="string"
+                       required="false" columnType="normal"/>
+            <attribute name="notification_config_from" property="_From"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_to" property="confTo"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="notification_config_template"
+                       property="confTemplate" dataType="string"
+                       required="false" columnType="normal"/>
+            <attribute name="notification_config_state" property="confState"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_categories" entity="Category" >
+            <attribute name="ta_categories_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_categories_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_categories_parent" property ="Parent"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_categories_cod" property ="Code"
+                       dataType="string" required="false" maxlength="10"
+                       columnType="normal"/>
+            <attribute name="ta_categories_name" property ="Name"
+                       dataType="string" required="false" maxlength="100"
+                       columnType="normal"/>
+            <attribute name="ta_categories_desc" property ="Description"
+                       dataType="string" required="false" maxlength="500"
+                       columnType="normal"/>
+            <attribute name="ta_categories_xml" property ="Xml" dataType="text"
+                       required="false" maxlength="65535" columnType="normal"/>
+            <attribute name="ta_categories_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_categories_link" property ="Link"
+                       dataType="string" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_products" entity="Product" >
+            <attribute name="ta_products_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_products_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_products_category" property ="Category"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_products_refer" property ="Reference"
+                       dataType="string" required="false" maxlength="20"
+                       columnType="normal"/>
+            <attribute name="ta_products_name" property ="Name" dataType="string"
+                       required="false" maxlength="100" columnType="normal"/>
+            <attribute name="ta_products_link" property ="Link" dataType="string"
+                       required="false" maxlength="200" columnType="normal"/>
+            <attribute name="ta_products_desc" property ="Description"
+                       dataType="string" required="false" maxlength="500"
+                       columnType="normal"/>
+            <attribute name="ta_products_keywords" property ="Keywords"
+                       dataType="string" required="true" maxlength="150"
+                       columnType="normal"/>
+            <attribute name="ta_products_price" property ="Price"
+                       dataType="float" required="false" columnType="normal"/>
+            <attribute name="ta_products_attr" property ="Attr" dataType="text"
+                       required="true" maxlength="65535" columnType="normal"/>
+            <attribute name="ta_products_ord" property ="Ord" dataType="int"
+                       required="true" columnType="normal"/>
+            <attribute name="ta_products_state" property ="State" dataType="int"
+                       required="false" columnType="normal"/>
+            <attribute name="ta_products_visible" property ="Visible"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_gallery" entity="Image" >
+            <attribute name="ta_gallery_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_gallery_prod" property ="Product" dataType="int"
+                       required="false" columnType="fk"/>
+            <attribute name="ta_gallery_name" property ="Name" dataType="string"
+                       required="false" maxlength="45" columnType="normal"/>
+            <attribute name="ta_gallery_desc" property ="Description"
+                       dataType="string" required="true" maxlength="200"
+                       columnType="normal"/>
+            <attribute name="ta_gallery_path" property ="Path" dataType="string"
+                       required="false" maxlength="300" columnType="normal"/>
+            <attribute name="ta_gallery_date" property ="Date"
+                       dataType="datetime" required="true" columnType="normal"/>
+            <attribute name="ta_gallery_state" property ="State" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_product_suscribers"
+                entity="ProductSuscriber" >
+            <attribute name="ta_product_suscribers_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_product_suscribers_prod" property ="Product"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_product_suscribers_name" property ="SuscriberName"
+                       dataType="string" required="false" maxlength="100"
+                       columnType="normal"/>
+            <attribute name="ta_product_suscribers_email" property ="Email"
+                       dataType="string" required="false" maxlength="200"
+                       columnType="normal"/>
+            <attribute name="ta_product_suscribers_ip" property ="IP"
+                       dataType="string" required="true" maxlength="32"
+                       columnType="normal"/>
+            <attribute name="ta_product_suscribers_date" property ="CreateDate"
+                       dataType="string" required="false"
+                       columnType="normal"/>
+            <attribute name="ta_product_suscribers_delete" property ="DeleteDate"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_product_suscribers_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_comments" entity="Comment" >
+            <attribute name="ta_comments_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_comments_product" property ="Product"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_comments_title" property ="Title"
+                       dataType="string" required="false" maxlength="100"
+                       columnType="normal"/>
+            <attribute name="ta_comments_text" property ="Text"
+                       dataType="string" required="false" maxlength="500"
+                       columnType="normal"/>
+            <attribute name="ta_comments_author" property ="Author"
+                       dataType="string" required="true" maxlength="100"
+                       columnType="normal"/>
+            <attribute name="ta_comments_date" property ="Date"
+                       dataType="datetime" required="false"
+                       columnType="normal"/>
+            <attribute name="ta_comments_likes" property ="Likes" dataType="int"
+                       required="false" columnType="normal"/>
+            <attribute name="ta_comments_unlikes" property ="Unlikes"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_comments_state" property ="State" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_hist_prod" entity="HistProduct" >
+            <attribute name="ta_hist_prod_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_hist_prod_prod" property ="Product"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_hist_prod_json" property ="Json" dataType="text"
+                       required="true" maxlength="65535" columnType="normal"/>
+            <attribute name="ta_hist_prod_date" property ="Date"
+                       dataType="datetime" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_likes" entity="Likes" >
+            <attribute name="ta_likes_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_likes_product" property ="Product" dataType="int"
+                       required="false" columnType="fk"/>
+            <attribute name="ta_likes_value" property ="Count" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_visit_log" entity="Log" >
+            <attribute name="ta_visit_log_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_visit_log_product" property ="Product"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_visit_log_count" property ="Count" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_page_log" entity="PageLog" >
+            <attribute name="ta_page_log_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_page_log_ip" property ="IP" dataType="string"
+                       required="false" maxlength="32" columnType="normal"/>
+            <attribute name="ta_page_log_url" property ="Url" dataType="string"
+                       required="false" maxlength="100" columnType="normal"/>
+            <attribute name="ta_page_log_date" property ="Date" dataType="date"
+                       required="false" columnType="normal"/>
+            <attribute name="ta_page_log_count" property ="Count" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_newsletter" entity="Suscriber" >
+            <attribute name="ta_newsletter_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_newsletter_name" property ="SuscriberName"
+                       dataType="string" required="false" maxlength="45"
+                       columnType="normal"/>
+            <attribute name="ta_newsletter_email" property ="Email"
+                       dataType="string" required="false" maxlength="45"
+                       columnType="normal"/>
+            <attribute name="ta_newsletter_ip" property ="IP" dataType="string"
+                       required="true" maxlength="32" columnType="normal"/>
+            <attribute name="ta_newsletter_date" property ="CreateDate"
+                       dataType="datetime" required="false"
+                       columnType="normal"/>
+            <attribute name="ta_newsletter_active" property ="Active"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_newsletter_delete" property ="DeleteDate"
+                       dataType="datetime" required="true" columnType="normal"/>
+            <attribute name="ta_newsletter_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_request_workflow" entity="WorkFlow" >
+            <attribute name="ta_request_workflow_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_request_workflow_name" property ="Name"
+                       dataType="string" required="false" maxlength="45"
+                       columnType="normal"/>
+            <attribute name="ta_request_workflow_desc" property ="Description"
+                       dataType="string" required="true" maxlength="500"
+                       columnType="normal"/>
+            <attribute name="ta_request_workflow_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_request" entity="Request" >
+            <attribute name="ta_request_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_request_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_request_ticket" property ="Ticket"
+                       dataType="string" required="true" maxlength="45"
+                       columnType="normal"/>
+            <attribute name="ta_request_name" property ="Name" dataType="string"
+                       required="false" maxlength="200" columnType="normal"/>
+            <attribute name="ta_request_email" property ="Email"
+                       dataType="string" required="false" maxlength="100"
+                       columnType="normal"/>
+            <attribute name="ta_request_address" property ="Address"
+                       dataType="string" required="false" maxlength="500"
+                       columnType="normal"/>
+            <attribute name="ta_request_ip" property ="IP" dataType="string"
+                       required="true" maxlength="32" columnType="normal"/>
+            <attribute name="ta_request_date" property ="Date"
+                       dataType="datetime" required="false"
+                       columnType="normal"/>
+            <attribute name="ta_request_wf" property ="WorkFlow" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="ta_request_state" property ="State" dataType="int"
+                       required="false" columnType="normal"/>
+
+            <attribute name="ta_request_discount" property ="Discount"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_request_deliverymethod" property ="DeliveryMethod"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_request_paymentmethod" property ="PaymentMethod"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_request_deliverydate" property ="DeliveryDate"
+                       dataType="datetime" required="false" columnType="normal"/>
+            <attribute name="ta_request_deliverytime" property ="DeliveryTime"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_request_advertising" property ="Advertising"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_request_phone" property ="Phone"
+                       dataType="string" required="true" maxlength="15"
+                       columnType="normal"/>
+
+            <attribute name="ta_request_postcode" property ="PostCode"
+                       dataType="string" required="true" maxlength="6"
+                       columnType="normal"/>
+            <attribute name="ta_request_amount" property ="Amount"
+                       dataType="float" required="true" columnType="normal" />
+            <attribute name="ta_request_total" property ="Total"
+                       dataType="float" required="true" columnType="normal" />
+
+        </object>
+
+        <object type="table" name="ta_request_item" entity="RequestItem" >
+            <attribute name="ta_request_item_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_request_item_request" property ="Request"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_request_item_prod" property ="Product"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_request_item_count" property ="Count"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_request_item_data" property ="Data"
+                       dataType="string" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_discounton" entity="DiscountOn" >
+            <attribute name="ta_discounton_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_discounton_project" property ="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_discounton_service" property ="Service"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_discounton_value" property ="Value"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_discounton_min" property ="Min"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_discounton_max" property ="Max"
+                       dataType="int" required="false" columnType="normal"/>
+            <attribute name="ta_discounton_start" property ="Start"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_discounton_end" property ="End"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_discounton_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_discountonconfiguration"
+                entity="DiscountOnConfiguration" >
+            <attribute name="ta_discountonconfiguration_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_discountonconfiguration_discounton"
+                       property ="DiscountOn"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_discountonconfiguration_dayofweek"
+                       property ="DayOfWeek"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_discountonconfiguration_slotofdelivery"
+                       property ="SlotOfDelivery"
+                       dataType="int" required="false" columnType="fk"/>
+        </object>
+
+        <object type="table" name="ta_deliverymethods" entity="DeliveryMethod" >
+            <attribute name="ta_deliverymethods_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_deliverymethods_name" property ="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_deliverymethods_description" property ="Description"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_terms" property ="Terms"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_paymentmethods" entity="PaymentMethod" >
+            <attribute name="ta_paymentmethods_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_paymentmethods_name" property ="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_paymentmethods_description" property ="Description"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_shortname" property ="ShortName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_servicedeliverymethods"
+                entity="ServiceDeliveryMethod" >
+            <attribute name="ta_servicedeliverymethods_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_servicedeliverymethods_project" property="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_servicedeliverymethods_service" property="Service"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_servicedeliverymethods_deliverymethod"
+                       property ="DeliveryMethod" dataType="int"
+                       required="false" columnType="fk"/>
+        </object>
+
+        <object type="table" name="ta_servicepaymentmethods"
+                entity="ServicePaymentMethod" >
+            <attribute name="ta_servicepaymentmethods_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_servicepaymentmethods_project" property ="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_servicepaymentmethods_service" property ="Service"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_servicepaymentmethods_paymentmethod"
+                       property ="Paymentmethod" dataType="int"
+                       required="false" columnType="fk"/>
+        </object>
+
+        <object type="table" name="ta_daysofweek" entity="DayOfWeek" >
+            <attribute name="ta_daysofweek_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_daysofweek_name" property ="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_daysofweek_shortname" property ="ShortName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_daysofweek_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_daysofweek_numberofday" property ="NumberOfDay"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_hourofday" entity="HourOfDay" >
+            <attribute name="ta_hourofday_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_hourofday_text" property ="Text"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_hourofday_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_slotconfigured" entity="SlotConfigured" >
+            <attribute name="ta_slotconfigured_id" property ="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_slotconfigured_project" property ="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_slotconfigured_dayofweek" property ="DayOfWeek"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_slotconfigured_slotofdelivery"
+                       property ="SlotOfDelivery" dataType="int"
+                       required="true" columnType="fk"/>
+        </object>
+
+        <object type="table" name="ta_slotevents" entity="SlotEvent" >
+            <attribute name="ta_slotevents_id" property="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_slotevents_project" property="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_slotevents_slotofdelivery"
+                       property ="SlotOfDelivery" dataType="int"
+                       required="true" columnType="fk"/>
+            <attribute name="ta_slotevents_date" property="Date"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slotevents_open" property="Open" dataType="int"
+                       required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_slotofdelivery" entity="SlotOfDelivery" >
+            <attribute name="ta_slotofdelivery_id" property="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_slotofdelivery_project" property="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_slotofdelivery_name" property="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slotofdelivery_start" property="Start"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slotofdelivery_end" property ="End"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slotofdelivery_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_slotofdelivery_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+
+        <object type="view" name="ta_paymentmethods_dto" entity="PaymentMethodDTO" >
+            <attribute name="ta_paymentmethods_dto_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_paymentmethods_dto_name" property ="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_paymentmethods_dto_description" property ="Description"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_dto_shortname" property ="ShortName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_dto_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_paymentmethods_dto_project" property ="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_paymentmethods_dto_service" property ="Service"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_paymentmethods_dto_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="view" name="ta_deliverymethods_dto" entity="DeliveryMethodDTO" >
+            <attribute name="ta_deliverymethods_dto_id" property ="Id"
+                       dataType="int" required="false" columnType="pk-auto"/>
+            <attribute name="ta_deliverymethods_dto_name" property ="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_deliverymethods_dto_description" property ="Description"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_dto_terms" property ="Terms"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_dto_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_deliverymethods_dto_project" property="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_deliverymethods_dto_service" property="Service"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_deliverymethods_dto_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="view" name="ta_slots_dto" entity="SlotDTO" >
+            <attribute name="ta_slots_dto_id" property="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_slots_dto_name" property="Name"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slots_dto_start" property="Start"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slots_dto_end" property ="End"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_slots_dto_iconame" property ="IcoName"
+                       dataType="string" required="false" columnType="normal"/>
+            <attribute name="ta_slots_dto_project" property="Project"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_slots_dto_dayofweek" property ="DayOfWeek"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_slots_dto_state" property ="State"
+                       dataType="int" required="false" columnType="normal"/>
+        </object>
+
+        <object type="table" name="ta_servicepostcodes" entity="ServicePostCode" >
+            <attribute name="ta_servicepostcodes_id" property="Id" dataType="int"
+                       required="false" columnType="pk-auto"/>
+            <attribute name="ta_servicepostcodes_project" property="Project"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_servicepostcodes_service" property="Service"
+                       dataType="int" required="true" columnType="fk"/>
+            <attribute name="ta_servicepostcodes_code" property="Code"
+                       dataType="int" required="false" columnType="fk"/>
+            <attribute name="ta_servicepostcodes_postcode" property="PostCode"
+                       dataType="string" required="true" columnType="normal"/>
+            <attribute name="ta_servicepostcodes_full" property="Full"
+                       dataType="int" required="true" columnType="normal"/>
+        </object>
+
+    </objects>
+</description>

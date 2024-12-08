@@ -1,0 +1,85 @@
+@charset "utf-8";
+
+/********************************************************/
+html{
+    background-color:#000000;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+.iframe{
+    width: 100%;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    border:0;
+    margin-top: 50px;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+    background-color:#ffffff;
+}
+
+#wrap > .container {
+    padding: 60px 15px 0;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+    height: 60px;
+    padding:10px;
+    background-color:#000;
+    text-align:center;
+    width:100%;
+    color:#ffffff;
+}
+
+#footer p{
+    margin:10px 0;
+}
+
+#footer a{
+    color:#ffffff;
+    text-decoration:none;
+}
+
+#footer a:hover{
+    text-decoration:underline;
+}
+
+#places td:nth-child(2){
+    text-align:right;
+}
+
+#blocks td:nth-child(3){
+    text-align:right;
+}
+
+#wrap-iframe{
+    height: 100%;
+    width: 100%;
+    margin-top:50px;
+    padding-bottom:50px;
+    overflow: auto;
+}
+
+#footer-iframe{
+    padding:50px;
+}
+
+.badge[data-count='0']{
+    display: none;
+}
+
+.badge{
+    margin-left:5px;
+}

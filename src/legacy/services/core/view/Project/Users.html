@@ -1,0 +1,33 @@
+<!--Layout={_layout.html}-->
+<script type="text/javascript" src="{Resources}/scripts/js-core/jquery.projects.js" ></script>
+
+<div class="container">
+	<h3>Usuarios  - {Entity.Name}</h3>
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Usuario</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--Users-->
+				<tr>
+					<td>
+						<input type="checkbox"
+							data-project="{Entity.Id}"
+							data-user="{item.Id}"
+							data-url="{Path}/Project/"
+							onchange="setUserProject(this);"
+							name="users" />
+					</td>
+					<td>{item.Username}</td>
+				</tr>
+				<!--Users-->
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<input type="hidden" id="usersproject" value='{jsonUsers}' />
