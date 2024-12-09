@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Adapters\Models;
 
-readonly class Notification {
-
+readonly class Notification
+{
     public function __construct(
         public int $id,
         public int $idProject,
@@ -17,5 +17,4 @@ readonly class Notification {
         public string $date,
         public bool $dispatched,
     ) { }
-
 }

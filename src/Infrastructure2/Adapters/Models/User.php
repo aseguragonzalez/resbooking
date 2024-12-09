@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Adapters\Models;
 
-readonly class Service {
-
+readonly class User
+{
     public function __construct(
         public int $id,
-        public string $name,
-        public string $path,
-        public string $platform,
-        public string $description,
+        public string $username,
+        public string $password,
         public bool $active,
     ) { }
-
 }

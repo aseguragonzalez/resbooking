@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Adapters\Models;
 
-readonly class ProjectUser {
-
+readonly class ProjectService
+{
     public function __construct(
         public int $id,
         public int $idProject,
-        public int $idUser,
+        public int $idService,
     ) { }
-
 }
