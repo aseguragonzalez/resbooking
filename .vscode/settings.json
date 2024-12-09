@@ -1,11 +1,11 @@
 {
   "phpunit.args": [
     "-c",
-    "${workspaceFolder}/services/api/phpunit.xml"
+    "${workspaceFolder}/tests/phpunit.xml"
   ],
   "phpunit.paths": {
-    "${workspaceFolder}": "${workspaceFolder}/services/api"
+    "${workspaceFolder}": "${workspaceFolder}"
   },
   "phpunit.php": "php",
-  "phpunit.phpunit": "${workspaceFolder}/services/api/vendor/bin/phpunit"
+  "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit"
 }

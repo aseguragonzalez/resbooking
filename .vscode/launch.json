@@ -9,7 +9,7 @@
     {
       "args": [
         "--configuration",
-        "${workspaceFolder}/services/api/phpunit.xml"
+        "${workspaceFolder}/tests/phpunit.xml"
       ],
       "cwd": "${workspaceFolder}",
       "env": {
@@ -18,12 +18,12 @@
       },
       "name": "Debug All Tests",
       "port": 9000,
-      "program": "${workspaceFolder}/services/api/vendor/bin/phpunit",
+      "program": "${workspaceFolder}/vendor/bin/phpunit",
       "request": "launch",
       "type": "php"
     },
     {
-      "cwd": "${workspaceRoot}/services/api",
+      "cwd": "${workspaceRoot}",
       "name": "Run API",
       "port": 9003,
       "program": "",
@@ -44,7 +44,7 @@
       "type": "php"
     },
     {
-      "cwd": "${workspaceRoot}/services/api",
+      "cwd": "${workspaceRoot}",
       "env": {
         "XDEBUG_CONFIG": "client_port=${port}",
         "XDEBUG_MODE": "debug,develop,profile,trace"

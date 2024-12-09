@@ -1,0 +1,23 @@
+{
+  "authors": [
+    {
+      "email": "a.segura.gonzalez@gmail.com",
+      "name": "Alfonso Segura"
+    }
+  ],
+  "autoload": {
+    "classmap": [
+      "src/"
+    ],
+    "psr-4": {
+      "Vscode\\Workspace\\": "src/"
+    }
+  },
+  "license": "MIT",
+  "name": "vscode/workspace",
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "type": "project"
+}
