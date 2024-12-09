@@ -1,26 +1,15 @@
 <?php
 
-    /**
-     * Entidad tipo de notificación
-     */
-    class NotificationType{
+declare(strict_types=1);
 
-        /**
-         * Identidad del tipo de notificación
-         * @var int Identidad del tipo de notificación
-         */
-        public $Id = 0;
+namespace App\Infrastructure\Adapters\Models;
 
-        /**
-         * Nombre del tipo de notificación
-         * @var string Nombre del tipo
-         */
-        public $Name = "";
+readonly class NotificationType {
 
-        /**
-         * Descripción de la notificación
-         * @var string Descripción breve sobre el uso del tipo
-         */
-        public $Description = "";
+    public function __construct(
+        public int $id,
+        public string $name,
+        public string $description,
+    ) { }
 
-    }
+}

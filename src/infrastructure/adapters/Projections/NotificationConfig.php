@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Projections;
 
 readonly class NotificationConfig {
 
     public function __construct(
         public int $id,
         public int $idProject,
+        public string $ProjectName,
         public int $idService,
+        public string $serviceName,
         public string $subject,
         public string $text,
         public string $from,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Projections;
 
 readonly class Notification {
 
@@ -12,10 +12,14 @@ readonly class Notification {
         public int $idService,
         public string $to,
         public string $subject,
-        public string $header,
         public string $content,
-        public string $date,
-        public bool $dispatched,
+        public int $attempts,
+        public string $confSubject,
+        public string $confSubjectText,
+        public string $from,
+        public string $confTo,
+        public string $confTemplate,
+        public bool $confState,
     ) { }
 
 }
