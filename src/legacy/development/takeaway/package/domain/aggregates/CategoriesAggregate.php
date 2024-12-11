@@ -36,12 +36,12 @@ class CategoriesAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Category = new \Category();
     }
 

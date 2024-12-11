@@ -105,11 +105,11 @@
         </object>
 
         <object type="table" name="auth_view" entity="AuthEntity" >
-            <attribute name="idUser" property ="IdUser" dataType="int"
+            <attribute name="userId" property ="IdUser" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idRole" property ="IdRole" dataType="int"
+            <attribute name="roleId" property ="IdRole" dataType="int"
                        required="true" columnType="normal"/>
             <attribute name="username" property ="Username"
                        dataType="string" required="true" maxLength="50"
@@ -121,7 +121,7 @@
                        required="true" maxLength="50" columnType="normal"/>
             <attribute name="svrname" property ="Service" dataType="string"
                        required="true" maxLength="50" columnType="normal"/>
-            <attribute name="idProject" property ="IdProject" dataType="int"
+            <attribute name="projectId" property ="IdProject" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 
@@ -135,9 +135,9 @@
                        columnType="normal"/>
             <attribute name="path" property ="Path" dataType="string"
                        required="true" maxLength="500" columnType="normal"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="fk"/>
-            <attribute name="idUser" property ="IdUser" dataType="int"
+            <attribute name="userId" property ="IdUser" dataType="int"
                        required="true" columnType="fk"/>
             <attribute name="date" property ="Date" dataType="string"
                        required="true" maxLength="500" columnType="normal"/>

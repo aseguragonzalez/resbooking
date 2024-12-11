@@ -76,12 +76,12 @@ class ZapperController extends \ResbookingController{
     public function RequiredPrePay(){
         try{
             $request = $_REQUEST;
-            $idProject = isset($request["project"]) ? $request["project"] : 0;
+            $projectId = isset($request["project"]) ? $request["project"] : 0;
             $idOffer = isset($request["offer"]) ? $request["offer"] : 0;
             $diners = isset($request["diners"]) ? $request["diners"] : 0;
             $date = isset($request["date"]) ? $request["date"] : "--";
             $dal = new \ZapperDAL();
-            $result = $dal->RequiredPrePay($idProject, $idOffer, $diners, $date);
+            $result = $dal->RequiredPrePay($projectId, $idOffer, $diners, $date);
             $resultDTO = [
                 "Amount" => $result,
                 "Error" => FALSE ,

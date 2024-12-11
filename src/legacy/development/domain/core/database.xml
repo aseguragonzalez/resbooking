@@ -61,38 +61,38 @@
         <object type="table" name="project_services" entity="ProjectServices" >
             <attribute name="id" property ="Id" dataType="int" required="true"
                        columnType="pk-auto"/>
-            <attribute name="idProject" property ="IdProject" dataType="int"
+            <attribute name="projectId" property ="IdProject" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 
         <object type="table" name="service_roles" entity="ServiceRole" >
             <attribute name="id" property ="Id" dataType="int" required="true"
                        columnType="pk-auto"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idRole" property ="IdRole" dataType="int"
+            <attribute name="roleId" property ="IdRole" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 
         <object type="table" name="project_users" entity="ProjectUsers" >
             <attribute name="id" property ="Id" dataType="int" required="true"
                        columnType="pk-auto"/>
-            <attribute name="idProject" property ="IdProject" dataType="int"
+            <attribute name="projectId" property ="IdProject" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idUser" property ="IdUser" dataType="int"
+            <attribute name="userId" property ="IdUser" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 
         <object type="table" name="user_role_service" entity="UserRoleService" >
             <attribute name="id" property ="Id" dataType="int" required="true"
                        columnType="pk-auto"/>
-            <attribute name="idUser" property ="IdUser" dataType="int"
+            <attribute name="userId" property ="IdUser" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idRole" property ="IdRole" dataType="int"
+            <attribute name="roleId" property ="IdRole" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 
@@ -100,13 +100,13 @@
                 entity="UserRoleServiceProject" >
             <attribute name="id" property ="Id" dataType="int" required="true"
                        columnType="pk-auto"/>
-            <attribute name="idUser" property ="IdUser" dataType="int"
+            <attribute name="userId" property ="IdUser" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idService" property ="IdService" dataType="int"
+            <attribute name="serviceId" property ="IdService" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idRole" property ="IdRole" dataType="int"
+            <attribute name="roleId" property ="IdRole" dataType="int"
                        required="true" columnType="normal"/>
-            <attribute name="idProject" property ="IdProject" dataType="int"
+            <attribute name="projectId" property ="IdProject" dataType="int"
                        required="true" columnType="normal"/>
         </object>
 

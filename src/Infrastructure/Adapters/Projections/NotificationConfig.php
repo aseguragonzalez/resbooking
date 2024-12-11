@@ -8,9 +8,9 @@ readonly class NotificationConfig
 {
     public function __construct(
         public int $id,
-        public int $idProject,
+        public int $projectId,
         public string $ProjectName,
-        public int $idService,
+        public int $serviceId,
         public string $serviceName,
         public string $subject,
         public string $text,

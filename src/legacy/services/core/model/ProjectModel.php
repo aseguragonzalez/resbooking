@@ -353,13 +353,13 @@ class ProjectModel extends CoreModel{
     ///<summary>
     /// Obtiene los servicios y las asociaciones con el proyecto
     ///</summary>
-    public function LoadServices($idProject = 0){
+    public function LoadServices($projectId = 0){
             // Cargar la información de proyecto
-            $project = $this->Read($idProject);
+            $project = $this->Read($projectId);
             // Cargar los servicios activos
             $this->Services = $this->Dao->GetByFilter( "Service", array( "Active" => 1));
             // Cargar los servicios asociados al proyecto
-            $services = $this->Dao->GetByFilter( "ProjectServices", array( "IdProject" => $idProject ));
+            $services = $this->Dao->GetByFilter( "ProjectServices", array( "IdProject" => $projectId ));
             // Serializar las relaciones
             if($services != null && count($services) > 0 )
                     $this->jsonServices = json_encode($services);
@@ -397,13 +397,13 @@ class ProjectModel extends CoreModel{
     ///<summary>
     /// Obtiene los usuarios del sistema y las asociaciones con el proyecto
     ///</summary>
-    public function LoadUsers($idProject = 0){
+    public function LoadUsers($projectId = 0){
             // Cargar la información de proyecto
-            $project = $this->Read($idProject);
+            $project = $this->Read($projectId);
             // Cargar los servicios activos
             $this->Users = $this->Dao->GetByFilter( "User", array( "Active" => 1));
             // Cargar los servicios asociados al proyecto
-            $users = $this->Dao->GetByFilter( "ProjectUsers", array( "IdProject" => $idProject ));
+            $users = $this->Dao->GetByFilter( "ProjectUsers", array( "IdProject" => $projectId ));
             // Serializar las relaciones
             if($users != null && count($users) > 0 )
                     $this->jsonUsers = json_encode($users);

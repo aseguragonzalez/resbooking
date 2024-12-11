@@ -8,7 +8,7 @@ readonly class ProjectService
 {
     public function __construct(
         public int $id,
-        public int $idProject,
-        public int $idService,
+        public int $projectId,
+        public int $serviceId,
     ) { }
 }

@@ -7,10 +7,10 @@ namespace App\Infrastructure\Adapters\Projections;
 readonly class Authentication
 {
     public function __construct(
-        public int $idProject,
-        public int $idRole,
-        public int $idService,
-        public int $idUser,
+        public int $projectId,
+        public int $roleId,
+        public int $serviceId,
+        public int $userId,
         public string $username,
         public string $password,
         public string $role,

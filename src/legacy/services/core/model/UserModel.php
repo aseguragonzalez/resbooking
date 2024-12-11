@@ -139,11 +139,11 @@ class UserModel extends \CoreModel{
     ///<summary>
     /// Cargar los proyectos asociados al usuario
     ///</summary>
-    private function LoadUserProjects( $idUser = 0 ){
+    private function LoadUserProjects( $userId = 0 ){
             // Cargar la lista de proyectos disponibles
             $projects = $this->Dao->GetByFilter( "Project", array( "Active" => 1));
             // Cargar la lista de proyectos asociados al usuario
-            $userProjects = $this->Dao->GetByFilter( "ProjectUsers" , array( "IdUser" => $idUser ));
+            $userProjects = $this->Dao->GetByFilter( "ProjectUsers" , array( "IdUser" => $userId ));
             // Cargar proyectos asociados
             foreach($userProjects as $userproject){
                     // Buscar proyecto
@@ -156,7 +156,7 @@ class UserModel extends \CoreModel{
     ///<summary>
     /// Realiza la carga de todas las entidades de bbdd necesarias
     ///</summary>
-    private function LoadEntities($idProject = 0, $idUser = 0){
+    private function LoadEntities($projectId = 0, $userId = 0){
             // Cargar la lista de servicios disponibles
             $this->Services = $this->Dao->GetByFilter( "Service", array( "Active" => 1));
             // Serializar servicios
@@ -169,9 +169,9 @@ class UserModel extends \CoreModel{
             // Cargar la lista de las asociaciones de servicios y roles disponibles
             $this->ServiceRoles = $this->Dao->Get( "ServiceRole" );
             // Buscar los registros de asociación de proyectos con servicios
-            $this->ProjectServices = $this->Dao->GetByFilter( "ProjectServices"  , array( "IdProject" => $idProject ));
+            $this->ProjectServices = $this->Dao->GetByFilter( "ProjectServices"  , array( "IdProject" => $projectId ));
             // Filtro de busqueda
-            $filter = array( "IdUser" => $idUser , "IdProject" => $idProject);
+            $filter = array( "IdUser" => $userId , "IdProject" => $projectId);
             // Obtener la lista de asociaciones user-role-service
             $this->UserRoleServiceProject = $this->Dao->GetByFilter( "UserRoleServiceProject" , $filter);
 
@@ -242,18 +242,18 @@ class UserModel extends \CoreModel{
     ///<summary>
     /// Método que carga las dependencias del formulario de usuario
     ///</summary>
-    public function LoadRelationsForm($idUser = 0, $idProject = 0){
+    public function LoadRelationsForm($userId = 0, $projectId = 0){
             // Establecer proyecto seleccionado
-            $this->IdProject = $idProject;
+            $this->IdProject = $projectId;
             // Cargar los datos de usuario
-            $this->Read($idUser);
+            $this->Read($userId);
             // Cargar proyectos
-            $this->LoadUserProjects($idUser);
+            $this->LoadUserProjects($userId);
             // Cargar un proyecto por defecto si hay
-            if($idProject == 0 && count($this->Projects) > 0)
-                    $idProject = $this->Projects[0]->Id;
+            if($projectId == 0 && count($this->Projects) > 0)
+                    $projectId = $this->Projects[0]->Id;
             // Carga todas las dependencias de base de datos
-            $this->LoadEntities($idProject, $idUser);
+            $this->LoadEntities($projectId, $userId);
     }
 
     ///<summary>

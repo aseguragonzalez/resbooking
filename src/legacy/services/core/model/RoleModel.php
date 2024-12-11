@@ -213,11 +213,11 @@ class RoleModel extends \CoreModel{
     ///<summary>
     /// Método que crea una asociación entre un servicio y un role
     ///</summary>
-    public function AddService($idRole = 0, $idService = 0){
+    public function AddService($roleId = 0, $serviceId = 0){
             // Instanciar entidad de relación
             $entity = new ServiceRole();
-            $entity->IdRole = $idRole;
-            $entity->IdService = $idService;
+            $entity->IdRole = $roleId;
+            $entity->IdService = $serviceId;
             // Persistir
             $this->Dao->Create($entity);
             return $entity;
@@ -226,9 +226,9 @@ class RoleModel extends \CoreModel{
     ///<summary>
     /// Método que elimina la/s asociación/es entre un servicio y un role
     ///</summary>
-    public function RemoveService($idRole = 0, $idService = 0){
+    public function RemoveService($roleId = 0, $serviceId = 0){
             // Definir el filtro de búsqueda
-            $filter = array( "IdRole" => $idRole, "IdService" => $idService );
+            $filter = array( "IdRole" => $roleId, "IdService" => $serviceId );
             // Obtener todas las posibles relaciones entre Servicio y rol
             $result = $this->Dao->GetByFilter( "ServiceRole" , $filter);
             // Eliminar cada relación
@@ -236,7 +236,7 @@ class RoleModel extends \CoreModel{
                     $this->Dao->Delete($entity->Id, "ServiceRole" );
 
             // Definir el filtro
-            $filter = array( "IdRole" => $idRole, "IdService" => $idService );
+            $filter = array( "IdRole" => $roleId, "IdService" => $serviceId );
             // Obtener todas las posibles relaciones entre Servicio, rol y usuario
             $result = $this->Dao->GetByFilter( "UserRoleService" , $filter);
             // Eliminar cada relación

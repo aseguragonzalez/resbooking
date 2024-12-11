@@ -12,8 +12,8 @@ readonly class Project
         public string $description,
         public string $path,
         public string $date,
-        public int $idService,
-        public int $idUser,
+        public int $serviceId,
+        public int $userId,
         public string $username,
         public bool $active,
     ) { }

@@ -64,8 +64,8 @@ class ZapperDAL{
         $this->_proxy = ZapperClientWebService::GetInstance();
     }
 
-    public function RequiredPrePay($idProject = 0, $idOffer = -1, $diners = -1, $date = null){
-        $filter = ["ProjectId" => $idProject ];
+    public function RequiredPrePay($projectId = 0, $idOffer = -1, $diners = -1, $date = null){
+        $filter = ["ProjectId" => $projectId ];
         $lst = $this->_dao->GetByFilter("ZapperOfferConfiguration", $filter);
         if(count($lst) > 0){
             $items = array_filter($lst, function ($item)

@@ -6593,12 +6593,12 @@ class BaseLineAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Slot = new \SlotConfigured();
     }
 
@@ -6650,12 +6650,12 @@ class CategoriesAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Category = new \Category();
     }
 
@@ -6717,12 +6717,12 @@ class DiscountsAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Discount = new \DiscountDTO();
     }
 
@@ -6798,12 +6798,12 @@ class EventsAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Event = new \SlotEvent();
     }
 
@@ -6904,12 +6904,12 @@ class OrderAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
     }
 
     /**
@@ -6976,12 +6976,12 @@ class ProductsAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Product = new \Product();
     }
 
@@ -7076,12 +7076,12 @@ class RequestsAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Request = new \Request();
         $this->ProjectInformation = new \ProjectInformation();
     }
@@ -7144,12 +7144,12 @@ class SlotsOfDeliveryAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->Slot = new \SlotOfDelivery();
     }
 
@@ -7233,12 +7233,12 @@ class ConfigurationAggregate extends \BaseAggregate{
 
     /**
      * Constructor
-     * @param int $idProject Identidad del proyecto
-     * @param int $idService Identidad del servicio
+     * @param int $projectId Identidad del proyecto
+     * @param int $serviceId Identidad del servicio
      */
-    public function __construct($idProject = 0, $idService = 0) {
-        $this->IdProject = $idProject;
-        $this->IdService = $idService;
+    public function __construct($projectId = 0, $serviceId = 0) {
+        $this->IdProject = $projectId;
+        $this->IdService = $serviceId;
         $this->ProjectInfo = new \ProjectInformation();
     }
 

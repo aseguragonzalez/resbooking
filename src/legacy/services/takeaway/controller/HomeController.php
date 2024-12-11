@@ -63,11 +63,11 @@ class HomeController extends \TakeawayController{
             // Comprobamos si se ha seleccionado un proyecto del desplegable
             $projectInfo = $this->GetEntity( "ProjectInfo" );
 
-            $idProject = (isset($id) && $id > 0)
+            $projectId = (isset($id) && $id > 0)
                     ? $id : $projectInfo->Id;
 
             // Configurar el proyecto seleccionado
-            return ($model->SetCurrent($idProject) == TRUE)
+            return ($model->SetCurrent($projectId) == TRUE)
                 ? $this->RedirectTo( "Index" , "Requests" )
                     :$this->RedirectTo( "Index" , "Home" );
 

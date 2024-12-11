@@ -8,7 +8,7 @@ readonly class ServiceRole
 {
     public function __construct(
         public int $id,
-        public int $idService,
-        public int $idRole,
+        public int $serviceId,
+        public int $roleId,
     ) { }
 }
