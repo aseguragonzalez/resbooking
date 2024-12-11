@@ -1,34 +1,18 @@
 <?php
 
-/*
- * Copyright (C) 2015 alfonso
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+declare(strict_types=1);
 
-/**
- * Implementación para la capa de infraestructura en la gestión de reservas
- *
- * @author alfonso
- */
-class BookingRepository extends \BaseRepository implements \IBookingRepository{
+namespace App\Infrastructure\Adapters\Repositories;
 
+use App\Domain\Booking\BookingRepository;
+
+final class MySQLBookingRepository extends BaseRepository implements BookingRepository
+{
     /**
      * Referencia a la clase base
      * @var \BookingRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -46,7 +30,7 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
      * @return \BookingRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(BookingRepository::$_reference == NULL){
+        if(BookingRepository::$_reference == null){
             BookingRepository::$_reference =
                     new \BookingRepository($project, $service);
         }
@@ -101,7 +85,7 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
      * @param boolean $advertising Flag para indicar si el cliente quiere publicidad
      * @return int Identidad del cliente
      */
-    public function GetClient($entity = NULL, $advertising = FALSE){
+    public function GetClient($entity = null, $advertising = false){
         $filter = ["Project" => $entity->Project ];
         // Buscar el registro de cliente
         if(empty($entity->Email)){
@@ -111,9 +95,9 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
             $filter["Email"] = "%$entity->Email%";
         }
         $clients = $this->Dao->GetByFilter( "Client", $filter);
-        $client = (empty($clients)) ? NULL : $clients[0];
+        $client = (empty($clients)) ? null : $clients[0];
         // Crear el registro si no existe
-        if($client == NULL){
+        if($client == null){
             $client = new \Client();
             $client->Project = $entity->Project;
             $client->Name = $entity->ClientName;
@@ -123,7 +107,7 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
             $client->Id = $this->Dao->Create($client);
         }
         else{
-            if($client->Advertising == FALSE){
+            if($client->Advertising == false){
                 $client->Advertising = $advertising;
                 $this->Dao->Update($client);
             }
@@ -137,10 +121,10 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
      * @param string $subject Asunto de la notificación
      * @return boolean Resultado del registro
      */
-    public function CreateNotification($entity = NULL, $subject = ""){
-        if($entity != NULL) {
+    public function CreateNotification($entity = null, $subject = ""){
+        if($entity != null) {
             $bookingDTO = $this->Read("BookingNotificationDTO", $entity->Id);
-            if($bookingDTO != NULL){
+            if($bookingDTO != null){
                 $date = new \DateTime($bookingDTO->Date);
                 $bookingDTO->ClientName = $bookingDTO->Name;
                 $bookingDTO->Date = strftime("%A %d de %B del %Y",$date->getTimestamp());
@@ -154,7 +138,7 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
                 return $this->RegisterNotification($bookingDTO, $subject);
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -164,8 +148,8 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
      * @param string $subject Asunto de la notificación
      * @return boolean Resultado del registro
      */
-    private function RegisterNotification($entity = NULL, $subject = ""){
-        if($entity != NULL && is_object($entity)){
+    private function RegisterNotification($entity = null, $subject = ""){
+        if($entity != null && is_object($entity)){
             $date = new \DateTime( "NOW" );
             $dto = new \Notification();
             $dto->Project = $this->IdProject;
@@ -182,9 +166,9 @@ class BookingRepository extends \BaseRepository implements \IBookingRepository{
             $entity->Ticket = $this->GetTicket("", $entity);
             $dto->Content = json_encode($entity);
             $this->Dao->Create( $dto );
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
