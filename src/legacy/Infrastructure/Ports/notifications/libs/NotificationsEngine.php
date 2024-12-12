@@ -13,19 +13,19 @@ class NotificationsEngine {
      * Referencia a la instancia actual del motor de notificaciones
      * @var \NotificationsEngine
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al gestor de trazas
      * @var \ILogManager
      */
-    private $_log = NULL;
+    private $_log = null;
 
     /**
      * Referencia al objeto de acceso a datos
      * @var \IDataAccessObject
      */
-    private $_dao = NULL;
+    private $_dao = null;
 
     /**
      * Cabecera SMTP estándar para los envíos de notificaciones
@@ -45,16 +45,16 @@ class NotificationsEngine {
      * @param \ILogManager $log Referencia al gestor de trazas
      * @throws Exception Excepción generada por error en los parámetros del constructor
      */
-    private function __construct($dao = NULL, $log = NULL) {
+    private function __construct($dao = null, $log = null) {
 
-        if($dao != NULL && $dao instanceof \IDataAccessObject){
+        if($dao != null && $dao instanceof \IDataAccessObject){
             $this->_dao = $dao;
         }
         else{
             throw new Exception("IDataAccessObject reference fail");
         }
 
-        if($log != NULL && $log instanceof \ILogManager){
+        if($log != null && $log instanceof \ILogManager){
             $this->_log = $log;
         }
         else{
@@ -105,7 +105,7 @@ class NotificationsEngine {
             // Decodificar dto de información para la notificación
             $object = $this->decodeObject($dto->Id, $dto->Content);
             // Validaro los parámetros
-            if($template === FALSE || $object === NULL){
+            if($template === false || $object === null){
                 $this->_log->LogError("Error en la plantilla o el objeto. Id: $dto->Id");
                 continue;
             }
@@ -113,7 +113,7 @@ class NotificationsEngine {
             $enviado = $this->sendNotification($dto->Id, $to, $subject,
                     $template, $object, $headers);
 
-            if($enviado == TRUE){
+            if($enviado == true){
                 $enviados++;
             }
         }
@@ -131,8 +131,8 @@ class NotificationsEngine {
      * @param string $headers Cabeceras SMTP
      */
     private function sendNotification($id = 0, $to = "", $subject = "",
-            $template = "", $object = NULL, $headers = ""){
-        $result = FALSE;
+            $template = "", $object = null, $headers = ""){
+        $result = false;
         // Generar contenido del mensaje
         $content = $this->replaceObject($template, $object);
         // Obtener el registro del envío para actualizar
@@ -140,13 +140,13 @@ class NotificationsEngine {
         $dto->_To = $dto->To;
         $dto->_Subject = $dto->Subject;
         // Realizar envío del mensaje
-        if(mail($to, $subject, $content, $headers) != FALSE){
+        if(mail($to, $subject, $content, $headers) != false){
             $dto->Dispatched += 1;
             $subjects = ["create-user", "reset-password"];
             if(in_array($dto->_Subject, $subjects)){
                 $dto->Content = "";
             }
-            $result = TRUE;
+            $result = true;
         }
         else{
             $msg = "-";
@@ -171,7 +171,7 @@ class NotificationsEngine {
      * @param string $tag Etiqueta utilizada
      * @return string Contenido actualizado
      */
-    private function replaceArray($template = "", $arr = NULL, $tag = ""){
+    private function replaceArray($template = "", $arr = null, $tag = ""){
         $result = "";
         foreach($arr as $item){
             if(is_object($item)){
@@ -194,7 +194,7 @@ class NotificationsEngine {
      * @param string $tag Etiqueta utilizada
      * @return string Contenido actualizado
      */
-    public function replaceObject($template = "", $object = NULL, $tag = ""){
+    public function replaceObject($template = "", $object = null, $tag = ""){
         settype($object, "array");
         foreach($object as $name => $value){
             if(is_object($value)){
@@ -229,13 +229,13 @@ class NotificationsEngine {
         // Buscamos la primera aparición de la subcadena $name en $content
         $start = strpos($template, $name);
         // Comprobar Si se ha encontrado la posición inicial
-        if($start === FALSE){
+        if($start === false){
             return $result;
         }
         // Buscamos si hay una segunda aparición
         $end = strpos($template , $name, ($start + 1));
         // Comprobar Si se ha encontrado la posición final
-        if($end === FALSE){
+        if($end === false){
             return $result;
         }
         // Extraer la subcadena del patrón
@@ -252,7 +252,7 @@ class NotificationsEngine {
         // Decodificar el contenido
         $template = base64_decode($base64Template);
         // Validar la operación
-        if($template === FALSE){
+        if($template === false){
             // Generar traza de error
             $this->_log->LogError("Plantilla no decodificable, id: $id");
         }
@@ -269,7 +269,7 @@ class NotificationsEngine {
         // Decodificar objeto
         $obj = json_decode($json);
         // Logear error si procede
-        $this->logJsonError($id, FALSE);
+        $this->logJsonError($id, false);
         // Retornar resultado
         return $obj;
     }
@@ -279,7 +279,7 @@ class NotificationsEngine {
      * @param int $id Identidad del registro
      * @param boolean $encode Flag para indicar si se trata de codificación o decodificación
      */
-    private function logJsonError($id = 0, $encode =  TRUE){
+    private function logJsonError($id = 0, $encode =  true){
         $error = json_last_error();
         $message = ($encode) ? "Se ha producido un error al codificar: "
                 : "Se ha producido un error al decodificar (id: $id) : ";
@@ -317,8 +317,8 @@ class NotificationsEngine {
      * @param \ILogManager $log Referencia al gestor de trazas
      * @return \NotificationsEngine Referencia a la instancia actual del motor
      */
-    public static function GetInstance($dao = NULL, $log = NULL){
-        if(NotificationsEngine::$_reference == NULL){
+    public static function GetInstance($dao = null, $log = null){
+        if(NotificationsEngine::$_reference == null){
             NotificationsEngine::$_reference =
                     new \NotificationsEngine($dao, $log);
         }

@@ -14,19 +14,19 @@ class ConfigurationServices  extends \BaseServices
      * Referencia
      * @var \IConfigurationServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IConfigurationRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \ConfigurationAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -38,11 +38,11 @@ class ConfigurationServices  extends \BaseServices
      * Constructor
      * @param \ConfigurationAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = ConfigurationRepository
+        $this->repository = ConfigurationRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -50,10 +50,10 @@ class ConfigurationServices  extends \BaseServices
      * Proceso de validación de la información del proyecto para la impresión
      * de tickets
      * @param \ProjectInformation $dto Referencia a la información del proyecto
-     * @return TRUE|array Colección de códigos de validación
+     * @return true|array Colección de códigos de validación
      */
-    public function ValidateInfo($dto = NULL){
-        if($dto != NULL){
+    public function ValidateInfo($dto = null){
+        if($dto != null){
             $this->ValidateTitleInfo($dto->Title);
             $this->ValidateCIFInfo($dto->CIF);
             $this->ValidateAddressInfo($dto->Address);
@@ -64,7 +64,7 @@ class ConfigurationServices  extends \BaseServices
             $this->Result[] = -1;
         }
 
-        return count($this->Result) == 0 ? TRUE : $this->Result;
+        return count($this->Result) == 0 ? true : $this->Result;
     }
 
     public function ValidateTitleInfo($title = ""){
@@ -77,7 +77,7 @@ class ConfigurationServices  extends \BaseServices
         if(empty($cif)){
             $this->Result[] = -3;
         }
-        else if(strlen($cif) > 15){
+        elseif(strlen($cif) > 15){
             $this->Result[] = -4;
         }
     }
@@ -92,7 +92,7 @@ class ConfigurationServices  extends \BaseServices
         if(empty($phone)){
             $this->Result[] = -6;
         }
-        else if(strlen($phone) > 15){
+        elseif(strlen($phone) > 15){
             $this->Result[] = -7;
         }
     }
@@ -101,7 +101,7 @@ class ConfigurationServices  extends \BaseServices
         if(empty($email)){
             $this->Result[] = -8;
         }
-        else if(strlen($email) > 200){
+        elseif(strlen($email) > 200){
             $this->Result[] = -9;
         }
     }
@@ -111,8 +111,8 @@ class ConfigurationServices  extends \BaseServices
      * @param \CategoriesAggregate Referencia al agregado actual
      * @return \IConfigurationServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(ConfigurationServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(ConfigurationServices::$_reference == null){
             ConfigurationServices::$_reference = new \ConfigurationServices($aggregate);
         }
         return ConfigurationServices::$_reference;

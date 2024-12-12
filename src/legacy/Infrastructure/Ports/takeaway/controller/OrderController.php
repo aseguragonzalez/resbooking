@@ -50,7 +50,7 @@ class OrderController extends \TakeawayController{
             // Obtener los datos del pedido
             $dto = $this->GetEntity("OrderDTO");
 
-            if($model->Save($dto)== TRUE){
+            if($model->Save($dto)== true){
                 return $this->Partial("Saved", $model);
             }
             else{
@@ -76,7 +76,7 @@ class OrderController extends \TakeawayController{
             $entity instanceof \OrderDTO;
             $date = new DateTime("NOW");
             $entity->IP =  $_SERVER['REMOTE_ADDR'];
-            $entity->Advertising = isset($_REQUEST["Advertising"]) ? TRUE : NULL;
+            $entity->Advertising = isset($_REQUEST["Advertising"]) ? true : null;
             $entity->Date = $date->format("Y-m-d h:i:s");
             $entity->DeliveryDate = $date->format("Y-m-d");
             $entity->Amount = number_format($entity->Amount, 2);

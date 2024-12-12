@@ -14,13 +14,13 @@ interface IEventsServices{
      * @param \EventsAggregate Referencia al agregado actual
      * @return \IEventsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Proceso de validación de la entidad
      * @param \SlotEvent $entity Referencia a la entidad
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL);
+    public function Validate($entity = null);
 }

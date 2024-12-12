@@ -7,7 +7,7 @@ $current = getcwd();
 if(strpos($current, "/pro/") > -1){
     $entorno = "http://des-admin.resbooking.es";
 }
-else if(strpos($current, "/pre/") > -1){
+elseif(strpos($current, "/pre/") > -1){
     $entorno = "http://des-admin.resbooking.es";
 }
 else{

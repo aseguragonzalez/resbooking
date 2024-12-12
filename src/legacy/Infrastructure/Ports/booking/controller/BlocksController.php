@@ -20,7 +20,7 @@ class BlocksController extends \ResbookingController{
     public function __construct(){
         // Indicamos al constructor que para todas las acciones
         // es necesario que esté contextualizado un proyecto
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -58,8 +58,8 @@ class BlocksController extends \ResbookingController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $id,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

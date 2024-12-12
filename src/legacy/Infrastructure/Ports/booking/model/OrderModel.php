@@ -4,13 +4,13 @@
 
 class ProductDTO{
 
-    public $Id = "";
+    public string $id = "";
 
-    public $Code = "";
+    public string $code = "";
 
-    public $Name = "";
+    public string $name = "";
 
-    public $Description = "";
+    public string $description = "";
 
     public $Price = "";
 

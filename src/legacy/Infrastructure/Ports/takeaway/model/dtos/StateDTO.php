@@ -11,12 +11,12 @@ class StateDTO {
      * Identidad de la entidad
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nuevo estado a asignar a la entidad
      * @var int
      */
-    public $State = 0;
+    public bool $state = false;
 
 }

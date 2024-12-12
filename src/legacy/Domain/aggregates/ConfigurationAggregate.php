@@ -13,7 +13,7 @@ class ConfigurationAggregate extends \BaseAggregate{
      * Referencia a la entidad de registro de información de proyecto
      * @var \ProjectInformation
      */
-    public $ProjectInfo = NULL;
+    public $ProjectInfo = null;
 
     /**
      * Colección de formas de entrega disponibles

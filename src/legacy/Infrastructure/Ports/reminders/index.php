@@ -14,7 +14,7 @@ require_once "libs/NotificationAlias.php";
 require_once "libs/RemindersEngine.php";
 
 // Modo de ejecución
-$debug = !TRUE;
+$debug = !true;
 // Establecer el modo depuración
 set_debug($debug);
 // Establecer localización para las fechas

@@ -40,19 +40,19 @@ abstract class BaseManagement{
      * Referencia al respositorio de entidades
      * @var \BaseRepository
      */
-    protected $Repository = NULL;
+    protected $Repository = null;
 
     /**
      * Referencia al gestor de servicios de la capa de dominio
      * @var \BaseService
      */
-    protected $Service = NULL;
+    protected $Service = null;
 
     /**
      * Referencia al agregado actual
      * @var \BaseAggregate;
      */
-    protected $Aggregate = NULL;
+    protected $Aggregate = null;
 
     /**
      * Constructor de la clase

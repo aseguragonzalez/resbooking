@@ -13,19 +13,19 @@ class PaymentMethodDTO {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre asignado al medio de pago
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción del medio de mago
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Abreviatura del nombre asignado
@@ -43,18 +43,18 @@ class PaymentMethodDTO {
      * Identidad del proyecto padre
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio actual
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 
 }

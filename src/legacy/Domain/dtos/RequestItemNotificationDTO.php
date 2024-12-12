@@ -13,7 +13,7 @@ class RequestItemNotificationDTO {
      * Identidad del registro
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Identidad de la solicitud
@@ -43,7 +43,7 @@ class RequestItemNotificationDTO {
      * Nombre del producto
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Precio del producto asociado

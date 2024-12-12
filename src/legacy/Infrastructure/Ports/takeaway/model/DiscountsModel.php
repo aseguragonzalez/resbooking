@@ -13,13 +13,13 @@ class DiscountsModel extends \TakeawayModel{
      * Indica si se ha producido algún error durante la última operación
      * @var boolean
      */
-    public $Error = FALSE;
+    public $Error = false;
 
     /**
      * Referencia al descuento en edición
      * @var \DiscountDTO
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de descuentos disponibles
@@ -37,7 +37,7 @@ class DiscountsModel extends \TakeawayModel{
      * Colección de días de la semana
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de Turnos de reparto
@@ -121,19 +121,19 @@ class DiscountsModel extends \TakeawayModel{
      * DTO para la navegación semanal
      * @var \WeekNavDTO
      */
-    public $WeekNavDTO = NULL;
+    public $WeekNavDTO = null;
 
     /**
      * Referencia al Management de descuentos
      * @var \IDiscountsManagement
      */
-    protected $Management = NULL;
+    protected $Management = null;
 
     /**
      * Referencia al agregado de descuentos
      * @var \DiscountsManagement
      */
-    public $Aggregate = NULL;
+    public $Aggregate = null;
 
     /**
      * Constructor
@@ -152,8 +152,8 @@ class DiscountsModel extends \TakeawayModel{
     public function GetDiscounts(){
         $this->Entities = [];
         $this->Management->GetDiscounts();
-        $this->Aggregate = $this->Management->GetAggregate();
-        foreach($this->Aggregate->Discounts as $item){
+        $this->aggregate = $this->Management->GetAggregate();
+        foreach($this->aggregate->Discounts as $item){
             $this->Entities[$item->Id] = $item;
         }
         // formatear la colección de descuentos
@@ -171,15 +171,15 @@ class DiscountsModel extends \TakeawayModel{
      * para visualiar los resultados de la operación
      * @param \DiscountDTO $entity Referencia a la entidad
      */
-    public function Save($entity = NULL){
-        $this->Error = TRUE;
+    public function Save($entity = null){
+        $this->Error = true;
         // Adaptar la configuración del descuento
         $entity = $this->SetDiscountsOnConfiguration($entity);
 
         // Procedimiento para almacenar el descuento
         $result = $this->Management->SetDiscount($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetDiscount: "
                     . "Códigos de operación inválidos");
         }
@@ -191,7 +191,7 @@ class DiscountsModel extends \TakeawayModel{
             $this->Entity->Configuration = json_encode($entity->Configuration);
         }
         else{
-            $this->Error = FALSE;
+            $this->Error = false;
             $this->Entities[$entity->Id] = $entity;
             $this->eResult = "La operación se ha realizado satisfactoriamente.";
             $this->eResultClass="has-success";
@@ -224,10 +224,10 @@ class DiscountsModel extends \TakeawayModel{
      * @param int $week Semana solicitada
      */
     public function GetEvents($id = 0, $year = 0, $week = 0){
-        $this->WeekNavDTO->SetWeekInfo($this->DaysOfWeek, $year, $week);
+        $this->WeekNavDTO->SetWeekInfo($this->daysOfWeek, $year, $week);
         if($this->Management->GetDiscount($id)== 0){
-            $this->Aggregate = $this->Management->GetAggregate();
-            $this->Entity = $this->Aggregate->Discount;
+            $this->aggregate = $this->Management->GetAggregate();
+            $this->Entity = $this->aggregate->Discount;
             $events = $this->Management->GetDiscountEvents($id,
                     $this->WeekNavDTO->Current, $this->WeekNavDTO->CurrentYear);
             $this->Events = json_encode($events);
@@ -239,24 +239,24 @@ class DiscountsModel extends \TakeawayModel{
      * @param \DiscountOnEvent $dto
      * @return \JsonResultDTO
      */
-    public function SetEvent($dto = NULL){
+    public function SetEvent($dto = null){
         // Configurar evento
         $result = $this->Management->SetDiscountEvent($dto);
 
         $json = new \JsonResultDTO();
 
-        if(is_numeric($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_numeric($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new Exception("Códigos de operación inválidos");
         }
 
         if($result!= 0){
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = $this->GetResultMessage(_OP_DELETE_, $result);
         }
         else{
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
 
@@ -267,9 +267,9 @@ class DiscountsModel extends \TakeawayModel{
      * Instancia todas las configuraciones seleccionadas en el formulario
      * @param \DiscountDTO $entity Referencia al dto de descuento
      */
-    private function SetDiscountsOnConfiguration($entity = NULL){
+    private function SetDiscountsOnConfiguration($entity = null){
         $dtos = [];
-        if($entity != NULL){
+        if($entity != null){
             $configs = json_decode($entity->Configuration);
             foreach ($configs as $config){
                 $dto = new \DiscountOnConfiguration();
@@ -321,8 +321,8 @@ class DiscountsModel extends \TakeawayModel{
         $this->Entity = new \DiscountDTO();
         $this->WeekNavDTO = new \WeekNavDTO();
         $this->Entity->Configuration = "[]";
-        $this->DaysOfWeek = $this->Aggregate->DaysOfWeek;
-        $this->SlotsOfDelivery = $this->Aggregate->SlotsOfDelivery;
+        $this->daysOfWeek = $this->aggregate->DaysOfWeek;
+        $this->SlotsOfDelivery = $this->aggregate->SlotsOfDelivery;
     }
 
     /**

@@ -14,14 +14,14 @@ interface IDiscountsServices{
      * @param \DiscountsAggregate Referencia al agregado actual
      * @return \IDiscountsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Proceso de validación de la información del descuento
      * contenida en el DTO
      * @param \DiscountDTO $dto Referencia a la información de descuento
-     * @return TRUE|array Colección de códigos de validación
+     * @return true|array Colección de códigos de validación
      */
-    public function Validate($dto = NULL);
+    public function Validate($dto = null);
 
 }

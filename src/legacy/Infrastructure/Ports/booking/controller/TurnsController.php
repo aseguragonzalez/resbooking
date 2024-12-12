@@ -18,7 +18,7 @@ class TurnsController extends \ResbookingController{
     public function __construct(){
         // Indicamos al constructor que para todas las acciones
         // es necesario que esté contextualizado un proyecto
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -55,8 +55,8 @@ class TurnsController extends \ResbookingController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $result,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -105,7 +105,7 @@ class TurnsController extends \ResbookingController{
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

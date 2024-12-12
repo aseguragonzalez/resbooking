@@ -15,19 +15,19 @@ class RemindersEngine {
      * Referencia a la instancia actual del motor
      * @var \RemindersEngine
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al Objeto de acceso a datos
      * @var \IDataAccessObject
      */
-    private $_dao = NULL;
+    private $_dao = null;
 
     /**
      * Referencia al gestor de trazas
      * @var \ILogManager
      */
-    private $_log = NULL;
+    private $_log = null;
 
     /**
      * Asunto para el registro de notificaciones
@@ -39,7 +39,7 @@ class RemindersEngine {
      * Referencia a la instancia DateTime actual
      * @var \DateTime
      */
-    private $_date = NULL;
+    private $_date = null;
 
     /**
      * Número de registros realizados en la última ejecución
@@ -59,7 +59,7 @@ class RemindersEngine {
      * @param \ILogManager $log Referencia al gestor de trazas
      * @param string $subject Asunto de las notificaciones
      */
-    private function __construct($dao = NULL, $log = NULL, $subject = "") {
+    private function __construct($dao = null, $log = null, $subject = "") {
         if($dao instanceof \IDataAccessObject){
             $this->_dao = $dao;
         }
@@ -89,8 +89,8 @@ class RemindersEngine {
      * @param \BookingNotificationEngineDTO $dto Referencia al dto de la reserva
      * @param string $sDto Serialización del dto
      */
-    private function setNotification($project = 0, $service = 0, $dto = NULL){
-        if($dto != NULL){
+    private function setNotification($project = 0, $service = 0, $dto = null){
+        if($dto != null){
             $date = new \DateTime($dto->Date);
             $dto->Date = strftime("%A %d de %B del %Y",$date->getTimestamp());
             $dto->Ticket = $this->getTicket($dto->Email, $dto);
@@ -118,7 +118,7 @@ class RemindersEngine {
      * @param \BookingNotificationDTO $dto Referencia al DTO de la reserva
      * @return string Ticket generado
      */
-    private function getTicket($user = "", $dto = NULL){
+    private function getTicket($user = "", $dto = null){
         // Establecer el destinatario de la notificación
         if($user == ""){ $user = "admin"; }
         // Array de parámetros del ticket
@@ -245,8 +245,8 @@ class RemindersEngine {
      * @param string $subject Asunto del tipo recordatorio
      * @return \RemindersEngine
      */
-    public static function GetInstance($dao = NULL, $log= NULL, $subject = ""){
-        if(\RemindersEngine::$_reference == NULL){
+    public static function GetInstance($dao = null, $log= null, $subject = ""){
+        if(\RemindersEngine::$_reference == null){
             \RemindersEngine::$_reference =
                     new \RemindersEngine($dao, $log, $subject);
         }
@@ -258,9 +258,9 @@ class RemindersEngine {
      * @param \Object $obj Referencia al objeto a serializar
      * @return string Objeto serializado
      */
-    private function JsonEncodeObject($obj = NULL){
+    private function JsonEncodeObject($obj = null){
         $json = json_encode($obj);
-        $this->LogJsonError(TRUE);
+        $this->LogJsonError(true);
         return $json;
     }
 
@@ -268,7 +268,7 @@ class RemindersEngine {
      * Generar traza de error al manejar json
      * @param boolean $encode Flag para indicar si se trata de codificación o decodificación
      */
-    private function LogJsonError($encode =  TRUE){
+    private function LogJsonError($encode =  true){
         $error = json_last_error();
         $message = ($encode) ? "Se ha producido un error al codificar: "
                 : "Se ha producido un error al decodificar: ";

@@ -55,7 +55,7 @@ class HomeModel extends \SaasModel{
             return $this->SetProject($this->Projects[0]);
         }
         // Resultado por defecto
-        return FALSE;
+        return false;
     }
 
     /**
@@ -74,7 +74,7 @@ class HomeModel extends \SaasModel{
             return $this->SetProject($projects[0]);
         }
         // resultado por defecto
-        return FALSE;
+        return false;
     }
 
     /**
@@ -82,16 +82,16 @@ class HomeModel extends \SaasModel{
      * @param \Project $project Referencia al proyecto a "setear"
      * @return boolean Resultado de la operación
      */
-    private function SetProject($project = NULL){
+    private function SetProject($project = null){
         // Setear el contexto con los datos de proyecto
         if($project != null){
             $_SESSION["projectId"] = $project->Id;
             $_SESSION["projectName"] = $project->Name;
             $_SESSION["projectPath"] = $project->Path;
-            return TRUE;
+            return true;
         }
         // resultado por defecto
-        return FALSE;
+        return false;
     }
 
 }

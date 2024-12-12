@@ -72,13 +72,13 @@ class Controller{
         // Buscamos la primera aparición de la subcadena $name en $content
         $start = strpos( $content , $name );
         // Comprobar Si se ha encontrado la posición inicial
-        if($start === FALSE){
+        if($start === false){
             return $result;
         }
         // Buscamos si hay una segunda aparición
         $end = strpos( $content , $name , ($start + 1));
         // Comprobar Si se ha encontrado la posición final
-        if($end === FALSE){
+        if($end === false){
             return $result;
         }
         // Extraer la subcadena del patrón
@@ -163,7 +163,7 @@ class Controller{
      * @return string Contenido reemplazado
      */
     private function ReplaceItem($item="", $propertyName="",
-            $propertyValue = NULL){
+            $propertyValue = null){
         if(is_array($propertyValue)|| is_object($propertyValue)){
             $item .= $this->ReplaceSubArray($item,
                     $propertyName, $propertyValue );
@@ -184,7 +184,7 @@ class Controller{
      * @param array $array de Items a reemplazar
      * @return string Vista renderizada
      */
-    protected function ReplaceArray($sView="", $name="", $array=NULL){
+    protected function ReplaceArray($sView="", $name="", $array=null){
         // Buscar el patrón
         $match = $this->FindPattern($name, $sView);
         // Contenido a reemplazar por el patrón
@@ -274,7 +274,7 @@ class Controller{
                 $view = $this->ReplaceArray($view,
                         $propertyName, $propertyValue);
             }
-            else if(is_object($propertyValue)){
+            elseif(is_object($propertyValue)){
                 $view = $this->ReplaceObject($view,
                         $propertyName, $propertyValue);
             }
@@ -435,10 +435,10 @@ class Controller{
      * @param object $obj Referencia al objeto a serializar
      * @return string
      */
-    public function ReturnJSON($obj = NULL){
+    public function ReturnJSON($obj = null){
         $returnValue = "[]";
         header('Content-Type: application/json');
-        if($obj != NULL){
+        if($obj != null){
             $returnValue = json_encode($obj);
         }
         return $returnValue;

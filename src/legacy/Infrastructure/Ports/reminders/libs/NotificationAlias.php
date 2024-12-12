@@ -13,19 +13,19 @@ class NotificationAlias{
      * Identidad de la notificación
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * proyecto asociado
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Servicio que genera el registro
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Destino de la notificación

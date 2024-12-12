@@ -12,19 +12,19 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      * Referencia al gestor de servicio de reservas
      * @var \IProductsServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IProductsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IBaseLineManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -35,11 +35,11 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = ProductsRepository::GetInstance($project, $service);
+        $this->repository = ProductsRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = ProductsServices::GetInstance($this->Aggregate);
+        $this->Services = ProductsServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -49,7 +49,7 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      * @return \IProductsManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(ProductsManagement::$_reference == NULL){
+        if(ProductsManagement::$_reference == null){
             ProductsManagement::$_reference =
                    new \ProductsManagement($project, $service);
         }
@@ -62,9 +62,9 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -75,9 +75,9 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      */
     public function GetProduct($id = 0) {
         $product = $this->Services->GetById(
-                $this->Aggregate->Products, $id);
-        if($product != NULL){
-            $this->Aggregate->Product = $product;
+                $this->aggregate->Products, $id);
+        if($product != null){
+            $this->aggregate->Product = $product;
 
             $this->GetImagesByProduct($id);
 
@@ -91,25 +91,25 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      * @param \Product $product Referencia al producto
      * @return array Códigos de operación
      */
-    public function SetProduct($product = NULL) {
+    public function SetProduct($product = null) {
 
         $product->Project = $this->IdProject;
 
         $result = $this->Services->Validate($product);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($product->Id == 0){
-                $res = $this->Repository->Create($product);
-                $result[] = ($res != FALSE) ? 0 : -1;
-                $product->Id = ($res != FALSE) ? $res->Id : 0;
+                $res = $this->repository->Create($product);
+                $result[] = ($res != false) ? 0 : -1;
+                $product->Id = ($res != false) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($product);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($product);
+                $result[] = ($res != false) ? 0 : -2;
             }
 
-            if($res != FALSE){
-                $this->Aggregate->Products[$product->Id] = $product;
+            if($res != false){
+                $this->aggregate->Products[$product->Id] = $product;
             }
         }
         return $result;
@@ -123,16 +123,16 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
     public function RemoveProduct($id = 0) {
         // Obtener referencia
         $product = $this->Services->GetById(
-                $this->Aggregate->Products, $id);
-        if($product != NULL){
+                $this->aggregate->Products, $id);
+        if($product != null){
             if($this->RemoveImages($id) == 0){
 
                 $product->State = 0;
 
-                $res = ($this->Repository->Update($product) != FALSE);
+                $res = ($this->repository->Update($product) != false);
 
                 if($res){
-                    unset($this->Aggregate->Products[$id]);
+                    unset($this->aggregate->Products[$id]);
                 }
 
                 return $res ? 0 : -1;
@@ -147,22 +147,22 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      * @return int Código de operación
      */
     public function RemoveImage($id = 0) {
-        $image = NULL;
+        $image = null;
 
-        if(count($this->Aggregate->Images) == 0){
+        if(count($this->aggregate->Images) == 0){
             $filter = [ "Id" => $id, "State"  => 1];
-            $images = $this->Repository->GetByFilter( "Image", $filter );
+            $images = $this->repository->GetByFilter( "Image", $filter );
         }
         else{
             $images = $this->Services->GetById(
-                    $this->Aggregate->Images, $id);
+                    $this->aggregate->Images, $id);
         }
 
         $image = current($images);
 
-        if($image != NULL){
+        if($image != null){
             $image->State = 0;
-            return ($this->Repository->Update($image) != FALSE)
+            return ($this->repository->Update($image) != false)
                     ? 0 : -1;
         }
         return -2;
@@ -173,19 +173,19 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      * @param \Image $image Referencia a la imagen
      * @return array Códigos de operación
      */
-    public function SetImage($image = NULL) {
+    public function SetImage($image = null) {
         $date = new \DateTime("NOW");
         $image->Date = $date->format("Y-m-d h:i:s");
         $result = $this->Services->ValidateImage($image);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($image->Id == 0){
-                $res = $this->Repository->Create($image);
-                $result[] = ($res != FALSE) ? 0 : -1;
+                $res = $this->repository->Create($image);
+                $result[] = ($res != false) ? 0 : -1;
             }
             else{
-                $res = $this->Repository->Update($image);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($image);
+                $result[] = ($res != false) ? 0 : -2;
             }
         }
         return $result;
@@ -197,8 +197,8 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
      */
     private function GetImagesByProduct($id = 0){
         $filter = ["Product" => $id, "State"  => 1];
-        $this->Aggregate->Images =
-                $this->Repository->GetByFilter( "Image", $filter );
+        $this->aggregate->Images =
+                $this->repository->GetByFilter( "Image", $filter );
     }
 
     /**
@@ -208,7 +208,7 @@ class ProductsManagement extends \BaseManagement implements \IProductsManagement
     private function RemoveImages($id = 0){
         $results = [];
         $this->GetImagesByProduct($id);
-        foreach($this->Aggregate->Images as $image){
+        foreach($this->aggregate->Images as $image){
             $results[] = $this->RemoveImage($image->Id);
         }
         $err = array_filter($results, function($item){ return $item != 0; });

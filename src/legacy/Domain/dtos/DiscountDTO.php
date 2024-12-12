@@ -22,9 +22,9 @@ class DiscountDTO extends \DiscountOn{
      * @param \DiscountOnConfiugration $configuration
      * Colección de configuraciones
      */
-    public function __construct($discountOn = NULL,
-            $configuration = NULL){
-        if($discountOn != NULL){
+    public function __construct($discountOn = null,
+            $configuration = null){
+        if($discountOn != null){
             $this->Id = $discountOn->Id;
             $this->Value = $discountOn->Value;
             $this->Project = $discountOn->Project;

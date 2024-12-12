@@ -10,7 +10,7 @@ class ProductSuscriber{
      * Identidad del registro de suscripción
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Identidad del producto al que se asocia el usuario

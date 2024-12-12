@@ -13,7 +13,7 @@ class BookingNotificationEngineDTO {
      * Identidad de la reserva
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto padre
@@ -31,7 +31,7 @@ class BookingNotificationEngineDTO {
      * Fecha de la reserva
      * @var string
      */
-    public $Date = "";
+    public string $date = "";
 
     /**
      * Fecha de creación de la reserva
@@ -49,7 +49,7 @@ class BookingNotificationEngineDTO {
      * Nombre del cliente
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Email del cliente
@@ -67,7 +67,7 @@ class BookingNotificationEngineDTO {
      * Estado de la reserva
      * @var int
      */
-    public $State = NULL;
+    public $State = null;
 
     /**
      * Lugar de la reserva
@@ -85,7 +85,7 @@ class BookingNotificationEngineDTO {
      * Descripción de la oferta
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Términos y condiciones de la oferta

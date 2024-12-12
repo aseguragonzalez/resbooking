@@ -74,9 +74,9 @@ class TurnsModel extends \ResbookingModel{
      * @param \Configuration Referencia a la entidad de configuración
      * @return int Resultado de la operación
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
         $result = -1;
-        if($entity != NULL){
+        if($entity != null){
             $entity->Project = $this->Project;
             if($entity->Id == 0){
                 $result = $this->Dao->Create($entity);
@@ -108,8 +108,8 @@ class TurnsModel extends \ResbookingModel{
      * @param \TurnShare $turnShare Referencia a la entidad
      * @return int Código de operación
      */
-    public function SetShare($turnShare = NULL){
-        if($turnShare == NULL){
+    public function SetShare($turnShare = null){
+        if($turnShare == null){
             return -1;
         }
         // Asignar proyecto
@@ -122,7 +122,7 @@ class TurnsModel extends \ResbookingModel{
         if(count($register) == 0){
             $this->Dao->Create($turnShare);
         }
-        else if($turnShare->Share == 0){
+        elseif($turnShare->Share == 0){
             $os = current($register);
             $this->Dao->Delete($os->Id, "TurnShare");
         }

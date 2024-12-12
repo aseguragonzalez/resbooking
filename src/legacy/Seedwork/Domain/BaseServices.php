@@ -13,13 +13,13 @@ abstract class BaseServices{
      * Referencia al agregado actual
      * @var \BaseAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Referencia al respositorio
      * @var \BaseRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Identidad del proyecto
@@ -37,10 +37,10 @@ abstract class BaseServices{
      * Constructor
      * @param \BaseAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL){
-        if($aggregate != NULL){
+    public function __construct($aggregate = null){
+        if($aggregate != null){
             // Asignar el agregado
-            $this->Aggregate = $aggregate;
+            $this->aggregate = $aggregate;
             // Asignar identidad del proyecto
             $this->IdProject = $aggregate->IdProject;
             // Asignar la identidad del servicio
@@ -52,7 +52,7 @@ abstract class BaseServices{
      * Obtiene la referencia actual al gestor de servicios
      * @param \BaseAggregate Referencia al agregado actual
      */
-    public static function GetInstance($aggregate = NULL){
+    public static function GetInstance($aggregate = null){
 
     }
 
@@ -60,13 +60,13 @@ abstract class BaseServices{
      * Obtiene una entidad desde un array filtrado por id
      * @param array $array Colección de entidades
      * @param int $id Id de la entidad buscada
-     * @return object|NULL Referencia encontrada
+     * @return object|null Referencia encontrada
      */
-    public function GetById($array = NULL, $id = 0){
+    public function GetById($array = null, $id = 0){
         $items = array_filter($array, function($item) use ($id){
            return $item->Id == $id;
         });
-        return (count($items) > 0) ? current($items) : NULL;
+        return (count($items) > 0) ? current($items) : null;
     }
 
     /**
@@ -75,9 +75,9 @@ abstract class BaseServices{
      * @param array $filter Colección de criterios para el filtro
      * @return array Colección de elementos que cumplen el filtro
      */
-    public function GetListByFilter($array = NULL, $filter = NULL){
+    public function GetListByFilter($array = null, $filter = null){
         $result = [];
-        if($array != NULL && $filter != NULL){
+        if($array != null && $filter != null){
             foreach($array as $item){
                 if($this->CompareObject($item, $filter)){
                     $result[] = $item;
@@ -93,15 +93,15 @@ abstract class BaseServices{
      * @param array $filter Array con los criterios de filtro
      * @return boolean
      */
-    private function CompareObject($item = NULL, $filter = NULL){
+    private function CompareObject($item = null, $filter = null){
         foreach($filter as $key => $value){
             $val = $item->{$key};
             $nok = (is_numeric($value) && $val != $value)
-                || (is_string($value) && strpos($val, $value) === FALSE);
+                || (is_string($value) && strpos($val, $value) === false);
             if($nok){
-                return FALSE;
+                return false;
             }
         }
-        return TRUE;
+        return true;
     }
 }

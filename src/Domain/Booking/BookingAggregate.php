@@ -106,19 +106,19 @@ final class BookingAggregate extends \BaseAggregate{
      * Referencia a la entidad cliente
      * @var \Client
      */
-    public $Client = NULL;
+    public $Client = null;
 
     /**
      * Referencia a la entidad reserva
      * @var \Booking
      */
-    public $Booking = NULL;
+    public $Booking = null;
 
     /**
      * Referencia a la configuración del servicio
      * @var \ConfigurationService
      */
-    public $Configuration = NULL;
+    public $Configuration = null;
 
     /**
      * Cantidad mínima de comensales
@@ -136,7 +136,7 @@ final class BookingAggregate extends \BaseAggregate{
      * Fecha de solicitud
      * @var \DateTime
      */
-    public $Date = NULL;
+    public $Date = null;
 
     /**
      * Constructor
@@ -193,7 +193,7 @@ final class BookingAggregate extends \BaseAggregate{
      */
     private function FilterAvailablePlaces(){
         $this->AvailablePlaces = array_filter($this->Places, function($item){
-           return  $item->Active == TRUE;
+           return  $item->Active == true;
         });
     }
 
@@ -232,8 +232,8 @@ final class BookingAggregate extends \BaseAggregate{
                 continue;
             }
             $end = ($offer->End == "0000-00-00 00:00:00" )
-                    ? NULL : new \DateTime($offer->End);
-            if($end > $yesterday || $end == NULL){
+                    ? null : new \DateTime($offer->End);
+            if($end > $yesterday || $end == null){
                 $this->AvailableOffers[] = $offer;
             }
         }
@@ -246,7 +246,7 @@ final class BookingAggregate extends \BaseAggregate{
         $this->AvailableTurns = array();
         foreach($this->Turns as $turn){
             $t = $this->SetTurnData($turn);
-            if($t != NULL){
+            if($t != null){
                 $this->AvailableTurns[] = $t;
             }
         }
@@ -256,10 +256,10 @@ final class BookingAggregate extends \BaseAggregate{
      * Establece los datos del turno para agregarlo a la lista de turnos
      * disponibles.
      * @param \Turn $turn Referencia al turno a configurar
-     * @return \Turn Referencia al turno a agregar o NULL si
+     * @return \Turn Referencia al turno a agregar o null si
      * no tiene configuraciones válidas
      */
-    private function SetTurnData($turn = NULL){
+    private function SetTurnData($turn = null){
         $configs = $this->GetConfigByTurn($turn->Id);
         if(!empty($configs)){
             $days = [];
@@ -271,7 +271,7 @@ final class BookingAggregate extends \BaseAggregate{
             $turn->End = substr($turn->End, 0, 5);
             return $turn;
         }
-        return NULL;
+        return null;
     }
 
     /**

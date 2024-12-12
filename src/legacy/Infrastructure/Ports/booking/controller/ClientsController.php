@@ -16,7 +16,7 @@ class ClientsController extends \ResbookingController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -51,7 +51,7 @@ class ClientsController extends \ResbookingController{
             $result = $model->GetClient($id);
             // Objeto a retornar
             $resultDTO = [
-                "Error" => ($result == NULL) ,
+                "Error" => ($result == null) ,
                 "Result" => $result,
                 "Message" => ""
             ];
@@ -274,7 +274,7 @@ class ClientsController extends \ResbookingController{
             // comprobar estado del vip
             $entity->Vip = filter_input(INPUT_POST,"Vip",
                     FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
-            $entity->Advertising = FALSE;
+            $entity->Advertising = false;
         }
         return $entity;
     }

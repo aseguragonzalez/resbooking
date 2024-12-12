@@ -31,7 +31,7 @@ class ClientCMSModel extends \Model{
      * Identidad del proyecto
      * @var int Identidad del proyecto
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Nombre del proyecto
@@ -49,7 +49,7 @@ class ClientCMSModel extends \Model{
      * Descripción de la sección o contenido
      * @var string Descripción del proyecto
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Keywords de la sección o contenido
@@ -221,9 +221,9 @@ class ClientCMSModel extends \Model{
     private function LoadMenu(){
         // Filtro de búsqueda
         $filter = ($this->Draft == 0)
-            ? array( "Project" => $this->Project , "Root" => NULL,
+            ? array( "Project" => $this->Project , "Root" => null,
                 "Draft" => $this->Draft )
-            : array( "Project" => $this->Project , "Root" => NULL );
+            : array( "Project" => $this->Project , "Root" => null );
         // Cargar todas las opciones del menú ( Secciones de tipo root )
         $this->Menu = $this->Dao->GetByFilter( "Section", $filter );
         // $this->Menu =

@@ -43,7 +43,7 @@ class HttpHandler implements \IHttpHandler{
      * Booleano que indica si la url contiene/o puede contener el lenguaje
      * @var boolean $GetLan Establece si se ha especificado un lenguaje
      */
-    private $GetLan = FALSE;
+    private $GetLan = false;
 
     /**
      * Idioma seleccionado (si procede)
@@ -252,7 +252,7 @@ class HttpHandler implements \IHttpHandler{
             // Asignar cada parte de la url
             $this->GetUrlParts($parts);
         }
-        else if($urlPartsCount > 1){
+        elseif($urlPartsCount > 1){
             // Extraemos la parte sin parámetros de la petición
             $url = $urlParts[0];
             // Fraccionamos la url para obtener controlador,

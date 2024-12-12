@@ -13,13 +13,13 @@ class EventsModel extends \TakeawayModel{
      * DTO para la navegación semanal
      * @var \WeekNavDTO
      */
-    public $WeekNavDTO = NULL;
+    public $WeekNavDTO = null;
 
     /**
      * Colección de días de la semana disponibles
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de eventos configurados
@@ -70,7 +70,7 @@ class EventsModel extends \TakeawayModel{
      * @param int $year Año solicitado
      */
     public function GetEvents($week = 0, $year = 0){
-        $this->WeekNavDTO->SetWeekInfo($this->DaysOfWeek, $year, $week);
+        $this->WeekNavDTO->SetWeekInfo($this->daysOfWeek, $year, $week);
         $this->FilterEvents();
     }
 
@@ -79,9 +79,9 @@ class EventsModel extends \TakeawayModel{
      * @param \SlotEvent $entity Referencia a la información del evento
      * @return \JsonResultDTO Dto con el resultado de la operación
      */
-    public function SetEvent($entity = NULL){
-        $dto = NULL;
-        if($entity != NULL){
+    public function SetEvent($entity = null){
+        $dto = null;
+        if($entity != null){
             if($entity->Id == 0){
                 $dto = $this->CreateEvent($entity);
             }
@@ -91,11 +91,11 @@ class EventsModel extends \TakeawayModel{
         }
         else{
             $dto = new \JsonResultDTO();
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Error = ["La entidad no es válida."];
             $dto->Message = "La entidad no es válida.";
             $dto->Code = 200;
-            $dto->Exception = NULL;
+            $dto->Exception = null;
         }
         return $dto;
     }
@@ -105,9 +105,9 @@ class EventsModel extends \TakeawayModel{
      */
     protected function SetModel(){
         $this->WeekNavDTO = new \WeekNavDTO();
-        $this->DaysOfWeek = $this->Aggregate->DaysOfWeek;
-        $this->SlotsOfDelivery = $this->Aggregate->AvailableSlotsOfDelivery;
-        $this->SlotsConfigured = $this->Aggregate->BaseLine;
+        $this->daysOfWeek = $this->aggregate->DaysOfWeek;
+        $this->SlotsOfDelivery = $this->aggregate->AvailableSlotsOfDelivery;
+        $this->SlotsConfigured = $this->aggregate->BaseLine;
         $this->JSONSlots = json_encode($this->SlotsConfigured);
     }
 
@@ -169,14 +169,14 @@ class EventsModel extends \TakeawayModel{
      * @param \SlotEvent $slot
      * @return \JsonResultDTO
      */
-    private function CreateEvent($slot = NULL){
+    private function CreateEvent($slot = null){
 
         $dto = new \JsonResultDTO();
 
         $result = $this->Management->SetEvent($slot);
 
-        if(is_array($result) == FALSE){
-            $dto->Result = FALSE;
+        if(is_array($result) == false){
+            $dto->Result = false;
             $dto->Code = 500;
             $dto->Exception = new Exception("Códigos de operación inválidos");
             $dto->Error = ["Códigos de operación inválidos"];
@@ -184,14 +184,14 @@ class EventsModel extends \TakeawayModel{
         }
 
         if(count($result) != 1 || $result[0] != 0){
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Error = $this->GetResultMessage(_OP_CREATE_, $result);
             $dto->Message = $dto->Error[$result];
         }
         else{
             $dto->Data = $slot->Id;
             $dto->Code = 200;
-            $dto->Result = TRUE;
+            $dto->Result = true;
             $dto->Message = "La operación se ha realizado correctamente.";
         }
 
@@ -209,20 +209,20 @@ class EventsModel extends \TakeawayModel{
 
         $result = $this->Management->RemoveEvent($id);
 
-        if(is_numeric($result) == FALSE){
-            $dto->Result = FALSE;
+        if(is_numeric($result) == false){
+            $dto->Result = false;
             $dto->Code = 500;
             $dto->Exception = new Exception("Códigos de operación inválidos");
             $dto->Message = "Códigos de operación inválidos";
         }
 
         if($result!= 0){
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Error = $this->GetResultMessage(_OP_DELETE_, $result);
             $dto->Message = $dto->Error[$result];
         }
         else{
-            $dto->Result = TRUE;
+            $dto->Result = true;
             $dto->Data = 0;
             $dto->Message = "La operación se ha realizado correctamente.";
         }
@@ -234,7 +234,7 @@ class EventsModel extends \TakeawayModel{
      * Filtrar los eventos activos en la semana correspondiente
      */
     private function FilterEvents(){
-        $base = $this->Aggregate->Events;
+        $base = $this->aggregate->Events;
         foreach($base as $item){
             $date = new \DateTime($item->Date);
             $item->Date = $date->format("Y-m-d");
@@ -245,7 +245,7 @@ class EventsModel extends \TakeawayModel{
             }
         }
         $events = [];
-        foreach($this->DaysOfWeek as $day){
+        foreach($this->daysOfWeek as $day){
             $es = array_filter($base,
                     function($item) use($day){
                         return  $item->Date == $day->Date;

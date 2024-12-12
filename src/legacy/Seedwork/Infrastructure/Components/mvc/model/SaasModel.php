@@ -25,7 +25,7 @@ class SaasModel extends \Model{
      * Id del Proyecto en ejecución
      * @var int Identidad del proyecto
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Nombre del proyecto actual
@@ -43,7 +43,7 @@ class SaasModel extends \Model{
      * Referencia al servicio actual
      * @var int Identidad del servicio
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Nombre del usuario en ejecución

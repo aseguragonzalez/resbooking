@@ -11,19 +11,19 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
      * Referencia
      * @var \IProductsServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IProductsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \ProductsAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -35,11 +35,11 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
      * Constructor
      * @param \ProductsAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = ProductsRepository
+        $this->repository = ProductsRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -48,8 +48,8 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
      * @param \ProductsAggregate Referencia al agregado actual
      * @return \IProductsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(ProductsServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(ProductsServices::$_reference == null){
             ProductsServices::$_reference = new \ProductsServices($aggregate);
         }
         return ProductsServices::$_reference;
@@ -74,11 +74,11 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
     /**
      * Proceso de validación del producto
      * @param \Product $entity
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateName($entity->Id, $entity->Name);
             $this->ValidateDesc($entity->Description);
             $this->ValidateKeywords($entity->Keywords);
@@ -91,17 +91,17 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
      * Proceso de validacion de la imagen
      * @param \Image $image Referencia al objeto imagen a crear
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function ValidateImage($image = NULL){
-        if($image != NULL){
+    public function ValidateImage($image = null){
+        if($image != null){
             $this->ValidateImageProduct($image->Product);
             $this->ValidateImageName($image->Id, $image->Name);
             $this->ValidateImageDescription($image->Description);
@@ -110,7 +110,7 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -139,7 +139,7 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
             "Name" => $name, "State" => 1 ];
 
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Products, $filter);
+                    $this->aggregate->Products, $filter);
         if(isset($items) && is_array($items)
                 && count($items) != 0 && $items[0]->Id != $id){
             $this->Result[] = -6;
@@ -180,7 +180,7 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
         $filter = [ "Project" => $this->IdProject,
             "Id" => $category, "State" => 1 ];
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Categories, $filter);
+                    $this->aggregate->Categories, $filter);
         if(empty($items) || count($items) == 0 ){
             $this->Result[] = -11;
         }
@@ -213,7 +213,7 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
             "Reference" => $reference, "State" => 1 ];
 
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Products, $filter);
+                    $this->aggregate->Products, $filter);
         if(isset($items) && is_array($items)
                 && count($items) != 0 && $items[0]->Id != $id){
             $this->Result[] = -14;
@@ -261,8 +261,8 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
      * @param int $id Identidad del producto
      */
     private function ValidateImageProduct($id = 0){
-        $product = $this->GetById($this->Aggregate->Products, $id);
-        if($product == NULL){
+        $product = $this->GetById($this->aggregate->Products, $id);
+        if($product == null){
             $this->Result[] = -10;
         }
     }
@@ -293,7 +293,7 @@ class ProductsServices extends \BaseServices implements \IProductsServices{
     private function ValidateImageExistsName($id = 0, $name = ""){
         $filter = [ "Name" => $name, "State" => 1 ];
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Images, $filter);
+                    $this->aggregate->Images, $filter);
         if(isset($items) && is_array($items)
                 && count($items) != 0 && $items[0]->Id != $id){
             $this->Result[] = -6;

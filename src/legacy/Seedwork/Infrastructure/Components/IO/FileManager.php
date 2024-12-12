@@ -99,7 +99,7 @@ class FileManager{
             // Establecer referencia al directorio origen
             $directory = dir( $source );
             // Recorrer el descriptor
-            while ( FALSE !== ( $readdirectory = $directory->read())){
+            while ( false !== ( $readdirectory = $directory->read())){
                 // Comprobar que no se apunta al
                 // directorio actual o al padre
                 if ( $readdirectory == '.' || $readdirectory == '..' ){

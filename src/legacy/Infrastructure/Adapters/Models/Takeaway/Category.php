@@ -13,37 +13,37 @@ class Category{
      * Identidad de la categoría
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Referencia al proyecto padre
      * @var int
      */
-    public $Project = NULL;
+    public int $projectId = 0;
 
     /**
      * Identidad de la categoría padre si existe
      * @var int
      */
-    public $Parent = NULL;
+    public $Parent = null;
 
     /**
      * Código asociado a la categoría
      * @var string
      */
-    public $Code = "";
+    public string $code = "";
 
     /**
      * Nombre o denominación de la categoría
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción informativa de la categoría
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Definición de los atributos que caracterizan a una categoría
@@ -55,7 +55,7 @@ class Category{
      * Estado lógico de la categoría
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 
     /**
      * Link de búsqueda para tener un URL friendly

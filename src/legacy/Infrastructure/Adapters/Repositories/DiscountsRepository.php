@@ -14,7 +14,7 @@ class DiscountsRepository extends \BaseRepository
      * Referencia a la clase base
      * @var \IDiscountsRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ class DiscountsRepository extends \BaseRepository
      * @return \IDiscountsRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(DiscountsRepository::$_reference == NULL){
+        if(DiscountsRepository::$_reference == null){
             DiscountsRepository::$_reference =
                     new \DiscountsRepository($project, $service);
         }
@@ -89,8 +89,8 @@ class DiscountsRepository extends \BaseRepository
     public function GetDiscountById($id = 0){
         // Obtener la información del descuento
         $discount = $this->Dao->Read($id, "DiscountOn");
-        if($discount == NULL){
-            return NULL;
+        if($discount == null){
+            return null;
         }
         $filter = ["DiscountOn" => $id];
         $configuration = $this->Dao->GetByFilter("DiscountOnConfiguration", $filter);

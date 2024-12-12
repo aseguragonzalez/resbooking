@@ -105,8 +105,8 @@ class OffersController extends \ResbookingController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $offers,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -155,8 +155,8 @@ class OffersController extends \ResbookingController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $configs,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -185,7 +185,7 @@ class OffersController extends \ResbookingController{
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -236,7 +236,7 @@ class OffersController extends \ResbookingController{
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

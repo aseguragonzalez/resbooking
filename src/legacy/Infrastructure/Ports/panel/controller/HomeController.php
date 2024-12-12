@@ -16,7 +16,7 @@ class HomeController extends \PanelController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(FALSE);
+        parent::__construct(false);
     }
 
     /**
@@ -67,8 +67,8 @@ class HomeController extends \PanelController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $model->Ticket,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -95,8 +95,8 @@ class HomeController extends \PanelController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $bullet,
-                "Error" => FALSE,
-                "Exception" => NULL
+                "Error" => false,
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

@@ -17,7 +17,7 @@ class PendingController extends \TakeawayController{
     * Constructor
     */
     public function __construct(){
-       parent::__construct(TRUE);
+       parent::__construct(true);
     }
 
     /**

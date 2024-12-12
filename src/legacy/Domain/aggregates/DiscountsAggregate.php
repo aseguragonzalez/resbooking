@@ -13,7 +13,7 @@ class DiscountsAggregate extends \BaseAggregate{
      * Referencia al descuento en edición
      * @var \DiscountDTO
      */
-    public $Discount = NULL;
+    public $Discount = null;
 
     /**
      * Colección de DTOs de descuentos activos
@@ -25,7 +25,7 @@ class DiscountsAggregate extends \BaseAggregate{
      * Colección de días de la semana registrados
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de turnos de reparto establecidos

@@ -67,7 +67,7 @@ class Injector{
      * @return object
      * @throws InjectorException
      */
-    public function Resolve($interfaceName = "", $include = FALSE){
+    public function Resolve($interfaceName = "", $include = false){
         // Buscar la referencia en el repositorio
         if(!array_key_exists($interfaceName, $this->_repository)){
             return null;
@@ -76,10 +76,10 @@ class Injector{
         $data = $this->_repository[$interfaceName];
         // Comprobar los datos
         if($data["mapTo"] == "" || $data["src"] == ""){
-            return NULL;
+            return null;
         }
         // Cargar dependencias
-        if($include == TRUE){
+        if($include == true){
             require_once($data["src"]);
         }
         // Crear instancia del objeto

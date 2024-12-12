@@ -1,14 +1,14 @@
 <?php
 
     try{
-        $debug = TRUE;
+        $debug = true;
         require_once("lib/core.domain.min.php");
         require_once("lib/debug.trycatch.lib.min.php");
         require_once("lib/debug.resbooking.lib.min.php");
         // Iniciar sesión
 	set_session();
         // configuración de la cache
-        set_cache(FALSE);
+        set_cache(false);
 	// Establecer los manejadores de errores
         set_handlers(E_ALL);
 	// Establecer localización para las fechas
@@ -26,7 +26,7 @@
         // Obtener implementación
         $module = $injector->Resolve( "IHttpModule" );
         // Validación del module
-        if($module != NULL){
+        if($module != null){
             // Iniciar la gestión de la petición
             $module->BeginRequest();
             // Procesado de la petición

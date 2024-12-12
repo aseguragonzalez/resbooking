@@ -158,7 +158,7 @@ class AccountsController extends \Controller{
      * @param \Exception $e Referencia a la excepción capturada
      * @return string Vista renderizada
      */
-    private function ProcessError($action = "", $e = NULL){
+    private function ProcessError($action = "", $e = null){
         // Crear traza de error
         $this->Log->LogErrorTrace($action, $e);
         // Instanciar Modelo

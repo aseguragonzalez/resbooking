@@ -25,7 +25,7 @@ class PlacesModel extends \ResbookingModel{
      * Referencia a la entidad
      * @var \Place
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Array de Espacios registrados
@@ -112,7 +112,7 @@ class PlacesModel extends \ResbookingModel{
      */
     public function GetPlaces(){
         // filtro de búsqueda
-        $filter = [ "Project" => $this->Project, "Active" => TRUE ];
+        $filter = [ "Project" => $this->Project, "Active" => true ];
         // Obtener la lista de "Espacios" configurados
         $this->Entities = $this->Dao->GetByFilter( "Place", $filter );
 
@@ -140,9 +140,9 @@ class PlacesModel extends \ResbookingModel{
      * @param \Place $place Referencia a la entidad Place a crear
      * @return boolean Resultado de la operación
      */
-    public function Save($place = NULL){
+    public function Save($place = null){
         $this->Entity = $place;
-        if($place != NULL && $this->Validate($place)){
+        if($place != null && $this->Validate($place)){
             $place->Project = $this->Project;
             if($place->Id == 0) {
                 $place->Id = $this->Dao->Create($place);
@@ -152,11 +152,11 @@ class PlacesModel extends \ResbookingModel{
             }
             $this->eGenResult = "La sala ha sido guardada con éxito.";
             $this->eGenResultClass = "alert-success";
-            return TRUE;
+            return true;
         }
         $this->TranslateResultCodes();
         $this->Error = 1;
-        return FALSE;
+        return false;
     }
 
     /**
@@ -167,17 +167,17 @@ class PlacesModel extends \ResbookingModel{
     public function Delete($id = 0){
         if(is_numeric($id)){
             $o = $this->Dao->Read($id, "Place");
-            if($o->Active != FALSE){
-                $o->Active = FALSE;
+            if($o->Active != false){
+                $o->Active = false;
                 $this->Dao->Update( $o );
                 $this->eGenResult = "La sala ha sido eliminada con éxito.";
                 $this->eGenResultClass = "alert-success";
-                return TRUE;
+                return true;
             }
         }
         $this->eGenResult = "La sala no ha podido ser eliminada.";
         $this->eGenResultClass = "alert-danger";
-        return FALSE;
+        return false;
     }
 
     /**
@@ -185,8 +185,8 @@ class PlacesModel extends \ResbookingModel{
      * @param \Place $entity Referencia a la entidad a validar
      * @return boolean Resultado de la validación
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateIdentity($entity->Id);
             $this->ValidateName($entity->Id, $entity->Name);
             $this->ValidateDescription($entity->Description);
@@ -205,7 +205,7 @@ class PlacesModel extends \ResbookingModel{
         if(!is_numeric($id)){
             $this->Codigos[] = -2;
         }
-        else if($id < 0){
+        elseif($id < 0){
             $this->Codigos[] = -3;
         }
     }
@@ -219,23 +219,23 @@ class PlacesModel extends \ResbookingModel{
         if(empty($name)){
             $this->Codigos[] = -4;
         }
-        else if(!is_string($name)){
+        elseif(!is_string($name)){
             $this->Codigos[] = -5;
         }
-        else if(strlen($name) > 100){
+        elseif(strlen($name) > 100){
             $this->Codigos[] = -6;
         }
-        else if($id == 0){
+        elseif($id == 0){
             $filtro =  [ "Project" => $this->Project,
-                "Active" => TRUE, "Name" => $name];
+                "Active" => true, "Name" => $name];
             $salas = $this->Dao->GetByFilter("Place", $filtro);
             if(count($salas)>0){
                 $this->Codigos[] = -10;
             }
         }
-        else if($id > 0){
+        elseif($id > 0){
             $filtro =  [ "Project" => $this->Project,
-                "Active" => TRUE, "Name" => $name];
+                "Active" => true, "Name" => $name];
             $salas = $this->Dao->GetByFilter("Place", $filtro);
             $cuenta = count($salas);
             if($cuenta > 1 || ($cuenta == 1 && $salas[0]->Id != $id)){
@@ -252,10 +252,10 @@ class PlacesModel extends \ResbookingModel{
         if(empty($description)){
             $this->Codigos[] = -7;
         }
-        else if(!is_string($description)){
+        elseif(!is_string($description)){
             $this->Codigos[] = -8;
         }
-        else if( strlen($description) > 500 ){
+        elseif( strlen($description) > 500 ){
             $this->Codigos[] = -9;
         }
     }

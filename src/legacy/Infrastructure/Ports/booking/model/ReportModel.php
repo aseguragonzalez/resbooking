@@ -247,8 +247,8 @@ class ReportModel extends \ResbookingModel{
      * @param \DateTime $date Referencia a la fecha
      * @return \ReportDTO Referencia al DTO generado
      */
-    private function SetReportDTO($date = NULL){
-        if($date != NULL){
+    private function SetReportDTO($date = null){
+        if($date != null){
             $month = $date->format( "m" );
             $year = $date->format( "Y" );
             $dto = new ReportDTO();
@@ -268,7 +268,7 @@ class ReportModel extends \ResbookingModel{
      * @param string $array_key Clave para el array de dtos
      * @param \Booking $item Referencia a la reserva
      */
-    private function SetDtoInfo($date = NULL, $array_key = "", $item = NULL){
+    private function SetDtoInfo($date = null, $array_key = "", $item = null){
         $keys = array_keys($this->Reports);
         // evaluar si ya existe el dto
         if(in_array($array_key, $keys)){

@@ -18,7 +18,7 @@ class ConfigurationController extends \ResbookingController{
     public function __construct(){
         // Indicamos al constructor que para todas las acciones
         // es necesario que esté contextualizado un proyecto
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -80,11 +80,11 @@ class ConfigurationController extends \ResbookingController{
         $obj->TimeSpan = filter_input(INPUT_POST, "TimeSpan");
         $obj->TimeFilter = filter_input(INPUT_POST, "TimeFilter");
         $obj->Advertising = filter_input(INPUT_POST,
-                "Advertising", FILTER_VALIDATE_BOOLEAN) == TRUE ? 1:0;
+                "Advertising", FILTER_VALIDATE_BOOLEAN) == true ? 1:0;
         $obj->PreOrder = filter_input(INPUT_POST,
-                "PreOrder", FILTER_VALIDATE_BOOLEAN)== TRUE ? 1:0;
+                "PreOrder", FILTER_VALIDATE_BOOLEAN)== true ? 1:0;
         $obj->Reminders = filter_input(INPUT_POST,
-                "Reminders", FILTER_VALIDATE_BOOLEAN)== TRUE ? 1:0;
+                "Reminders", FILTER_VALIDATE_BOOLEAN)== true ? 1:0;
         return $obj;
     }
 }

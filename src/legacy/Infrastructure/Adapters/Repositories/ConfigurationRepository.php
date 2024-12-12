@@ -13,7 +13,7 @@ class ConfigurationRepository extends \BaseRepository implements \IConfiguration
      * Referencia a la clase base
      * @var \IConfigurationRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class ConfigurationRepository extends \BaseRepository implements \IConfiguration
      * @return \IConfigurationRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(ConfigurationRepository::$_reference == NULL){
+        if(ConfigurationRepository::$_reference == null){
             ConfigurationRepository::$_reference =
                     new \ConfigurationRepository($project, $service);
         }

@@ -10,23 +10,23 @@ class ServiceDeliveryMethod{
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Identidad del método de entrega|recogida
      * @var int
      */
-    public $DeliveryMethod = 0;
+    public int $deliveryMethod = 0;
 }

@@ -32,7 +32,7 @@ interface IRequestsManagement{
      * @param \Request $request Referencia a la solicitud
      * @return array Códigos de operación
      */
-    public function SetRequest($request = NULL);
+    public function SetRequest($request = null);
 
     /**
      * Proceso de eliminación de una categoría mediante su Identidad

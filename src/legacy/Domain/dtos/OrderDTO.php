@@ -19,7 +19,7 @@ class OrderDTO extends \Request {
      * Constructor
      * @param \Request $request
      */
-    public function __construct($request = NULL) {
+    public function __construct($request = null) {
 
         parent::__construct();
 
@@ -33,7 +33,7 @@ class OrderDTO extends \Request {
     public function GetRequest(){
         $request = new \Request();
         $request->Address = $this->Address;
-        $request->Advertising = ($this->Advertising == TRUE);
+        $request->Advertising = ($this->Advertising == true);
         $request->Date = $this->Date;
         $request->DeliveryDate = $this->DeliveryDate;
         $request->DeliveryMethod = $this->DeliveryMethod;
@@ -83,10 +83,10 @@ class OrderDTO extends \Request {
      * Establece las propiedades heredadas de una solicitud
      * @param \Request $request
      */
-    public function SetRequest($request = NULL){
-        if($request != NULL && is_object($request)){
+    public function SetRequest($request = null){
+        if($request != null && is_object($request)){
             $this->Address = $request->Address;
-            $this->Advertising = ($request->Advertising == TRUE);
+            $this->Advertising = ($request->Advertising == true);
             $this->Date = $request->Date;
             $this->DeliveryDate = $request->DeliveryDate;
             $this->DeliveryMethod = $request->DeliveryMethod;

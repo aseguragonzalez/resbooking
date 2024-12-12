@@ -13,13 +13,13 @@ class SlotDTO {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre asignado a la franja horaria
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Hora de inicio de la franja horaria
@@ -43,7 +43,7 @@ class SlotDTO {
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Día de la semana
@@ -55,6 +55,6 @@ class SlotDTO {
      * Estado del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 
 }

@@ -13,25 +13,25 @@ class DiscountsManagement extends \BaseManagement
      * Referencia al gestor de servicio de reservas
      * @var \IDiscountsServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IDiscountsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado actual
      * @var \DiscountsAggregate
      */
-    public $Aggregate = NULL;
+    public $Aggregate = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IDiscountsManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -42,11 +42,11 @@ class DiscountsManagement extends \BaseManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = DiscountsRepository::GetInstance($project, $service);
+        $this->repository = DiscountsRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = DiscountsServices::GetInstance($this->Aggregate);
+        $this->Services = DiscountsServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -56,7 +56,7 @@ class DiscountsManagement extends \BaseManagement
      * @return \IDiscountsManagement
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(DiscountsManagement::$_reference == NULL){
+        if(DiscountsManagement::$_reference == null){
             DiscountsManagement::$_reference =
                    new \DiscountsManagement($project, $service);
         }
@@ -69,9 +69,9 @@ class DiscountsManagement extends \BaseManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -84,16 +84,16 @@ class DiscountsManagement extends \BaseManagement
         $result = -1;
         // Obtener referencia al descuento
         $dto = $this->Services->GetById(
-                $this->Aggregate->Discounts, $id);
+                $this->aggregate->Discounts, $id);
 
-        if($dto == NULL){
-            $dto = $this->Repository->GetDiscountById($id);
+        if($dto == null){
+            $dto = $this->repository->GetDiscountById($id);
         }
 
         // Validar la referencia obtenida
-        if($dto != NULL){
+        if($dto != null){
             // Asignamos el dto encontrado
-            $this->Aggregate->Discount = $dto;
+            $this->aggregate->Discount = $dto;
             // código de operación
             $result = 0;
         }
@@ -107,9 +107,9 @@ class DiscountsManagement extends \BaseManagement
      */
     public function GetDiscounts() {
         // Cargar en el agregado los descuentos
-        $this->Aggregate->Discounts = $this->Repository->GetDiscounts();
+        $this->aggregate->Discounts = $this->repository->GetDiscounts();
         // Retornar la colección
-        return $this->Aggregate->Discounts;
+        return $this->aggregate->Discounts;
     }
 
     /**
@@ -117,39 +117,39 @@ class DiscountsManagement extends \BaseManagement
      * @param \DiscountDTO $dto Referencia al descuento
      * @return array Códigos de operación
      */
-    public function SetDiscount($dto = NULL) {
+    public function SetDiscount($dto = null) {
         // Asignar el proyecto
         $dto->Project = $this->IdProject;
         // Asignar el servicio
         $dto->Service = $this->IdService;
         // Validar la información del descuento
         $result = $this->Services->Validate($dto);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             // Obtener referencia a la entidad de bbdd
             $entity = $dto->GetDiscountOn();
             $result = [];
             // Registrar|actualizar el descuento
             if($entity->Id == 0){
                 // Crear el registro del descuento
-                $res = $this->Repository->Create($entity);
+                $res = $this->repository->Create($entity);
                 // Establecer el resultado de la operación
-                $result[] = ($res != FALSE) ? 0 : -1;
-                $dto->Id = ($res != FALSE) ? $res->Id : 0;
+                $result[] = ($res != false) ? 0 : -1;
+                $dto->Id = ($res != false) ? $res->Id : 0;
             }
             else{
                 // Actualizar el regsitro del descuento
-                $res = $this->Repository->Update($entity);
+                $res = $this->repository->Update($entity);
                 // Establecer el resultado de la operación
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $result[] = ($res != false) ? 0 : -2;
             }
             // Actualizar las configuraciones asociadas
-            if($res != FALSE){
+            if($res != false){
                 // Actualizar las configuraciones del descuento
                 $res = $this->SetConfiguration($res->Id, $dto->Configuration);
                 // Establecer el resultado de la operación
-                $result = ($res != FALSE) ? [0] : [-3];
+                $result = ($res != false) ? [0] : [-3];
                 // Actualizar el dto en la colección
-                $this->Aggregate->Discounts[$dto->Id] = $dto;
+                $this->aggregate->Discounts[$dto->Id] = $dto;
             }
         }
         return $result;
@@ -163,13 +163,13 @@ class DiscountsManagement extends \BaseManagement
     public function RemoveDiscount($id = 0) {
         // Obtener referencia al dto del descuento
         $dto = $this->Services->GetById(
-                $this->Aggregate->Discounts, $id);
+                $this->aggregate->Discounts, $id);
 
-        if($dto == NULL){
-            $dto = $this->Repository->GetDiscountById($id);
+        if($dto == null){
+            $dto = $this->repository->GetDiscountById($id);
         }
 
-        if($dto != NULL){
+        if($dto != null){
             // Eliminar todas las referencias a configuraciones del descuento
             $this->RemoveReferences($dto->Configuration);
             // Eliminar la referencia
@@ -179,7 +179,7 @@ class DiscountsManagement extends \BaseManagement
             // Establecer el estado
             $entity->State = 0;
             // Actualizar
-            return ($this->Repository->Update($entity) != FALSE)
+            return ($this->repository->Update($entity) != false)
                 ? 0 : -1;
         }
         return -2;
@@ -189,10 +189,10 @@ class DiscountsManagement extends \BaseManagement
      * Proceso de eliminación de las configuraciones del descuento
      * @param array $configs Colección de configuraciones
      */
-    private function RemoveReferences($configs = NULL){
+    private function RemoveReferences($configs = null){
         foreach($configs as $config){
             if($config->Id > 0){
-                $this->Repository->Delete(
+                $this->repository->Delete(
                         "DiscountOnConfiguration", $config->Id);
             }
         }
@@ -203,18 +203,18 @@ class DiscountsManagement extends \BaseManagement
      * @param int $id Identidad del descuento
      * @param array $config Colección de configuraciones
      */
-    private function SetConfiguration($id = 0, $config = NULL){
+    private function SetConfiguration($id = 0, $config = null){
         // filtro para cargar las configuraciones del descuento
         $configFilter = ["DiscountOn" => $id ];
         // Obtener configuraciones
-        $configuration = $this->Repository->GetByFilter(
+        $configuration = $this->repository->GetByFilter(
                 "DiscountOnConfiguration", $configFilter );
         // Eliminar la configuración actual
         $this->RemoveReferences($configuration);
         // Crear todos los registros nuevos
         foreach($config as $item){
             $item->DiscountOn = $id;
-            $item = $this->Repository->Create($item);
+            $item = $this->repository->Create($item);
         }
         return $id;
     }
@@ -238,7 +238,7 @@ class DiscountsManagement extends \BaseManagement
             $filter["Year"] = $year;
         }
         // Búsqueda de eventos
-        $events = $this->Repository->GetByFilter("DiscountOnEvent", $filter);
+        $events = $this->repository->GetByFilter("DiscountOnEvent", $filter);
         // Filtrado de eventos por fecha actual
         // (No se han especificado los parametros)
         if($week == 0 || $year == 0){
@@ -255,8 +255,8 @@ class DiscountsManagement extends \BaseManagement
      * @param \DiscountOnEvent $dto Referencia a la información del evento
      * @return int Código de operación
      */
-    public function SetDiscountEvent($dto = NULL){
-        if($dto == NULL){
+    public function SetDiscountEvent($dto = null){
+        if($dto == null){
             return -1;
         }
         $dto->Project = $this->IdProject;
@@ -267,14 +267,14 @@ class DiscountsManagement extends \BaseManagement
             "SlotOfDelivery" => $dto->SlotOfDelivery
         ];
         // Resultado de la búsqueda
-        $events = $this->Repository->GetByFilter("DiscountOnEvent", $filter);
+        $events = $this->repository->GetByFilter("DiscountOnEvent", $filter);
 
         if(empty($events)){
-            $this->Repository->Create($dto);
+            $this->repository->Create($dto);
         }
         else{
             foreach($events as $event){
-                $this->Repository->Delete("DiscountOnEvent", $event->Id);
+                $this->repository->Delete("DiscountOnEvent", $event->Id);
             }
         }
         return 0;

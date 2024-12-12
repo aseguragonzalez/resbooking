@@ -30,13 +30,13 @@ abstract class TakeawayModel extends \SaasModel{
      * Referencia al agregado
      * @var \BaseAggregate
      */
-    public $Aggregate = NULL;
+    public $Aggregate = null;
 
     /**
      * Referencia al gestor del agregado
      * @var \BaseManagement
      */
-    protected $Management = NULL;
+    protected $Management = null;
 
     /**
      * Colección de códigos de operación
@@ -75,7 +75,7 @@ abstract class TakeawayModel extends \SaasModel{
         if($management != ""){
             $this->Management =
                     $management::GetInstance($this->Project, $this->Service);
-            $this->Aggregate = $this->Management->GetAggregate();
+            $this->aggregate = $this->Management->GetAggregate();
         }
         $this->SetResultCodes();
         $date = new \DateTime("NOW");
@@ -88,8 +88,8 @@ abstract class TakeawayModel extends \SaasModel{
      * @param int $oper Identificador de la operación realizada
      * @param array $codes Coleccion de codigos de error obtenidos
      */
-    protected function TranslateResultCodes($oper = 0, $codes = NULL){
-       if($codes != NULL && is_array($codes)){
+    protected function TranslateResultCodes($oper = 0, $codes = null){
+       if($codes != null && is_array($codes)){
            foreach ($codes as $code){
                if(!isset($this->Codes[$oper][$code])){
                    continue;
@@ -106,9 +106,9 @@ abstract class TakeawayModel extends \SaasModel{
      * Obtiene la colección de mensajes de error generados
      * @return array Mensajes de error generados
      */
-    protected function GetResultMessage($oper = 0, $codes = NULL){
+    protected function GetResultMessage($oper = 0, $codes = null){
         $messages = [];
-        if($codes != NULL && is_array($codes)){
+        if($codes != null && is_array($codes)){
            foreach ($codes as $code){
                if(!isset($this->Codes[$oper][$code])){
                    continue;
@@ -117,7 +117,7 @@ abstract class TakeawayModel extends \SaasModel{
                $messages[$code] =  $codeInfo["msg"];
            }
        }
-       else if(is_numeric($codes)){
+       elseif(is_numeric($codes)){
             if(isset($this->Codes[$oper][$codes])){
                 $codeInfo = $this->Codes[$oper][$codes];
                 $messages[$codes] =  $codeInfo["msg"];

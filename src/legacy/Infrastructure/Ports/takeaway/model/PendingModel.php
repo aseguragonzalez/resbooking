@@ -19,13 +19,13 @@ class PendingModel extends \TakeawayModel{
      * Referencia a la solicitud en edición
      * @var \Request
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Referencia a la información del proyecto para impresión
      * @var \ProjectInformation
      */
-    public $Information = NULL;
+    public $Information = null;
 
     /**
      * Colección de solicitudes disponibles
@@ -55,7 +55,7 @@ class PendingModel extends \TakeawayModel{
      * Referencia al descuento
      * @var \DiscountOn
      */
-    protected $Discount = NULL;
+    protected $Discount = null;
 
     /**
      * Importe total
@@ -73,7 +73,7 @@ class PendingModel extends \TakeawayModel{
      *
      * @var \RequestsAggregate
      */
-    public $Aggergate = NULL;
+    public $Aggergate = null;
 
     /**
      * Constructor
@@ -102,14 +102,14 @@ class PendingModel extends \TakeawayModel{
      * @return \JsonResultDTO
      */
     public function GetRequestCount($id = 0){
-        $filter = ["Project" => $id, "WorkFlow" => NULL];
+        $filter = ["Project" => $id, "WorkFlow" => null];
         $requests = $this->Dao->GetByFilter("Request", $filter);
         $json = new \JsonResultDTO();
-        $json->Result = TRUE;
+        $json->Result = true;
         $json->Data = count($requests);
         $json->Error = "";
         $json->Code = 200;
-        $json->Exception = NULL;
+        $json->Exception = null;
         return $json;
     }
 
@@ -117,16 +117,16 @@ class PendingModel extends \TakeawayModel{
      * Procedimiento para actualizar el estado del pedido
      * @param type $dto
      */
-    public function SetState($dto = NULL){
-        if($dto != NULL){
+    public function SetState($dto = null){
+        if($dto != null){
             $json = $this->UpdateState($dto);
         }
         else{
             $json = new \JsonResultDTO();
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = ["La entidad no es válida."];
             $json->Code = 200;
-            $json->Exception = NULL;
+            $json->Exception = null;
         }
         return $json;
     }
@@ -137,25 +137,25 @@ class PendingModel extends \TakeawayModel{
      * @param \Request $dto Referencia a la solicitud
      * @return \JsonResultDTO
      */
-    private function UpdateState($dto = NULL){
+    private function UpdateState($dto = null){
         $json = new \JsonResultDTO();
 
         $result = $this->Management->SetState($dto->Id, $dto->State);
 
-        if(is_array($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_array($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new Exception("Códigos de operación inválidos");
         }
 
         if($result != 0){
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = $this->GetResultMessage(_OP_UPDATE_, [$result]);
         }
         else{
             $json->Data = $dto;
             $json->Code = 200;
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
         return $json;
@@ -233,14 +233,14 @@ class PendingModel extends \TakeawayModel{
      */
     protected function SetModel() {
         $this->Entity = new \Request();
-        $this->Workflow = $this->Aggregate->States;
+        $this->Workflow = $this->aggregate->States;
     }
 
     /**
      * Carga el array de solicitudes y lo configura
      */
     private function SetEntities(){
-        $this->Entities = $this->Aggregate->Requests;
+        $this->Entities = $this->aggregate->Requests;
         foreach($this->Entities as $item){
             $item instanceof \Request;
             $item->sTicket = $this->GetCutText($item->Ticket);
@@ -261,7 +261,7 @@ class PendingModel extends \TakeawayModel{
      * @return string
      */
     private function GetHourOfDay($id = 0){
-        $hour = array_filter($this->Aggregate->HoursOfDay,
+        $hour = array_filter($this->aggregate->HoursOfDay,
                 function($item) use($id){
             return $item->Id == $id;
         });
@@ -276,9 +276,9 @@ class PendingModel extends \TakeawayModel{
      * Configuración del modelo para la vista de detalles de la solicitud
      */
     private function SetEntity(){
-        $this->Aggregate = $this->Management->GetAggregate();
-        $this->Entity = $this->Aggregate->Request;
-        $this->Information = $this->Aggregate->ProjectInformation;
+        $this->aggregate = $this->Management->GetAggregate();
+        $this->Entity = $this->aggregate->Request;
+        $this->Information = $this->aggregate->ProjectInformation;
 
         // Instanciar las fechas
         $date = new \DateTime($this->Entity->DeliveryDate);
@@ -300,8 +300,8 @@ class PendingModel extends \TakeawayModel{
         $this->Entity->Amount = number_format($this->Entity->Amount, 2);
         $this->Entity->Total = number_format($this->Entity->Total, 2);
 
-        $this->Items = $this->Aggregate->Items;
-        $this->Products = $this->Aggregate->Products;
+        $this->Items = $this->aggregate->Items;
+        $this->Products = $this->aggregate->Products;
         $this->SetEntityState();
         $this->SetDiscount();
     }
@@ -310,9 +310,9 @@ class PendingModel extends \TakeawayModel{
      * Establece el valor del descuento si procede
      */
     private function SetDiscount(){
-        if($this->Entity->Discount != NULL){
+        if($this->Entity->Discount != null){
             $discount = $this->Entity->Discount;
-            $discounts = array_filter($this->Aggregate->Discounts,
+            $discounts = array_filter($this->aggregate->Discounts,
                     function($item) use($discount){
                 return $item->Id == $discount;
             });
@@ -320,7 +320,7 @@ class PendingModel extends \TakeawayModel{
                 $this->Discount = current($discounts);
             }
         }
-        if($this->Discount != NULL){
+        if($this->Discount != null){
             $this->DiscountValue = $this->Discount->Value."%";
         }
     }
@@ -330,7 +330,7 @@ class PendingModel extends \TakeawayModel{
      * @param int $id
      */
     private function GetDiscountText($id = 0){
-        $discounts = array_filter($this->Aggregate->Discounts,
+        $discounts = array_filter($this->aggregate->Discounts,
                 function($item) use ($id){
             return $item->Id == $id;
         });
@@ -348,7 +348,7 @@ class PendingModel extends \TakeawayModel{
      * Establece el estado de la entidad
      */
     private function SetEntityState(){
-        if($this->Entity->WorkFlow != NULL){
+        if($this->Entity->WorkFlow != null){
             $entity = $this->Entity;
             $states = array_filter($this->Workflow,
                     function($item) use($entity){

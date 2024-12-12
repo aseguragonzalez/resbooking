@@ -13,7 +13,7 @@ class WeekNavDTO {
      * Colección de días de la semana disponibles
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Número de la semana previa
@@ -76,7 +76,7 @@ class WeekNavDTO {
      * @param int $week Semana en la que se desea configurar
      */
     public function SetWeekInfo($days = [], $year = 0, $week = 0){
-        $this->DaysOfWeek = $days;
+        $this->daysOfWeek = $days;
         $this->SetCurrentYearWeek($week, $year);
         $this->SetWeekAndYear();
         $this->SetControlDates();
@@ -149,7 +149,7 @@ class WeekNavDTO {
      */
     private function SetControlDates(){
        $d = new DateTime();
-       foreach($this->DaysOfWeek as $day){
+       foreach($this->daysOfWeek as $day){
            $d->setISODate($this->CurrentYear, $this->Current, $day->DayOfWeek);
            $day->Date = $d->format("Y-m-d");
            $day->sDate = strftime("%e %b", $d->getTimestamp());

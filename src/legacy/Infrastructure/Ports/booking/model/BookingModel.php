@@ -19,7 +19,7 @@ class BookingModel extends \ResbookingModel{
      * Referencia al dto para navegación por fechas
      * @var \DateNavDTO
      */
-    public $DateNavDTO = NULL;
+    public $DateNavDTO = null;
 
     /**
      * Identidad del estado anulado
@@ -55,7 +55,7 @@ class BookingModel extends \ResbookingModel{
      * Referencia a la reserva seleccionada
      * @var \Booking
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Número máximo de comensales
@@ -94,7 +94,7 @@ class BookingModel extends \ResbookingModel{
      */
     private function SetProject($id = 0){
         $project = $this->Dao->Read($id, "Project");
-        if($project != NULL && $project instanceof \Project){
+        if($project != null && $project instanceof \Project){
             $this->Project = $id;
             $this->ProjectName = $project->Name;
             $this->ProjectPath = $project->Path;
@@ -112,7 +112,7 @@ class BookingModel extends \ResbookingModel{
             "Date" => $this->DateNavDTO->Fecha];
         $registros = $this->Dao->GetByFilter("BookingDTO", $filter);
         $reservas = array_filter($registros, function($item){
-           return $item->State != NULL;
+           return $item->State != null;
         });
         foreach($reservas as $item){
             $item->sClientName = $this->SetText($item->ClientName, 25);
@@ -202,7 +202,7 @@ class BookingModel extends \ResbookingModel{
         if($diners < $agg->MinDiners ){
             $result = -1;
         }
-        else if($diners > $agg->MaxDiners){
+        elseif($diners > $agg->MaxDiners){
             $result = -2;
         }
         else{
@@ -227,10 +227,10 @@ class BookingModel extends \ResbookingModel{
      * @param \Booking $entity Referencia a la reserva a generar
      * @return boolean Resultado de la operación
      */
-    public function SaveBooking($entity = NULL){
+    public function SaveBooking($entity = null){
         $management = BookingManagement::
                 GetInstance($this->Project, $this->Service);
-        return FALSE;
+        return false;
     }
 
     /**
@@ -244,10 +244,10 @@ class BookingModel extends \ResbookingModel{
         if(empty($to)){
             $result = -1;
         }
-        else if(filter_var($to, FILTER_VALIDATE_EMAIL) == FALSE){
+        elseif(filter_var($to, FILTER_VALIDATE_EMAIL) == false){
             $result = -2;
         }
-        else if(empty($message)){
+        elseif(empty($message)){
             $result = -3;
         }
         if($result == 0){
@@ -265,7 +265,7 @@ class BookingModel extends \ResbookingModel{
     public function SendReminder($id = 0){
         $result = -1;
         $reserva = $this->Dao->Read($id, "BookingDTO");
-        if($reserva != NULL){
+        if($reserva != null){
             $result = $this->RegistrarNotificacion($reserva->Email,
                     "recordatorio-resbooking", $reserva);
         }
@@ -303,12 +303,12 @@ class BookingModel extends \ResbookingModel{
         $arr = json_decode($sTicket);
         settype($arr, "array");
         // validación
-        if($arr != NULL && is_array($arr)){
+        if($arr != null && is_array($arr)){
             $management = BookingManagement::
                 GetInstance($this->Project, $this->Service);
             $entity = $management->GetBookingById($arr["Id"]);
             $dto = $this->Dao->Read($arr["Id"], "BookingNotificationDTO");
-            if($entity != NULL && $entity->State != $this->IdAnulado
+            if($entity != null && $entity->State != $this->IdAnulado
                     && $this->ValidateDate($entity->Date, $dto->Start)){
                 $this->Entity = $dto;
                 $this->Entity->Date = $this->SetDate($entity->Date);
@@ -317,7 +317,7 @@ class BookingModel extends \ResbookingModel{
                         ? $arr["User"] : "email-admin";
                 return 0;
             }
-            if($entity != NULL && $entity->State == $this->IdAnulado){
+            if($entity != null && $entity->State == $this->IdAnulado){
                 return 1;
             }
         }
@@ -348,7 +348,7 @@ class BookingModel extends \ResbookingModel{
             return $this->CompareDate($date, $today, $sTurn);
         }
         catch(Exception $e){
-            return FALSE;
+            return false;
         }
     }
 
@@ -359,35 +359,35 @@ class BookingModel extends \ResbookingModel{
      * @param string $sTurn Turno del día
      * @return boolean
      */
-    private function CompareDate($date = NULL, $today = NULL, $sTurn = ""){
+    private function CompareDate($date = null, $today = null, $sTurn = ""){
         $dateY = intval($date->format("Y"));
         $todayY = intval($today->format("Y"));
 
         if($dateY < $todayY){
-            return FALSE;
+            return false;
         }
-        else if($dateY > $todayY){
-            return TRUE;
+        elseif($dateY > $todayY){
+            return true;
         }
 
         $dateM = intval($date->format("m"));
         $todayM = intval($today->format("m"));
 
         if($dateM < $todayM){
-            return FALSE;
+            return false;
         }
-        else if($dateM > $todayM){
-            return TRUE;
+        elseif($dateM > $todayM){
+            return true;
         }
 
         $dateD = intval($date->format("d"));
         $todayD = intval($today->format("d"));
 
         if($dateD < $todayD){
-            return FALSE;
+            return false;
         }
-        else if($dateD > $todayD){
-            return TRUE;
+        elseif($dateD > $todayD){
+            return true;
         }
 
         return $this->ValidateTurn($sTurn);
@@ -408,20 +408,20 @@ class BookingModel extends \ResbookingModel{
             $hour = intval($data[0]);
 
             if($currentHour > $hour){
-                return FALSE;
+                return false;
             }
-            else if($currentHour < $hour){
-                return TRUE;
+            elseif($currentHour < $hour){
+                return true;
             }
 
             $minutes = intval($data[1]);
             if($currentMinutes >= $minutes){
-                return FALSE;
+                return false;
             }
 
-            return TRUE;
+            return true;
 
         }
-        return FALSE;
+        return false;
     }
 }

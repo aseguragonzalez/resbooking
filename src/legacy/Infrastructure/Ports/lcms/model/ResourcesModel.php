@@ -68,19 +68,19 @@
 				// Guardar BasePath
 				$this->BasePath = str_replace("{Project}",$this->ProjectPath ,$path."/");
 			}
-			else if($entity == "StyleSheet"){
+			elseif($entity == "StyleSheet"){
 				// Obtener path del config.xml
 				$path = ConfigurationManager::GetKey( "cssPath" );
 				// Guardar BasePath
 				$this->BasePath = str_replace("{Project}",$this->ProjectPath ,$path."/");
 			}
-			else if($entity == "JavaScript"){
+			elseif($entity == "JavaScript"){
 				// Obtener path del config.xml
 				$path = ConfigurationManager::GetKey( "scriptPath" );
 				// Guardar BasePath
 				$this->BasePath = str_replace("{Project}",$this->ProjectPath ,$path."/");
 			}
-			else if($entity == "Layout"){
+			elseif($entity == "Layout"){
 				// Obtener path del config.xml
 				$path = ConfigurationManager::GetKey( "layoutPath" );
 				// Guardar BasePath
@@ -124,10 +124,10 @@
 			if($this->Entity == "Image"){
 				$filter = array( "jpg" , "JPG" , "png", "PNG" , "GIF" , "gif" );
 			}
-			else if($this->Entity == "StyleSheet"){
+			elseif($this->Entity == "StyleSheet"){
 				$filter = array( "css" );
 			}
-			else if($this->Entity == "JavaScript"){
+			elseif($this->Entity == "JavaScript"){
 				$filter = array( "js" );
 			}
 			else{

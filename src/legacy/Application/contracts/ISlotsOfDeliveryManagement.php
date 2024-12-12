@@ -21,7 +21,7 @@ interface ISlotsOfDeliveryManagement {
      * @param \SlotOfDelivery $slot Referencia a la entidad a guardar
      * @return array Códigos de operación
      */
-    public function SetSlot($slot = NULL);
+    public function SetSlot($slot = null);
 
     /**
      * Proceso para eliminar el registro de un turno de reparto

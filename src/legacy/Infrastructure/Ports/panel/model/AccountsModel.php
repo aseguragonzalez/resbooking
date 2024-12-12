@@ -14,7 +14,7 @@ class AccountsModel extends \PanelModel{
      * Referencia al dto de datos de formulario
      * @var \AccountDTO
      */
-    public $AccountDTO = NULL;
+    public $AccountDTO = null;
 
     /**
      * Mensaje sobre el resultado de la última operación
@@ -121,8 +121,8 @@ class AccountsModel extends \PanelModel{
      * @param \AccountDTO $dto Referencia al DTO con la información de la solicitud
      * @return boolean Resultado de la operación
      */
-    public function SaveNewPassword($dto = NULL){
-        $result = FALSE;
+    public function SaveNewPassword($dto = null){
+        $result = false;
         // Calcular los hash
         $dto->Password = (empty($dto->Password))
                 ? $dto->Password : hash("sha512", $dto->Password);
@@ -152,8 +152,8 @@ class AccountsModel extends \PanelModel{
      * @param \AccountDTO $dto DTO datos de recuperación
      * @return boolean Resultado de la operación
      */
-    public function RecoveryPassword($dto = NULL){
-        $result = FALSE;
+    public function RecoveryPassword($dto = null){
+        $result = false;
         if($this->ValidateRecoveryPassword($dto)){
             // Obtener el id de proyecto resbooking
             $project = $this->GetProjectId();
@@ -181,7 +181,7 @@ class AccountsModel extends \PanelModel{
         if(empty($email)){
             $this->ErrorCodes[] = -2;
         }
-        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->ErrorCodes[] = -3;
         }
         else{
@@ -191,7 +191,7 @@ class AccountsModel extends \PanelModel{
             if($counts == 0){
                 $this->ErrorCodes[] = -11;
             }
-            else if($counts > 1){
+            elseif($counts > 1){
                 $this->ErrorCodes[] = -12;
             }
         }
@@ -226,10 +226,10 @@ class AccountsModel extends \PanelModel{
         if(empty($newPassword)){
             $this->ErrorCodes[] = -6;
         }
-        else if(empty($repeatedNewPassword)){
+        elseif(empty($repeatedNewPassword)){
             $this->ErrorCodes[] = -7;
         }
-        else if($newPassword != $repeatedNewPassword){
+        elseif($newPassword != $repeatedNewPassword){
             $this->ErrorCodes[] = -8;
         }
     }
@@ -239,8 +239,8 @@ class AccountsModel extends \PanelModel{
      * @param \AccountDTO $dto Referencia al dto con información contraseña
      * @return boolean Resultado del proceso de validación
      */
-    private function ValidateSaveNewPassword($dto = NULL ){
-        if($dto != NULL){
+    private function ValidateSaveNewPassword($dto = null ){
+        if($dto != null){
             $this->ValidatePassword($dto->Password);
             $this->ValidateNewPassword(
                     $dto->NewPassword, $dto->RepeatNewPassword);
@@ -256,8 +256,8 @@ class AccountsModel extends \PanelModel{
      * @param \AccountDTO $dto Referencia al dto con información de recuperación
      * @return boolean
      */
-    private function ValidateRecoveryPassword($dto = NULL){
-        if($dto != NULL){
+    private function ValidateRecoveryPassword($dto = null){
+        if($dto != null){
             $this->ValidateEmail($dto->Email);
         }
         else{

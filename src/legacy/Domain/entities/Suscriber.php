@@ -11,7 +11,7 @@ class Suscriber{
      * Identidad del suscriptor
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Nombre del suscriptor
@@ -35,7 +35,7 @@ class Suscriber{
      * Fecha de creación del registro
      * @var string
      */
-    public $CreateDate = NULL;
+    public $CreateDate = null;
 
     /**
      * Estado de la suscripción
@@ -47,7 +47,7 @@ class Suscriber{
      * Fecha de baja del registro
      * @var string
      */
-    public $DeleteDate=NULL;
+    public $DeleteDate=null;
 
     /**
      * Estado lógico del registro

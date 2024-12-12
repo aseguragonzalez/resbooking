@@ -31,19 +31,19 @@ class ConfigurationModel extends \TakeawayModel{
      * Referencia a la información del proyecto
      * @var \ProjectInformation
      */
-    public $Info = NULL;
+    public $Info = null;
 
     /**
      * Referencia al agregado
      * @var \ConfigurationAggregate
      */
-    public $Aggregate = NULL;
+    public $Aggregate = null;
 
     /**
      * Referencia al gestor del agregado
      * @var \IConfigurationManagement
      */
-    protected $Management = NULL;
+    protected $Management = null;
 
     /**
      * Constructor
@@ -61,32 +61,32 @@ class ConfigurationModel extends \TakeawayModel{
      */
     public function LoadModel(){
         $this->Management->GetConfiguration();
-        $this->Aggregate = $this->Management->GetAggregate();
-        foreach($this->Aggregate->DeliveryMethods as $method){
-            $filter = array_filter($this->Aggregate->AvailableDeliveryMethods,
+        $this->aggregate = $this->Management->GetAggregate();
+        foreach($this->aggregate->DeliveryMethods as $method){
+            $filter = array_filter($this->aggregate->AvailableDeliveryMethods,
                     function ($item) use($method){
                         return $item->Id == $method->Id;
                     });
             $method->Checked = count($filter) > 0 ? 1 : 0;
         }
-        $this->DeliveryMethods = $this->Aggregate->DeliveryMethods;
-        foreach($this->Aggregate->PaymentMethods as $method){
-            $filter = array_filter($this->Aggregate->AvailablePaymentMethods,
+        $this->DeliveryMethods = $this->aggregate->DeliveryMethods;
+        foreach($this->aggregate->PaymentMethods as $method){
+            $filter = array_filter($this->aggregate->AvailablePaymentMethods,
                     function ($item) use($method){
                         return $item->Id == $method->Id;
                     });
             $method->Checked = count($filter) > 0 ? 1 : 0;
         }
-        $this->PaymentMethods = $this->Aggregate->PaymentMethods;
-        foreach($this->Aggregate->PostCodes as $method){
-            $filter = array_filter($this->Aggregate->AvailablePostCodes,
+        $this->PaymentMethods = $this->aggregate->PaymentMethods;
+        foreach($this->aggregate->PostCodes as $method){
+            $filter = array_filter($this->aggregate->AvailablePostCodes,
                     function ($item) use($method){
                         return $item->Code == $method->Id;
                     });
             $method->Checked = count($filter) > 0 ? 1 : 0;
         }
-        $this->PostCodes = $this->Aggregate->PostCodes;
-        $this->Info = $this->Aggregate->ProjectInfo;
+        $this->PostCodes = $this->aggregate->PostCodes;
+        $this->Info = $this->aggregate->ProjectInfo;
 
     }
 
@@ -96,22 +96,22 @@ class ConfigurationModel extends \TakeawayModel{
      * @param \ProjectInformation $info Referencia a la entidad
      * @return \JsonResultDTO Resultado de la operación
      */
-    public function SetProjectInformation($info = NULL){
+    public function SetProjectInformation($info = null){
         $result = $this->Management->SetProjectInfo($info);
 
         $json = new \JsonResultDTO();
 
-        if(is_array($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_array($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new \Exception("Códigos de operación inválidos");
         }
-        else if(count($result) >  0){
-            $json->Result = FALSE;
+        elseif(count($result) >  0){
+            $json->Result = false;
             $json->Codes = $result;
         }
         else{
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
 
@@ -129,18 +129,18 @@ class ConfigurationModel extends \TakeawayModel{
 
         $json = new \JsonResultDTO();
 
-        if(is_numeric($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_numeric($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new \Exception("Códigos de operación inválidos");
         }
 
         if($result < 0){
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = $this->GetResultMessage(_OP_DELETE_, $result);
         }
         else{
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
 
@@ -158,18 +158,18 @@ class ConfigurationModel extends \TakeawayModel{
 
         $json = new \JsonResultDTO();
 
-        if(is_numeric($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_numeric($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new \Exception("Códigos de operación inválidos");
         }
 
         if($result < 0){
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = $this->GetResultMessage(_OP_DELETE_, $result);
         }
         else{
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
 
@@ -187,18 +187,18 @@ class ConfigurationModel extends \TakeawayModel{
 
         $json = new \JsonResultDTO();
 
-        if(is_numeric($result) == FALSE){
-            $json->Result = FALSE;
+        if(is_numeric($result) == false){
+            $json->Result = false;
             $json->Code = 500;
             $json->Exception = new \Exception("Códigos de operación inválidos");
         }
 
         if($result < 0){
-            $json->Result = FALSE;
+            $json->Result = false;
             $json->Error = $this->GetResultMessage(_OP_DELETE_, $result);
         }
         else{
-            $json->Result = TRUE;
+            $json->Result = true;
             $json->Message = "La operación se ha realizado correctamente.";
         }
 

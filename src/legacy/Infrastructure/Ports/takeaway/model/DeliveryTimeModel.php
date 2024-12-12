@@ -13,13 +13,13 @@ class DeliveryTimeModel extends \TakeawayModel{
      * Indica si se ha producido un error durante la última operación
      * @var boolean
      */
-    public $Error = FALSE;
+    public $Error = false;
 
     /**
      * Referencia al turno de reparto en edición
      * @var \SlotOfDelivery
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de turnos de reparto activos
@@ -111,13 +111,13 @@ class DeliveryTimeModel extends \TakeawayModel{
      * del modelo para visualizar los resultados de la operación
      * @param \SlotOfDelivery $entity Referencia al turno de reparto
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
 
-        $this->Error = TRUE;
+        $this->Error = true;
 
         $result = $this->Management->SetSlot($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetSlot: "
                     . "Códigos de operación inválidos");
         }
@@ -129,7 +129,7 @@ class DeliveryTimeModel extends \TakeawayModel{
             $this->eResult = "La operación se ha realizado satisfactoriamente.";
             $this->eResultClass="has-success";
             $this->Entities[$entity->Id] = $entity;
-            $this->Error = FALSE;
+            $this->Error = false;
         }
         $this->Entity = $entity;
     }
@@ -158,8 +158,8 @@ class DeliveryTimeModel extends \TakeawayModel{
      */
     protected function SetModel() {
         $this->Entity = new \SlotOfDelivery();
-        $this->Entities = $this->Aggregate->AvailableSlots;
-        $this->Hours = $this->Aggregate->HoursOfDay;
+        $this->Entities = $this->aggregate->AvailableSlots;
+        $this->Hours = $this->aggregate->HoursOfDay;
     }
 
     /**

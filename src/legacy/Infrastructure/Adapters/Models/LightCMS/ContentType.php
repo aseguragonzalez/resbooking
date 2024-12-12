@@ -10,7 +10,7 @@ class ContentType
      * Identidad de la entidad
      * @var int Identidad de la tipología
      */
-    public $Id;
+    public int $id;
 
     /**
      * Nombre del tipo de contenido

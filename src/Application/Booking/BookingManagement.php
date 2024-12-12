@@ -28,19 +28,19 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      * Referencia al gestor de servicio de reservas
      * @var \BookingServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IBookingRepository
      */
-    protected $Repository = NULL;
+    protected $Repository = null;
 
     /**
      * Referencia al Management de reservas
      * @var \IBookingManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -77,7 +77,7 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      * @return \BookingManagement
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(BookingManagement::$_reference == NULL){
+        if(BookingManagement::$_reference == null){
            BookingManagement::$_reference =
                    new \BookingManagement($project, $service);
         }
@@ -91,13 +91,13 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      * @param boolean $sendNotification Flag para indicar si se envía notificación
      * @return array Resultado de la operación
      */
-    public function RegisterBooking($entity = NULL,
-            $saveClient = FALSE, $sendNotification = TRUE){
+    public function RegisterBooking($entity = null,
+            $saveClient = false, $sendNotification = true){
         $entity->Project = $this->IdProject;
         $result = $this->Services->Validate($entity);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $exist = $this->Services->Exist($entity);
-            if($exist == FALSE){
+            if($exist == false){
                 $result = $this->CreateBooking($entity,
                         $saveClient, $sendNotification);
             }
@@ -119,13 +119,13 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      *  -2 : Se ha producido un error durante la actualización
      */
     public function SavePropertyBooking($id = 0,
-            $propName = "", $propValue = NULL){
+            $propName = "", $propValue = null){
         // Código de operación
         $result = -1;
         // Obtener referencia a la entidad buscada
         $entity = $this->Repository->Read( "Booking", $id);
         // Comprobar que se ha encontrad
-        if($entity != NULL){
+        if($entity != null){
             // Proceso de actualización de la reserva
             $result = $this->UpdatePropertyBooking($entity, $propName, $propValue);
         }
@@ -151,7 +151,7 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
         // Obtener referencia a la entidad buscada
         $entity = $this->Repository->Read( "Booking", $id);
         // Comprobar que se ha encontrad
-        if($entity != NULL && $valState == TRUE){
+        if($entity != null && $valState == true){
             // Validar el estado actual de la reserva
             if($entity->State == $state){ return 0; }
             // Actualización
@@ -161,13 +161,13 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
                 // Generar la notificación
                 $not = $this->Repository->CreateNotification($entity, $subject);
                 // Asignar el resultado de la operación
-                $result = ($not == FALSE) ? -3 : 0;
+                $result = ($not == false) ? -3 : 0;
             }
             else{
                 $result = -2;
             }
         }
-        else if($valState == FALSE){
+        else if($valState == false){
             $result = -4;
         }
         return $result;
@@ -200,11 +200,11 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      * @param array $filter Filtro de búsqueda
      * @return array Colección de reservas encontradas
      */
-    public function GetBookingsByFilter($filter = NULL){
+    public function GetBookingsByFilter($filter = null){
         // Si el filtro no se ha definido, lo definimos
         // y establecemos el proyecto sobre el que se buscan las
         // reservas
-        if($filter == NULL){
+        if($filter == null){
             $filter = [ "Project" => $this->IdProject ];
         }
         else{
@@ -221,13 +221,13 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      * @param boolean $sendNotification Flag para indicar si se envía notificación
      * @return array Códigos de operación
      */
-    private function CreateBooking($entity = NULL,
-            $saveClient = FALSE, $sendNotification = TRUE){
+    private function CreateBooking($entity = null,
+            $saveClient = false, $sendNotification = true){
         $log = $this->Services->GetActivity($entity);
         $this->Repository->Create($log);
         $entity->Client = $this->Repository->GetClient($entity, $saveClient);
         $booking = $this->Repository->Create($entity);
-        if($booking != FALSE ){
+        if($booking != false ){
             $this->Aggregate->Booking = $booking;
 
             $subject = ConfigurationManager::GetKey("mailSubject");
@@ -266,10 +266,10 @@ class BookingManagement extends \BaseManagement implements \IBookingManagement{
      *  -1 => La referencia a la reserva es null
      *  -2 => No se ha definido la propiedad a actualizar
      */
-    private function UpdatePropertyBooking($entity = NULL,
-            $propertyName = "", $propertyValue = NULL){
+    private function UpdatePropertyBooking($entity = null,
+            $propertyName = "", $propertyValue = null){
         $return = -1;
-        if($entity != NULL){
+        if($entity != null){
             if($propertyName != ""){
                 // Crear Histórico
                 $hist = new \BookingBck($entity);

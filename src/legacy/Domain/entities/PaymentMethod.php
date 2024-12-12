@@ -11,19 +11,19 @@ class PaymentMethod{
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre asignado al medio de pago
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción del medio de mago
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Abreviatura del nombre asignado
@@ -41,5 +41,5 @@ class PaymentMethod{
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 }

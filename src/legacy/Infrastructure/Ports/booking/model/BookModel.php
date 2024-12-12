@@ -121,13 +121,13 @@ class BookModel extends \ResbookingModel{
      * Consentimiento para guardar los datos de cliente
      * @var boolean
      */
-    public $Legal = FALSE;
+    public $Legal = false;
 
     /**
      * Referencia a la entidad
      * @var \Booking
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de turnos configurados
@@ -193,19 +193,19 @@ class BookModel extends \ResbookingModel{
      * Referencia al servicio actual
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Referencia al objeto Management de reservas
      * @var \BookingManagement
      */
-    protected $Management = NULL;
+    protected $Management = null;
 
     /**
      * Referencia al agregado de reservas
      * @var \BookingAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Array de codigos de resultado
@@ -236,41 +236,41 @@ class BookModel extends \ResbookingModel{
      * agregado correspondiente
      */
     private function SetModelProperties(){
-        $this->Aggregate = $this->Management->GetAggregate();
-        $this->Advertising = ($this->Aggregate->Configuration->Advertising) ? 1: 0;
-        $this->Preorder = ($this->Aggregate->Configuration->PreOrder) ? 1: 0;
-        $this->Places = $this->Aggregate->AvailablePlaces;
+        $this->aggregate = $this->Management->GetAggregate();
+        $this->Advertising = ($this->aggregate->Configuration->Advertising) ? 1: 0;
+        $this->Preorder = ($this->aggregate->Configuration->PreOrder) ? 1: 0;
+        $this->Places = $this->aggregate->AvailablePlaces;
 
-        $this->OffersShare = json_encode($this->Aggregate->OffersShare);
-        $this->TurnsShare = json_encode($this->Aggregate->TurnsShare);
+        $this->OffersShare = json_encode($this->aggregate->OffersShare);
+        $this->TurnsShare = json_encode($this->aggregate->TurnsShare);
 
         $this->OffersEvents = [];
-        foreach($this->Aggregate->AvailableOffersEvents as $item){
+        foreach($this->aggregate->AvailableOffersEvents as $item){
             $this->OffersEvents[] = $item;
         }
         $this->OffersEvents = json_encode($this->OffersEvents);
 
         $this->Blocks = [];
-        foreach($this->Aggregate->AvailableBlocks as $item){
+        foreach($this->aggregate->AvailableBlocks as $item){
             $this->Blocks[] = $item;
         }
         $this->Blocks = json_encode($this->Blocks);
 
-        $max = $this->Aggregate->MaxDiners;
-        $min = $this->Aggregate->MinDiners;
+        $max = $this->aggregate->MaxDiners;
+        $min = $this->aggregate->MinDiners;
         for($i = $min; $i <= $max; $i++){
             $this->DinersLst[] = new \SelectControlItem($i, $i);
         }
-        $this->Offers = $this->Aggregate->AvailableOffers;
+        $this->Offers = $this->aggregate->AvailableOffers;
         foreach($this->Offers as $item){
             $item->Config = json_encode($item->Config);
         }
-        $diners = ($this->Aggregate->MinDiners <= 2)
-                    ? 2: $this->Aggregate->MinDiners;
+        $diners = ($this->aggregate->MinDiners <= 2)
+                    ? 2: $this->aggregate->MinDiners;
         $this->Entity = new \Booking();
         $this->Entity->Diners = $diners;
         $this->Entity->Comment = "";
-        $this->Turns = $this->Aggregate->Turns;
+        $this->Turns = $this->aggregate->Turns;
         foreach($this->Turns as $turn){
             if(isset($turn->Days)){
                 $turn->Days = json_encode($turn->Days);
@@ -288,16 +288,16 @@ class BookModel extends \ResbookingModel{
      * Establecer en el model los datos de la entidad
      * @param \Booking $entity
      */
-    private function SetEntity($entity = NULL){
-        if($entity != NULL){
+    private function SetEntity($entity = null){
+        if($entity != null){
             $date = new \DateTime( $entity->Date );
             $entity->Date = $date->format( "d-m-Y" );
             $this->Entity = $entity;
             $this->Entity->Project = $this->Project;
         }
         else{
-            $diners = ($this->Aggregate->MinDiners <= 2)
-                    ? 2: $this->Aggregate->MinDiners;
+            $diners = ($this->aggregate->MinDiners <= 2)
+                    ? 2: $this->aggregate->MinDiners;
             $this->Entity = new \Booking();
             $this->Entity->Project = $this->Project;
             $this->Entity->Diners = $diners;
@@ -311,7 +311,7 @@ class BookModel extends \ResbookingModel{
      * @param boolean $legal Flag para indicar el registro del cliente
      * @return boolean Resultado de la operación
      */
-    public function Save($entity = NULL, $legal = FALSE){
+    public function Save($entity = null, $legal = false){
         $this->Legal = $legal;
 
         $ars = [" ", "-", "(", ")"];
@@ -320,7 +320,7 @@ class BookModel extends \ResbookingModel{
 
         // Establecer el valor de la oferta seleccionada
         $entity->Offer = (empty($entity->Offer) || $entity->Offer == "-1" )
-                ? NULL: intval($entity->Offer);
+                ? null: intval($entity->Offer);
         // Formatear la fecha
         $datetime = new \DateTime($entity->Date);
         $entity->Date = $datetime->format("Y-m-d");
@@ -432,8 +432,8 @@ class BookModel extends \ResbookingModel{
      * en la operacion anterior.
      * @param array $codes Coleccion de codigos de error obtenidos
      */
-    private function TranslateResultCodes($codes = NULL){
-        if($codes != NULL && is_array($codes)){
+    private function TranslateResultCodes($codes = null){
+        if($codes != null && is_array($codes)){
             foreach ($codes as $code){
                 if(!isset($this->Codes[$code])){
                     continue;

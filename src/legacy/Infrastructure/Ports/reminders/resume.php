@@ -26,14 +26,14 @@ $sDate = filter_input(INPUT_GET, "date");
 $date = !empty($sDate) ? $sDate : $d->format( "Ynj" );
 
 $path = "./logs/data-$date.log";
-$contenido = FALSE;
-if(file_exists($path) == TRUE){
+$contenido = false;
+if(file_exists($path) == true){
     // Obtener contenido del log
     $contenido = file_get_contents($path);
 }
 
 // Comprobar que está vacío
-if($contenido != FALSE){
+if($contenido != false){
     $contenido = substr ($contenido , 0, (strlen($contenido) - 2) );
     $contenido = "[".$contenido."]";
     $data = json_decode($contenido);

@@ -121,7 +121,7 @@ function setMessageResult(){
         if($(o).hasClass("has-success")){
             $(o).addClass("alert-success");
         }
-        else if($(o).hasClass("has-error")){
+        elseif($(o).hasClass("has-error")){
             $(o).addClass("alert-danger");
         }
     });

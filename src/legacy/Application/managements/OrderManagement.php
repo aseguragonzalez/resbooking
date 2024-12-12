@@ -14,19 +14,19 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
      * Referencia al gestor de servicio de reservas
      * @var \IOrderServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IOrderRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IOrderManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -37,11 +37,11 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = OrderRepository::GetInstance($project, $service);
+        $this->repository = OrderRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = OrderServices::GetInstance($this->Aggregate);
+        $this->Services = OrderServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -51,7 +51,7 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
      * @return \IOrderManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(OrderManagement::$_reference == NULL){
+        if(OrderManagement::$_reference == null){
             OrderManagement::$_reference =
                    new \OrderManagement($project, $service);
         }
@@ -64,9 +64,9 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -74,7 +74,7 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
      * @param \OrderDTO $dto Referencia al DTO de la solicitud
      * @return array Códigos de operación
      */
-    public function SetOrder($dto = NULL) {
+    public function SetOrder($dto = null) {
         $subject = "Pedido";
         // Asignar el proyecto
         $dto->Project = $this->IdProject;
@@ -85,17 +85,17 @@ class OrderManagement extends \BaseManagement implements \IOrderManagement{
         // Validación de los datos
         $result = $this->Services->Validate($dto);
 
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             // Obtener la referencia a la solicitud
             $request = $dto->GetRequest();
             // Obtener la colección de productos solicitados
             $items = $dto->GetRequestItems();
             // Generar el registro
-            $id = $this->Repository->CreateOrder($request, $items);
+            $id = $this->repository->CreateOrder($request, $items);
             // Validar registro del pedido
             if($id > 0){
-                $result[] = $this->Repository->CreateNotification($id, $subject);
+                $result[] = $this->repository->CreateNotification($id, $subject);
             }
             else{
                 $result[] = $id;

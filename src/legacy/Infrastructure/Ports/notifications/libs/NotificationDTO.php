@@ -9,19 +9,19 @@ class NotificationDTO{
      * Identidad del registro de notificación
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto asociado
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio asociado
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Propiedad To ( Destino de la notificación )

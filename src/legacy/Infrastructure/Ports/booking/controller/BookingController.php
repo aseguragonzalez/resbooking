@@ -244,7 +244,7 @@ class BookingController extends \ResbookingController{
             settype($arr, "array");
 
             // Validación del ticket
-            if($arr == NULL || !is_array($arr) || !isset($arr["Project"])){
+            if($arr == null || !is_array($arr) || !isset($arr["Project"])){
                 $this->Log->LogError( "Cancel - Error en el ticket "
                         . "de cancelación: ". $ticket);
                 $model = new \BookingModel(0);

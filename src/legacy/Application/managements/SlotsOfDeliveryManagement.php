@@ -15,19 +15,19 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      * Referencia al gestor de servicio de reservas
      * @var \ISlotsOfDeliveryServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \ISlotsOfDeliveryRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \ISlotsOfDeliveryManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -38,11 +38,11 @@ class SlotsOfDeliveryManagement extends \BaseManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = SlotsOfDeliveryRepository::GetInstance($project, $service);
+        $this->repository = SlotsOfDeliveryRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = SlotsOfDeliveryServices::GetInstance($this->Aggregate);
+        $this->Services = SlotsOfDeliveryServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -51,9 +51,9 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -63,7 +63,7 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      * @return \ISlotsOfDeliveryManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(SlotsOfDeliveryManagement::$_reference == NULL){
+        if(SlotsOfDeliveryManagement::$_reference == null){
             SlotsOfDeliveryManagement::$_reference =
                    new \SlotsOfDeliveryManagement($project, $service);
         }
@@ -79,10 +79,10 @@ class SlotsOfDeliveryManagement extends \BaseManagement
     public function GetSlot($id = 0) {
         // Obtener referencia
         $slot = $this->Services->GetById(
-                $this->Aggregate->Slots, $id);
-        if($slot != NULL){
+                $this->aggregate->Slots, $id);
+        if($slot != null){
 
-            $this->Aggregate->Slot = $slot;
+            $this->aggregate->Slot = $slot;
 
             return 0;
         }
@@ -94,22 +94,22 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      * @param \SlotOfDelivery $slot Referencia a la entidad a guardar
      * @return array Códigos de operación
      */
-    public function SetSlot($slot = NULL) {
+    public function SetSlot($slot = null) {
         $slot->Project = $this->IdProject;
         $result = $this->Services->Validate($slot);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($slot->Id == 0){
-                $res = $this->Repository->Create($slot);
-                $result[] = ($res != FALSE) ? 0 : -1;
-                $slot->Id = ($res != FALSE) ? $res->Id : 0;
+                $res = $this->repository->Create($slot);
+                $result[] = ($res != false) ? 0 : -1;
+                $slot->Id = ($res != false) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($slot);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($slot);
+                $result[] = ($res != false) ? 0 : -2;
             }
-            if($res != FALSE){
-                $this->Aggregate->Slots[$slot->Id] = $slot;
+            if($res != false){
+                $this->aggregate->Slots[$slot->Id] = $slot;
             }
         }
         return $result;
@@ -122,18 +122,18 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      */
     public function RemoveSlot($id = 0) {
         // Obtener referencia
-        $slot = $this->Services->GetById($this->Aggregate->Slots, $id);
-        if($slot != NULL){
+        $slot = $this->Services->GetById($this->aggregate->Slots, $id);
+        if($slot != null){
             // Establecer el estado
             $slot->State = 0;
             // Actualizar
-            $res = ($this->Repository->Update($slot) != FALSE);
+            $res = ($this->repository->Update($slot) != false);
 
             if($res){
                 // Eliminar todas las entidades relacionadas
                 $this->RemoveRelations($id);
 
-                unset($this->Aggregate->Slots[$id]);
+                unset($this->aggregate->Slots[$id]);
             }
 
             return  $res ? 0 : -1;
@@ -150,8 +150,8 @@ class SlotsOfDeliveryManagement extends \BaseManagement
         $agg = new \SlotsOfDeliveryAggregate();
         $agg->IdProject = $this->IdProject;
         $agg->IdService = $this->IdService;
-        $this->Aggregate = $this->GetFromRepository($agg);
-        $this->Aggregate->SetAggregate();
+        $this->aggregate = $this->GetFromRepository($agg);
+        $this->aggregate->SetAggregate();
     }
 
     /**
@@ -159,15 +159,15 @@ class SlotsOfDeliveryManagement extends \BaseManagement
      * @param \SlotsOfDeliveryAggregate $agg Referencia al agregado a completar
      * @return \SlotsOfDeliveryAggregate
      */
-    private function GetFromRepository($agg = NULL){
+    private function GetFromRepository($agg = null){
 
         // Cargar las horas disponibles
-        $agg->HoursOfDay = $this->Repository->
+        $agg->HoursOfDay = $this->repository->
                 GetByFilter( "HourOfDay", ["State" => 1] );
 
         $filter = ["Project" => $this->IdProject];
 
-        $slots = $this->Repository->GetByFilter( "SlotOfDelivery", $filter );
+        $slots = $this->repository->GetByFilter( "SlotOfDelivery", $filter );
 
         foreach($slots as $slot){
             $agg->Slots[$slot->Id] = $slot;
@@ -185,27 +185,27 @@ class SlotsOfDeliveryManagement extends \BaseManagement
 
         $filter = [ "SlotOfDelivery" => $id ];
 
-        $slotsEvents = $this->Repository->GetByFilter( "SlotEvent", $filter );
+        $slotsEvents = $this->repository->GetByFilter( "SlotEvent", $filter );
 
         foreach($slotsEvents as $item){
-            $this->Repository->Delete( "SlotEvent", $item->Id );
+            $this->repository->Delete( "SlotEvent", $item->Id );
         }
 
         $slotsConfigured =
-                $this->Repository->GetByFilter( "SlotConfigured", $filter );
+                $this->repository->GetByFilter( "SlotConfigured", $filter );
 
         foreach($slotsConfigured as $item){
-            $this->Repository->Delete( "SlotConfigured", $item->Id );
+            $this->repository->Delete( "SlotConfigured", $item->Id );
         }
 
         $discountsOnConfiguration =
-                $this->Repository->GetByFilter( "DiscountOnConfiguration",
+                $this->repository->GetByFilter( "DiscountOnConfiguration",
                         $filter );
 
         foreach($discountsOnConfiguration as $item){
-            $this->Repository->Delete( "DiscountOnConfiguration", $item->Id );
+            $this->repository->Delete( "DiscountOnConfiguration", $item->Id );
         }
 
-        return TRUE;
+        return true;
     }
 }

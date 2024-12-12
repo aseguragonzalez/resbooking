@@ -10,13 +10,13 @@ class SlotConfigured{
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del día de la semana

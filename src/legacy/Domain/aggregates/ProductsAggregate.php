@@ -23,7 +23,7 @@ class ProductsAggregate extends \BaseAggregate{
      * Referencia al producto cargado
      * @var \Product
      */
-    public $Product = NULL;
+    public $Product = null;
 
     /**
      * Colección de imagenes del producto seleccionado

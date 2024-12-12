@@ -11,7 +11,7 @@ class RequestDTO{
      * Identidad de la solicitud
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia a la solicitud

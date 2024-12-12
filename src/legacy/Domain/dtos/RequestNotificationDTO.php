@@ -13,13 +13,13 @@ class RequestNotificationDTO {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre del cliente
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Dirección del cliente
@@ -73,7 +73,7 @@ class RequestNotificationDTO {
      * Método de entrega seleccionado
      * @var string
      */
-    public $DeliveryMethod = "";
+    public string $deliveryMethod = "";
 
     /**
      * Hora de entrega seleccionada

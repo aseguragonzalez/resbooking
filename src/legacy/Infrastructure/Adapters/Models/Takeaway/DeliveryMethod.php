@@ -10,19 +10,19 @@ class DeliveryMethod {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre del método de entrega
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción del método de entrega
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Términos generales (opcional)
@@ -40,5 +40,5 @@ class DeliveryMethod {
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 }

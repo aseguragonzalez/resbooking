@@ -11,13 +11,13 @@ class ProductDTO{
      * Identidad del producto
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia al producto
      * @var \Product
      */
-    public $Product = NULL;
+    public $Product = null;
 
     /**
      * Coleccion de imagenes asociadas al producto

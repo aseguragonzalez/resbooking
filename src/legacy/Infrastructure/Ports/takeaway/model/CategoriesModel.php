@@ -13,7 +13,7 @@ class CategoriesModel extends \TakeawayModel{
      * Referencia a la categoría en edición
      * @var \Category
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de categorías a listar
@@ -98,7 +98,7 @@ class CategoriesModel extends \TakeawayModel{
      */
     public function GetCategories(){
         // Asignar las categorías del agregado
-        $this->Entities = array_filter($this->Aggregate->Categories,
+        $this->Entities = array_filter($this->aggregate->Categories,
                 function($item){
             return $item->State == 1;
         });
@@ -122,7 +122,7 @@ class CategoriesModel extends \TakeawayModel{
                 $this->TranslateResultCodes(_OP_READ_, [$result]);
             }
             else{
-                $this->Entity = $this->Aggregate->Category;
+                $this->Entity = $this->aggregate->Category;
             }
         }
         $this->FilterParentCategories($id);
@@ -134,11 +134,11 @@ class CategoriesModel extends \TakeawayModel{
      * @throws Exception Excepción generada cuando el resultado
      * de la capa de aplicación no es el esperado
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
         // Procedimiento para almacenar la categoría
         $result = $this->Management->SetCategory($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetCategory: "
                     . "Códigos de operación inválidos");
         }
@@ -198,8 +198,8 @@ class CategoriesModel extends \TakeawayModel{
      */
     private function FilterParentCategories($id = 0){
         $this->Entities = array_filter(
-                $this->Aggregate->Categories, function($item) use($id){
-            return $item->Parent == NULL && $item->Id != $id ;
+                $this->aggregate->Categories, function($item) use($id){
+            return $item->Parent == null && $item->Id != $id ;
         });
     }
 

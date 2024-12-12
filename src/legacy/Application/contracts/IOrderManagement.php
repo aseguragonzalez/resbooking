@@ -13,7 +13,7 @@ interface IOrderManagement {
      * @param \OrderDTO $request Referencia a la solicitud
      * @return array Códigos de operación
      */
-    public function SetOrder($request = NULL);
+    public function SetOrder($request = null);
 
     /**
      * Obtiene una referencia al agregado del contexto

@@ -9,18 +9,18 @@
          * Identidad del tipo de notificación
          * @var int Identidad del tipo de notificación
          */
-        public $Id = 0;
+        public int $id = 0;
 
         /**
          * Nombre del tipo de notificación
          * @var string Nombre del tipo
          */
-        public $Name = "";
+        public string $name = "";
 
         /**
          * Descripción de la notificación
          * @var string Descripción breve sobre el uso del tipo
          */
-        public $Description = "";
+        public string $description = "";
 
     }

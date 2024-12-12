@@ -16,7 +16,7 @@ class CategoriesController extends \TakeawayController{
     * Constructor
     */
     public function __construct(){
-       parent::__construct(TRUE);
+       parent::__construct(true);
     }
 
     /**
@@ -68,7 +68,7 @@ class CategoriesController extends \TakeawayController{
         }
 
         if($entity->Parent == "null"){
-            $entity->Parent = NULL;
+            $entity->Parent = null;
         }
 
         return $entity;

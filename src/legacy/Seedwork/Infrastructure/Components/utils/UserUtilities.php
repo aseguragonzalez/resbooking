@@ -35,7 +35,7 @@ class UserDTOUtils{
      * Fecha en la que se genera la contraseña
      * @var string
      */
-    public $Date = "";
+    public string $date = "";
 
 }
 

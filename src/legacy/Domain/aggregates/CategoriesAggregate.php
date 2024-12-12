@@ -11,7 +11,7 @@ class CategoriesAggregate extends \BaseAggregate{
      * Referencia a la categoría cargada
      * @var \Category
      */
-    public $Category = NULL;
+    public $Category = null;
 
     /**
      * Colección de categorías registradas

@@ -33,7 +33,7 @@ class HomeModel extends \PanelModel{
             if($name == "resbooking"){
                 $count = $this->GetResbookingBulletValue();
             }
-            else if($name == "takeaway"){
+            elseif($name == "takeaway"){
                 $count = $this->GetTakeawayBulletValue();
             }
         }
@@ -48,7 +48,7 @@ class HomeModel extends \PanelModel{
         // Cargar dependencias de bbdd
         require_once "model/entities/Booking.php";
         // Filtro de búsqueda
-        $filter = ["Project" => $this->Project->Id, "State" => NULL];
+        $filter = ["Project" => $this->Project->Id, "State" => null];
         // Cargar la colección de reservas
         $bookings = $this->Dao->GetByFilter("Booking", $filter);
         // Retornar el número de reservas pendientes
@@ -63,7 +63,7 @@ class HomeModel extends \PanelModel{
         // Cargar dependencias de bbdd
         require_once "model/entities/Request.php";
         // Filtro de búsqueda
-        $filter = ["Project" => $this->Project->Id, "WorkFlow" => NULL];
+        $filter = ["Project" => $this->Project->Id, "WorkFlow" => null];
         // Cargar la colección de pedidos
         $requests = $this->Dao->GetByFilter("Request", $filter);
         // Retornar el número de pedidos pendientes

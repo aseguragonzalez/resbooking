@@ -19,7 +19,7 @@ class SlotsOfDeliveryAggregate extends \BaseAggregate{
      * Referencia al Turno de reparto actual
      * @var \SlotOfDelivery
      */
-    public $Slot = NULL;
+    public $Slot = null;
 
     /**
      * Colección de turnos de reparto registrados

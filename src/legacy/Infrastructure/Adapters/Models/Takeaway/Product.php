@@ -10,13 +10,13 @@ class Product{
      * Identidad del producto
      * @var int Id
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia al proyecto padre
      * @var int
      */
-    public $Project = NULL;
+    public int $projectId = 0;
 
     /**
      * Referencia a la categoría
@@ -34,7 +34,7 @@ class Product{
      * Nompre del producto
      * @var string Nombre
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Texto del enlace utilizado al cargar la ficha de producto
@@ -46,7 +46,7 @@ class Product{
      * Descripción del producto utilizada en la ficha
      * @var string Descripción
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Terminos clave asociados a caracterizar el producto
@@ -76,7 +76,7 @@ class Product{
      * Estado lógico del producto
      * @var boolean Estado actual
      */
-    public $State = 1;
+    public bool $state = true;
 
     /**
      * Estado de visibilidad del producto en el catálogo

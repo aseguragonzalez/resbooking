@@ -10,25 +10,25 @@ class ServicePostCode {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia al proyecto asociado
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Referencia al servicio asociado
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Referencia al código postal
      * @var int
      */
-    public $Code = 0;
+    public int $code = 0;
 
     /**
      * Código postal
@@ -40,5 +40,5 @@ class ServicePostCode {
      * Flag indicación si incluye el código postal completo
      * @var boolean
      */
-    public $Full = FALSE;
+    public $Full = false;
 }

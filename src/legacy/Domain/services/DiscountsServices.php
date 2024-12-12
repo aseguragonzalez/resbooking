@@ -13,19 +13,19 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * Referencia
      * @var \IDiscountsServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IDiscountsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \CategoriesAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -37,11 +37,11 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * Constructor
      * @param \DiscountsAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = DiscountsRepository
+        $this->repository = DiscountsRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -50,8 +50,8 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * @param \BaseAggregate Referencia al agregado actual
      * @return \IDiscountsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(DiscountsServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(DiscountsServices::$_reference == null){
             DiscountsServices::$_reference = new \DiscountsServices($aggregate);
         }
         return DiscountsServices::$_reference;
@@ -61,10 +61,10 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * Proceso de validación de la información del descuento
      * contenida en el DTO
      * @param \DiscountDTO $dto Referencia a la información de descuento
-     * @return TRUE|array Colección de códigos de validación
+     * @return true|array Colección de códigos de validación
      */
-    public function Validate($dto = NULL){
-        if($dto != NULL){
+    public function Validate($dto = null){
+        if($dto != null){
             $this->ValidateValue($dto->Value);
             $this->ValidateMaxValue($dto->Max);
             $this->ValidateMinValue($dto->Min);
@@ -78,7 +78,7 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
         else{
             $this->Result[] = -4;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -89,10 +89,10 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
         if(empty($value)){
             $this->Result[] = -5;
         }
-        else if(!is_numeric($value)){
+        elseif(!is_numeric($value)){
             $this->Result[] = -6;
         }
-        else if(intval($value) < 0){
+        elseif(intval($value) < 0){
             $this->Result[] = -7;
         }
     }
@@ -105,10 +105,10 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
         if(empty($max)){
             $this->Result[] = -8;
         }
-        else if(!is_numeric($max)){
+        elseif(!is_numeric($max)){
             $this->Result[] = -9;
         }
-        else if(intval($max) <= 0){
+        elseif(intval($max) <= 0){
             $this->Result[] = -10;
         }
     }
@@ -121,10 +121,10 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
         if(empty($min)){
             $this->Result[] = -11;
         }
-        else if(!is_numeric($min)){
+        elseif(!is_numeric($min)){
             $this->Result[] = -12;
         }
-        else if(intval($min) < 0){
+        elseif(intval($min) < 0){
             $this->Result[] = -13;
         }
     }
@@ -223,8 +223,8 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * Proceso de validación de las configuraciones del descuento
      * @param array $config
      */
-    private function ValidateConfiguration($config = NULL){
-        if($config == NULL){
+    private function ValidateConfiguration($config = null){
+        if($config == null){
             return;
         }
 
@@ -243,24 +243,24 @@ class DiscountsServices extends \BaseServices implements \IDiscountsServices{
      * @param \DiscountOnConfiguration $config
      * @return boolean
      */
-    private function ValidateConfig($config = NULL){
-        if($config == NULL ||
-                $config instanceof \DiscountOnConfiguration == FALSE){
-            return FALSE;
+    private function ValidateConfig($config = null){
+        if($config == null ||
+                $config instanceof \DiscountOnConfiguration == false){
+            return false;
         }
 
         if(empty($config->DayOfWeek)){
-            return FALSE;
+            return false;
         }
 
-        $slot = $this->GetById($this->Aggregate->SlotsOfDelivery,
+        $slot = $this->GetById($this->aggregate->SlotsOfDelivery,
                 $config->SlotOfDelivery);
 
-        if($slot == NULL){
-            return FALSE;
+        if($slot == null){
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
 }

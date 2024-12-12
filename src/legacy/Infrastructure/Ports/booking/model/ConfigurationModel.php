@@ -19,7 +19,7 @@ class ConfigurationModel extends \ResbookingModel{
      * Referencia a la entidad de configuración del servicio
      * @var \ConfigurationService
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Mensaje de error en el mínimo número de comensales
@@ -122,7 +122,7 @@ class ConfigurationModel extends \ResbookingModel{
      * Proceso para almacenar la información de configuración del servicio
      * @param \ConfigurationService $entity Referencia a la entidad a guardar
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
         if($this->Validate($entity)){
             $entity->Project = $this->Project;
             $entity->Service = $this->Service;
@@ -149,8 +149,8 @@ class ConfigurationModel extends \ResbookingModel{
      * @param \ConfigurationService $entity Referencia a la entidad
      * @return type
      */
-    public function Validate($entity = NULL){
-        if($entity == NULL){
+    public function Validate($entity = null){
+        if($entity == null){
             $this->Codigos[] = -1;
         }
         else{
@@ -165,23 +165,23 @@ class ConfigurationModel extends \ResbookingModel{
      * Proceso de validación de el número de comensales
      * @param \ConfigurationService $entity Referencia a la entidad
      */
-    private function ValidateDiners($entity = NULL){
+    private function ValidateDiners($entity = null){
         if(empty($entity->MaxDiners)){
             $this->Codigos[] = -2;
         }
-        else if(!is_numeric($entity->MaxDiners)){
+        elseif(!is_numeric($entity->MaxDiners)){
             $this->Codigos[] = -3;
         }
-        else if($entity->MaxDiners < 1){
+        elseif($entity->MaxDiners < 1){
             $this->Codigos[] = -4;
         }
         if(empty($entity->MinDiners)){
             $this->Codigos[] = -5;
         }
-        else if(!is_numeric($entity->MinDiners)){
+        elseif(!is_numeric($entity->MinDiners)){
             $this->Codigos[] = -6;
         }
-        else if($entity->MinDiners < 1){
+        elseif($entity->MinDiners < 1){
             $this->Codigos[] = -7;
         }
         if($entity->MaxDiners <= $entity->MinDiners){
@@ -193,25 +193,25 @@ class ConfigurationModel extends \ResbookingModel{
      * Proceso de validación de la información para recordatorios
      * @param \ConfigurationService $entity Referencia a la entidad
      */
-    private function ValidateReminders($entity = NULL){
-        if($entity->Reminders == TRUE){
+    private function ValidateReminders($entity = null){
+        if($entity->Reminders == true){
             if(empty($entity->TimeSpan)){
                 $this->Codigos[] = -9;
             }
-            else if(!is_numeric($entity->TimeSpan)){
+            elseif(!is_numeric($entity->TimeSpan)){
                 $this->Codigos[] = -10;
             }
-            else if($entity->TimeSpan < 1){
+            elseif($entity->TimeSpan < 1){
                 $this->Codigos[] = -11;
             }
 
             if(empty($entity->Diners)){
                 $this->Codigos[] = -12;
             }
-            else if(!is_numeric($entity->Diners)){
+            elseif(!is_numeric($entity->Diners)){
                 $this->Codigos[] = -13;
             }
-            else if($entity->Diners < 1){
+            elseif($entity->Diners < 1){
                 $this->Codigos[] = -14;
             }
         }
@@ -252,8 +252,8 @@ class ConfigurationModel extends \ResbookingModel{
      * en la operacion anterior.
      * @param array $codes Coleccion de codigos de error obtenidos
      */
-    private function TranslateResultCodes($codes = NULL){
-        if($codes != NULL && is_array($codes)){
+    private function TranslateResultCodes($codes = null){
+        if($codes != null && is_array($codes)){
             foreach ($codes as $code){
                 if(!isset($this->Codes[$code])){
                     continue;

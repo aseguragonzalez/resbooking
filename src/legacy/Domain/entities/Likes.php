@@ -11,7 +11,7 @@ class Likes{
      * Identidad del Like
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Identidad del producto asociado

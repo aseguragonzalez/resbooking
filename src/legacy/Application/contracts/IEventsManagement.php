@@ -23,7 +23,7 @@ interface IEventsManagement {
      * @param \SlotEvent $event Referencia a la entidad
      * @return array Códigos de operación
      */
-    public function SetEvent($event = NULL);
+    public function SetEvent($event = null);
 
     /**
      * Proceso para eliminar un evento del registro

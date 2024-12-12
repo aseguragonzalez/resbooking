@@ -28,7 +28,7 @@ class HomeController extends \ResbookingController{
             // Instanciar modelo
             $model = new \HomeModel();
             // Configurar lista de proyectos
-            return ($model->LoadProjects() == TRUE)
+            return ($model->LoadProjects() == true)
                 ? $this->RedirectTo( "Index" , "Booking" )
                     : $this->PartialView($model);
         }
@@ -48,7 +48,7 @@ class HomeController extends \ResbookingController{
             // Instanciar el modelo
             $model = new \HomeModel();
             // Configurar el proyecto seleccionado
-            return ($model->SetCurrent($id) == TRUE)
+            return ($model->SetCurrent($id) == true)
                 ? $this->RedirectTo( "Index" , "Booking" )
                     :$this->RedirectTo( "Index" , "Home" );
         }

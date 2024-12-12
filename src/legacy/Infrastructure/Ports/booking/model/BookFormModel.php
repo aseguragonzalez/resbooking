@@ -153,13 +153,13 @@ class BookFormModel extends \ResbookingModel{
      * Referencia al management
      * @var \IBookingManagement
      */
-    protected $Management = NULL;
+    protected $Management = null;
 
     /**
      * Referencia al agregado
      * @var \BookingAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Constructor
@@ -169,10 +169,10 @@ class BookFormModel extends \ResbookingModel{
         $this->Title = "Reservar";
         $this->Management = BookingManagement::
                 GetInstance($this->Project, $this->Service);
-        $this->Aggregate = $this->Management->GetAggregate();
+        $this->aggregate = $this->Management->GetAggregate();
 
-        $diners = ($this->Aggregate->MinDiners <= 2)
-                ? 2: $this->Aggregate->MinDiners;
+        $diners = ($this->aggregate->MinDiners <= 2)
+                ? 2: $this->aggregate->MinDiners;
         $this->Entity = new \Booking();
         $this->Entity->Diners = $diners;
         $this->Entity->Comment = "";
@@ -184,7 +184,7 @@ class BookFormModel extends \ResbookingModel{
      * Configura la información del formulario
      */
     public function SetForm(){
-        $this->Turns = $this->Aggregate->Turns;
+        $this->Turns = $this->aggregate->Turns;
         foreach($this->Turns as $turn){
             if(isset($turn->Days)){
                 $turn->Days = json_encode($turn->Days);
@@ -194,26 +194,26 @@ class BookFormModel extends \ResbookingModel{
             }
         }
 
-        $this->Offers = $this->Aggregate->AvailableOffers;
+        $this->Offers = $this->aggregate->AvailableOffers;
         foreach($this->Offers as $offer){
             $offer->Config = json_encode($offer->Config);
         }
 
-        for($i = $this->Aggregate->MinDiners;
-                $i <= $this->Aggregate->MaxDiners; $i++){
+        for($i = $this->aggregate->MinDiners;
+                $i <= $this->aggregate->MaxDiners; $i++){
             $this->DinersLst[] = new SelectControlItem($i, $i);
         }
 
-        $this->Places = $this->Aggregate->AvailablePlaces;
+        $this->Places = $this->aggregate->AvailablePlaces;
 
         $this->Blocks = [];
-        foreach($this->Aggregate->AvailableBlocks as $block){
+        foreach($this->aggregate->AvailableBlocks as $block){
             $this->Blocks[] = $block;
         }
         $this->Blocks = json_encode($this->Blocks);
 
         $this->OffersEvents = [];
-        foreach($this->Aggregate->AvailableOffersEvents as $event){
+        foreach($this->aggregate->AvailableOffersEvents as $event){
             $this->OffersEvents[] = $event;
         }
         $this->OffersEvents = json_encode($this->OffersEvents);
@@ -224,10 +224,10 @@ class BookFormModel extends \ResbookingModel{
      * @param \Booking $entity Referencia a la reserva
      * @return boolean Resultado de la operación
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
         $ars = [" ", "-", "(", ")"];
         $arr = ["", "", "", ""];
-        if($entity != NULL){
+        if($entity != null){
             $entity->Project = $this->Project;
             $entity->State = ConfigurationManager::GetKey("reservado");
             $entity->Phone = trim(str_replace($ars, $arr, $entity->Phone));
@@ -235,11 +235,11 @@ class BookFormModel extends \ResbookingModel{
         }
         // Asignar la oferta
         $value = intval($entity->Offer);
-        $entity->Offer = (is_numeric($value) && $value > 0) ? $value : NULL;
+        $entity->Offer = (is_numeric($value) && $value > 0) ? $value : null;
         // Guardamos la fecha de la solicitud
         $date = $entity->Date;
         // realigar el guardado
-        $result = $this->Management->RegisterBooking($entity, TRUE, FALSE);
+        $result = $this->Management->RegisterBooking($entity, true, false);
         // Establecer los mensajes de error
         $this->TranslateResultCodes($result);
         // Reasignamos la fecha
@@ -327,8 +327,8 @@ class BookFormModel extends \ResbookingModel{
      * en la operacion anterior.
      * @param array $codes Coleccion de codigos de error obtenidos
      */
-    private function TranslateResultCodes($codes = NULL){
-        if($codes != NULL && is_array($codes)){
+    private function TranslateResultCodes($codes = null){
+        if($codes != null && is_array($codes)){
             foreach ($codes as $code){
                 if(!isset($this->Codes[$code])){
                     continue;

@@ -13,7 +13,7 @@ final class Role
     ) { }
 
     public static function new(string $description, string $name): self {
-        return new self(NULL, $description, $name);
+        return new self(null, $description, $name);
     }
 
     public static function stored(int $id, string $description, string $name): self

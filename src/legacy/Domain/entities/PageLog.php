@@ -11,7 +11,7 @@ class PageLog{
      * Identidad del registro
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Dirección IP desde donde se realiza la solicitud

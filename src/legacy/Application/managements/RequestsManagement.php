@@ -15,19 +15,19 @@ class RequestsManagement extends \BaseManagement
      * Referencia al gestor de servicio de reservas
      * @var \IRequestsServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IRequestsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IRequestsManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -38,11 +38,11 @@ class RequestsManagement extends \BaseManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = RequestsRepository::GetInstance($project, $service);
+        $this->repository = RequestsRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = RequestsServices::GetInstance($this->Aggregate);
+        $this->Services = RequestsServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -52,7 +52,7 @@ class RequestsManagement extends \BaseManagement
      * @return \RequestsManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(RequestsManagement::$_reference == NULL){
+        if(RequestsManagement::$_reference == null){
             RequestsManagement::$_reference =
                    new \RequestsManagement($project, $service);
         }
@@ -65,9 +65,9 @@ class RequestsManagement extends \BaseManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -93,7 +93,7 @@ class RequestsManagement extends \BaseManagement
      * @param string $sDate Filtro opcional por fecha
      */
     public function GetRequests($sDate = ""){
-        $date = NULL;
+        $date = null;
         if($sDate != ""){
             try{
                 $date = new \DateTime($sDate);
@@ -101,17 +101,17 @@ class RequestsManagement extends \BaseManagement
                 $date = new \DateTime("NOW");
             }
         }
-        $this->Aggregate->Requests =
-                $this->Repository->GetRequestsByDate($date);
+        $this->aggregate->Requests =
+                $this->repository->GetRequestsByDate($date);
     }
 
     /**
      * Proceso para cargar en el agregado las solicitudes pendientes
      */
     public function GetRequestsPending(){
-        $filter = ["Project" => $this->IdProject, "WorkFlow" => NULL];
-        $this->Aggregate->Requests =
-                $this->Repository->GetByFilter("Request", $filter);
+        $filter = ["Project" => $this->IdProject, "WorkFlow" => null];
+        $this->aggregate->Requests =
+                $this->repository->GetByFilter("Request", $filter);
     }
 
     /**
@@ -119,24 +119,24 @@ class RequestsManagement extends \BaseManagement
      * @param \Request $request Referencia a la solicitud
      * @return array Códigos de operación
      */
-    public function SetRequest($request = NULL) {
+    public function SetRequest($request = null) {
 
         $result = $this->Services->Validate($request);
 
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($request->Id == 0){
-                $res = $this->Repository->Create($request);
-                $result[] = ($res != FALSE) ? 0 : -1;
+                $res = $this->repository->Create($request);
+                $result[] = ($res != false) ? 0 : -1;
                 $request->Id = ($res) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($request);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($request);
+                $result[] = ($res != false) ? 0 : -2;
             }
 
-            if($res != FALSE){
-                $this->Aggregate->Requests[$request->Id] = $request;
+            if($res != false){
+                $this->aggregate->Requests[$request->Id] = $request;
             }
         }
         return $result;
@@ -153,14 +153,14 @@ class RequestsManagement extends \BaseManagement
         if($this->GetRequestById($id) == 0
                 && $this->RemoveItemsByRequest($id) == 0){
             // Actualizar el estado
-            $this->Aggregate->Request->State = 0;
+            $this->aggregate->Request->State = 0;
             // Guardar cambios
-            $res = ($this->Repository->Update($this->Aggregate->Request) != FALSE);
+            $res = ($this->repository->Update($this->aggregate->Request) != false);
             // Modificar la información en el agregado
-            if($res && isset($this->Aggregate->Requests[$id])){
-                unset($this->Aggregate->Requests[$id]);
+            if($res && isset($this->aggregate->Requests[$id])){
+                unset($this->aggregate->Requests[$id]);
             }
-            $this->Aggregate->Request = NULL;
+            $this->aggregate->Request = null;
             return  $res ? 0 : -1;
         }
         return -2;
@@ -179,17 +179,17 @@ class RequestsManagement extends \BaseManagement
         }
 
         if(!$this->Services->ValidateChangeState(
-                $this->Aggregate->Request->WorkFlow, $state)){
+                $this->aggregate->Request->WorkFlow, $state)){
             return -2;
         }
 
-        $this->Aggregate->Request->WorkFlow = $state;
+        $this->aggregate->Request->WorkFlow = $state;
 
-        if($this->Repository->Update($this->Aggregate->Request) == FALSE){
+        if($this->repository->Update($this->aggregate->Request) == false){
             return -3;
         }
 
-        $this->Aggregate->Requests[$id] = $this->Aggregate->Request;
+        $this->aggregate->Requests[$id] = $this->aggregate->Request;
 
         return 0;
     }
@@ -200,10 +200,10 @@ class RequestsManagement extends \BaseManagement
     private function GetRequestDependences(){
         // Cargamos todos los productos y categorías
         $filter = ["Project" => $this->IdProject ];
-        $this->Aggregate->Products =
-                $this->Repository->GetByFilter( "Product", $filter );
-        $this->Aggregate->Categories =
-                $this->Repository->GetByFilter( "Category", $filter );
+        $this->aggregate->Products =
+                $this->repository->GetByFilter( "Product", $filter );
+        $this->aggregate->Categories =
+                $this->repository->GetByFilter( "Category", $filter );
     }
 
     /**
@@ -213,14 +213,14 @@ class RequestsManagement extends \BaseManagement
      */
     private function GetRequestById($id = 0){
         // Buscamos la información en la lista de solicitudes del agregado
-        $this->Aggregate->Request =
-                $this->Services->GetById($this->Aggregate->Requests, $id);
+        $this->aggregate->Request =
+                $this->Services->GetById($this->aggregate->Requests, $id);
         // Si no se ha encontrado, buscamos en base de datos
-        if($this->Aggregate->Request instanceof \Request == FALSE){
-            $this->Aggregate->Request = $this->Repository->Read("Request", $id);
+        if($this->aggregate->Request instanceof \Request == false){
+            $this->aggregate->Request = $this->repository->Read("Request", $id);
         }
         // Retornamos el código de operación
-        return ($this->Aggregate->Request instanceof \Request) ? 0 : -1;
+        return ($this->aggregate->Request instanceof \Request) ? 0 : -1;
     }
 
     /**
@@ -231,8 +231,8 @@ class RequestsManagement extends \BaseManagement
     private function GetItemsByRequest($id = 0){
         $filter = ["Request" => $id ];
 
-        $this->Aggregate->Items =
-                $this->Repository->GetByFilter( "RequestItem", $filter );
+        $this->aggregate->Items =
+                $this->repository->GetByFilter( "RequestItem", $filter );
     }
 
     /**
@@ -243,7 +243,7 @@ class RequestsManagement extends \BaseManagement
     private function RemoveItemsByRequest($id = 0){
         $results = [];
         $this->GetItemsByRequest($id);
-        foreach($this->Aggregate->Items as $item){
+        foreach($this->aggregate->Items as $item){
             $results[] = $this->RemoveItemById($item->Id);
         }
         $err = array_filter($results, function($item){ return $item != 0; });
@@ -256,16 +256,16 @@ class RequestsManagement extends \BaseManagement
      * @return int Código de operación
      */
     private function RemoveItemById($id = 0){
-        $item = NULL;
-        if(count($this->Aggregate->Items) == 0){
+        $item = null;
+        if(count($this->aggregate->Items) == 0){
             $filter = [ "Id" => $id, "State"  => 1];
-            $item = $this->Repository->GetByFilter( "RequestItem", $filter );
+            $item = $this->repository->GetByFilter( "RequestItem", $filter );
         }
         else{
-            $item = $this->Services->GetById($this->Aggregate->Items, $id);
+            $item = $this->Services->GetById($this->aggregate->Items, $id);
         }
-        if($item != NULL){
-            return ($this->Repository->Update($item) != FALSE)
+        if($item != null){
+            return ($this->repository->Update($item) != false)
                     ? 0 : -1;
         }
         return -2;
@@ -278,11 +278,11 @@ class RequestsManagement extends \BaseManagement
      * @return \Request Referencia a la solicitud
      */
     public function SetRequestState($id = 0, $state = 0){
-        $request = $this->GetById($this->Aggregate->Requests, $id);
-        if($request != NULL){
+        $request = $this->GetById($this->aggregate->Requests, $id);
+        if($request != null){
             $request->WorkFlow = $state;
             return $request;
         }
-        return NULL;
+        return null;
     }
 }

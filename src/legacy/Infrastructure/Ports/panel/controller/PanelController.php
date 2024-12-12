@@ -12,11 +12,11 @@ class PanelController extends \Controller{
     /**
      * Constructor
      */
-    public function __construct($projectRequired = FALSE){
+    public function __construct($projectRequired = false){
 
         parent::__construct();
 
-        if($projectRequired == TRUE){
+        if($projectRequired == true){
             $this->ValidateProject();
         }
     }
@@ -56,7 +56,7 @@ class PanelController extends \Controller{
         // Crear traza de error
         $this->Log->LogErrorTrace($method, $e);
         $dto = new \JsonResultDTO();
-        $dto->Result = FALSE;
+        $dto->Result = false;
         $dto->Error = $e->getMessage();
         $dto->Code = 200;
         $dto->Exception = $e;

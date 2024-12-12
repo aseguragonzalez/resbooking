@@ -16,7 +16,7 @@ class ImagesController extends \TakeawayController{
     * Constructor
     */
     public function __construct(){
-       parent::__construct(TRUE);
+       parent::__construct(true);
     }
 
     /**
@@ -131,7 +131,7 @@ class ImagesController extends \TakeawayController{
         // Asignar el directorio de producto
         $path = str_replace( "{Reference}", $reference ,$basePath );
         // Validamos si el directorio existe
-        if(is_dir($path) == FALSE){ mkdir($path, 0777); }
+        if(is_dir($path) == false){ mkdir($path, 0777); }
 
         foreach ($_FILES["files"]["error"] as $key => $error) {
             if ($error == UPLOAD_ERR_OK) {
@@ -148,7 +148,7 @@ class ImagesController extends \TakeawayController{
                 if(empty($ext)){ continue; }
                 // Obtener el recurso
                 $image = $this->getImageResource($mime, $tmp);
-                if($image == NULL){continue;}
+                if($image == null){continue;}
                 // Obtener nombre de la imagen
                 $name = sha1_file($tmp).md5_file($tmp).".$ext";
                 // directorio destino
@@ -198,7 +198,7 @@ class ImagesController extends \TakeawayController{
     }
 
     private function getImageResource($mime = 0, $path = ""){
-        $image = NULL;
+        $image = null;
         // carga la imagen
         switch ($mime){
 
@@ -217,9 +217,9 @@ class ImagesController extends \TakeawayController{
         return $image;
     }
 
-    private function exportImage($mime = 0, $image = NULL, $dst_path = ""){
+    private function exportImage($mime = 0, $image = null, $dst_path = ""){
 
-        $export = FALSE;
+        $export = false;
 
         switch ($mime){
 
@@ -236,7 +236,7 @@ class ImagesController extends \TakeawayController{
                 break;
         }
 
-        if($image != NULL){
+        if($image != null){
             imagedestroy($image);
         }
 

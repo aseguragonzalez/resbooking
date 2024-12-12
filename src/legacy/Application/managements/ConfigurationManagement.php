@@ -15,19 +15,19 @@ class ConfigurationManagement extends \BaseManagement
      * Referencia al gestor de servicio de reservas
      * @var \IConfigurationServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IConfigurationRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IConfigurationManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -38,11 +38,11 @@ class ConfigurationManagement extends \BaseManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = ConfigurationRepository::GetInstance($project, $service);
+        $this->repository = ConfigurationRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = new \ConfigurationAggregate($project, $service);
+        $this->aggregate = new \ConfigurationAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = ConfigurationServices::GetInstance($this->Aggregate);
+        $this->Services = ConfigurationServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -52,7 +52,7 @@ class ConfigurationManagement extends \BaseManagement
      * @return \IBaseLineManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(ConfigurationManagement::$_reference == NULL){
+        if(ConfigurationManagement::$_reference == null){
             ConfigurationManagement::$_reference =
                    new \ConfigurationManagement($project, $service);
         }
@@ -65,9 +65,9 @@ class ConfigurationManagement extends \BaseManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -81,18 +81,18 @@ class ConfigurationManagement extends \BaseManagement
         $filter = [ "Project" => $this->IdProject, "DeliveryMethod" => $id,
             "Service" => $this->IdService];
         $register =
-                $this->Repository->GetByFilter("ServiceDeliveryMethod", $filter);
+                $this->repository->GetByFilter("ServiceDeliveryMethod", $filter);
         if(empty($register)){
             $entity = new \ServiceDeliveryMethod();
             $entity->Project = $this->IdProject;
             $entity->Service = $this->IdService;
             $entity->DeliveryMethod = $id;
-            $nEntity = $this->Repository->Create($entity);
+            $nEntity = $this->repository->Create($entity);
             $result = $nEntity->Id;
         }
         else{
             foreach($register as $reg){
-                $this->Repository->Delete("ServiceDeliveryMethod", $reg->Id);
+                $this->repository->Delete("ServiceDeliveryMethod", $reg->Id);
                 $result = 0;
             }
         }
@@ -110,18 +110,18 @@ class ConfigurationManagement extends \BaseManagement
         $filter = [ "Project" => $this->IdProject, "PaymentMethod" => $id,
             "Service" => $this->IdService];
         $register =
-                $this->Repository->GetByFilter("ServicePaymentMethod", $filter);
+                $this->repository->GetByFilter("ServicePaymentMethod", $filter);
         if(empty($register)){
             $entity = new \ServicePaymentMethod();
             $entity->Project = $this->IdProject;
             $entity->Service = $this->IdService;
             $entity->PaymentMethod = $id;
-            $nEntity = $this->Repository->Create($entity);
+            $nEntity = $this->repository->Create($entity);
             $result = $nEntity->Id;
         }
         else{
             foreach($register as $reg){
-                $this->Repository->Delete("ServicePaymentMethod", $reg->Id);
+                $this->repository->Delete("ServicePaymentMethod", $reg->Id);
                 $result = 0;
             }
         }
@@ -139,18 +139,18 @@ class ConfigurationManagement extends \BaseManagement
         $filter = [ "Project" => $this->IdProject, "Code" => $id,
             "Service" => $this->IdService];
         $register =
-                $this->Repository->GetByFilter("ServicePostCode", $filter);
+                $this->repository->GetByFilter("ServicePostCode", $filter);
         if(empty($register)){
             $entity = new \ServicePostCode();
             $entity->Project = $this->IdProject;
             $entity->Service = $this->IdService;
             $entity->Code = $id;
-            $nEntity = $this->Repository->Create($entity);
+            $nEntity = $this->repository->Create($entity);
             $result = $nEntity->Id;
         }
         else{
             foreach($register as $reg){
-                $this->Repository->Delete("ServicePostCode", $reg->Id);
+                $this->repository->Delete("ServicePostCode", $reg->Id);
                 $result = 0;
             }
         }
@@ -163,23 +163,23 @@ class ConfigurationManagement extends \BaseManagement
      * @param \ProjectInfo $info Referencia a la entidad a registrar
      * @return array Códigos de operación
      */
-    public function SetProjectInfo($info = NULL){
+    public function SetProjectInfo($info = null){
         $info->Project = $this->IdProject;
         $result = $this->Services->ValidateInfo($info);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($info->Id == 0){
-                $res = $this->Repository->Create($info);
-                $result = ($res != FALSE) ? [] : [-1];
-                $info->Id = ($res != FALSE) ? $res->Id : 0;
+                $res = $this->repository->Create($info);
+                $result = ($res != false) ? [] : [-1];
+                $info->Id = ($res != false) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($info);
-                $result = ($res != FALSE) ? [] : [-2];
+                $res = $this->repository->Update($info);
+                $result = ($res != false) ? [] : [-2];
             }
 
-            if($res != FALSE){
-                $this->Aggregate->ProjectInfo = $info;
+            if($res != false){
+                $this->aggregate->ProjectInfo = $info;
             }
         }
         return $result;
@@ -190,10 +190,10 @@ class ConfigurationManagement extends \BaseManagement
      */
     public function GetConfiguration() {
         // Cargar el agregado
-        $this->Aggregate =
-                $this->Repository->GetAggregate($this->IdProject, $this->IdService);
+        $this->aggregate =
+                $this->repository->GetAggregate($this->IdProject, $this->IdService);
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
     }
 
 }

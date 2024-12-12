@@ -8,8 +8,8 @@ declare(strict_types=1);
  * @author alfonso
  */
 class JsonResultDTO {
-    public $Result = FALSE;
+    public $Result = false;
     public $Error = "";
     public $Code = 200;
-    public $Exception = NULL;
+    public $Exception = null;
 }

@@ -79,10 +79,10 @@ class PasswordFactory{
         if(!is_numeric($length)){
             $length = $this->Length;
         }
-        else if($length < $this->MinLength){
+        elseif($length < $this->MinLength){
             $length = $this->MinLength;
         }
-        else if($length > $this->MaxLength){
+        elseif($length > $this->MaxLength){
             $length = $this->MaxLength;
         }
         // Se define una cadena de caractares. Te recomiendo que uses esta.

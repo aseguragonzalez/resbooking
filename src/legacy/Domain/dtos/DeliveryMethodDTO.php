@@ -13,19 +13,19 @@ class DeliveryMethodDTO {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre del método de entrega
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción del método de entrega
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Términos generales (opcional)
@@ -43,18 +43,18 @@ class DeliveryMethodDTO {
      * Identidad del proyecto padre
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio actual
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 
 }

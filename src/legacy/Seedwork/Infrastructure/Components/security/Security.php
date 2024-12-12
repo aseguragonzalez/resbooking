@@ -13,15 +13,15 @@ class Security implements \ISecurity{
      * Array con los datos de los controladores asociados
      * @var array $Controller Array de controladores
      */
-    protected $Controllers = NULL;
+    protected $Controllers = null;
 
     /**
      * Obtiene la información de un nodo action en un array
      * @param object $action Referencia al XmlNode con la info
-     * @return mixed Array con la información de la acción o FALSE
+     * @return mixed Array con la información de la acción o false
      */
-    private function ReadChildren($action = NULL){
-        if($action != NULL){
+    private function ReadChildren($action = null){
+        if($action != null){
             $attr = $action->attributes();
 
             $visible = (isset($attr->visible)
@@ -38,7 +38,7 @@ class Security implements \ISecurity{
                 "visible" =>  $visible
                     ];
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -46,12 +46,12 @@ class Security implements \ISecurity{
      * @param array $actions Array de acciones
      * @return array Array de acciones actualizado
      */
-    private function GetChildrens($actions = NULL){
+    private function GetChildrens($actions = null){
         $acciones = [];
-        if($actions != NULL && is_object($actions)){
+        if($actions != null && is_object($actions)){
             foreach($actions as $action){
                 $item = $this->ReadChildren($action);
-                if($item != FALSE && $item["visible"] === TRUE){
+                if($item != false && $item["visible"] === true){
                     $acciones[$item["name"]] = $item;
                 }
             }
@@ -64,9 +64,9 @@ class Security implements \ISecurity{
      * @param object $actions Referencia a los nodos con las acciones
      * @return array Colección de arrays con la infor de las acciones
      */
-    private function GetActions($actions = NULL){
+    private function GetActions($actions = null){
         $acciones = [];
-        if($actions != NULL && is_object($actions)){
+        if($actions != null && is_object($actions)){
             foreach($actions as $action){
                 $attr = $action->attributes();
                 $acciones[(string)$attr->name] = (string)$attr->roles;
@@ -79,7 +79,7 @@ class Security implements \ISecurity{
      * Procesar la información de cada controlador configurado
      * @param type $node
      */
-    private function ProcessControllerEntry($node = NULL){
+    private function ProcessControllerEntry($node = null){
         $actions = $node->actions->children();
         $acciones = $this->GetActions($actions);
         $childrens = $this->GetChildrens($actions);
@@ -173,7 +173,7 @@ class Security implements \ISecurity{
             // validar si se se han superado el máximo de intentos
             return $count >= 5;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -201,11 +201,11 @@ class Security implements \ISecurity{
     public function Authenticate($username, $password){
         // Validar que no está bloqueado el acceso
         if($this->IsBlocked()){
-            return FALSE;
+            return false;
         }
         // Validación de la sesión actual
         if($this->IsAuthenticate()){
-            return TRUE;
+            return true;
         }
         // Validar la información de usuario
         $auth = $this->ValidateUser($username, $password);
@@ -225,7 +225,7 @@ class Security implements \ISecurity{
      * @return boolean Indica si requiere autenticación
      */
     public function RequiredAuthentication($controller, $action){
-        $required = FALSE;
+        $required = false;
         if(array_key_exists ($controller, $this->Controllers)){
             $item = $this->Controllers[$controller];
             if(array_key_exists($action, $item["actions"])){
@@ -259,28 +259,28 @@ class Security implements \ISecurity{
      * @param array $roles Colección de roles de la acción
      * @return boolean Estado de la validación
      */
-    private function ValidateUserRole($roles = NULL){
+    private function ValidateUserRole($roles = null){
         // Error en los parámetros
         if(!is_array($roles)){
-            return FALSE;
+            return false;
         }
         // No require roles
         if(count($roles) == 0){
-            return TRUE;
+            return true;
         }
 
         // Obtener los roles del usuario
         $userRoles = $this->GetUserRoles();
 
         if(!is_array($userRoles)){
-            return FALSE;
+            return false;
         }
 
-        $authorize = FALSE;
+        $authorize = false;
         // Comprobar los roles del usuario
         foreach($userRoles as $rol){
             if(in_array($rol, $roles)){
-                $authorize = TRUE;
+                $authorize = true;
             }
         }
 
@@ -313,7 +313,7 @@ class Security implements \ISecurity{
 
             return $this->ValidateUserRole($roles);
         }
-        return TRUE;
+        return true;
     }
 
     /**
@@ -339,23 +339,23 @@ class Security implements \ISecurity{
      * @param array $roles Colección de roles de usuario
      * @return array Colección de arrays accesibles
      */
-    private function FilterActionsByRole($actions = NULL, $roles = NULL){
+    private function FilterActionsByRole($actions = null, $roles = null){
 
         $childrens = [];
 
-        if($roles == NULL || $actions == NULL){
+        if($roles == null || $actions == null){
             return $childrens;
         }
         foreach($actions as $item){
             if($item["roles"] == ""
-                    && $item["visible"] == TRUE){
+                    && $item["visible"] == true){
                 $childrens[$item["name"]] = $item;
                 continue;
             }
             $sRoles = explode(",", $item["roles"]);
             foreach($sRoles as $role){
                 if(in_array(trim($role), $roles)
-                        && $item["visible"] == TRUE){
+                        && $item["visible"] == true){
                     $childrens[$item["name"]] = $item;
                 }
             }
@@ -367,28 +367,28 @@ class Security implements \ISecurity{
      * Validación del controlador por roles de usuario
      * @param object $item Referencia a la información del controlador
      * @param array $roles Colección de roles disponibles
-     * @return mixed Referencia al controlador filtrado o FALSE
+     * @return mixed Referencia al controlador filtrado o false
      */
-    private function FilterControllerByRole($item = NULL, $roles = NULL){
-        if($item != NULL){
+    private function FilterControllerByRole($item = null, $roles = null){
+        if($item != null){
             $childrens = $this->FilterActionsByRole(
                     $item["childrens"], $roles);
             settype($childrens, "array");
             $item["childrens"] = json_encode($childrens);
 
-            if($item["roles"] == "" && $item["visible"] == TRUE){
+            if($item["roles"] == "" && $item["visible"] == true){
                 return $item;
             }
 
             $sRoles = explode(",", $item["roles"]);
             foreach($sRoles as $role){
                 if(in_array(trim($role), $roles)
-                        && $item["visible"] == TRUE){
+                        && $item["visible"] == true){
                     return $item;
                 }
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -404,7 +404,7 @@ class Security implements \ISecurity{
         // Filtrar la información de los controladores según el role
         foreach($this->Controllers as $value){
             if(($controller = $this->FilterControllerByRole(
-                    $value, $roles)) == TRUE){
+                    $value, $roles)) == true){
                 $controllers[] = $controller;
             }
         }
@@ -443,7 +443,7 @@ class Security implements \ISecurity{
     /**
      * Obtiene un objeto con la información del usuario almacenada
      * en el contexto. En caso de no estar el usuario autenticado,
-     * se retornará el valor NULL.
+     * se retornará el valor null.
      */
     public function GetUserData(){
         throw new \NotImplementedException( "GetUserData" );

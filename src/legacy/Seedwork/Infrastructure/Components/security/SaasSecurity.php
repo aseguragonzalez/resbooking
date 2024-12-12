@@ -22,19 +22,19 @@ class SaasSecurity extends \Security implements \ISecurity{
      * Referencia al Objeto de acceso a datos
      * @var \IDataAccessObject
      */
-    protected $Dao = NULL;
+    protected $Dao = null;
 
     /**
      * ID del servicio en ejecución
      * @var int
      */
-    protected $Service = 0;
+    protected int $serviceId = 0;
 
     /**
      * ID del proyecto actual
      * @var int
      */
-    protected $Project = 0;
+    protected int $projectId = 0;
 
     /**
      * Obtiene el ID de servicio del contexto
@@ -106,16 +106,16 @@ class SaasSecurity extends \Security implements \ISecurity{
 
         $hashFunction = filter_input(INPUT_POST, "hash", FILTER_SANITIZE_STRING);
 
-        if($hashFunction!== FALSE && $hashFunction!== NULL){
+        if($hashFunction!== false && $hashFunction!== null){
             $hashFunction = strtoupper(trim($hashFunction));
             $algo = "md5";
             if($hashFunction == "SHA1"){
                 $algo = "sha1";
             }
-            else if($hashFunction == "SHA256"){
+            elseif($hashFunction == "SHA256"){
                 $algo = "sha256";
             }
-            else if($hashFunction == "SHA512"){
+            elseif($hashFunction == "SHA512"){
                 $algo = "sha512";
             }
             return hash($algo, $pass);
@@ -151,12 +151,12 @@ class SaasSecurity extends \Security implements \ISecurity{
             // almacenar en sesión datos de usuario
             $_SESSION[ "user" ] = $username;
             $_SESSION[ "userid" ] = $users[0]->IdUser;
-            return TRUE;
+            return true;
         }
         // Mensaje de error para el login
         $_SESSION[ "eLogin" ]
                 = "Las credenciales de usuario no han sido validadas.";
-        return FALSE;
+        return false;
     }
 
     /**
@@ -204,7 +204,7 @@ class SaasSecurity extends \Security implements \ISecurity{
         // Comprobación si se utiliza un ticket de autenticación
         $ticket = filter_input(INPUT_GET, "ticket");
         // Proceso de validación del ticket
-        if($ticket != FALSE && $ticket != NULL){
+        if($ticket != false && $ticket != null){
             return $this->AuthenticateTicket($ticket);
         }
         // ejecutar el proceso de autenticación básico
@@ -225,49 +225,49 @@ class SaasSecurity extends \Security implements \ISecurity{
         if(is_array($arr)){
             // Validar origen del ticket
             if($arr["source"] != $_SERVER["REMOTE_ADDR"]){
-                return FALSE;
+                return false;
             }
             // Validar fecha ticket
             $date = new \DateTime($arr["date"]);
             $now = new \DateTime("NOW");
             if(intval($date->format("d")) < intval($now->format("d"))){
-                return FALSE;
+                return false;
             }
             // Establecer los datos de sesión
             $_SESSION["user"] = $arr["user"];
             $_SESSION["userid"] = $arr["userid"];
-            return TRUE;
+            return true;
         }
-        return FALSE;
+        return false;
     }
 
     /**
      * Proceso para la validación del formato/estructura del ticket
      * @param string $ticket ticket de autenticación
-     * @return mixed Retorna FALSE si falla el proceso o referencia al array con
+     * @return mixed Retorna false si falla el proceso o referencia al array con
      * la información del ticket
      */
     private function ValidateTicket($ticket = ""){
         // Validar tipología del parámetro
         if(!is_string($ticket)){
-            return FALSE;
+            return false;
         }
         $json = base64_decode($ticket);
         // verificar la decodificación
-        if($json == FALSE){
-            return FALSE;
+        if($json == false){
+            return false;
         }
         $arr = json_decode($json);
         // verificar la decodificación json
-        if($arr == NULL || !is_object($arr)){
-            return FALSE;
+        if($arr == null || !is_object($arr)){
+            return false;
         }
 
         settype($arr, "array");
 
         if(empty($arr["user"])||empty($arr["userid"])
                 ||empty($arr["source"])||empty($arr["date"])){
-            return FALSE;
+            return false;
         }
         return $arr;
     }

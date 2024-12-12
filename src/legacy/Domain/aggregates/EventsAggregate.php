@@ -13,13 +13,13 @@ class EventsAggregate extends \BaseAggregate{
      * Colección de días de la semana
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Referencia al evento actual
      * @var \SlotEvent
      */
-    public $Event = NULL;
+    public $Event = null;
 
     /**
      * Colección de eventos registrados

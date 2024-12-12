@@ -16,7 +16,7 @@ class RequestsController extends \ResbookingController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -51,8 +51,8 @@ class RequestsController extends \ResbookingController{
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => 0,
-                "Error" => FALSE,
-                "Exception" => NULL,
+                "Error" => false,
+                "Exception" => null,
                 "Count" => $count
             ];
             // Serializar el resultado
@@ -83,7 +83,7 @@ class RequestsController extends \ResbookingController{
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);
@@ -108,12 +108,12 @@ class RequestsController extends \ResbookingController{
             // Instanciar modelo de datos
             $model = new \RequestsModel();
             // Ejecutar operación
-            $result = $model->ChangeState($id, $state, TRUE);
+            $result = $model->ChangeState($id, $state, true);
             // Establecer el objeto para el response
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

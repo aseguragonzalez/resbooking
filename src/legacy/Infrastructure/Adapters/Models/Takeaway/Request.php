@@ -10,13 +10,13 @@ class Request{
      * Identidad del registro de solicitud
      * @var type
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Referencia al proyecto padre
      * @var int
      */
-    public $Project = NULL;
+    public int $projectId = 0;
 
     /**
      * Ticket generado para la solicitud
@@ -70,13 +70,13 @@ class Request{
      * Referencia al descuento asociado
      * @var int?
      */
-    public $Discount = NULL;
+    public $Discount = null;
 
     /**
      * Referencia al método de entrega seleccionado
      * @var int
      */
-    public $DeliveryMethod = 0;
+    public int $deliveryMethod = 0;
 
     /**
      * Referencia al método de pago seleccionado
@@ -88,7 +88,7 @@ class Request{
      * Fecha de entrega seleccionada
      * @var Fecha de entrega seleccionada
      */
-    public $DeliveryDate = NULL;
+    public $DeliveryDate = null;
 
     /**
      * Referencia a la hora de entrega seleccionada
@@ -100,7 +100,7 @@ class Request{
      * Flag sobre la política de publicidad
      * @var bool
      */
-    public $Advertising = FALSE;
+    public $Advertising = false;
 
     /**
      * Teléfono de contacto

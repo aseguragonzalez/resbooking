@@ -42,7 +42,7 @@ class RequestsModel extends \ResbookingModel{
      * configura para su visualización.
      */
     public function GetRequests(){
-        $filter = ["Project" => $this->Project, "State" => NULL];
+        $filter = ["Project" => $this->Project, "State" => null];
         $this->Entities = $this->Dao->GetByFilter("RequestDTO", $filter);
         foreach($this->Entities as $item){
             $item->Date = $this->SetDate($item->Date);
@@ -58,7 +58,7 @@ class RequestsModel extends \ResbookingModel{
      * @return int Número de solicitudes pendientes
      */
     public function GetRequestCount(){
-        $filter = ["Project" => $this->Project, "State" => NULL];
+        $filter = ["Project" => $this->Project, "State" => null];
         $requests = $this->Dao->GetByFilter("RequestDTO", $filter);
         $this->Counts = count($requests);
         return $this->Counts;
@@ -71,11 +71,11 @@ class RequestsModel extends \ResbookingModel{
      * @param boolean $cancel Tipo de cambio de estado : Aceptar o cancelar
      * @return int código de operación
      */
-    public function ChangeState($id = 0, $idState = 0, $cancel = FALSE){
+    public function ChangeState($id = 0, $idState = 0, $cancel = false){
         // Obtener una referencia al management de gestión de reservas
         $management = BookingManagement
                 ::GetInstance($this->Project, $this->Service);
-        if($cancel == TRUE){
+        if($cancel == true){
             $management->CancelBooking($id, $idState);
         }
         else{

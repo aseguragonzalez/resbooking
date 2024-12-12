@@ -44,7 +44,7 @@ interface IConfigurationManagement {
      * @param \ProjectInfo $info Referencia a la entidad a registrar
      * @return array Códigos de operación
      */
-    public function SetProjectInfo($info = NULL);
+    public function SetProjectInfo($info = null);
 
     /**
      * Obtiene una instancia del Management de gestión de línea base

@@ -13,7 +13,7 @@ class BaseLineAggregate extends \BaseAggregate{
      * Referencia al Slot actual
      * @var \SlotConfigured
      */
-    public $Slot = NULL;
+    public $Slot = null;
 
     /**
      * Coleccion de Slots configurados
@@ -37,7 +37,7 @@ class BaseLineAggregate extends \BaseAggregate{
      * Coleccion de dias de la semana
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Constructor

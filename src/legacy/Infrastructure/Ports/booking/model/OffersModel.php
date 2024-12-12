@@ -49,7 +49,7 @@ class OffersModel extends \ResbookingModel{
      * Referencia a la entidad en edición
      * @var \Offer
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de Ofertas registradas
@@ -156,7 +156,7 @@ class OffersModel extends \ResbookingModel{
      * @return void
      */
     public function CargarOfertas(){
-        $filter = ["Project" => $this->Project , "Active" => TRUE];
+        $filter = ["Project" => $this->Project , "Active" => true];
         $this->Entities = $this->Dao->GetByFilter( "Offer", $filter );
         foreach($this->Entities as $item){
             $item->sWeb = ($item->Web == 1)
@@ -198,7 +198,7 @@ class OffersModel extends \ResbookingModel{
      * @return array colección de ofertas
      */
     public function ObtenerOfertas($id = 0){
-        $filter = ["Project" => $id , "Active" => TRUE , "Web" => 1];
+        $filter = ["Project" => $id , "Active" => true , "Web" => 1];
         $entities = $this->Dao->GetByFilter( "Offer", $filter );
         foreach($entities as $item){
             $item->Start = $this->ConfigurarFecha($item->Start);
@@ -273,9 +273,9 @@ class OffersModel extends \ResbookingModel{
      * @param \Offer $offer Referencia a la oferta a registrar
      * @return boolean Resultado de la operación
      */
-    public function GuardarOferta($offer = NULL){
+    public function GuardarOferta($offer = null){
         $this->Entity = $offer;
-        if($offer != NULL && $this->Validate($offer)){
+        if($offer != null && $this->Validate($offer)){
             $offer->Project = $this->Project;
             $date = new \DateTime("NOW");
             $sdate = $date->format("Y-m-d H:i:s");
@@ -291,11 +291,11 @@ class OffersModel extends \ResbookingModel{
             }
             $this->eGenResult = "La oferta ha sido guardada con éxito.";
             $this->eGenResultClass = "alert-success";
-            return TRUE;
+            return true;
         }
         $this->TranslateResultCodes();
         $this->Error = 1;
-        return FALSE;
+        return false;
     }
 
     /**
@@ -306,17 +306,17 @@ class OffersModel extends \ResbookingModel{
     public function EliminarOferta($id = 0){
         if(is_numeric($id)){
             $o = $this->Dao->Read($id, "Offer");
-            if($o->Active != FALSE){
-                $o->Active = FALSE;
+            if($o->Active != false){
+                $o->Active = false;
                 $this->Dao->Update( $o );
                 $this->eGenResult = "La oferta ha sido eliminada con éxito.";
                 $this->eGenResultClass = "alert-success";
-                return TRUE;
+                return true;
             }
         }
         $this->eGenResult = "La oferta no ha podido ser eliminada.";
         $this->eGenResultClass = "alert-danger";
-        return FALSE;
+        return false;
     }
 
     /**
@@ -324,12 +324,12 @@ class OffersModel extends \ResbookingModel{
      * @param \OfferShare $offerShare Referencia a la cuota
      * @return int Código de operación
      */
-    public function GuardarCuotaOferta($offerShare = NULL){
-        if($offerShare == NULL){
+    public function GuardarCuotaOferta($offerShare = null){
+        if($offerShare == null){
             return -1;
         }
 
-        $offerShare->Turn = NULL;
+        $offerShare->Turn = null;
         // Asignar proyecto
         $offerShare->Project = $this->Project;
         // filtro de búsqueda
@@ -355,8 +355,8 @@ class OffersModel extends \ResbookingModel{
      * @param \OfferConfig $config Referencia a la configuración
      * @return int Código de operación
      */
-    public function GuardarConfiguracion($config = NULL){
-        if($config != NULL){
+    public function GuardarConfiguracion($config = null){
+        if($config != null){
             if($config->Id == 0){
                 return $this->Dao->Create($config);
             }
@@ -385,8 +385,8 @@ class OffersModel extends \ResbookingModel{
      * @param \Offer $entity Referencia a la entidad a validar
      * @return boolean Resultado de la operación
      */
-    private function Validate($entity = NULL){
-        if($entity == NULL){
+    private function Validate($entity = null){
+        if($entity == null){
             $this->Codigos[] = -1;
         }
         else{
@@ -408,7 +408,7 @@ class OffersModel extends \ResbookingModel{
         if(!is_numeric($id)){
             $this->Codigos[] = -2;
         }
-        else if($id < 0){
+        elseif($id < 0){
             $this->Codigos[] = -3;
         }
     }
@@ -422,10 +422,10 @@ class OffersModel extends \ResbookingModel{
         if(empty($titulo)){
             $this->Codigos[] = -4;
         }
-        else if(!is_string($titulo)){
+        elseif(!is_string($titulo)){
             $this->Codigos[] = -5;
         }
-        else if(strlen($titulo) > 100){
+        elseif(strlen($titulo) > 100){
             $this->Codigos[] = -6;
         }
     }
@@ -440,7 +440,7 @@ class OffersModel extends \ResbookingModel{
             if(!is_string($descripcion)){
                 $this->Codigos[] = -7;
             }
-            else if(strlen($descripcion) > 1000){
+            elseif(strlen($descripcion) > 1000){
                 $this->Codigos[] = -8;
             }
         }
@@ -456,7 +456,7 @@ class OffersModel extends \ResbookingModel{
             if(!is_string($terms)){
                 $this->Codigos[] = -9;
             }
-            else if(strlen($terms) > 500){
+            elseif(strlen($terms) > 500){
                 $this->Codigos[] = -10;
             }
         }
@@ -467,20 +467,20 @@ class OffersModel extends \ResbookingModel{
      * @param \Offer $entity Referencia a la entidad a validar
      * @return void
      */
-    private function ValidateDates($entity = NULL){
-        $startD = FALSE;
-        $endD = FALSE;
+    private function ValidateDates($entity = null){
+        $startD = false;
+        $endD = false;
 
         if(isset($entity->Start) && $entity->Start != ""){
             $date = new DateTime($entity->Start);
             $entity->Start = $date->format( "Y-m-d");
-            $startD = TRUE;
+            $startD = true;
         }
 
         if(isset($entity->End) && $entity->End != ""){
             $date = new DateTime($entity->End);
             $entity->End = $date->format( "Y-m-d");
-            $endD = TRUE;
+            $endD = true;
         }
 
         if($startD && $endD){

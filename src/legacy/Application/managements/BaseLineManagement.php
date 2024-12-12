@@ -14,19 +14,19 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
      * Referencia al gestor de servicio de reservas
      * @var \IBaseLineServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IBaseLineRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IBaseLineManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -37,11 +37,11 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = BaseLineRepository::GetInstance($project, $service);
+        $this->repository = BaseLineRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = BaseLineServices::GetInstance($this->Aggregate);
+        $this->Services = BaseLineServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -53,10 +53,10 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
     public function GetSlot($id = 0) {
         // Obtener referencia
         $slot = $this->Services->GetById(
-                $this->Aggregate->Slots, $id);
-        if($slot != NULL){
+                $this->aggregate->Slots, $id);
+        if($slot != null){
 
-            $this->Aggregate->Slot = $slot;
+            $this->aggregate->Slot = $slot;
 
             return 0;
         }
@@ -68,26 +68,26 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
      * @param \SlotConfiguration $slot Referencia a la entidad a guardar
      * @return array Códigos de operación
      */
-    public function SetSlot($slot = NULL) {
+    public function SetSlot($slot = null) {
         $slot->Project = $this->IdProject;
         $result = $this->Services->Validate($slot);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($slot->Id == 0){
-                $res = $this->Repository->Create($slot);
+                $res = $this->repository->Create($slot);
 
-                $result[] = ($res != FALSE) ? 0 : -1;
+                $result[] = ($res != false) ? 0 : -1;
 
-                $slot->Id = ($res != FALSE)? $res->Id : 0;
+                $slot->Id = ($res != false)? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($slot);
+                $res = $this->repository->Update($slot);
 
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $result[] = ($res != false) ? 0 : -2;
             }
             // Actualizar la colección de slots
-            if($res != FALSE){
-                $this->Aggregate->Slots[$slot->Id] = $slot;
+            if($res != false){
+                $this->aggregate->Slots[$slot->Id] = $slot;
             }
         }
         return $result;
@@ -100,10 +100,10 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
      */
     public function RemoveSlot($id = 0) {
 
-        $slot = $this->Services->GetById($this->Aggregate->Slots, $id);
+        $slot = $this->Services->GetById($this->aggregate->Slots, $id);
 
-        if($slot != NULL ){
-            $result = $this->Repository->Delete("SlotConfigured", $id);
+        if($slot != null ){
+            $result = $this->repository->Delete("SlotConfigured", $id);
             if($result == 0){
                 unset($slot);
                 return 0;
@@ -120,7 +120,7 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
      * @return \IBaseLineManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(BaseLineManagement::$_reference == NULL){
+        if(BaseLineManagement::$_reference == null){
             BaseLineManagement::$_reference =
                    new \BaseLineManagement($project, $service);
         }
@@ -133,8 +133,8 @@ class BaseLineManagement extends \BaseManagement implements \IBaseLineManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 }

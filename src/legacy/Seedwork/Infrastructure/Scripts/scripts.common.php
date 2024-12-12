@@ -70,10 +70,10 @@ function load_references($references = null){
 /**
  * Establece la cabecera http para no almacenar en cache
  * los recursos del website
- * @param boolean $cache TRUE = guardar
+ * @param boolean $cache true = guardar
  */
-function set_cache($cache = FALSE){
-    if($cache == FALSE){
+function set_cache($cache = false){
+    if($cache == false){
         header("Cache-Control: no-cache, must-revalidate");
         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
     }
@@ -169,7 +169,7 @@ function setUrl($startController = ""){
  * @param Exception $e Referencia a la excepcion
  * @return string
  */
-function catchError($message = "", $fileName = "" , $e = NULL ){
+function catchError($message = "", $fileName = "" , $e = null ){
     // Obtener inyector de dependencias
     $injector = Injector::GetInstance();
     // Obtener implementación
@@ -269,6 +269,6 @@ function processLoginError($view = ""){
  * @param string $message Mensaje de error a enviar
  * @param Exception $e Referencia a la excepción generada
  */
-function sendError($message = "", $e = NULL){
+function sendError($message = "", $e = null){
 
 }

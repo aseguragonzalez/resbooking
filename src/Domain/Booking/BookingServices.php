@@ -28,19 +28,19 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * Referencia
      * @var \BookingServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IBookingRepository
      */
-    protected $Repository = NULL;
+    protected $Repository = null;
 
     /**
      * Referencia al agregado
      * @var \BookingAggregate
      */
-    protected $Aggregate = NULL;
+    protected $Aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -52,7 +52,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * Constructor
      * @param \BaseLineAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
 
         parent::__construct($aggregate);
 
@@ -64,8 +64,8 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * Obtiene la referencia actual al gestor de servicios
      * @param \BaseAggregate Referencia al agregado actual
      */
-    public static function GetInstance($aggregate = NULL) {
-        if(BookingServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null) {
+        if(BookingServices::$_reference == null){
             BookingServices::$_reference =
                     new \BookingServices($aggregate);
         }
@@ -75,10 +75,10 @@ class BookingServices extends \BaseServices implements \IBookingServices{
     /**
      * Comprobación sobre la existencia de la reserva solicitada
      * @param \Booking $entity Referencia a la reserva a registrar
-     * @return boolean Resultado de la comprobación. TRUE si la reserva
-     * ya está registrada. FALSE en caso contrario
+     * @return boolean Resultado de la comprobación. true si la reserva
+     * ya está registrada. false en caso contrario
      */
-    public function Exist($entity = NULL){
+    public function Exist($entity = null){
         $filter = [ "Project" => $entity->Project, "Turn" => $entity->Turn,
                 "Date" => $entity->Date, "Diners" => $entity->Diners,
                 "Email" => "%".$entity->Email."%", "Phone" => "%".$entity->Phone."%",
@@ -92,7 +92,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * @param \Booking $entity Referencia a la reserva
      * @return \Log
      */
-    public function GetActivity($entity = NULL){
+    public function GetActivity($entity = null){
         $info = [ "REQUEST" => $_REQUEST, "Entity" => $entity];
         $date = new \DateTime( "NOW" );
         $log = new \Log();
@@ -106,10 +106,10 @@ class BookingServices extends \BaseServices implements \IBookingServices{
     /**
      * Proceso de validación de la entidad Reserva
      * @param \Booking $entity Referencia a los datos de reserva
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
+    public function Validate($entity = null){
         $this->Result = [];
         $this->ValidateClientName($entity->ClientName);
         $this->ValidateDate($entity->Date);
@@ -120,7 +120,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
         $this->ValidateTurn($entity->Turn, $entity->Date);
         $this->ValidateOffer($entity->Offer,
                 $entity->Turn, $entity->Date);
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -132,7 +132,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
         // Referencia al estado de reserva
         $state = $this->GetById($this->Aggregate->States, $id);
         // Validación
-        return ($state != NULL);
+        return ($state != null);
     }
 
     /**
@@ -162,7 +162,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
         else if(strlen($email) > 100){
             $this->Result[] = -6;
         }
-        else if(filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE){
+        else if(filter_var($email, FILTER_VALIDATE_EMAIL) === false){
             $this->Result[] = -5;
         }
     }
@@ -191,7 +191,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
         if(empty($diners)){
             $this->Result[] = -10;
         }
-        else if(is_numeric($diners)=== FALSE){
+        else if(is_numeric($diners)=== false){
             $this->Result[] = -11;
         }
         else if($diners > $this->Aggregate->MaxDiners){
@@ -303,16 +303,16 @@ class BookingServices extends \BaseServices implements \IBookingServices{
         $validar = (intval($date->format("d")) == intval($current->format("d")))
                 && (intval($date->format("m")) == intval($current->format("m")))
                 && (intval($date->format("Y")) == intval($current->format("Y")));
-        if($validar == FALSE){ return TRUE;}
+        if($validar == false){ return true;}
         // Proceso de validación del turno
         $turn = $this->GetById($this->Aggregate->Turns, $id);
-        if($turn != NULL && $turn instanceof \Turn){
+        if($turn != null && $turn instanceof \Turn){
             $start = substr($turn->Start, 0, 5);
             $startParts = explode(":", $start);
             $H = intval($current->format("H"));
             $h = intval($startParts[0]);
             if( $H < $h){
-                return TRUE;
+                return true;
             }
             else if($H == $h){
                 $M = intval($current->format("i")) + 20;
@@ -320,7 +320,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
                 return $M < $m;
             }
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -392,15 +392,15 @@ class BookingServices extends \BaseServices implements \IBookingServices{
     private function ValidateOffer($offer = 0, $turn = 0, $sDate = "" ){
         if($offer > 0){
             $off = $this->GetById($this->Aggregate->Offers, $offer);
-            if($off == NULL){
+            if($off == null){
                 $this->Result[] = -24;
             }
             // Comprobamos si la oferta está abierta
-            else if($this->OfferIsOpen($offer, $turn, $sDate) == TRUE){
+            else if($this->OfferIsOpen($offer, $turn, $sDate) == true){
                 return;
             }
             // Comprobamos si la oferta está cerrada
-            else if($this->OfferIsClose($offer, $turn, $sDate) == TRUE){
+            else if($this->OfferIsClose($offer, $turn, $sDate) == true){
                 $this->Result[] = -26;
             }
             else if(!$this->ValidateOfferDates($off, $sDate)){
@@ -422,18 +422,18 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * @param string $sDate Fecha de la reserva
      * @return boolean
      */
-    private function ValidateOfferConfig($offer = NULL, $idturn = 0, $sDate = ""){
-        if($offer != NULL) {
+    private function ValidateOfferConfig($offer = null, $idturn = 0, $sDate = ""){
+        if($offer != null) {
             $date = new \DateTime($sDate);
             $dayOfWeek = $date->format("N");
             $filter = [ "Turn" => $idturn, "Day" => $dayOfWeek ];
             $configs = json_decode($offer->Config);
-            if($configs == FALSE){
+            if($configs == false){
                 $configs = [];
             }
             return !empty($this->GetListByFilter($configs, $filter));
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -442,25 +442,25 @@ class BookingServices extends \BaseServices implements \IBookingServices{
      * @param string $sDate Referencia a la fecha
      * @return boolean Resultado de la comprobación
      */
-    private function ValidateOfferDates($offer = NULL, $sDate = ""){
+    private function ValidateOfferDates($offer = null, $sDate = ""){
         // Instanciar fecha
         $date = new \DateTime($sDate);
 
         $start = (isset($offer->Start)
                 && $offer->Start != ""
                 && $offer->Start != "0000-00-00 00:00:00")
-                ? new DateTime($offer->Start) : NULL;
+                ? new DateTime($offer->Start) : null;
 
         $end = (isset($offer->End)
                 && $offer->End != ""
                 && $offer->End != "0000-00-00 00:00:00")
-                ? new DateTime($offer->End) : NULL;
+                ? new DateTime($offer->End) : null;
 
-        $cmp_ok_1 = ($start == NULL
-                || ($start != NULL && $date >= $start));
+        $cmp_ok_1 = ($start == null
+                || ($start != null && $date >= $start));
 
-        $cmp_ok_2 = ($end == NULL
-                || ($end != NULL && $date <= $end));
+        $cmp_ok_2 = ($end == null
+                || ($end != null && $date <= $end));
 
         return ($cmp_ok_1 && $cmp_ok_2);
     }
@@ -507,7 +507,7 @@ class BookingServices extends \BaseServices implements \IBookingServices{
     private function ValidateOfferShare($id = 0, $idTurn = 0, $sDate = ""){
         $turn = $this->GetById($this->Aggregate->Turns, $idTurn);
         $filterShares = [];
-        if($turn != NULL){
+        if($turn != null){
             $filter = [ "Project" => $this->IdProject, "Offer" => $id,
                 "Slot" => $turn->Slot, "Date" => $sDate ];
             $shares = $this->GetListByFilter($this->Aggregate->OffersShare, $filter);

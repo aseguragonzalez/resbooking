@@ -28,7 +28,7 @@ interface BookingRepository
      * @param boolean $advertising Flag para indicar si el cliente quiere publicidad
      * @return int Identidad del cliente
      */
-    public function GetClient($entity = NULL, $advertising = FALSE);
+    public function GetClient($entity = null, $advertising = false);
 
     /**
      * Genera el registro de notificación de una reserva
@@ -36,5 +36,5 @@ interface BookingRepository
      * @param string $subject Asunto de la notificación
      * @return boolean Resultado del registro
      */
-    public function CreateNotification($entity = NULL, $subject = "");
+    public function CreateNotification($entity = null, $subject = "");
 }

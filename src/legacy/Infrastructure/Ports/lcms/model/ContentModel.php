@@ -166,12 +166,12 @@
 					$this->Title = "Noticia";
 					$this->Templates = $this->GetFiles( "News", $this->ProjectPath, ".html" );
 				}
-				else if($type == 2){
+				elseif($type == 2){
 					$this->Title = "Contenido";
 					$this->Templates = $this->GetFiles( "Content", $this->ProjectPath, ".html" );
 					$this->Images = $this->GetImages( $this->ProjectPath );
 				}
-				else if($type == 3){
+				elseif($type == 3){
 					$this->Title = "Galería";
 					$this->Templates = $this->GetFiles( "Gallery", $this->ProjectPath, ".html" );
 					$this->Images = $this->GetImages( $this->ProjectPath );

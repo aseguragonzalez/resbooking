@@ -12,7 +12,7 @@ interface IProductsServices{
      * @param \ProductsAggregate Referencia al agregado actual
      * @return \IProductsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Obtiene el link de un producto a partir de su nombre
@@ -26,16 +26,16 @@ interface IProductsServices{
     /**
      * Proceso de validación del producto
      * @param \Product $entity
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL);
+    public function Validate($entity = null);
 
     /**
      * Proceso de validacion de la imagen
      * @param \Image $image Referencia al objeto imagen a crear
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function ValidateImage($image = NULL);
+    public function ValidateImage($image = null);
 }

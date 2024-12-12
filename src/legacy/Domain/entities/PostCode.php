@@ -13,18 +13,18 @@ class PostCode {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Código postal
      * @var string
      */
-    public $Code = "";
+    public string $code = "";
 
     /**
      * Descripción y/o Notas
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
 }

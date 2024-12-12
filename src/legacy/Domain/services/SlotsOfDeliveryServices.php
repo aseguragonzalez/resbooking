@@ -14,19 +14,19 @@ class SlotsOfDeliveryServices extends \BaseServices
      * Referencia
      * @var \ISlotsOfDeliveryServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \ISlotsOfDeliveryRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \SlotsOfDeliveryAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -38,11 +38,11 @@ class SlotsOfDeliveryServices extends \BaseServices
      * Constructor
      * @param \SlotsOfDeliveryAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = SlotsOfDeliveryRepository
+        $this->repository = SlotsOfDeliveryRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -51,8 +51,8 @@ class SlotsOfDeliveryServices extends \BaseServices
      * @param \RequestsAggregate Referencia al agregado actual
      * @return \IProductsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(SlotsOfDeliveryServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(SlotsOfDeliveryServices::$_reference == null){
             SlotsOfDeliveryServices::$_reference =
                     new \SlotsOfDeliveryServices($aggregate);
         }
@@ -62,11 +62,11 @@ class SlotsOfDeliveryServices extends \BaseServices
     /**
      * Proceso de validación de la entidad
      * @param \SlotOfDelivery $entity Referencia a la entidad
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateProject($entity->Project);
             $this->ValidateName($entity->Id, $entity->Name);
             $this->ValidateStart($entity->Id, $entity->Start);
@@ -76,7 +76,7 @@ class SlotsOfDeliveryServices extends \BaseServices
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -87,7 +87,7 @@ class SlotsOfDeliveryServices extends \BaseServices
         if(empty($id)){
             $this->Result[] = -4;
         }
-        else if($id < 1){
+        elseif($id < 1){
             $this->Result[] = -5;
         }
     }
@@ -119,7 +119,7 @@ class SlotsOfDeliveryServices extends \BaseServices
         $filter = [ "Project" => $this->IdProject,
             "Name" => $name, "State" => 1 ];
         // buscar algún item con el mismo código
-        $items = $this->GetListByFilter($this->Aggregate->Slots, $filter);
+        $items = $this->GetListByFilter($this->aggregate->Slots, $filter);
         // Comprobar el resultado de la búsqueda
         if(isset($items) && is_array($items)
                 && count($items) != 0 && current($items)->Id != $id){
@@ -156,7 +156,7 @@ class SlotsOfDeliveryServices extends \BaseServices
             "Start" => $start, "State" => 1 ];
         // buscar algún item con el mismo código
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Slots, $filter);
+                    $this->aggregate->Slots, $filter);
         // Comprobar el resultado de la búsqueda
         if(isset($items) && is_array($items)
                 && count($items) != 0 && current($items)->Id != $id){
@@ -193,7 +193,7 @@ class SlotsOfDeliveryServices extends \BaseServices
             "End" => $end, "State" => 1 ];
         // buscar algún item con el mismo código
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Slots, $filter);
+                    $this->aggregate->Slots, $filter);
         // Comprobar el resultado de la búsqueda
         if(isset($items) && is_array($items)
                 && count($items) != 0 && current($items)->Id != $id){
@@ -210,7 +210,7 @@ class SlotsOfDeliveryServices extends \BaseServices
         if(empty($start) || empty($end)){
             $this->Result[] = -17;
         }
-        else if(!$this->CompareHour($start, $end)){
+        elseif(!$this->CompareHour($start, $end)){
             $this->Result[] = -18;
         }
     }
@@ -221,7 +221,7 @@ class SlotsOfDeliveryServices extends \BaseServices
      * @param int $id Identidad del registro de hora
      */
     private function ValidateExistHour($id = 0){
-        $hour = array_filter($this->Aggregate->HoursOfDay,
+        $hour = array_filter($this->aggregate->HoursOfDay,
                 function($item) use($id){
             return $item->Id == $id;
         });
@@ -236,11 +236,11 @@ class SlotsOfDeliveryServices extends \BaseServices
      * @return boolean
      */
     private function CompareHour($iStart = 0, $iEnd = 0){
-        $sHours = array_filter($this->Aggregate->HoursOfDay,
+        $sHours = array_filter($this->aggregate->HoursOfDay,
                 function($item) use($iStart){return $item->Id == $iStart;});
         $start = current($sHours);
 
-        $eHours = array_filter($this->Aggregate->HoursOfDay,
+        $eHours = array_filter($this->aggregate->HoursOfDay,
                 function($item) use($iEnd){return $item->Id == $iEnd;});
         $end = current($eHours);
 
@@ -252,14 +252,14 @@ class SlotsOfDeliveryServices extends \BaseServices
         $hEnd = intval($aEnd[0]);
         // Proceso de comparación
         if($hStart > $hEnd){
-            return FALSE;
+            return false;
         }
-        else if($hStart == $hEnd){
+        elseif($hStart == $hEnd){
             // comparar minutos
             if(intval($aStart[1]) >= intval($aEnd[1])){
-                return FALSE;
+                return false;
             }
         }
-        return TRUE;
+        return true;
     }
 }

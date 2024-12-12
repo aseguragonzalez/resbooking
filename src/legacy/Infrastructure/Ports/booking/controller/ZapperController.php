@@ -69,8 +69,8 @@ class ZapperController extends \ResbookingController{
             $result = $dal->RequiredPrePay($projectId, $idOffer, $diners, $date);
             $resultDTO = [
                 "Amount" => $result,
-                "Error" => FALSE ,
-                "Result" => ($result !== FALSE),
+                "Error" => false ,
+                "Result" => ($result !== false),
                 "Message" => ""
             ];
             return $this->ReturnJSON($resultDTO);

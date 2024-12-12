@@ -640,7 +640,7 @@ function validate_email(error, callback){
                 + "Debe especificar una dirección de contacto." );
         error = true;
     }
-    else if(!validateEmail( $( "[name='Email']" ).val())){
+    elseif(!validateEmail( $( "[name='Email']" ).val())){
         $( "#Email-Error" ).parent().addClass( "has-error" );
         $( "#Email-Error" ).text( email_error_str
                 + "La dirección no corresponde con formato e-mail." );
@@ -804,7 +804,7 @@ function validate_diners(error, callback){
         error = true;
     }
     // Comprobar que el número de comensales es un entero
-    else if( isNaN(parseInt($( "[name='Diners']" ).val()))){
+    elseif( isNaN(parseInt($( "[name='Diners']" ).val()))){
         $( "#Diners-Error" ).parent().addClass( "has-error" );
         $( "#Diners-Error" ).text( diners_error_str +
                 "El tipo de dato introducido es incorrecto. P.e.: 4 " );

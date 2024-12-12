@@ -10,7 +10,7 @@ class Log{
      * Identidad del log en base de datos
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Identidad del producto asociado

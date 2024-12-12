@@ -19,7 +19,7 @@ class ClientsModel extends \ResbookingModel{
      * Referencia a la entidad cliente en edición
      * @var \Client
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de clientes registradoss
@@ -253,7 +253,7 @@ class ClientsModel extends \ResbookingModel{
      * @param \Client $client Referencia a la entidad cliente
      * @return int Código de operación
      */
-    public function Save($client = NULL){
+    public function Save($client = null){
         $ars = [" ", "-", "(", ")"];
         $arr = ["", "", "", ""];
 
@@ -291,7 +291,7 @@ class ClientsModel extends \ResbookingModel{
         $filter = ["Client" => $id];
         $reservas = $this->Dao->GetByFilter("Booking", $filter);
         foreach($reservas as $item){
-            $item->Client = NULL;
+            $item->Client = null;
             $this->Dao->Update($item);
         }
         $this->Dao->Delete($id, "Client");
@@ -306,7 +306,7 @@ class ClientsModel extends \ResbookingModel{
     public function SetVip($id = 0){
         $result = -1;
         $client = $this->Dao->Read($id, "Client");
-        if($client != NULL){
+        if($client != null){
             $date = new \DateTime("NOW");
             $client->Vip = !$client->Vip;
             $client->UpdateDate = $date->format("Y-m-d H:i:s");
@@ -325,7 +325,7 @@ class ClientsModel extends \ResbookingModel{
     public function SetNotes($id = 0, $notes = ""){
         $result = -1;
         $client = $this->Dao->Read($id, "Client");
-        if($client != NULL){
+        if($client != null){
             $date = new \DateTime("NOW");
             $client->Comments = strip_tags($notes);
             $client->UpdateDate = $date->format("Y-m-d h:i:s");
@@ -340,8 +340,8 @@ class ClientsModel extends \ResbookingModel{
      * @param \Client $entity Referencia al cliente
      * @return boolean Resultado de la validación
      */
-    private function Validate($entity = NULL){
-        if($entity != NULL){
+    private function Validate($entity = null){
+        if($entity != null){
             $this->ValidateIdentity($entity->Id);
             $this->ValidateName($entity->Name);
             $this->ValidatePhone($entity->Phone);
@@ -372,7 +372,7 @@ class ClientsModel extends \ResbookingModel{
         if(empty($name)){
             $this->Codigos[] = -2;
         }
-        else if(strlen($name) > 100){
+        elseif(strlen($name) > 100){
             $this->Codigos[] = -3;
         }
     }
@@ -385,7 +385,7 @@ class ClientsModel extends \ResbookingModel{
         if(empty($phone)){
             $this->Codigos[] = -4;
         }
-        else if(strlen($phone) > 45){
+        elseif(strlen($phone) > 45){
             $this->Codigos[] = -5;
         }
     }
@@ -399,19 +399,19 @@ class ClientsModel extends \ResbookingModel{
         if(empty($email)){
             $this->Codigos[] = -6;
         }
-        else if(strlen($email) > 100){
+        elseif(strlen($email) > 100){
             $this->Codigos[] = -7;
         }
-        else if(filter_var($email, FILTER_VALIDATE_EMAIL)==FALSE){
+        elseif(filter_var($email, FILTER_VALIDATE_EMAIL)==false){
             $this->Codigos[] = -11;
         }
-        else if($id == 0){
+        elseif($id == 0){
             $clients = $this->Dao->GetByFilter("Client", ["Email" => $email]);
             if(count($clients) > 0){
                 $this->Codigos[] = -8;
             }
         }
-        else if($id > 0){
+        elseif($id > 0){
             $clients = $this->Dao->GetByFilter("Client", ["Email" => $email]);
             $counts = count($clients);
             if( $counts > 1 || ($counts == 1 && $clients[0]->Id != $id)){

@@ -13,7 +13,7 @@ class BlocksModel extends \ResbookingModel{
      * DTO de navegación
      * @var \WeekNavDTO
      */
-    public $WeekNavDTO = NULL;
+    public $WeekNavDTO = null;
 
     /**
      * Colección de días de la semana disponibles
@@ -25,7 +25,7 @@ class BlocksModel extends \ResbookingModel{
      * Colección de días de la semana disponibles
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de turnos disponibles
@@ -72,7 +72,7 @@ class BlocksModel extends \ResbookingModel{
         $days = $this->Dao->Get("Day");
         $this->WeekNavDTO->SetWeekInfo($days, $year, $week);
         $this->Days = $this->WeekNavDTO->DaysOfWeek;
-        $this->DaysOfWeek = $this->WeekNavDTO->DaysOfWeek;
+        $this->daysOfWeek = $this->WeekNavDTO->DaysOfWeek;
         // Cargar línea base de configuración
         $base = $this->Dao->GetByFilter("Configuration",
             ["Project" => $this->Project]);
@@ -91,9 +91,9 @@ class BlocksModel extends \ResbookingModel{
      * @param \Block $entity Referencia a la información del bloqueo
      * @return int Código de la operación ejecutada
      */
-    public function SetBlock($entity = NULL){
+    public function SetBlock($entity = null){
         $result = -1;
-        if($entity == NULL){
+        if($entity == null){
             return $result;
         }
         // Asignar el proyecto actual

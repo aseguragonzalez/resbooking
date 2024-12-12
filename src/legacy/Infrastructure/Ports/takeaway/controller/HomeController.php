@@ -27,7 +27,7 @@ class HomeController extends \TakeawayController{
             // Instanciar modelo
             $model = new \HomeModel();
             // Configurar lista de proyectos
-            return ($model->LoadProjects() == TRUE)
+            return ($model->LoadProjects() == true)
                 ? $this->RedirectTo( "Index" , "Requests" )
                     : $this->PartialView($model);
 
@@ -52,7 +52,7 @@ class HomeController extends \TakeawayController{
                     ? $id : $projectInfo->Id;
 
             // Configurar el proyecto seleccionado
-            return ($model->SetCurrent($projectId) == TRUE)
+            return ($model->SetCurrent($projectId) == true)
                 ? $this->RedirectTo( "Index" , "Requests" )
                     :$this->RedirectTo( "Index" , "Home" );
 
@@ -122,8 +122,8 @@ class HomeController extends \TakeawayController{
      * @param string $name Nombre de la vista pública solicitada
      * @return string
      */
-    public function GetViewNameByModel($name = "Index", $model = NULL){
-        return ($model != NULL && $model->Username != "")
+    public function GetViewNameByModel($name = "Index", $model = null){
+        return ($model != null && $model->Username != "")
             ? "Auth$name" : $name;
     }
 }

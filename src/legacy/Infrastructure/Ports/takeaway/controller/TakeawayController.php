@@ -15,9 +15,9 @@ class TakeawayController extends \SaasController{
      * proyecto activo.
      * @throws ProjectException
      */
-    public function __construct($projectRequired = FALSE) {
+    public function __construct($projectRequired = false) {
         parent::__construct();
-        if($projectRequired == TRUE && $this->Project <= 0){
+        if($projectRequired == true && $this->Project <= 0){
             throw new ProjectException("Proyecto no seleccionado");
         }
     }
@@ -48,7 +48,7 @@ class TakeawayController extends \SaasController{
         $this->Log->LogErrorTrace($method, $e);
 
         $dto = new \JsonResultDTO();
-        $dto->Result = FALSE;
+        $dto->Result = false;
         $dto->Error = $e->getMessage();
         $dto->Code = 200;
         $dto->Exception = $e;

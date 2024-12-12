@@ -43,7 +43,7 @@ interface IDiscountsManagement {
      * @param \DiscountDTO $dto Referencia al descuento
      * @return array Códigos de operación
      */
-    public function SetDiscount($dto = NULL);
+    public function SetDiscount($dto = null);
 
     /**
      * Proceso para dar de baja un descuento mediante su identidad
@@ -65,6 +65,6 @@ interface IDiscountsManagement {
      * @param \DiscountOnEvent $dto Referencia a la información del evento
      * @return int Código de operación
      */
-    public function SetDiscountEvent($dto = NULL);
+    public function SetDiscountEvent($dto = null);
 
 }

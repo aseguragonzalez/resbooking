@@ -13,19 +13,19 @@ class OffersEventsModel extends \ResbookingModel{
      * Identidad de la oferta
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia a la oferta
      * @var \Offer
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * DTO de navegación
      * @var \WeekNavDTO
      */
-    public $WeekNavDTO = NULL;
+    public $WeekNavDTO = null;
 
     /**
      * Colección de días de la semana disponibles
@@ -37,7 +37,7 @@ class OffersEventsModel extends \ResbookingModel{
      * Colección de días de la semana disponibles
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de turnos disponibles
@@ -91,7 +91,7 @@ class OffersEventsModel extends \ResbookingModel{
         $this->CargarTurnosConfigurados();
         $this->WeekNavDTO->SetWeekInfo($this->Days, $year, $week);
         $this->Days = $this->WeekNavDTO->DaysOfWeek;
-        $this->DaysOfWeek = $this->WeekNavDTO->DaysOfWeek;
+        $this->daysOfWeek = $this->WeekNavDTO->DaysOfWeek;
         $base = $this->Dao->GetByFilter("OfferConfig", ["Offer" => $id]);
         $this->BaseLine = json_encode($base);
         $filtro = ["Offer" => $id, "Week" => $this->WeekNavDTO->Current,
@@ -105,9 +105,9 @@ class OffersEventsModel extends \ResbookingModel{
      * @param \OfferEvent $entity Referencia a la información del evento
      * @return int Código de la operación ejecutada
      */
-    public function SetEvent($entity = NULL){
+    public function SetEvent($entity = null){
         $result = -1;
-        if($entity == NULL){
+        if($entity == null){
             return $result;
         }
 

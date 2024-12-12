@@ -28,30 +28,30 @@ interface IBookingServices {
      * Obtiene la referencia actual al gestor de servicios
      * @param \BaseAggregate Referencia al agregado actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Comprobación sobre la existencia de la reserva solicitada
      * @param \Booking $entity Referencia a la reserva a registrar
-     * @return boolean Resultado de la comprobación. TRUE si la reserva
-     * ya está registrada. FALSE en caso contrario
+     * @return boolean Resultado de la comprobación. true si la reserva
+     * ya está registrada. false en caso contrario
      */
-    public function Exist($entity = NULL);
+    public function Exist($entity = null);
 
     /**
      * Obtiene una instancia para el registro de actividad
      * @param \Booking $entity Referencia a la reserva
      * @return \Log
      */
-    public function GetActivity($entity = NULL);
+    public function GetActivity($entity = null);
 
     /**
      * Proceso de validación de la entidad Reserva
      * @param \Booking $entity Referencia a los datos de reserva
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL);
+    public function Validate($entity = null);
 
     /**
      * Proceso de validación del estado de la reserva

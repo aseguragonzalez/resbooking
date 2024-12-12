@@ -14,14 +14,14 @@ interface IRequestsServices{
      * @param \RequestsAggregate Referencia al agregado actual
      * @return \IRequestsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Proceso de validación de la solicitud
      * @param \Request $request Referencia a la solicitud
      * @return boolean
      */
-    public function Validate($request = NULL);
+    public function Validate($request = null);
 
     /**
      * Proceso de validación en el cambio de estado de una solicitud

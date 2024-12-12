@@ -11,7 +11,7 @@ class Image{
      * Identidad de la imagen
      * @var int Id
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del producto padre
@@ -23,13 +23,13 @@ class Image{
      * Nombre asignado a la imagen
      * @var string Nombre de producto
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Descripción de la imagen
      * @var string Descripción
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Ruta de acceso al fichero de imagen
@@ -47,5 +47,5 @@ class Image{
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 }

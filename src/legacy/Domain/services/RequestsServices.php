@@ -13,19 +13,19 @@ class RequestsServices extends \BaseServices implements \IRequestsServices{
      * Referencia
      * @var \IRequestsServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IRequestsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \RequestsAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -37,11 +37,11 @@ class RequestsServices extends \BaseServices implements \IRequestsServices{
      * Constructor
      * @param \RequestsAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = RequestsRepository
+        $this->repository = RequestsRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -50,8 +50,8 @@ class RequestsServices extends \BaseServices implements \IRequestsServices{
      * @param \RequestsAggregate Referencia al agregado actual
      * @return \IProductsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(RequestsServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(RequestsServices::$_reference == null){
             RequestsServices::$_reference = new \RequestsServices($aggregate);
         }
         return RequestsServices::$_reference;
@@ -62,8 +62,8 @@ class RequestsServices extends \BaseServices implements \IRequestsServices{
      * @param \Request $request Referencia a la solicitud
      * @return boolean
      */
-    public function Validate($request = NULL){
-        return TRUE;
+    public function Validate($request = null){
+        return true;
     }
 
     /**
@@ -73,6 +73,6 @@ class RequestsServices extends \BaseServices implements \IRequestsServices{
      * @return boolean
      */
     public function ValidateChangeState($current = 0, $next = 0){
-        return TRUE;
+        return true;
     }
 }

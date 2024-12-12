@@ -14,19 +14,19 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
      * Referencia al gestor de servicio de reservas
      * @var \IEventsServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \IEventsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \IEventsManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -37,11 +37,11 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
         // Constructor de la clase padre
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = EventsRepository::GetInstance($project, $service);
+        $this->repository = EventsRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = EventsServices::GetInstance($this->Aggregate);
+        $this->Services = EventsServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -51,7 +51,7 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
      * @return \IEventsManagement
      */
     public static function GetInstance($project = 0, $service = 0) {
-        if(EventsManagement::$_reference == NULL){
+        if(EventsManagement::$_reference == null){
             EventsManagement::$_reference =
                    new \EventsManagement($project, $service);
         }
@@ -64,9 +64,9 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -78,10 +78,10 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
     public function GetEvent($id = 0) {
         // Obtener referencia
         $event = $this->Services->GetById(
-                $this->Aggregate->Events, $id);
-        if($event != NULL){
+                $this->aggregate->Events, $id);
+        if($event != null){
 
-            $this->Aggregate->Category = $event;
+            $this->aggregate->Category = $event;
 
             return 0;
         }
@@ -93,23 +93,23 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
      * @param \SlotEvent $event Referencia a la entidad
      * @return array Códigos de operación
      */
-    public function SetEvent($event = NULL) {
+    public function SetEvent($event = null) {
         $event->Project = $this->IdProject;
         $result = $this->Services->Validate($event);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($event->Id == 0){
-                $res = $this->Repository->Create($event);
-                $result[] = ($res != FALSE) ? 0 : -1;
-                $event->Id = ($res != FALSE) ? $res->Id : 0;
+                $res = $this->repository->Create($event);
+                $result[] = ($res != false) ? 0 : -1;
+                $event->Id = ($res != false) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($event);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($event);
+                $result[] = ($res != false) ? 0 : -2;
             }
 
-            if($res != FALSE){
-                $this->Aggregate->Events[$event->Id] = $event;
+            if($res != false){
+                $this->aggregate->Events[$event->Id] = $event;
             }
         }
 
@@ -125,10 +125,10 @@ class EventsManagement extends \BaseManagement implements \IEventsManagement{
     public function RemoveEvent($id = 0) {
         // Obtener referencia
         $event = $this->Services->GetById(
-                $this->Aggregate->Events, $id);
-        if($event != NULL){
+                $this->aggregate->Events, $id);
+        if($event != null){
 
-            $result = $this->Repository->Delete("SlotEvent", $id);
+            $result = $this->repository->Delete("SlotEvent", $id);
 
             if($result == 0){
 

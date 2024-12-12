@@ -18,7 +18,7 @@ class PlacesController extends \ResbookingController{
     public function __construct(){
         // Indicamos al constructor que para todas las acciones
         // es necesario que esté contextualizado un proyecto
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**

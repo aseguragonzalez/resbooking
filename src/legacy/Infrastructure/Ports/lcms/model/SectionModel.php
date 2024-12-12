@@ -80,7 +80,7 @@
 						unset($this->Sections[$index]);
 						continue;
 					}
-					if($section->Root != NULL)
+					if($section->Root != null)
 						unset($this->Sections[$index]);
 				}
 			}
@@ -92,7 +92,7 @@
 		///</summary>
 		public function Save($entity = null){
 			// Establecer root
-			if($entity->Root == "null")	$entity->Root = NULL;
+			if($entity->Root == "null")	$entity->Root = null;
 			// Establecer proyecto
 			$entity->Project = $this->Project;
 			// Validar entidad

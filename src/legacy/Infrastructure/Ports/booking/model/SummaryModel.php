@@ -248,7 +248,7 @@ class SummaryModel extends \ResbookingModel{
     /**
      * Método que obtiene la lista de reservas para una fecha
      */
-    public function GetSummary($dto = NULL){
+    public function GetSummary($dto = null){
         // Obtener parámetro de fecha
         $date = $this->SetFecha($dto);
         // establecer el filtro
@@ -351,7 +351,7 @@ class SummaryModel extends \ResbookingModel{
      * Contabilizar los datos de las reservas
      * @param \Booking $item Referencia a la reserva
      */
-    private function FiltrarRegistro($item = NULL){
+    private function FiltrarRegistro($item = null){
         switch($item->State){
             case 1:
                 $this->NReservados++;

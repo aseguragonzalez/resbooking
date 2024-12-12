@@ -13,7 +13,7 @@ interface IProductsManagement{
      * @param \Image $image Referencia a la imagen
      * @return array Códigos de operación
      */
-    public function SetImage($image = NULL);
+    public function SetImage($image = null);
 
     /**
      * Proceso de eliminación de una imagen asociada a un producto
@@ -35,7 +35,7 @@ interface IProductsManagement{
      * @param \Product $product Referencia al producto
      * @return array Códigos de operación
      */
-    public function SetProduct($product = NULL);
+    public function SetProduct($product = null);
 
     /**
      * Proceso de eliminación de un producto mediante su Identidad

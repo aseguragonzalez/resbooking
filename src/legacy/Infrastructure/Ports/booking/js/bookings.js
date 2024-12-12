@@ -203,7 +203,7 @@ function actualizarComensales(obj){
             if(data.Result === -1){
                 message = "El número de comensales debe ser superior al mínimo";
             }
-            else if(data.Result === -2){
+            elseif(data.Result === -2){
                 message = "El número de comensales debe ser inferior al máximo";
             }
             rollbackComensales(obj, message);

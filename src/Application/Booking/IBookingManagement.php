@@ -32,8 +32,8 @@ interface IBookingManagement{
      * @param boolean $sendNotification Flag para indicar si se envía notificación
      * @return array Resultado de la operación
      */
-    public function RegisterBooking($entity = NULL,
-            $saveClient = FALSE, $sendNotification = TRUE);
+    public function RegisterBooking($entity = null,
+            $saveClient = false, $sendNotification = true);
 
     /**
      * Actualización de la información de una reserva
@@ -46,7 +46,7 @@ interface IBookingManagement{
      *  -2 : Se ha producido un error durante la actualización
      */
     public function SavePropertyBooking($id = 0,
-            $propName = "", $propValue = NULL);
+            $propName = "", $propValue = null);
 
     /**
      * Proceso de anulación de la reserva
@@ -88,7 +88,7 @@ interface IBookingManagement{
      * @param array $filter Filtro de búsqueda
      * @return array Colección de reservas encontradas
      */
-    public function GetBookingsByFilter($filter = NULL);
+    public function GetBookingsByFilter($filter = null);
 
     /**
      * Obtiene una instancia del Management de reservas

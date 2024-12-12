@@ -123,7 +123,7 @@
 		///</summary>
 		private function GetPostKey( $key ){
 			// Comprobar que está definida la clave
-			if(!isset($_REQUEST[$key])){ return NULL;	}
+			if(!isset($_REQUEST[$key])){ return null;	}
 			// Obtener el valor de la clave
 			$value = $_REQUEST[$key];
 			// Filtrar caracteres

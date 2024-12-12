@@ -30,8 +30,8 @@ class OrderController extends \SaasController{
             $model = new \OrderModel($id);
             // Objeto a retornar
             $resultDTO = [
-                "Error" => FALSE,
-                "Result" => TRUE,
+                "Error" => false,
+                "Result" => true,
                 "Content" => $this->PartialView($model),
                 "Message" => ""
             ];

@@ -10,7 +10,7 @@ class HistProduct{
      * Identidad del historico
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Identidad del producto modificado

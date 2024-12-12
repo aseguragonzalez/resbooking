@@ -15,7 +15,7 @@ interface IOrderRepository {
      * @param array $items Referencia a la colección de productos seleccionados
      * @return int Código de operación
      */
-    public function CreateOrder($request = NULL, $items = NULL);
+    public function CreateOrder($request = null, $items = null);
 
     /**
      * Genera el registro de notificación de un pedido

@@ -13,7 +13,7 @@ class EventsRepository extends \BaseRepository implements \IEventsRepository{
      * Referencia a la clase base
      * @var \IEventsRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class EventsRepository extends \BaseRepository implements \IEventsRepository{
      * @return \IEventsRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(EventsRepository::$_reference == NULL){
+        if(EventsRepository::$_reference == null){
             EventsRepository::$_reference =
                     new \EventsRepository($project, $service);
         }

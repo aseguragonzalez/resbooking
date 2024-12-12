@@ -13,7 +13,7 @@ class SlotModel extends \TakeawayModel{
      * Colección de días de la semana
      * @var array
      */
-    public $DaysOfWeek = [];
+    public array $daysOfWeek = [];
 
     /**
      * Colección de Turnos de reparto registrados
@@ -76,9 +76,9 @@ class SlotModel extends \TakeawayModel{
      * @param \SlotConfigured $entity Referencia a la entidad e configuración
      * @return \JSonResultDTO Referencia a un dto de resultados
      */
-    public function SetSlot($entity = NULL){
-        $dto = NULL;
-        if($entity != NULL){
+    public function SetSlot($entity = null){
+        $dto = null;
+        if($entity != null){
             if($entity->Id == 0){
                 $dto = $this->CreateSlot($entity);
             }
@@ -88,10 +88,10 @@ class SlotModel extends \TakeawayModel{
         }
         else{
             $dto = new \JsonResultDTO();
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Message = "La entidad no es válida.";
             $dto->Code = 200;
-            $dto->Exception = NULL;
+            $dto->Exception = null;
         }
         return $dto;
     }
@@ -100,10 +100,10 @@ class SlotModel extends \TakeawayModel{
      * Configuración estándar del modelo
      */
     protected function SetModel() {
-        $this->DaysOfWeek = $this->Aggregate->DaysOfWeek;
-        $this->SlotsOfDelivery = $this->Aggregate->AvailableSlotsOfDelivery;
-        $this->SlotsConfigured = $this->Aggregate->Slots;
-        $this->Columns = count($this->DaysOfWeek) + 1;
+        $this->daysOfWeek = $this->aggregate->DaysOfWeek;
+        $this->SlotsOfDelivery = $this->aggregate->AvailableSlotsOfDelivery;
+        $this->SlotsConfigured = $this->aggregate->Slots;
+        $this->Columns = count($this->daysOfWeek) + 1;
     }
 
     /**
@@ -164,27 +164,27 @@ class SlotModel extends \TakeawayModel{
      * @param \SlotConfigured $slot
      * @return \JsonResultDTO
      */
-    private function CreateSlot($slot = NULL){
+    private function CreateSlot($slot = null){
 
         $dto = new \JsonResultDTO();
 
         $result = $this->Management->SetSlot($slot);
 
-        if(is_array($result) == FALSE){
-            $dto->Result = FALSE;
+        if(is_array($result) == false){
+            $dto->Result = false;
             $dto->Code = 500;
             $dto->Exception = new Exception("Códigos de operación inválidos");
             $dto->Message = "Códigos de operación inválidos";
         }
 
         if(count($result) != 1 || $result[0] != 0){
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Error = $this->GetResultMessage(_OP_CREATE_, $result);
             $dto->Message = $dto->Error[$result];
         }
         else{
             $dto->Code = 200;
-            $dto->Result = TRUE;
+            $dto->Result = true;
             $dto->Data = $slot->Id;
             $dto->Message = "La operación se ha realizado correctamente.";
         }
@@ -203,19 +203,19 @@ class SlotModel extends \TakeawayModel{
 
         $result = $this->Management->RemoveSlot($id);
 
-        if(is_numeric($result) == FALSE){
-            $dto->Result = FALSE;
+        if(is_numeric($result) == false){
+            $dto->Result = false;
             $dto->Code = 500;
             $dto->Message = "Códigos de operación inválidos";
         }
 
         if($result!= 0){
-            $dto->Result = FALSE;
+            $dto->Result = false;
             $dto->Error = $this->GetResultMessage(_OP_DELETE_, $result);
             $dto->Message = $dto->Error[$result];
         }
         else{
-            $dto->Result = TRUE;
+            $dto->Result = true;
             $dto->Data = 0;
             $dto->Message = "La operación se ha realizado correctamente.";
         }
@@ -228,7 +228,7 @@ class SlotModel extends \TakeawayModel{
      */
     private function CreateBaseLine(){
         $this->BaseLine = [];
-        foreach($this->DaysOfWeek as $day){
+        foreach($this->daysOfWeek as $day){
             foreach($this->SlotsOfDelivery as $deliveryTime){
                 $o = new \SlotConfigured();
                 $o->Id = 0;

@@ -13,19 +13,19 @@ class EventsServices extends \BaseServices implements \IEventsServices{
      * Referencia
      * @var \IEventsServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IEventsRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \EventsAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -37,11 +37,11 @@ class EventsServices extends \BaseServices implements \IEventsServices{
      * Constructor
      * @param \EventsAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = EventsRepository
+        $this->repository = EventsRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -50,8 +50,8 @@ class EventsServices extends \BaseServices implements \IEventsServices{
      * @param \EventsAggregate Referencia al agregado actual
      * @return \IEventsServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(EventsServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(EventsServices::$_reference == null){
             EventsServices::$_reference = new \EventsServices($aggregate);
         }
         return EventsServices::$_reference;
@@ -60,11 +60,11 @@ class EventsServices extends \BaseServices implements \IEventsServices{
     /**
      * Proceso de validación de la entidad
      * @param \SlotEvent $entity Referencia a la entidad
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateProject($entity->Project);
             $this->ValidateSlot($entity->SlotOfDelivery);
             $this->ValidateDate($entity->Date);
@@ -72,7 +72,7 @@ class EventsServices extends \BaseServices implements \IEventsServices{
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -83,7 +83,7 @@ class EventsServices extends \BaseServices implements \IEventsServices{
         if(empty($id)){
             $this->Result[] = -4;
         }
-        else if($id < 1){
+        elseif($id < 1){
             $this->Result[] = -5;
         }
     }
@@ -96,13 +96,13 @@ class EventsServices extends \BaseServices implements \IEventsServices{
         if(empty($slot)){
             $this->Result[] = -6;
         }
-        else if($slot < 1){
+        elseif($slot < 1){
             $this->Result[] = -7;
         }
         else{
             $s = $this->GetById(
-                    $this->Aggregate->AvailableSlotsOfDelivery, $slot);
-            if($s == NULL){
+                    $this->aggregate->AvailableSlotsOfDelivery, $slot);
+            if($s == null){
                 $this->Result[] = -8;
             }
         }

@@ -27,7 +27,7 @@ abstract class BaseAggregate{
      * Referencia al proyecto actual
      * @var \Project
      */
-    public $Project = NULL;
+    public $Project = null;
 
     /**
      * Identidad del proyecto actual

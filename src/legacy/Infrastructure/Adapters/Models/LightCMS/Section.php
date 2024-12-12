@@ -7,14 +7,14 @@ namespace App\Legacy\Infrastructure2\Adapters\LightCMS;
 
 class Section
 {
-    public $Id = 0;
-    public $Project = 0;
-    public $Root = NULL;
-    public $Name = "";
+    public int $id = 0;
+    public int $projectId = 0;
+    public $Root = null;
+    public string $name = "";
     public $Link = "";
     public $Author = "";
     public $Keywords = "";
-    public $Description = "";
+    public string $description = "";
     public $Tooltip = "";
     public $Template = "";
     public $Position = 0;

@@ -18,7 +18,7 @@ class OffersEventsController extends \ResbookingController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -62,7 +62,7 @@ class OffersEventsController extends \ResbookingController{
             $resultDTO = [
                 "Result" => $result,
                 "Error" => ($result == -1),
-                "Exception" => NULL
+                "Exception" => null
             ];
             // Serializar el resultado
             return $this->ReturnJSON($resultDTO);

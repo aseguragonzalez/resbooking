@@ -93,10 +93,10 @@ class StmtClient {
         if($type == "string" || $type == "date"){
             return "s";
         }
-        else if ($type == "int" || $type == "bool"){
+        elseif ($type == "int" || $type == "bool"){
             return "i";
         }
-        else if ($type == "double" || $type == "float"){
+        elseif ($type == "double" || $type == "float"){
             return "d";
         }
         else{
@@ -722,7 +722,7 @@ class StmtClient {
 
             foreach($nFilter as $key => $value){
 
-                if($value["Value"] === NULL){
+                if($value["Value"] === null){
                     $this->_where .= " AND ".$key." is null";
                     continue;
                 }

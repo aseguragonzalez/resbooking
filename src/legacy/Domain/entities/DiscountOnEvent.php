@@ -13,19 +13,19 @@ class DiscountOnEvent {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto asociado
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio asociado
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Identidad del descuento asociado
@@ -43,7 +43,7 @@ class DiscountOnEvent {
      * Fecha del evento
      * @var string
      */
-    public $Date = "";
+    public string $date = "";
 
     /**
      * Anyo del evento
@@ -67,5 +67,5 @@ class DiscountOnEvent {
      * Estado del descuento: Abierto o cerrado
      * @var int
      */
-    public $State = 0;
+    public bool $state = false;
 }

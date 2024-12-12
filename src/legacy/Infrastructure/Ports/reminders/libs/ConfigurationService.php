@@ -13,19 +13,19 @@ class ConfigurationService {
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del servicio asociado
      * @var int
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Mínimo número de comensales
@@ -43,7 +43,7 @@ class ConfigurationService {
      * Flag para indicar si están activados los recordatorios
      * @var boolean
      */
-    public $Reminders = FALSE;
+    public $Reminders = false;
 
     /**
      * Ventana de tiempo previa para el envío de recordatorio [en horas]
@@ -68,11 +68,11 @@ class ConfigurationService {
      * en el formulario de reservas
      * @var boolean
      */
-    public $Advertising = FALSE;
+    public $Advertising = false;
 
     /**
      * Flag para indicar la suscripción al servicio de pre-pedidos
      * @var boolean
      */
-    public $PreOrder = FALSE;
+    public $PreOrder = false;
 }

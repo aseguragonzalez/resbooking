@@ -13,7 +13,7 @@ class RequestsRepository extends \BaseRepository implements \IRequestsRepository
      * Referencia a la clase base
      * @var \IRequestsRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class RequestsRepository extends \BaseRepository implements \IRequestsRepository
      * @return \IRequestsRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(RequestsRepository::$_reference == NULL){
+        if(RequestsRepository::$_reference == null){
             RequestsRepository::$_reference =
                     new \RequestsRepository($project, $service);
         }
@@ -73,9 +73,9 @@ class RequestsRepository extends \BaseRepository implements \IRequestsRepository
      * @param \DateTime $date Referencia a un objeto de tipo datetime
      * @return array
      */
-    public function GetRequestsByDate($date = NULL){
+    public function GetRequestsByDate($date = null){
         $array = [];
-        if($date == NULL || !($date instanceof DateTime)){
+        if($date == null || !($date instanceof DateTime)){
             $date = new \DateTime("NOW");
         }
         $sDate = $date->format("Y-m-d");

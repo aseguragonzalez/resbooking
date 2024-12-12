@@ -18,7 +18,7 @@ class SummaryController extends \ResbookingController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**

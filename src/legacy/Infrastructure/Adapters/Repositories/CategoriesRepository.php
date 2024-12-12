@@ -14,7 +14,7 @@ class CategoriesRepository extends \BaseRepository
      * Referencia a la clase base
      * @var \ICategoriesRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ class CategoriesRepository extends \BaseRepository
      * @return \ICategoriesRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(CategoriesRepository::$_reference == NULL){
+        if(CategoriesRepository::$_reference == null){
             CategoriesRepository::$_reference =
                     new \CategoriesRepository($project, $service);
         }

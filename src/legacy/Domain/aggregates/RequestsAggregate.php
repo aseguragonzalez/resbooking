@@ -41,13 +41,13 @@ class RequestsAggregate extends \BaseAggregate{
      * Referencia a la solicitud cargada
      * @var \Request
      */
-    public $Request = NULL;
+    public $Request = null;
 
     /**
      * Referencia a la información del proyecto para impresión
      * @var \ProjectInformation
      */
-    public $ProjectInformation = NULL;
+    public $ProjectInformation = null;
 
     /**
      * Colección de Productos parametrizados en la solicitud

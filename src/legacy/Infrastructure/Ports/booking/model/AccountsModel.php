@@ -145,7 +145,7 @@ class AccountsModel extends \ResbookingModel{
      */
     public function Recovery($email = ""){
         $this->Email = $email;
-        $resultado = FALSE;
+        $resultado = false;
         if($this->ValidarRecovery()){
             // Obtener el id de proyecto resbooking
             $project = $this->GetProjectId();
@@ -157,7 +157,7 @@ class AccountsModel extends \ResbookingModel{
             // Resetear usuario
             $resultado = UserUtilities::ResetPassword($parametros);
 
-            if($resultado == TRUE){
+            if($resultado == true){
                 $this->Result = "Sus credenciales han sido reseteadas "
                         . "y notificadas a su cuenta de correo.";
                 $this->ResultCss = "has-success";
@@ -175,8 +175,8 @@ class AccountsModel extends \ResbookingModel{
      * Establece los parámetros del DTO en el modelo actual
      * @param \ChangeDTO $dto Referencia al dto de cambio de password
      */
-    private function SetChangeDTO($dto = NULL){
-        if($dto != NULL){
+    private function SetChangeDTO($dto = null){
+        if($dto != null){
             $this->Email = $this->Username;
             $this->Pass = $dto->Pass;
             $this->NewPass = $dto->NewPass;
@@ -189,9 +189,9 @@ class AccountsModel extends \ResbookingModel{
      * @param \ChangeDTO $dto Referencia al DTO para cambio de contraseña
      * @return boolean
      */
-    public function ChangePass($dto = NULL){
+    public function ChangePass($dto = null){
 
-        $resultado = FALSE;
+        $resultado = false;
 
         $this->SetChangeDTO($dto);
 
@@ -199,7 +199,7 @@ class AccountsModel extends \ResbookingModel{
             $parametros = array( "email" => $this->Email,
                 "pass" => $this->Pass, "newpass" => $this->NewPass);
             $resultado = UserUtilities::ChangePassword($parametros);
-            if($resultado == TRUE){
+            if($resultado == true){
                 $this->Result = "Sus credenciales han sido "
                         . "modificadas con éxito.";
                 $this->ResultCss = "has-success";
@@ -231,11 +231,11 @@ class AccountsModel extends \ResbookingModel{
      * @param boolean $error Estado de validación actual
      * @return boolean Resultado de la validación
      */
-    private function ValidateEmail($error = FALSE){
+    private function ValidateEmail($error = false){
         if(!isset($this->Email) || $this->Email == ""){
             $this->eEmail = "Debe especificar una dirección de e-mail.";
             $this->eEmailClass = "has-error";
-            $error = TRUE;
+            $error = true;
         }
         return $error;
     }
@@ -245,7 +245,7 @@ class AccountsModel extends \ResbookingModel{
      * @param boolean $error Estado de la validación actual
      * @return boolean Resultado de la validación
      */
-    private function ValidatePass($error = FALSE){
+    private function ValidatePass($error = false){
         if(!isset($this->Pass) || $this->Pass == ""){
             $this->ePass = "Debe especificar su password actual.";
             $this->ePassClass = "has-error";
@@ -259,18 +259,18 @@ class AccountsModel extends \ResbookingModel{
      * @param boolean $error Estado del proceso de validación actual
      * @return boolean Resultado de la validación
      */
-    private function ValidateNewPass($error = FALSE){
+    private function ValidateNewPass($error = false){
 
         if(!isset($this->NewPass) || $this->NewPass == ""){
             $this->eNewPass = "Debe especificar su nueva password.";
             $this->eNewPassClass = "has-error";
-            $error = TRUE;
+            $error = true;
         }
 
         if(!isset($this->ReNewPass) || $this->ReNewPass == ""){
             $this->eReNewPass = "Debe repetir la contraseña.";
             $this->eReNewPassClass = "has-error";
-            $error = TRUE;
+            $error = true;
         }
 
         if(isset($this->NewPass) && $this->NewPass != ""
@@ -278,7 +278,7 @@ class AccountsModel extends \ResbookingModel{
                     && $this->NewPass != $this->ReNewPass){
             $this->eReNewPass = "La contraseña y su repetición no coinciden.";
             $this->eReNewPassClass = "has-error";
-            $error = TRUE;
+            $error = true;
         }
 
         return $error;
@@ -291,7 +291,7 @@ class AccountsModel extends \ResbookingModel{
     private function ValidarChangePass(){
         return !$this->ValidateNewPass(
                         $this->ValidatePass(
-                            $this->ValidateEmail(FALSE)));
+                            $this->ValidateEmail(false)));
     }
 
 }

@@ -10,13 +10,13 @@ class SlotEvent{
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad de la franja horaria configurada
@@ -28,7 +28,7 @@ class SlotEvent{
      * Fecha del evento en formato yyyy-mm-dd
      * @var string
      */
-    public $Date = "";
+    public string $date = "";
 
     /**
      * Tipo de evento Apertura o cierre.

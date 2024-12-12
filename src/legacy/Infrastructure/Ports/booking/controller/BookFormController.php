@@ -16,7 +16,7 @@ class BookFormController extends \ResbookingController{
      * Constructor
      */
     public function __construct(){
-        parent::__construct(TRUE);
+        parent::__construct(true);
     }
 
     /**
@@ -34,8 +34,8 @@ class BookFormController extends \ResbookingController{
             if($json != 0){
                 // Objeto a retornar
                 $resultDTO = [
-                    "Error" => FALSE,
-                    "Result" => TRUE,
+                    "Error" => false,
+                    "Result" => true,
                     "Content" => $this->Partial("IndexJSON", $model),
                     "Message" => ""
                 ];

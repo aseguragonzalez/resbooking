@@ -21,7 +21,7 @@ interface ICategoriesManagement{
      * @param \Category $category Referencia a la categoría
      * @return array Códigos de operación
      */
-    public function SetCategory($category = NULL);
+    public function SetCategory($category = null);
 
     /**
      * Proceso de eliminación de una categoría mediante su Identidad

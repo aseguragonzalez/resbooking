@@ -40,13 +40,13 @@ abstract class BaseRepository{
      * Referencia al objeto de acceso a datos
      * @var \IDataAccessObject
      */
-    protected $Dao = NULL;
+    protected $Dao = null;
 
     /**
      * Referencia al gestor de trazas
      * @var \ILogManager Gestor de trazas
      */
-    protected $Log = NULL;
+    protected $Log = null;
 
     /**
      * Constructor
@@ -103,21 +103,21 @@ abstract class BaseRepository{
      * @param array $filter Filtro de búsqueda
      * @return array Colección de entidades disponibles
      */
-    public function GetByFilter($entityName = "", $filter = NULL){
+    public function GetByFilter($entityName = "", $filter = null){
         return $this->Dao->GetByFilter($entityName, $filter);
     }
 
     /**
      * Crea un registro de la entidad solicitada
      * @param object $entity Referencia a la entidad a registrar
-     * @return object|boolean Referencia a la entidad generada o FALSE
+     * @return object|boolean Referencia a la entidad generada o false
      */
-    public function Create($entity = NULL){
-        if($entity != NULL){
+    public function Create($entity = null){
+        if($entity != null){
              $entity->Id = $this->Dao->Create($entity);
             return $entity;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -126,21 +126,21 @@ abstract class BaseRepository{
      * @param object $identity Identidad de la entidad buscada
      * @return object Referencia a la entidad buscada
      */
-    public function Read($entityName = "", $identity = NULL){
+    public function Read($entityName = "", $identity = null){
         return $this->Dao->Read($identity, $entityName);
     }
 
     /**
      * Actualización de la entidad pasado como argumento
      * @param object $entity Referencia a la entidad a actualizar
-     * @return object|boolean Referencia a la entidad o FALSE
+     * @return object|boolean Referencia a la entidad o false
      */
-    public function Update($entity = NULL){
-        if($entity != NULL){
+    public function Update($entity = null){
+        if($entity != null){
             $this->Dao->Update($entity);
             return $entity;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -149,7 +149,7 @@ abstract class BaseRepository{
      * @param object $identity Identidad de la entidad
      * @return boolean Resultado de la operacion
      */
-    public function Delete($entityName = "", $identity = NULL){
+    public function Delete($entityName = "", $identity = null){
         return $this->Dao->Delete($identity, $entityName);
     }
 }

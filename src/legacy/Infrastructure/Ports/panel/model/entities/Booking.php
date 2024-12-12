@@ -18,13 +18,13 @@ class Booking{
      * Identidad
      * @var int Identidad de la reserva
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Referencia externa (fk) al Proyecto
      * @var int Identidad del proyecto
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Referencia externa (fk) al Turno de comida
@@ -36,13 +36,13 @@ class Booking{
      * Referencia externa (fk) al cliente registrado
      * @var int Identidad del cliente (si ha sido registrado)
      */
-    public $Client = NULL;
+    public $Client = null;
 
     /**
      * Fecha para la reserva
      * @var string Fecha de la reserva
      */
-    public $Date = NULL;
+    public $Date = null;
 
     /**
      * Comensales
@@ -72,7 +72,7 @@ class Booking{
      * Fecha de creación del registro
      * @var string Fecha de creación del registro
      */
-    public $CreateDate = NULL;
+    public $CreateDate = null;
 
     /**
      * Fecha de creación del registro
@@ -102,7 +102,7 @@ class Booking{
      * Identidad del origen de reserva
      * @var int
      */
-    public $BookingSource = NULL;
+    public $BookingSource = null;
 
     /**
      * Notas asociadas a la reserva

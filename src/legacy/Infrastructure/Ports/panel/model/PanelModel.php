@@ -13,7 +13,7 @@ abstract class PanelModel extends \Model{
      * Proyecto activo
      * @var \Project
      */
-    public $Project = NULL;
+    public int $projectId = 0;
 
     /**
      * Colección de proyectos del usuario
@@ -37,7 +37,7 @@ abstract class PanelModel extends \Model{
      * Referencia al gestor de seguridad
      * @var \ISecurity Referencia al gestor de seguridad
      */
-    protected $Security = NULL;
+    protected $Security = null;
 
     /**
      * Identidad del usuario
@@ -151,7 +151,7 @@ abstract class PanelModel extends \Model{
      * Carga la colección de servicios asociados al proyecto actual
      */
     private function GetServices(){
-        if($this->Project != NULL){
+        if($this->Project != null){
             $filter = ["Project" => $this->Project->Id, "User" => $this->UserId];
             $services = $this->Dao->GetByFilter("ServiceDTO", $filter);
             $this->Services = array_filter($services, function($item){
@@ -166,13 +166,13 @@ abstract class PanelModel extends \Model{
      * @return boolean Advierte si el proyecto ha sido cargado desde la sesión
      */
     private function SetProjectFromSession(){
-        $result = FALSE;
+        $result = false;
         if(isset($_SESSION["project_id"])){
             $id = intval($_SESSION["project_id"]);
-            if(array_key_exists($id, $this->Projects) == TRUE){
+            if(array_key_exists($id, $this->Projects) == true){
                 $this->Project = $this->Projects[$id];
                 $this->GetServices();
-                $result = TRUE;
+                $result = true;
             }
         }
         return $result;
@@ -183,12 +183,12 @@ abstract class PanelModel extends \Model{
      * @return boolean Advierte si el proyecto ha sido cargado con éxito
      */
     private function SetDefaultProject(){
-        $result = FALSE;
+        $result = false;
         if(count($this->Projects) > 0){
             $this->Project = current($this->Projects);
             $_SESSION["project_id"] = $this->Project->Id;
             $this->GetServices();
-            $result = TRUE;
+            $result = true;
         }
         return $result;
     }
@@ -199,7 +199,7 @@ abstract class PanelModel extends \Model{
      * @return boolean Advierte si el proyecto ha sido cargado con éxito
      */
     private function SetProjectById($id = 0){
-        $result = FALSE;
+        $result = false;
         $filters = array_filter($this->Projects, function($item) use ($id){
            return $item->Id == $id;
         });
@@ -207,7 +207,7 @@ abstract class PanelModel extends \Model{
             $this->Project = current($filters);
             $_SESSION["project_id"] = $this->Project->Id;
             $this->GetServices();
-            $result = TRUE;
+            $result = true;
         }
         return $result;
     }
@@ -218,19 +218,19 @@ abstract class PanelModel extends \Model{
      * @return boolean Resultado de la configuración de proyecto
      */
     public function SetCurrent($id = 0){
-        $return = FALSE;
+        $return = false;
 
         if($id <= 0 && $this->SetProjectFromSession()){
-            $return = TRUE;
+            $return = true;
         }
-        else if($id <= 0 && $this->SetDefaultProject()){
-            $return = TRUE;
+        elseif($id <= 0 && $this->SetDefaultProject()){
+            $return = true;
         }
-        else if($id > 0 && $this->SetProjectById($id)){
-            $return = TRUE;
+        elseif($id > 0 && $this->SetProjectById($id)){
+            $return = true;
         }
         else{
-            $this->Project = NULL;
+            $this->Project = null;
             unset($_SESSION["project_id"]);
         }
 

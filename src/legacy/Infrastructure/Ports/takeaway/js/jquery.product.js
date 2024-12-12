@@ -70,7 +70,7 @@ function setFormData(obj){
                     $( control ).val(value);
                 }
             }
-            else if(length > 1){
+            elseif(length > 1){
 
                 var tagName = $(control).prop( "tagName" );
 
@@ -258,7 +258,7 @@ function setControl(control, target, callback){
             });
         }
     }
-    else if(control.type === "text"
+    elseif(control.type === "text"
             &&(  control.maxlength === ""
             || parseInt(control.maxlength) > 50)){
         ctrl = $("<textarea />")

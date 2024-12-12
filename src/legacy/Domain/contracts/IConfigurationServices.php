@@ -15,13 +15,13 @@ interface IConfigurationServices {
      * @param \ConfigurationAggregate Referencia al agregado actual
      * @return \IConfigurationServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL);
+    public static function GetInstance($aggregate = null);
 
     /**
      * Proceso de validación de la información del proyecto para la impresión
      * de tickets
      * @param \ProjectInfo $dto Referencia a la información del proyecto
-     * @return TRUE|array Colección de códigos de validación
+     * @return true|array Colección de códigos de validación
      */
-    public function ValidateInfo($dto = NULL);
+    public function ValidateInfo($dto = null);
 }

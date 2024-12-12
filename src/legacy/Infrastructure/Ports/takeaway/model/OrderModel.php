@@ -13,19 +13,19 @@ class OrderModel extends \TakeawayModel{
      * Referencia a la solicitud actual
      * @var \Request
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Indica si se ha producido un error de validación
      * @var boolean
      */
-    public $Error = FALSE;
+    public $Error = false;
 
     /**
      * Indica si debe visualizarse el modal de códigos postales
      * @var boolean
      */
-    public $ModalEntrega = TRUE;
+    public $ModalEntrega = true;
 
     /**
      * Cólección de horas de reparto disponibles
@@ -203,7 +203,7 @@ class OrderModel extends \TakeawayModel{
         parent::__construct("Pedidos");
         $this->Management =
             OrderManagement::GetInstance($project, $this->Service);
-        $this->Aggregate = $this->Management->GetAggregate();
+        $this->aggregate = $this->Management->GetAggregate();
         $this->SetProject();
         $this->SetModel();
     }
@@ -221,7 +221,7 @@ class OrderModel extends \TakeawayModel{
             $item->PPrice = number_format($price, 2);
         }
 
-        foreach($this->Aggregate->Categories as $cat){
+        foreach($this->aggregate->Categories as $cat){
 
             $prods = array_filter($this->Products, function($prod) use($cat){
                 return $prod->Category == $cat->Id;
@@ -240,8 +240,8 @@ class OrderModel extends \TakeawayModel{
      * @param \Request $entity Referencia con la información del pedido
      * @return boolean Resultado del registro
      */
-    public function Save($entity = NULL){
-        $this->Error = TRUE;
+    public function Save($entity = null){
+        $this->Error = true;
         // Generar ticket
         $entity->Ticket = $this->GenerateTicket();
         // Extraer lista de items
@@ -249,7 +249,7 @@ class OrderModel extends \TakeawayModel{
         // Procedimiento para almacenar el descuento
         $result = $this->Management->SetOrder($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetOrder: "
                     . "Códigos de operación inválidos");
         }
@@ -258,17 +258,17 @@ class OrderModel extends \TakeawayModel{
 
         if(count($result) == 1){
             if($result[0] == 0 || $result[0] == -25){
-                $this->Error = FALSE;
+                $this->Error = false;
                 $this->eResult = "La operación se ha realizado satisfactoriamente.";
                 $this->eResultClass="has-success";
-                return TRUE;
+                return true;
             }
         }
 
         $this->TranslateResultCodes(_OP_CREATE_, $result);
         $this->Entity->Items = json_encode($entity->Items);
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -277,13 +277,13 @@ class OrderModel extends \TakeawayModel{
     protected function SetModel() {
         $this->Entity = new \Request();
         $this->Entity->Items = "[]";
-        $this->Products = $this->Aggregate->Products;
+        $this->Products = $this->aggregate->Products;
         foreach($this->Products as $item){
             $item->Price = number_format($item->Price, 2);
         }
-        $this->PostCodes = $this->Aggregate->PostCodes;
-        $this->DeliveryMethods = $this->Aggregate->DeliveryMethods;
-        $this->PaymentMethods = $this->Aggregate->PaymentMethods;
+        $this->PostCodes = $this->aggregate->PostCodes;
+        $this->DeliveryMethods = $this->aggregate->DeliveryMethods;
+        $this->PaymentMethods = $this->aggregate->PaymentMethods;
         $this->JSONPostCodes = json_encode($this->PostCodes);
         $this->FilterByDate();
     }
@@ -303,10 +303,10 @@ class OrderModel extends \TakeawayModel{
      * Establece los datos del proyecto seleccionado
      */
     private function SetProject(){
-        if($this->Aggregate->Project != NULL){
-            $this->Project = $this->Aggregate->Project->Id;
-            $this->ProjectName = $this->Aggregate->Project->Name;
-            $this->ProjectPath = $this->Aggregate->Project->Path;
+        if($this->aggregate->Project != null){
+            $this->Project = $this->aggregate->Project->Id;
+            $this->ProjectName = $this->aggregate->Project->Name;
+            $this->ProjectPath = $this->aggregate->Project->Path;
         }
     }
 
@@ -352,7 +352,7 @@ class OrderModel extends \TakeawayModel{
      * @param int $dow Dia de la semana
      */
     private function FilterDiscounts($dow = 0){
-        foreach($this->Aggregate->Discounts as $discount){
+        foreach($this->aggregate->Discounts as $discount){
             $items = array_filter($discount->Configuration,
                     function($item) use($dow){
                 return $item->DayOfWeek == $dow;
@@ -387,21 +387,21 @@ class OrderModel extends \TakeawayModel{
         }
         $date = new \DateTime($sDate);
         $dateOfEvent = $date->format("Y-m-d");
-        $this->Events = array_filter($this->Aggregate->Events,
+        $this->Events = array_filter($this->aggregate->Events,
                 function($event) use($dateOfEvent){
-            return strpos($event->Date, $dateOfEvent) !== FALSE ;
+            return strpos($event->Date, $dateOfEvent) !== false ;
         });
         // Agregar y Quitar los slot bloqueados para la fecha
         foreach($this->Events as $event){
             $blocks = array_filter($this->Slots, function($slot) use($event){
-               return $event->Open == FALSE
+               return $event->Open == false
                        && $slot->Id == $event->SlotOfDelivery;
             });
             if(count($blocks) > 0){
                 $this->Slots = array_diff($this->Slots, $blocks);
             }
-            $opened = array_filter($this->Aggregate->SlotsOfDelivery, function($slot) use($event){
-               return $event->Open == TRUE
+            $opened = array_filter($this->aggregate->SlotsOfDelivery, function($slot) use($event){
+               return $event->Open == true
                        && $slot->Id == $event->SlotOfDelivery;
             });
             if(count($opened) > 0){
@@ -415,7 +415,7 @@ class OrderModel extends \TakeawayModel{
      * @param int $dow Día de la semana
      */
     private function FilterSlotsByDayOfWeek($dow = 0){
-        $this->Slots = array_filter($this->Aggregate->Slots,
+        $this->Slots = array_filter($this->aggregate->Slots,
             function($item) use($dow){
                 return $item->DayOfWeek == $dow;
         });
@@ -426,7 +426,7 @@ class OrderModel extends \TakeawayModel{
      */
     private function FilterHoursOfDayBySlots(){
         foreach($this->Slots as $slot){
-            $hours = array_filter($this->Aggregate->HoursOfDay,
+            $hours = array_filter($this->aggregate->HoursOfDay,
                 function($item) use($slot){
                     return $slot->Start <= $item->Id
                             && $slot->End >= $item->Id;
@@ -458,8 +458,8 @@ class OrderModel extends \TakeawayModel{
      * @param int $end Identidad de la hora de finalización
      * @return boolean
      */
-    private function CompareHour($start = NULL, $end = NULL){
-        if($start != NULL && $end != NULL){
+    private function CompareHour($start = null, $end = null){
+        if($start != null && $end != null){
             // Partimos las cadenas con format [hh:mm] por ":"
             $aStart = explode(":", $start);
             $aEnd = explode(":", $end);
@@ -468,16 +468,16 @@ class OrderModel extends \TakeawayModel{
             $hEnd = intval($aEnd[0]);
             // Proceso de comparación
             if($hStart > $hEnd){
-                return FALSE;
+                return false;
             }
-            else if($hStart == $hEnd){
+            elseif($hStart == $hEnd){
                 // comparar minutos
                 if(intval($aStart[1]) >= intval($aEnd[1])){
-                    return FALSE;
+                    return false;
                 }
             }
         }
-        return TRUE;
+        return true;
     }
 
     /**
@@ -495,8 +495,8 @@ class OrderModel extends \TakeawayModel{
      * @param \Request $entity Referencia a la solicitud
      * @return array
      */
-    private function GetRequestItems($entity = NULL){
-        if($entity != NULL && isset($entity->Items)
+    private function GetRequestItems($entity = null){
+        if($entity != null && isset($entity->Items)
                 && is_string($entity->Items)){
             return json_decode($entity->Items);
         }

@@ -22,7 +22,7 @@ interface IBaseLineManagement {
      * @param \SlotConfiguration $slot Referencia a la entidad a guardar
      * @return array Códigos de operación
      */
-    public function SetSlot($slot = NULL);
+    public function SetSlot($slot = null);
 
     /**
      * Proceso para eliminar un registro de configuración

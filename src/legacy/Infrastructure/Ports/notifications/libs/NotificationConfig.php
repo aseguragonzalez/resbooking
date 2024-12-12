@@ -9,19 +9,19 @@
          * Propiedad Id de la notificación
          * @var int Identidad del registro de configuración
          */
-        public $Id = 0;
+        public int $id = 0;
 
         /**
          * Propiedad Project ( proyecto asociado )
          * @var int Identidad del proyecto asociado
          */
-        public $Project = 0;
+        public int $projectId = 0;
 
         /**
          * Propiedad Service ( servicio que genera el registro )
          * @var int Identidad del servicio asociado
          */
-        public $Service = 0;
+        public int $serviceId = 0;
 
         /**
          * Propiedad Subject ( Asunto de la notificación )
@@ -57,6 +57,6 @@
          * Propiedad State ( Estado del servicio )
          * @var boolean Estado de la notificación
          */
-        public $State = 1;
+        public bool $state = true;
 
     }

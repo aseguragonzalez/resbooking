@@ -21,7 +21,7 @@ final class Service
         string $path,
         string $platform,
     ): self {
-        return new self(NULL, $description, $name, $path, $platform);
+        return new self(null, $description, $name, $path, $platform);
     }
 
     public static function stored(

@@ -9,19 +9,19 @@ declare(strict_types=1);
  */
 class DateNavDTO {
 
-    protected $NextDate = NULL;
+    protected $NextDate = null;
 
     public $NextText = "";
 
     public $Next = "";
 
-    protected $CurrentDate = NULL;
+    protected $CurrentDate = null;
 
     public $CurrentText = "";
 
     public $Current = "";
 
-    protected $PrevDate = NULL;
+    protected $PrevDate = null;
 
     public $PrevText = "";
 
@@ -59,8 +59,8 @@ class DateNavDTO {
         try{
             $d = new DateTime($date);
         } catch (Exception $ex) {
-            return FALSE;
+            return false;
         }
-        return TRUE;
+        return true;
     }
 }

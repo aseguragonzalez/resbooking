@@ -13,19 +13,19 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * Referencia
      * @var \IOrderServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \IOrderRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \OrderAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -37,11 +37,11 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * Constructor
      * @param \OrderAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = OrderRepository
+        $this->repository = OrderRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -50,8 +50,8 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param \OrderAggregate Referencia al agregado actual
      * @return \IOrderServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(OrderServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(OrderServices::$_reference == null){
             OrderServices::$_reference = new \OrderServices($aggregate);
         }
         return OrderServices::$_reference;
@@ -62,7 +62,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param \OrderDTO $entity Referencia a la solicitud
      * @return float Importe
      */
-    public function GetAmount($entity = NULL) {
+    public function GetAmount($entity = null) {
         // Obtener la colección de productos
         $items = $entity->GetRequestItems();
         // Calcular importe
@@ -74,13 +74,13 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param \OrderDTO $entity Referencia a la solicitud
      * @return float Importe Total
      */
-    public function GetTotal($entity = NULL) {
+    public function GetTotal($entity = null) {
         // Calcular total sin descuento
         $total = $this->GetAmount($entity);
         // Obtener referencia al descuento
         if(isset($entity->Discount) && $entity->Discount > 0){
             $discounts = $this->GetListByFilter(
-                    $this->Aggregate->Discounts, ["Id" => $entity->Discount]);
+                    $this->aggregate->Discounts, ["Id" => $entity->Discount]);
             if(!empty($discounts)){
                 $discount = current($discounts);
                 $discount instanceof \DiscountOn;
@@ -95,7 +95,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param \OrderDTO $entity Referencia a la solicitud
      * @return string Ticket del pedido
      */
-    public function GetTicket($entity = NULL) {
+    public function GetTicket($entity = null) {
 
         $sProject = "$this->IdProject";
         if($this->IdProject < 10){
@@ -108,7 +108,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             $sProject = "$this->IdProject-";
         }
 
-        $requests = $this->Repository->GetByFilter(
+        $requests = $this->repository->GetByFilter(
                 "Request", ["Project" => $this->IdProject]);
         $current = count($requests);
 
@@ -117,7 +117,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
 
             $ticket = $sProject.$this->SetTicket($current);
 
-            $requests = $this->Repository->GetByFilter(
+            $requests = $this->repository->GetByFilter(
                     "Request", ["Ticket" => $ticket]);
         }while (count($requests) > 0);
 
@@ -147,11 +147,11 @@ class OrderServices extends \BaseServices implements \IOrderServices{
     /**
      * Proceso de validación de la solicitud
      * @param \OrderDTO $entity Referencia al pedido
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateProject($entity->Project);
             $this->ValidateTicket($entity->Ticket);
             $this->ValidateName($entity->Name);
@@ -170,7 +170,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
 
@@ -181,12 +181,12 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param array $items Colección de productos asociados
      * @return float
      */
-    private function CalculateAmount($items = NULL){
+    private function CalculateAmount($items = null){
         $amount = 0;
         foreach($items as $item){
-            $product = $this->GetById($this->Aggregate->Products,
+            $product = $this->GetById($this->aggregate->Products,
                     $item->Product);
-            if($product != NULL){
+            if($product != null){
                 $amount += $item->Count * $product->Price;
             }
         }
@@ -211,7 +211,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($ticket)){
             $this->Result[] = -5;
         }
-        else if(strlen($ticket) > 45){
+        elseif(strlen($ticket) > 45){
             $this->Result[] = -6;
         }
     }
@@ -224,7 +224,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($name)){
             $this->Result[] = -7;
         }
-        else if(strlen($name) > 200){
+        elseif(strlen($name) > 200){
             $this->Result[] = -8;
         }
     }
@@ -237,10 +237,10 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($email)){
             $this->Result[] = -9;
         }
-        else if(strlen($email) > 100){
+        elseif(strlen($email) > 100){
             $this->Result[] = -10;
         }
-        else if(filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE){
+        elseif(filter_var($email, FILTER_VALIDATE_EMAIL) == false){
             $this->Result[] = -11;
         }
     }
@@ -253,7 +253,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($addr)){
             $this->Result[] = -12;
         }
-        else if(strlen($addr) > 500){
+        elseif(strlen($addr) > 500){
             $this->Result[] = -13;
         }
     }
@@ -263,9 +263,9 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param int $id Identidad del descuento
      * @return void
      */
-    private function ValidateDiscount($id = NULL){
+    private function ValidateDiscount($id = null){
 
-        if($id == NULL){
+        if($id == null){
             return;
         }
 
@@ -273,7 +273,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             $this->Result[] = -14;
         }
         else{
-            $discounts = array_filter($this->Aggregate->Discounts,
+            $discounts = array_filter($this->aggregate->Discounts,
                     function($item) use ($id){ return $item->Id == $id; });
             if(count($discounts) == 0){
                 $this->Result[] = -15;
@@ -290,7 +290,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             $this->Result[] = -16;
         }
         else{
-            $list = array_filter($this->Aggregate->DeliveryMethods,
+            $list = array_filter($this->aggregate->DeliveryMethods,
                     function($item) use ($id){ return $item->Id == $id; });
             if(count($list) == 0){
                 $this->Result[] = -17;
@@ -307,7 +307,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             $this->Result[] = -18;
         }
         else{
-            $list = array_filter($this->Aggregate->PaymentMethods,
+            $list = array_filter($this->aggregate->PaymentMethods,
                     function($item) use ($id){ return $item->Id == $id; });
             if(count($list) == 0){
                 $this->Result[] = -19;
@@ -325,7 +325,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             $this->Result[] = -20;
         }
         else{
-            $list = array_filter($this->Aggregate->HoursOfDay,
+            $list = array_filter($this->aggregate->HoursOfDay,
                     function($item) use ($id){ return $item->Id == $id; });
             if(count($list) == 0){
                 $this->Result[] = -21;
@@ -341,7 +341,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($phone)){
             $this->Result[] = -22;
         }
-        else if(strlen($phone) > 15){
+        elseif(strlen($phone) > 15){
             $this->Result[] = -23;
         }
     }
@@ -350,20 +350,20 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * Validación de los productos seleccionados
      * @param array $items colección de productos asociados al pedido
      */
-    private function ValidateItems($items = NULL){
-        if($items == NULL || !is_array($items) || count($items)==0){
+    private function ValidateItems($items = null){
+        if($items == null || !is_array($items) || count($items)==0){
             $this->Result[] = -24;
         }
         else{
-            $error = FALSE;
+            $error = false;
             foreach($items as $item){
-                $product = $this->GetById($this->Aggregate->Products,
+                $product = $this->GetById($this->aggregate->Products,
                     $item->Product);
-                if($product == NULL){
-                    $error = TRUE;
+                if($product == null){
+                    $error = true;
                 }
             }
-            if($error == TRUE){
+            if($error == true){
                 $this->Result[] = -31;
             }
         }
@@ -373,7 +373,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * Validación si ya existe un registro de pedido
      * @param \OrderDTO $request Referencia al DTO de pedido
      */
-    private function ValidateRequest($request = NULL){
+    private function ValidateRequest($request = null){
         $filter = [
             "DeliveryDate" => $request->DeliveryDate,
             "DeliveryTime" => $request->DeliveryTime,
@@ -383,7 +383,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
             "Project" => $request->Project
         ];
 
-        $requests = $this->Repository->GetByFilter("Request", $filter);
+        $requests = $this->repository->GetByFilter("Request", $filter);
 
         if(is_array($requests) && count($requests) != 0){
             $this->Result[] = -25;
@@ -404,14 +404,14 @@ class OrderServices extends \BaseServices implements \IOrderServices{
         if(empty($postcode)){
             $this->Result[] = -26;
         }
-        else if(strlen($postcode) > 6){
+        elseif(strlen($postcode) > 6){
             $this->Result[] = -27;
         }
-        else if(!is_numeric($postcode)){
+        elseif(!is_numeric($postcode)){
             $this->Result[] = -28;
         }
         else{
-            $postcodes = array_filter($this->Aggregate->PostCodes,
+            $postcodes = array_filter($this->aggregate->PostCodes,
                     function($item) use ($postcode){
                         return $item->Code == $postcode;
                     });
@@ -426,11 +426,11 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param float $amount Importe del pedido
      * @param array $items Colección de productos asociados
      */
-    private function ValidateAmount($amount = 0, $items = NULL){
+    private function ValidateAmount($amount = 0, $items = null){
         if($amount <= 0){
             $this->Result[] = -29;
         }
-        else if($items != NULL && is_array($items) && count($items) !=0){
+        elseif($items != null && is_array($items) && count($items) !=0){
             $temp = $this->CalculateAmount($items);
             if($temp != $amount){
                 $this->Result[] = -30;
@@ -446,18 +446,18 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * @param float $amount Importe neto del pedido
      * @param int $discount Referencia al descuento aplicable
      */
-    private function ValidateTotal($total = 0, $amount = 0, $discount = NULL){
+    private function ValidateTotal($total = 0, $amount = 0, $discount = null){
         if($total == 0){
             $this->Result[] = -32;
         }
-        else if(($discount == NULL || $discount == 0)
+        elseif(($discount == null || $discount == 0)
                 && ($total != $amount)){
             $this->Result[] = -33;
         }
         else {
-            $disc = $this->GetById($this->Aggregate->Discounts, $discount);
+            $disc = $this->GetById($this->aggregate->Discounts, $discount);
             $temp = 0;
-            if($disc != NULL){
+            if($disc != null){
                 $temp = $amount * (1 - ($disc->Value/100));
             }
             if($temp != $total){
@@ -470,7 +470,7 @@ class OrderServices extends \BaseServices implements \IOrderServices{
      * Validación de la fecha de entrega
      * @param \DateTime $date Referencia a la fecha de entrega
      */
-    private function ValidateDeliveryDate($date = NULL){
+    private function ValidateDeliveryDate($date = null){
 
     }
 }

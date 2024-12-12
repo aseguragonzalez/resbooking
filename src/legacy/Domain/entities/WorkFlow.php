@@ -11,7 +11,7 @@ class WorkFlow{
      * Identidad del estado de workflow
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Nombre del estado

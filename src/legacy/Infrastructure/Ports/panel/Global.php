@@ -3,7 +3,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$debug = !TRUE;
+$debug = !true;
 
 try{
     require_once("libs/debug.resbooking.lib.php");
@@ -11,7 +11,7 @@ try{
     // Iniciar sesión
     set_session();
     // configuración de la cache
-    set_cache(FALSE);
+    set_cache(false);
     // Establecer localización para las fechas
     setlocale(LC_ALL,"es_ES.UTF-8");
     // Establecer el formato de fecha-hora
@@ -27,7 +27,7 @@ try{
     // Obtener implementación
     $module = $injector->Resolve( "IHttpModule" );
     // Validación del module
-    if($module != NULL){
+    if($module != null){
         // Iniciar la gestión de la petición
         $module->BeginRequest();
         // Procesado de la petición

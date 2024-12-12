@@ -25,7 +25,7 @@ class SaasController extends \Controller{
      * Id del Proyecto en ejecución
      * @var int Identidad del proyecto en ejecución
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Nombre del proyecto actual
@@ -43,7 +43,7 @@ class SaasController extends \Controller{
      * Referencia al servicio actual
      * @var int Identidad del servicio en ejecución
      */
-    public $Service = 0;
+    public int $serviceId = 0;
 
     /**
      * Constructor de la clase base

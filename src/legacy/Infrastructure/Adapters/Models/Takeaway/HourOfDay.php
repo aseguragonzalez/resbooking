@@ -10,7 +10,7 @@ class HourOfDay{
      * Identidad del registro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Texto a visualizar para la hora, p.e. : "11:00"
@@ -22,6 +22,6 @@ class HourOfDay{
      * Estado lógico del registro
      * @var boolean
      */
-    public $State = 1;
+    public bool $state = true;
 
 }

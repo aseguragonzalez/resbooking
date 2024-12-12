@@ -13,13 +13,13 @@ class ImagesModel extends \TakeawayModel{
      * Referencia al producto padre
      * @var \Product
      */
-    public $Product = NULL;
+    public $Product = null;
 
     /**
      * Referencia a la imagen en edición
      * @var \Image
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de imágenes asociadas al producto
@@ -31,7 +31,7 @@ class ImagesModel extends \TakeawayModel{
      * Flag para los errores de validación
      * @var string
      */
-    public $Error = FALSE;
+    public $Error = false;
 
     /**
      * Mensaje de error en el nombre de imagen
@@ -95,13 +95,13 @@ class ImagesModel extends \TakeawayModel{
                 $this->TranslateResultCodes(_OP_READ_, [$result]);
             }
             else{
-                $this->Product = $this->Aggregate->Product;
-                $this->Entities = $this->Aggregate->Images;
+                $this->Product = $this->aggregate->Product;
+                $this->Entities = $this->aggregate->Images;
             }
         }
     }
 
-    public function SaveImages($id=0, $paths=NULL){
+    public function SaveImages($id=0, $paths=null){
         $date = new \DateTime("NOW");
         $sdate = $date->format("Y-m-d H:i:s");
         foreach($paths as $key => $value){
@@ -110,7 +110,7 @@ class ImagesModel extends \TakeawayModel{
             $img->Name = $key;
             $img->Description = $key;
             $img->Path = $value;
-            $img->State = TRUE;
+            $img->State = true;
             $img->Date = $sdate;
             $this->Dao->Create($img);
         }
@@ -120,11 +120,11 @@ class ImagesModel extends \TakeawayModel{
      * Almacenamiento de la información de la imagen de producto
      * @param \Image $entity Referencia a la información de imagen
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
         // Proceso de almacenamiento de una imagen
         $result = $this->Management->SetImage($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetImage: "
                     . "Códigos de operación inválidos");
         }
@@ -133,7 +133,7 @@ class ImagesModel extends \TakeawayModel{
 
         if(count($result) != 1 || $result[0] != 0){
             $this->TranslateResultCodes(_OP_CREATE_, $result);
-            $this->Error = TRUE;
+            $this->Error = true;
         }
         else{
             $this->eResult = "La operación se ha realizado satisfactoriamente.";

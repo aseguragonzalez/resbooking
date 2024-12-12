@@ -13,13 +13,13 @@ class ServiceDTO {
      * Identidad de Servicio
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre del servicio
      * @var string
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Ruta fisica de la aplicacion cliente
@@ -37,13 +37,13 @@ class ServiceDTO {
      * Descripcion funcional del servicio
      * @var string
      */
-    public $Description = "";
+    public string $description = "";
 
     /**
      * Identidad del proyecto
      * @var int
      */
-    public $Project = 0;
+    public int $projectId = 0;
 
     /**
      * Identidad del Usuario

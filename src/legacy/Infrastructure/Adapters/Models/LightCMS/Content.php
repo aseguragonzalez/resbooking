@@ -13,7 +13,7 @@ class Content
      * Identidad de la entidad
      * @var int Identidad del Contenido
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Identidad de la sección padre

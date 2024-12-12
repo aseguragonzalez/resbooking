@@ -14,5 +14,5 @@ interface IRequestsRepository {
      * @param \DateTime $date Referencia a un objeto de tipo datetime
      * @return array
      */
-    public function GetRequestsByDate($date = NULL);
+    public function GetRequestsByDate($date = null);
 }

@@ -21,7 +21,7 @@ class StmtBaseDAO implements \IDataAccessObject{
      * Atributo para generar trazas por cada consulta ejecutada
      * @var boolean Indica si está en modo debug
      */
-    private $_isDebug = FALSE;
+    private $_isDebug = false;
 
     /**
      * Referencia al cliente Stmt para el acceso a base de datos

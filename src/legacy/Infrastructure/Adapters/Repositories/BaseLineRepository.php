@@ -13,7 +13,7 @@ class BaseLineRepository extends \BaseRepository implements \IBaseLineRepository
      * Referencia a la clase base
      * @var \IBaseLineRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class BaseLineRepository extends \BaseRepository implements \IBaseLineRepository
      * @return \IBaseLineRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(BaseLineRepository::$_reference == NULL){
+        if(BaseLineRepository::$_reference == null){
             BaseLineRepository::$_reference =
                     new \BaseLineRepository($project, $service);
         }

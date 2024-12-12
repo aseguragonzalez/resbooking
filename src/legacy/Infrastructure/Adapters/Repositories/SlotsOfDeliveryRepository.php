@@ -14,7 +14,7 @@ class SlotsOfDeliveryRepository extends \BaseRepository
      * Referencia a la clase base
      * @var \ISlotsOfDeliveryRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ class SlotsOfDeliveryRepository extends \BaseRepository
      * @return \ISlotsOfDeliveryRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(SlotsOfDeliveryRepository::$_reference == NULL){
+        if(SlotsOfDeliveryRepository::$_reference == null){
             SlotsOfDeliveryRepository::$_reference =
                     new \SlotsOfDeliveryRepository($project, $service);
         }

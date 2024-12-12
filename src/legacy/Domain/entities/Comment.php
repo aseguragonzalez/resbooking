@@ -12,7 +12,7 @@ class Comment{
      * Identidad del comentario
      * @var int
      */
-    public $Id=0;
+    public int $id = 0;
 
     /**
      * Referencia al producto asociado

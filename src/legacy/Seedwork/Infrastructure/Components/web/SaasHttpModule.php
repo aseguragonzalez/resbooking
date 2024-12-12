@@ -99,7 +99,7 @@ class SaasHttpModule extends \HttpModule implements \IHttpModule{
         // Comprobación si se utiliza un ticket de autenticación
         $ticket = filter_input(INPUT_GET, "ticket");
         // Proceso de validación del ticket
-        if($ticket != FALSE && $ticket != NULL){
+        if($ticket != false && $ticket != null){
             if(!$this->Security->AuthenticateTicket($ticket)){
                 // Establecer el mensaje de error
                 $message = get_class()." - Authentication - ticket no validado";

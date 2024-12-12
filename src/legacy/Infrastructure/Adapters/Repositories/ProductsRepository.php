@@ -13,7 +13,7 @@ class ProductsRepository extends \BaseRepository implements \IProductsRepository
      * Referencia a la clase base
      * @var \IProductsRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class ProductsRepository extends \BaseRepository implements \IProductsRepository
      * @return \IProductsRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(ProductsRepository::$_reference == NULL){
+        if(ProductsRepository::$_reference == null){
             ProductsRepository::$_reference =
                     new \ProductsRepository($project, $service);
         }

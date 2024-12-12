@@ -11,19 +11,19 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
      * Referencia
      * @var \ICategoriesServices
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Referencia al repositorio actual
      * @var \ICategoriesRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia al agregado
      * @var \CategoriesAggregate
      */
-    protected $Aggregate = NULL;
+    protected $aggregate = null;
 
     /**
      * Colección de códigos de operación
@@ -35,11 +35,11 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
      * Constructor
      * @param \CategoriesAggregate $aggregate Referencia al agregado
      */
-    public function __construct($aggregate = NULL) {
+    public function __construct($aggregate = null) {
         // Constructor de la clase padre
         parent::__construct($aggregate);
         // Obtener instancia del repositorio
-        $this->Repository = CategoriesRepository
+        $this->repository = CategoriesRepository
                 ::GetInstance($this->IdProject, $this->IdService);
     }
 
@@ -48,8 +48,8 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
      * @param \CategoriesAggregate Referencia al agregado actual
      * @return \ICategoriesServices Referencia a la instancia actual
      */
-    public static function GetInstance($aggregate = NULL){
-        if(CategoriesServices::$_reference == NULL){
+    public static function GetInstance($aggregate = null){
+        if(CategoriesServices::$_reference == null){
             CategoriesServices::$_reference = new \CategoriesServices($aggregate);
         }
         return CategoriesServices::$_reference;
@@ -58,11 +58,11 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
     /**
      * Proceso de validación de categorías
      * @param \Category $entity Referencia a la categoría a validar
-     * @return boolean|array Devuelve TRUE si la validación es correcta
+     * @return boolean|array Devuelve true si la validación es correcta
      * o la colección de códigos de operación si no supera el proceso
      */
-    public function Validate($entity = NULL){
-        if($entity != NULL){
+    public function Validate($entity = null){
+        if($entity != null){
             $this->ValidateCode($entity->Id, $entity->Code);
             $this->ValidateName($entity->Id, $entity->Name);
             $this->ValidateDescription($entity->Description);
@@ -72,7 +72,7 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
         else{
             $this->Result[] = -3;
         }
-        return empty($this->Result) ? TRUE : $this->Result;
+        return empty($this->Result) ? true : $this->Result;
     }
 
     /**
@@ -104,7 +104,7 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
             "Code" => $code, "State" => 1 ];
         // buscar algún item con el mismo código
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Categories, $filter);
+                    $this->aggregate->Categories, $filter);
         // Comprobar el resultado de la búsqueda
         if(isset($items) && is_array($items)
                 && count($items) != 0 && $items[0]->Id != $id){
@@ -139,7 +139,7 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
             "Name" => $name, "State" => 1 ];
         // buscar algún item con el mismo nombre
         $items = $this->GetListByFilter(
-                    $this->Aggregate->Categories, $filter);
+                    $this->aggregate->Categories, $filter);
         // Comprobar el resultado de la búsqueda
         if(isset($items) && is_array($items)
             && count($items) > 0 && $items[0]->Id != $id){
@@ -183,7 +183,7 @@ class CategoriesServices extends \BaseServices implements \ICategoriesServices{
             $filter = [ "Project" => $this->IdProject,
                 "Id" => $id, "State" => 1 ];
             $items = $this->GetListByFilter(
-                    $this->Aggregate->Categories, $filter);
+                    $this->aggregate->Categories, $filter);
             if(empty($items) || count($items) == 0){
                 $this->Result[] = -13;
             }

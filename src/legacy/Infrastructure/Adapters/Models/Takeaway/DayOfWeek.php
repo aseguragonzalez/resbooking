@@ -10,13 +10,13 @@ class DayOfWeek{
      * Identidad del resgitro
      * @var int
      */
-    public $Id = 0;
+    public int $id = 0;
 
     /**
      * Nombre del día
      * @var type
      */
-    public $Name = "";
+    public string $name = "";
 
     /**
      * Abreviatura del día

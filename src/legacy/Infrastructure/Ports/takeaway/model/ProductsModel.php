@@ -13,7 +13,7 @@ class ProductsModel extends \TakeawayModel{
      * Referencia al producto en edición
      * @var \Product
      */
-    public $Entity = NULL;
+    public $Entity = null;
 
     /**
      * Colección de productos
@@ -129,7 +129,7 @@ class ProductsModel extends \TakeawayModel{
      */
     public function GetProducts(){
          // Asignar los productos del agregado
-        $this->Entities = array_filter($this->Aggregate->Products,
+        $this->Entities = array_filter($this->aggregate->Products,
                 function($item){
                     return $item->State == 1;
                 });
@@ -155,7 +155,7 @@ class ProductsModel extends \TakeawayModel{
                 $this->TranslateResultCodes(_OP_READ_, [$result]);
             }
             else{
-                $this->Entity = $this->Aggregate->Product;
+                $this->Entity = $this->aggregate->Product;
             }
         }
     }
@@ -164,7 +164,7 @@ class ProductsModel extends \TakeawayModel{
      * Procedimiento para guardar la información de un producto
      * @param \Product $entity
      */
-    public function Save($entity = NULL){
+    public function Save($entity = null){
 
         if(!empty($entity->Price)){
             $price = floatval(str_replace(",", ".", $entity->Price));
@@ -174,7 +174,7 @@ class ProductsModel extends \TakeawayModel{
         // Proceso de almacenamiento de un producto
         $result = $this->Management->SetProduct($entity);
 
-        if(is_array($result) == FALSE){
+        if(is_array($result) == false){
             throw new Exception("Save: SetProduct: "
                     . "Códigos de operación inválidos");
         }
@@ -236,7 +236,7 @@ class ProductsModel extends \TakeawayModel{
      * edición de productos
      */
     private function SetCategories(){
-        $this->Categories = array_filter($this->Aggregate->Categories,
+        $this->Categories = array_filter($this->aggregate->Categories,
                 function($item){
                     return $item->State == 1;
                 });
@@ -248,7 +248,7 @@ class ProductsModel extends \TakeawayModel{
      * @return string
      */
     private function GetCategoryName($id = 0){
-        $cats = array_filter($this->Aggregate->Categories,
+        $cats = array_filter($this->aggregate->Categories,
                 function($item) use($id){
                     return $item->Id == $id;
                 });

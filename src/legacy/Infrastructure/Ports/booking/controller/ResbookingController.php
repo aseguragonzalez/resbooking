@@ -12,11 +12,11 @@ class ResbookingController extends \SaasController{
     /**
      * Constructor
      */
-    public function __construct($projectRequired = FALSE){
+    public function __construct($projectRequired = false){
 
         parent::__construct();
 
-        if($projectRequired == TRUE){
+        if($projectRequired == true){
             $this->ValidateProject();
         }
     }
@@ -63,7 +63,7 @@ class ResbookingController extends \SaasController{
         $this->Log->LogErrorTrace($method, $e);
 
         $dto = new \JsonResultDTO();
-        $dto->Result = FALSE;
+        $dto->Result = false;
         $dto->Error = $e->getMessage();
         $dto->Code = 200;
         $dto->Exception = $e;

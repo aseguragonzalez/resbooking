@@ -13,19 +13,19 @@ class CategoriesManagement extends \BaseManagement
      * Referencia al gestor de servicio de reservas
      * @var \ICategoriesServices
      */
-    protected $Services = NULL;
+    protected $Services = null;
 
     /**
      * Referencia al respositorio de reservas
      * @var \ICategoriesRepository
      */
-    protected $Repository = NULL;
+    protected $repository = null;
 
     /**
      * Referencia a la instancia de management
      * @var \ICategoriesManagement
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor de la clase
@@ -35,11 +35,11 @@ class CategoriesManagement extends \BaseManagement
     public function __construct($project = 0, $service = 0){
         parent::__construct($project, $service);
         // Obtener referencia al repositorio
-        $this->Repository = CategoriesRepository::GetInstance($project, $service);
+        $this->repository = CategoriesRepository::GetInstance($project, $service);
         // Cargar el agregado
-        $this->Aggregate = $this->Repository->GetAggregate($project, $service);
+        $this->aggregate = $this->repository->GetAggregate($project, $service);
         // Cargar el gestor de servicios
-        $this->Services = CategoriesServices::GetInstance($this->Aggregate);
+        $this->Services = CategoriesServices::GetInstance($this->aggregate);
     }
 
     /**
@@ -51,10 +51,10 @@ class CategoriesManagement extends \BaseManagement
     public function GetCategory($id = 0) {
         // Obtener referencia
         $category = $this->Services->GetById(
-                $this->Aggregate->Categories, $id);
-        if($category != NULL){
+                $this->aggregate->Categories, $id);
+        if($category != null){
 
-            $this->Aggregate->Category = $category;
+            $this->aggregate->Category = $category;
 
             return 0;
         }
@@ -66,23 +66,23 @@ class CategoriesManagement extends \BaseManagement
      * @param \Category $category Referencia a la categoría
      * @return array Códigos de operación
      */
-    public function SetCategory($category = NULL) {
+    public function SetCategory($category = null) {
         $category->Project = $this->IdProject;
         $result = $this->Services->Validate($category);
-        if(!is_array($result) && $result == TRUE ){
+        if(!is_array($result) && $result == true ){
             $result = [];
             if($category->Id == 0){
-                $res = $this->Repository->Create($category);
-                $result[] = ($res != FALSE) ? 0 : -1;
-                $category->Id = ($res != FALSE) ? $res->Id : 0;
+                $res = $this->repository->Create($category);
+                $result[] = ($res != false) ? 0 : -1;
+                $category->Id = ($res != false) ? $res->Id : 0;
             }
             else{
-                $res = $this->Repository->Update($category);
-                $result[] = ($res != FALSE) ? 0 : -2;
+                $res = $this->repository->Update($category);
+                $result[] = ($res != false) ? 0 : -2;
             }
 
-            if($res != FALSE){
-                $this->Aggregate->Categories[$category->Id] = $category;
+            if($res != false){
+                $this->aggregate->Categories[$category->Id] = $category;
             }
         }
         return $result;
@@ -96,17 +96,17 @@ class CategoriesManagement extends \BaseManagement
     public function RemoveCategory($id = 0) {
         // Obtener referencia
         $category = $this->Services->GetById(
-                $this->Aggregate->Categories, $id);
-        if($category != NULL){
+                $this->aggregate->Categories, $id);
+        if($category != null){
             // Eliminar todas las referencias asociadas a la categoría
             $this->RemoveReferences($id);
             // Establecer el estado
             $category->State = 0;
             // Actualizar
-            $res = ($this->Repository->Update($category) != FALSE);
+            $res = ($this->repository->Update($category) != false);
 
-            if($res == TRUE){
-                unset($this->Aggregate->Categories[$id]);
+            if($res == true){
+                unset($this->aggregate->Categories[$id]);
             }
 
             return  $res ? 0 : -1;
@@ -121,7 +121,7 @@ class CategoriesManagement extends \BaseManagement
      * @return \ICategoriesManagement
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(CategoriesManagement::$_reference == NULL){
+        if(CategoriesManagement::$_reference == null){
             CategoriesManagement::$_reference =
                    new \CategoriesManagement($project, $service);
         }
@@ -134,9 +134,9 @@ class CategoriesManagement extends \BaseManagement
      */
     public function GetAggregate() {
 
-        $this->Aggregate->SetAggregate();
+        $this->aggregate->SetAggregate();
 
-        return $this->Aggregate;
+        return $this->aggregate;
     }
 
     /**
@@ -148,20 +148,20 @@ class CategoriesManagement extends \BaseManagement
         $filter = ["Parent" => $id, "State" => 1];
         // Obtener todas las subcategorias
         $categories = $this->Services->GetListByFilter(
-                $this->Aggregate->Categories, $filter);
+                $this->aggregate->Categories, $filter);
         // Proces de eliminación de subcategorías
         foreach($categories as $item){
             // Actualizar la categoría actual
             $item->State = 0;
             // Actualizar el estado en bbdd
-            $this->Repository->Update($item);
+            $this->repository->Update($item);
             // Actualizar los productos relacionados
-            $products = $this->Repository->GetByFilter("Product",
+            $products = $this->repository->GetByFilter("Product",
                 ["Category" => $item->Id, "State" => 1]);
             // Actualizar el estado en bbdd
             foreach($products as $prod){
                 $prod->State = 0;
-                $this->Repository->Update($prod);
+                $this->repository->Update($prod);
             }
         }
     }

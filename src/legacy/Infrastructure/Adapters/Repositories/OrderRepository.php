@@ -13,7 +13,7 @@ class OrderRepository extends \BaseRepository implements \IOrderRepository{
      * Referencia a la clase base
      * @var \IOrderRepository
      */
-    private static $_reference = NULL;
+    private static $_reference = null;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ class OrderRepository extends \BaseRepository implements \IOrderRepository{
      * @return \IOrderRepository
      */
     public static function GetInstance($project = 0, $service = 0){
-        if(OrderRepository::$_reference == NULL){
+        if(OrderRepository::$_reference == null){
             OrderRepository::$_reference =
                     new \OrderRepository($project, $service);
         }
@@ -80,16 +80,16 @@ class OrderRepository extends \BaseRepository implements \IOrderRepository{
      * @param array $items Referencia a la colección de productos seleccionados
      * @return int Código de operación
      */
-    public function CreateOrder($request = NULL, $items = NULL){
+    public function CreateOrder($request = null, $items = null){
         // Validación de los parámetros
-        if($request == NULL || $request instanceof \Request == FALSE){
+        if($request == null || $request instanceof \Request == false){
             return -101;
         }
-        if(!is_array($items) || $items == NULL ){
+        if(!is_array($items) || $items == null ){
             return -102;
         }
         // Registrar la solicitud y productos
-        if(($r = $this->Create($request)) != FALSE){
+        if(($r = $this->Create($request)) != false){
             $r instanceof \Request;
             foreach($items as $item){
                 $item instanceof \RequestItem;
@@ -111,7 +111,7 @@ class OrderRepository extends \BaseRepository implements \IOrderRepository{
         // Obtener la información del pedido
         $dto = $this->Dao->Read($id, "RequestNotificationDTO");
         // Comprobar datos leídos
-        if($dto instanceof \RequestNotificationDTO != FALSE){
+        if($dto instanceof \RequestNotificationDTO != false){
             // Obtener los productos asociados al pedido
             $dto->Items = $this->Dao->GetByFilter(
                     "RequestItemNotificationDTO", ["Request"=>$id]);
@@ -136,8 +136,8 @@ class OrderRepository extends \BaseRepository implements \IOrderRepository{
      * @param string $subject Asunto de la notificación
      * @return int Código de operación
      */
-    private function RegisterNotification($entity = NULL, $subject = ""){
-       if($entity != NULL && is_object($entity)){
+    private function RegisterNotification($entity = null, $subject = ""){
+       if($entity != null && is_object($entity)){
            $date = new \DateTime( "NOW" );
            $dto = new \Notification();
            $dto->Project = $this->IdProject;
