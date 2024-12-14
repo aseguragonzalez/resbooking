@@ -14,7 +14,7 @@ readonly class ConfigurationService
         public int $maxDiners,
         public bool $reminders,
         public int $timespan,
-        public int $yimeFilter,
+        public int $timeFilter,
         public int $diners,
         public bool $advertising,
         public bool $preOrder,
