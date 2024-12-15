@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Models\Shared;
 
-readonly class BookingSource
+readonly class Role
 {
     public function __construct(
         public int $id,
-        public string $sourceName,
+        public string $name,
         public string $description,
+        public bool $active
     ) { }
 }

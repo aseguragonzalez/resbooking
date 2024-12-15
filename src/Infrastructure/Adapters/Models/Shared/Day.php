@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Models\Shared;
 
-readonly class State
+readonly class Day
 {
     public function __construct(
         public int $id,
         public string $name,
-        public string $description,
-        public int $level,
+        public int $dayOfWeek,
     ) { }
 }
