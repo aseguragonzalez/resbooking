@@ -4,39 +4,25 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared;
 
-final class Role
+enum Role: int
 {
-    public static Role $admin;
-    public static Role $user;
+    case ADMIN = 1;
+    case USER = 2;
 
-    private function __construct(
-        public readonly int $id,
-        public readonly string $name,
-    ) { }
-
-    public static function initialize(): void
+    public static function getById(int $id): Self
     {
-        self::$admin = new self(1, 'admin');
-        self::$user = new self(2, 'host');
-    }
-
-    public static function byId(int $id): Role
-    {
-        if ($id < 1 || $id > 2) {
-            throw new \InvalidArgumentException("Invalid role id: $id");
-        }
-
         return match ($id) {
-            self::$admin->id => self::$admin,
-            self::$user->id => self::$user,
+            1 => self::ADMIN,
+            2 => self::USER,
+            default => throw new \InvalidArgumentException("Invalid role id: $id"),
         };
     }
 
-    public static function byName(string $name): Role
+    public static function getByName(string $name): Self
     {
-        return match ($name) {
-            self::$admin->name => self::$admin,
-            self::$user->name => self::$user,
+        return match (strtolower($name)) {
+            'admin' => self::ADMIN,
+            'user' => self::USER,
             default => throw new \InvalidArgumentException("Invalid role name: $name"),
         };
     }

@@ -13,8 +13,6 @@ final class TurnTest extends TestCase
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-
-        Turn::initialize();
     }
 
     protected function tearDown(): void
@@ -26,19 +24,19 @@ final class TurnTest extends TestCase
     {
         $id = $this->faker->numberBetween(1, 24);
 
-        $turn = Turn::byId($id);
+        $turn = Turn::getById($id);
 
-        $this->assertSame($id, $turn->id);
+        $this->assertSame($id, $turn->value);
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveTurnByIdWithInvalidId(): void
+    public function testShouldRaiseExceptionWhenRetrieveTurnGetByIdWithInvalidId(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        Turn::byId(0);
+        Turn::getById(0);
     }
 
-    public function testShouldRetrieveRoleByName(): void
+    public function testShouldRetrieveTurnByStartTime(): void
     {
         $startTime = $this->faker->randomElement([
             '12:00:00',
@@ -67,8 +65,15 @@ final class TurnTest extends TestCase
             '23:30:00',
         ]);
 
-        $turn = Turn::byStartTime($startTime);
+        $turn = Turn::getByStartTime($startTime);
 
-        $this->assertSame($startTime, $turn->startTime);
+        $this->assertSame($startTime, $turn->toString());
+    }
+
+    public function testShouldRaiseExceptionWhenRetrieveTurnGetByStartTimeWithInvalidValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Turn::getByStartTime($this->faker->lexify('?????'));
     }
 }

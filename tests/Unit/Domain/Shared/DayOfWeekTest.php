@@ -13,8 +13,6 @@ final class DayOfWeekTest extends TestCase
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-
-        DayOfWeek::initialize();
     }
 
     protected function tearDown(): void
@@ -26,16 +24,16 @@ final class DayOfWeekTest extends TestCase
     {
         $id = $this->faker->numberBetween(1, 7);
 
-        $dayOfWeek = DayOfWeek::byId($id);
+        $dayOfWeek = DayOfWeek::getById($id);
 
-        $this->assertSame($id, $dayOfWeek->id);
+        $this->assertSame($id, $dayOfWeek->value);
     }
 
     public function testShouldRaiseExceptionWhenRetrieveDayOfWeekByIdWithInvalidId(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        DayOfWeek::byId(0);
+        DayOfWeek::getById(0);
     }
 
     public function testShouldRetrieveDayOfWeekByName(): void
@@ -50,8 +48,15 @@ final class DayOfWeekTest extends TestCase
             'saturday',
         ]);
 
-        $dayOfWeek = DayOfWeek::byName($name);
+        $dayOfWeek = DayOfWeek::getByName($name);
 
-        $this->assertSame($name, $dayOfWeek->name);
+        $this->assertSame($name, strtolower($dayOfWeek->name));
+    }
+
+    public function testShouldRaiseExceptionWhenRetrieveDayOfWeekByNameWithInvalidValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        DayOfWeek::getByName($this->faker->word());
     }
 }

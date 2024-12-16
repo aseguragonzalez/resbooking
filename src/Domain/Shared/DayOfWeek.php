@@ -4,59 +4,40 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared;
 
-final class DayOfWeek
+enum DayOfWeek: int
 {
-    public static DayOfWeek $sunday;
-    public static DayOfWeek $monday;
-    public static DayOfWeek $tuesday;
-    public static DayOfWeek $wednesday;
-    public static DayOfWeek $thursday;
-    public static DayOfWeek $friday;
-    public static DayOfWeek $saturday;
+    case SUNDAY = 1;
+    case MONDAY = 2;
+    case TUESDAY = 3;
+    case WEDNESDAY = 4;
+    case THURSDAY = 5;
+    case FRIDAY = 6;
+    case SATURDAY = 7;
 
-    private function __construct(
-        public readonly int $id,
-        public readonly string $name,
-    ) { }
-
-    public static function initialize(): void
+    public static function getById(int $id): self
     {
-        self::$sunday = new self(1, 'sunday');
-        self::$monday = new self(2, 'monday');
-        self::$tuesday = new self(3, 'tuesday');
-        self::$wednesday = new self(4, 'wednesday');
-        self::$thursday = new self(5, 'thursday');
-        self::$friday = new self(6, 'friday');
-        self::$saturday = new self(7, 'saturday');
-    }
-
-    public static function byId(int $id): DayOfWeek
-    {
-        if ($id < 1 || $id > 7) {
-            throw new \InvalidArgumentException("Invalid day of week id: $id");
-        }
-
         return match ($id) {
-            self::$sunday->id => self::$sunday,
-            self::$monday->id => self::$monday,
-            self::$tuesday->id => self::$tuesday,
-            self::$wednesday->id => self::$wednesday,
-            self::$thursday->id => self::$thursday,
-            self::$friday->id => self::$friday,
-            self::$saturday->id => self::$saturday,
+            1 => self::SUNDAY,
+            2 => self::MONDAY,
+            3 => self::TUESDAY,
+            4 => self::WEDNESDAY,
+            5 => self::THURSDAY,
+            6 => self::FRIDAY,
+            7 => self::SATURDAY,
+            default => throw new \InvalidArgumentException("Invalid day of week id: $id"),
         };
     }
 
-    public static function byName(string $name): DayOfWeek
+    public static function getByName(string $name): self
     {
-        return match ($name) {
-            self::$sunday->name => self::$sunday,
-            self::$monday->name => self::$monday,
-            self::$tuesday->name => self::$tuesday,
-            self::$wednesday->name => self::$wednesday,
-            self::$thursday->name => self::$thursday,
-            self::$friday->name => self::$friday,
-            self::$saturday->name => self::$saturday,
+        return match (strtolower($name)) {
+            'sunday' => self::SUNDAY,
+            'monday' => self::MONDAY,
+            'tuesday' => self::TUESDAY,
+            'wednesday' => self::WEDNESDAY,
+            'thursday' => self::THURSDAY,
+            'friday' => self::FRIDAY,
+            'saturday' => self::SATURDAY,
             default => throw new \InvalidArgumentException("Invalid day of week name: $name"),
         };
     }

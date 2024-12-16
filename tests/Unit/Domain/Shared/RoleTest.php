@@ -13,8 +13,6 @@ final class RoleTest extends TestCase
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-
-        Role::initialize();
     }
 
     protected function tearDown(): void
@@ -26,16 +24,16 @@ final class RoleTest extends TestCase
     {
         $id = $this->faker->numberBetween(1, 2);
 
-        $role = Role::byId($id);
+        $role = Role::getById($id);
 
-        $this->assertSame($id, $role->id);
+        $this->assertSame($id, $role->value);
     }
 
     public function testShouldRaiseExceptionWhenRetrieveRoleByIdWithInvalidId(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        Role::byId(0);
+        Role::getById(0);
     }
 
     public function testShouldRetrieveRoleByName(): void
@@ -45,8 +43,8 @@ final class RoleTest extends TestCase
             'host',
         ]);
 
-        $role = Role::byName($name);
+        $role = Role::getByName($name);
 
-        $this->assertSame($name, $role->name);
+        $this->assertSame($name, strtolower($role->name));
     }
 }
