@@ -5,38 +5,17 @@ declare(strict_types=1);
 namespace App\Domain\Projects;
 
 use App\Domain\Projects\ValueObjects\Settings;
+use App\Seedwork\Domain\AggregateRoot;
 
-final class Project
+final class Project extends AggregateRoot
 {
     public function __construct(
-        public int $id,
+        public ?int $id,
         public readonly Settings $settings,
-        public readonly array $offers = [],
         public readonly array $users = [],
         public readonly array $places = [],
         public readonly array $turns = [],
     ) { }
-
-    public function addOffer(Offer $offer): void
-    {
-        $this->offers[] = $offer;
-    }
-
-    public function removeOffer(Offer $offer): void
-    {
-        $this->offers = array_filter(
-            $this->offers,
-            fn (Offer $s) => $s->equals($offer)
-        );
-    }
-
-    public function modifyOffer(Offer $offer): void
-    {
-        $this->offers = array_map(
-            fn (Offer $s) => $s->equals($offer) ? $offer : $s,
-            $this->offers
-        );
-    }
 
     public function addUser(User $user): void
     {

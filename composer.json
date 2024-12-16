@@ -15,8 +15,8 @@
   },
   "license": "MIT",
   "name": "vscode/workspace",
-  "require": {},
   "require-dev": {
+    "fakerphp/faker": "^1.24",
     "phpunit/phpunit": "^11.5"
   },
   "type": "project"

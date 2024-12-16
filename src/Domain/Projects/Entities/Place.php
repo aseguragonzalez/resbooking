@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects;
 
+use App\Domain\Projects\ValueObjects\Capacity;
 use App\Seedwork\Domain\Entity;
 
 final class Place extends Entity
 {
     public function __construct(
-        public int $id,
+        public ?int $id,
+        public Capacity $capacity,
         public string $description,
-        public int $capacity,
         public string $name,
     ) { }
 

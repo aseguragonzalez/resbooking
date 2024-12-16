@@ -6,7 +6,7 @@ namespace App\Seedwork\Domain;
 
 abstract class AggregateRoot
 {
-    public function __construct(private ?int $id = null, private array $events = []) { }
+    public function __construct(private ?int $id = null, private array $domainEvents = []) { }
 
     public function equals(AggregateRoot $other): bool
     {
@@ -18,20 +18,22 @@ abstract class AggregateRoot
         return $this->id;
     }
 
-    public function getEvents(): array
+    public function getDomainEvents(): array
     {
-        $events = array_map(fn(DomainEvent $event) => clone $event, $events);
-        $this->events = [];
-        return $events;
+        $domainEvents = array_map(
+            fn(DomainEvent $domainEvent) => clone $domainEvent, $this->domainEvents
+        );
+        $this->domainEvents = [];
+        return $domainEvents;
     }
 
-    protected function addEvent(DomainEvent $event): void
+    protected function addDomainEvent(DomainEvent $domainEvent): void
     {
-        $this->events[] = $event;
+        $this->domainEvents[] = $domainEvent;
     }
 
-    protected function addEvents(array $events): void
+    protected function addDomainEvents(array $domainEvents): void
     {
-        $this->events[] = $events;
+        $this->domainEvents[] = $domainEvents;
     }
 }

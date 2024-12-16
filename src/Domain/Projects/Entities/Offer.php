@@ -5,44 +5,43 @@ declare(strict_types=1);
 namespace App\Domain\Projects;
 
 use DateTimeInmutable;
-use App\Seedwork\Domain\Entity;
+use App\Domain\Shared\{OpenCloseEvent, AvailabilityTurn};
+use App\Seedwork\Domain\AggregateRoot;
 
-final class Offer extends Entity
+final class Offer extends AggregateRoot
 {
     public function __construct(
-        public int $id,
+        public ?int $id,
         public string $description,
         public string $title,
         public string $termsAndConditions,
         public DateTimeInmutable $startDate,
         public DateTimeInmutable $endDate,
-        public array $offerConfigs = [],
-        public array $offerEvents = [],
+        public array $openCloseEvents = [],
+        public array $turns = [],
     ) { }
 
-    public function addConfig(OfferConfig $offerConfig): void
+    public function addTurn(AvailabilityTurn $turn): void
     {
-        $this->offerConfigs[] = $offerConfig;
+        $this->turns[] = $turn;
     }
 
-    public function removeConfig(OfferConfig $offerConfig): void
+    public function removeTurn(AvailabilityTurn $turn): void
     {
-        $this->offerConfigs = array_filter(
-            $this->offerConfigs,
-            fn (OfferConfig $s) => $s->equals($offerConfig)
+        $this->turns = array_filter(
+            $this->turns, fn (AvailabilityTurn $s) => $s->equals($turn)
         );
     }
 
-    public function addEvent(OfferEvent $offerEvent): void
+    public function addOpenCloseEvent(OpenCloseEvent $event): void
     {
-        $this->offerEvents[] = $offerEvent;
+        $this->openCloseEvents[] = $event;
     }
 
-    public function removeEvent(OfferEvent $offerEvent): void
+    public function removeOpenCloseEvent(OpenCloseEvent $event): void
     {
-        $this->offerEvents = array_filter(
-            $this->offerEvents,
-            fn (OfferEvent $s) => $s->equals($offerEvent)
+        $this->openCloseEvents = array_filter(
+            $this->openCloseEvents, fn (OpenCloseEvent $event) => $event->equals($event)
         );
     }
 }
