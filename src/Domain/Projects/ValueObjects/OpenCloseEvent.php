@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace App\Domain\Projects\ValueObjects;
 
 use DateTimeInmutable;
 use App\Domain\Shared\Turn;

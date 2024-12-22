@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects;
 
-use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Projects\ValueObjects\{Settings, Place, AvailabilityTurn};
 use App\Seedwork\Domain\AggregateRoot;
 
 final class Project extends AggregateRoot
 {
     public function __construct(
-        public ?int $id,
+        private readonly string $id,
         public readonly Settings $settings,
         public readonly array $users = [],
         public readonly array $places = [],
         public readonly array $turns = [],
-    ) { }
+    ) {
+        parent::__construct($id);
+    }
 
     public function addUser(User $user): void
     {
@@ -40,6 +42,19 @@ final class Project extends AggregateRoot
         $this->places = array_filter(
             $this->places,
             fn (Place $s) => $s->equals($place)
+        );
+    }
+
+    public function addTurn(TurnAvailability $turn): void
+    {
+        $this->turns[] = $turn;
+    }
+
+    public function removeTurn(TurnAvailability $turn): void
+    {
+        $this->turns = array_filter(
+            $this->turns,
+            fn (TurnAvailability $s) => $s->equals($turn)
         );
     }
 }
