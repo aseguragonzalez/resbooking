@@ -24,7 +24,7 @@ final class OpenCloseEventTest extends TestCase
 
     public function testEqualsShouldBeTrueWhenTurnAndDateAreEquals(): void
     {
-        $date = new DateTimeImmutable();
+        $date = new \DateTimeImmutable();
         $isAvailable = $this->faker->boolean();
         $turn = Turn::getByStartTime('13:30:00');
 
@@ -49,10 +49,11 @@ final class OpenCloseEventTest extends TestCase
 
     public function testEqualsShouldBeFalseWhenDateIsDifferent(): void
     {
+        $date = new DateTimeImmutable();
         $isAvailable = $this->faker->boolean();
         $turn = Turn::getByStartTime('14:30:00');
-        $openCloseEvent = new OpenCloseEvent(new DateTimeImmutable(), $isAvailable, $turn);
-        $other = new OpenCloseEvent(new DateTimeImmutable(), $isAvailable, $turn);
+        $openCloseEvent = new OpenCloseEvent($date, $isAvailable, $turn);
+        $other = new OpenCloseEvent($date->add(new DateInterval('P1D')), $isAvailable, $turn);
 
         $this->assertFalse($openCloseEvent->equals($other));
     }
