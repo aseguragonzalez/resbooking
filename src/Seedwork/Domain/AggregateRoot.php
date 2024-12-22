@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Seedwork\Domain;
 
+
 abstract class AggregateRoot
 {
-    public function __construct(private ?int $id = null, private array $domainEvents = []) { }
+    public function __construct(private string $id = null, private array $domainEvents = []) { }
 
     public function equals(AggregateRoot $other): bool
     {
       return $this->id === $other->getId();
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }

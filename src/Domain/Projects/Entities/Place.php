@@ -10,14 +10,16 @@ use App\Seedwork\Domain\Entity;
 final class Place extends Entity
 {
     public function __construct(
-        public ?int $id,
+        private readonly string $id,
         public Capacity $capacity,
         public string $description,
         public string $name,
-    ) { }
+    ) {
+        parent::__construct($id);
+    }
 
     public function equals(Place $place): bool
     {
-        return $this->id === $place->id;
+        return $this->id === $place->getId();
     }
 }

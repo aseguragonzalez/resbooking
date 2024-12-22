@@ -11,7 +11,7 @@ use App\Seedwork\Domain\AggregateRoot;
 final class Offer extends AggregateRoot
 {
     public function __construct(
-        public ?int $id,
+        private readonly string $id,
         public string $description,
         public string $title,
         public string $termsAndConditions,
@@ -19,17 +19,19 @@ final class Offer extends AggregateRoot
         public DateTimeInmutable $endDate,
         public array $openCloseEvents = [],
         public array $turns = [],
-    ) { }
+    ) {
+        parent::__construct($id);
+    }
 
-    public function addTurn(AvailabilityTurn $turn): void
+    public function addTurn(TurnAvailability $turn): void
     {
         $this->turns[] = $turn;
     }
 
-    public function removeTurn(AvailabilityTurn $turn): void
+    public function removeTurn(TurnAvailability $turn): void
     {
         $this->turns = array_filter(
-            $this->turns, fn (AvailabilityTurn $s) => $s->equals($turn)
+            $this->turns, fn (TurnAvailability $s) => $s->equals($turn)
         );
     }
 

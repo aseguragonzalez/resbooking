@@ -8,7 +8,7 @@ interface Repository
 {
     public function save(AggregateRoot $aggregateRoot): void;
 
-    public function getById(int $id): AggregateRoot;
+    public function getById(string $id): AggregateRoot;
 
-    public function findById(int $id): ?AggregateRoot;
+    public function findById(string $id): ?AggregateRoot;
 }
