@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 
-final class OfferTest extends TestCase
+final class ProjectTest extends TestCase
 {
     private $faker = null;
 
@@ -17,10 +17,5 @@ final class OfferTest extends TestCase
     protected function tearDown(): void
     {
         $this->faker = null;
-    }
-
-    public function testFakeTest(): void
-    {
-        $this->assertSame(true, true);
     }
 }
