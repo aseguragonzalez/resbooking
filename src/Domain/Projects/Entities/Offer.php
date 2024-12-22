@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Projects;
 
 use DateTimeInmutable;
-use App\Domain\Shared\{OpenCloseEvent, AvailabilityTurn};
+use App\Domain\Shared\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
 
 final class Offer extends AggregateRoot
