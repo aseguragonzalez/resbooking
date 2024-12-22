@@ -6,7 +6,7 @@ namespace App\Domain\Projects\ValueObjects;
 
 use DateTimeImmutable;
 use App\Seedwork\Domain\ValueObject;
-use App\Shared\Capacity;
+use App\Shared\{Capacity, Email, Phone};
 
 final class Settings extends ValueObject
 {
@@ -16,8 +16,8 @@ final class Settings extends ValueObject
         public readonly bool $hasRemainders,
         public readonly string $name,
         public readonly string $claim,
-        public readonly string $email,
-        public readonly string $phone,
+        public readonly Email $email,
+        public readonly Phone $phone,
         public readonly string $address,
     ) { }
 }
