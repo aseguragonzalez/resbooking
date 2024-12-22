@@ -20,7 +20,7 @@ final class TurnTest extends TestCase
         $this->faker = null;
     }
 
-    public function testShouldRetrieveTurnById(): void
+    public function testGetByIdShouldRetrieveById(): void
     {
         $id = $this->faker->numberBetween(1, 24);
 
@@ -29,14 +29,14 @@ final class TurnTest extends TestCase
         $this->assertSame($id, $turn->value);
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveTurnGetByIdWithInvalidId(): void
+    public function testGetByIdShouldFailWhenRetrieveWithInvalidId(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         Turn::getById(0);
     }
 
-    public function testShouldRetrieveTurnByStartTime(): void
+    public function testGetByStartTimeShouldRetrieveByStartTime(): void
     {
         $startTime = $this->faker->randomElement([
             '12:00:00',
@@ -70,7 +70,7 @@ final class TurnTest extends TestCase
         $this->assertSame($startTime, $turn->toString());
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveTurnGetByStartTimeWithInvalidValue(): void
+    public function testGetByStartTimeShouldFailWhenRetrieveWithInvalidValue(): void
     {
         $this->expectException(InvalidArgumentException::class);
 

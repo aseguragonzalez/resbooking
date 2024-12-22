@@ -6,30 +6,30 @@ namespace App\Domain\Shared;
 
 enum Turn: int
 {
-    CASE H1200 = 1;
-    CASE H1230 = 2;
-    CASE H1300 = 3;
-    CASE H1330 = 4;
-    CASE H1400 = 5;
-    CASE H1430 = 6;
-    CASE H1500 = 7;
-    CASE H1530 = 8;
-    CASE H1600 = 9;
-    CASE H1630 = 10;
-    CASE H1700 = 11;
-    CASE H1730 = 12;
-    CASE H1800 = 13;
-    CASE H1830 = 14;
-    CASE H1900 = 15;
-    CASE H1930 = 16;
-    CASE H2000 = 17;
-    CASE H2030 = 18;
-    CASE H2100 = 19;
-    CASE H2130 = 20;
-    CASE H2200 = 21;
-    CASE H2230 = 22;
-    CASE H2300 = 23;
-    CASE H2330 = 24;
+    case H1200 = 1;
+    case H1230 = 2;
+    case H1300 = 3;
+    case H1330 = 4;
+    case H1400 = 5;
+    case H1430 = 6;
+    case H1500 = 7;
+    case H1530 = 8;
+    case H1600 = 9;
+    case H1630 = 10;
+    case H1700 = 11;
+    case H1730 = 12;
+    case H1800 = 13;
+    case H1830 = 14;
+    case H1900 = 15;
+    case H1930 = 16;
+    case H2000 = 17;
+    case H2030 = 18;
+    case H2100 = 19;
+    case H2130 = 20;
+    case H2200 = 21;
+    case H2230 = 22;
+    case H2300 = 23;
+    case H2330 = 24;
 
     public static function getById(int $id): self
     {
