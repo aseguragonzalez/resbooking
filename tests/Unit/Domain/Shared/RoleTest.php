@@ -20,7 +20,7 @@ final class RoleTest extends TestCase
         $this->faker = null;
     }
 
-    public function testShouldRetrieveRoleById(): void
+    public function testGetByIdShouldRetrieveRoleById(): void
     {
         $id = $this->faker->numberBetween(1, 2);
 
@@ -29,14 +29,14 @@ final class RoleTest extends TestCase
         $this->assertSame($id, $role->value);
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveRoleByIdWithInvalidId(): void
+    public function testGetByIdShouldFailWhenRetrieveWithInvalidId(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
         Role::getById(0);
     }
 
-    public function testShouldRetrieveRoleByName(): void
+    public function testGeByNameShouldRetrieveRoleByName(): void
     {
         $name = $this->faker->randomElement([
             'admin',
@@ -46,5 +46,12 @@ final class RoleTest extends TestCase
         $role = Role::getByName($name);
 
         $this->assertSame($name, strtolower($role->name));
+    }
+
+    public function testGeByNameShouldFailWhenRetrieveWithInvalidName(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Role::getByName('invalid');
     }
 }
