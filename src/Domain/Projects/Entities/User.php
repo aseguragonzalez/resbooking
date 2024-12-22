@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\Entities;
 
-use App\Domain\Projects\Credential;
-use App\Domain\Shared\Role;
+use App\Domain\Projects\ValueObjects\Credential;
+use App\Domain\Shared\{Email, Role};
 use App\Seedwork\Domain\Entity;
 
 final class User extends Entity
 {
     public function __construct(
-        private readonly string $username,
+        public readonly Email $username,
         private Credential $credential,
         private bool $locked = false,
         private bool $available = true,
         private array $roles = [],
     ) {
-        parent::__construct($username);
+        parent::__construct((string) $username);
      }
 
     public function lock(): void
@@ -57,12 +57,19 @@ final class User extends Entity
 
     public function removeRole(Role $role): void
     {
-        $this->roles = array_filter($this->roles, fn(Role $r) => $r->equals($role));
+        $this->roles = array_filter(
+            $this->roles, fn(Role $r) => $r !== $role
+        );
     }
 
     public function hasRole(Role $role): bool
     {
         return in_array($role, $this->roles, true);
+    }
+
+    public function getCredential(): Credential
+    {
+        return $this->credential;
     }
 
     public function getRoles(): array
@@ -75,25 +82,21 @@ final class User extends Entity
         $this->credential = $credential;
     }
 
-    public function signin(string $password): void
+    public function equals(Entity $other): bool
     {
-        if (!$this->credential->check($password))
-        {
-            throw new Exception("authentication");
+        if (!$other instanceof self) {
+            return false;
         }
+
+        return parent::equals($other) && $this->username->equals($other->username);
     }
 
-    public function equals(User $other): bool
-    {
-        return $this->username === $other->username;
-    }
-
-    public static function createNewAdmin(string $username, Credential $credential): Self
+    public static function createNewAdmin(Email $username, Credential $credential): Self
     {
         return new Self($username, $credential, false, true, [Role::ADMIN]);
     }
 
-    public static function createNewUser(string $username, Credential $credential): Self
+    public static function createNewUser(Email $username, Credential $credential): Self
     {
         return new Self($username, $credential, false, true, [Role::USER]);
     }
