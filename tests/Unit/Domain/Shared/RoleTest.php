@@ -40,7 +40,7 @@ final class RoleTest extends TestCase
     {
         $name = $this->faker->randomElement([
             'admin',
-            'host',
+            'user',
         ]);
 
         $role = Role::getByName($name);
