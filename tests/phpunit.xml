@@ -5,7 +5,7 @@
      verbose="true">
   <testsuites>
     <testsuite name="Unit Test Suite">
-      <directory>./tests</directory>
+      <directory>.</directory>
     </testsuite>
   </testsuites>
   <logging>
