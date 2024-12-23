@@ -12,4 +12,6 @@ abstract class DomainEvent
             'now', new DateTimeZone('UTC')
         )
     ) { }
+
+    abstract public function equals(DomainEvent $other): bool;
 }

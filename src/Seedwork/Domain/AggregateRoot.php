@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Seedwork\Domain;
 
-
 abstract class AggregateRoot
 {
     public function __construct(private string $id = null, private array $domainEvents = []) { }
