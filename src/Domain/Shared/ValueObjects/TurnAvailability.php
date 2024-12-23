@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace App\Domain\Shared\ValueObjects;
 
 use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
 use App\Seedwork\Domain\ValueObject;

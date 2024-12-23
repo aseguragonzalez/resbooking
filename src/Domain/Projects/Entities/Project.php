@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace App\Domain\Projects\Entities;
 
-use App\Domain\Projects\ValueObjects\{Settings, Place, AvailabilityTurn};
+use App\Domain\Projects\Entities\{Place, User};
+use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
 
 final class Project extends AggregateRoot
@@ -15,6 +17,7 @@ final class Project extends AggregateRoot
         public readonly array $users = [],
         public readonly array $places = [],
         public readonly array $turns = [],
+        public readonly array $openCloseEvents = [],
     ) {
         parent::__construct($id);
     }
@@ -55,6 +58,18 @@ final class Project extends AggregateRoot
         $this->turns = array_filter(
             $this->turns,
             fn (TurnAvailability $s) => $s->equals($turn)
+        );
+    }
+
+    public function addOpenCloseEvent(OpenCloseEvent $event): void
+    {
+        $this->openCloseEvents[] = $event;
+    }
+
+    public function removeOpenCloseEvent(OpenCloseEvent $event): void
+    {
+        $this->openCloseEvents = array_filter(
+            $this->openCloseEvents, fn (OpenCloseEvent $event) => $event->equals($event)
         );
     }
 }

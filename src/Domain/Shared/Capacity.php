@@ -6,7 +6,7 @@ namespace App\Domain\Shared;
 
 use App\Seedwork\Domain\Exceptions\ValueException;
 
-class Capacity
+final class Capacity
 {
     public readonly int $value;
 

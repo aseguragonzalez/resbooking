@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace App\Domain\Offers\Entities;
 
-use DateTimeInmutable;
 use App\Domain\Shared\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
 
@@ -17,6 +16,7 @@ final class Offer extends AggregateRoot
         public string $termsAndConditions,
         public DateTimeInmutable $startDate,
         public DateTimeInmutable $endDate,
+        private bool $isEnable = true,
         public array $openCloseEvents = [],
         public array $turns = [],
     ) {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\ValueObjects\OpenCloseEvent;
-use App\Domain\Shared\Turn;
 
+use App\Domain\Shared\Turn;
+use App\Domain\Shared\ValueObjects\OpenCloseEvent;
 
 final class OpenCloseEventTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\ValueObjects\Capacity;
 use App\Seedwork\Domain\Entity;
