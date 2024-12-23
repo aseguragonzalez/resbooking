@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\ProjectRepository;
+use App\Domain\Offers\OfferRepository;
 
-final class CreateProjectTest extends TestCase
+final class AddOpenCloseEventTest extends TestCase
 {
     private $faker = null;
-    private ProjectRepository $projectRepository;
+    private OfferRepository $offerRepository;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-        $this->projectRepository = $this->createMock(ProjectRepository::class);
+        $this->offerRepository = $this->createMock(OfferRepository::class);
     }
 
     protected function tearDown(): void
     {
         $this->faker = null;
-        $this->projectRepository = null;
+        $this->offerRepository = null;
     }
 
     public function testFake(): void
