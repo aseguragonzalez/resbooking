@@ -2,15 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Offers\AddOpenCloseEvent;
+namespace Tests\Unit\Application\Projects;
 
-use App\Seedwork\Application\UseCase;
-use App\Seedwork\Exception\NotImplementedException;
+use Faker\Factory as FakerFactory;
+use PHPUnit\Framework\TestCase;
+use App\Domain\Projects\ProjectRepository;
 
-class AddOpenCloseEvent extends UseCase
+final class AddOpenCloseEventTest extends TestCase
 {
-    public function execute(AddOpenCloseEventRequest $request): void
+    private $faker = null;
+    private ProjectRepository $projectRepository;
+
+    protected function setUp(): void
     {
-        throw new NotImplementedException();
+        $this->faker = FakerFactory::create();
+        $this->projectRepository = $this->createMock(ProjectRepository::class);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->faker = null;
+        $this->projectRepository = null;
+    }
+
+    public function testFake(): void
+    {
+        $this->assertTrue(false);
     }
 }

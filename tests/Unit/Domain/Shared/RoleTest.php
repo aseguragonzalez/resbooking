@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Domain\Shared\Role;
+namespace Tests\Unit\Domain\Shared;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+
+use App\Domain\Shared\Role;
 
 final class RoleTest extends TestCase
 {
@@ -31,7 +34,7 @@ final class RoleTest extends TestCase
 
     public function testGetByIdShouldFailWhenRetrieveWithInvalidId(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         Role::getById(0);
     }
@@ -50,7 +53,7 @@ final class RoleTest extends TestCase
 
     public function testGeByNameShouldFailWhenRetrieveWithInvalidName(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         Role::getByName('invalid');
     }

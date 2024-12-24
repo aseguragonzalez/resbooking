@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Domain\Shared\Email;
+namespace Tests\Unit\Domain\Shared;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+
+use App\Domain\Shared\Email;
 
 final class EmailTest extends TestCase
 {
@@ -31,7 +34,7 @@ final class EmailTest extends TestCase
 
 	public function testEmailShouldFailWhenValueInvalid(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(\InvalidArgumentException::class);
 
 		new Email($this->faker->word);
 	}

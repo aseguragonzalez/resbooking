@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Domain\Shared\Phone;
+namespace Tests\Unit\Domain\Shared;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+
+use App\Domain\Shared\Phone;
 
 final class PhoneTest extends TestCase
 {

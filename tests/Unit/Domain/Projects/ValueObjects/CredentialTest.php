@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Domain\Projects\ValueObjects;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 

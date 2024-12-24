@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Domain\Shared\Capacity;
-use App\Seedwork\Domain\Exceptions\ValueException;
+namespace Tests\Unit\Domain\Shared;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+
+use App\Domain\Shared\Capacity;
+use App\Seedwork\Domain\Exceptions\ValueException;
 
 final class CapacityTest extends TestCase
 {

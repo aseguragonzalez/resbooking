@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Application\Projects;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\ProjectRepository;

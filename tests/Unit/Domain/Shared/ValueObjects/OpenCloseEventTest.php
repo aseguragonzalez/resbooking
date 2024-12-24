@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Domain\Shared\ValueObjects;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -36,7 +38,7 @@ final class OpenCloseEventTest extends TestCase
 
     public function testEqualsShouldBeFalseWhenTurnIsDifferent(): void
     {
-        $date = new DateTimeImmutable();
+        $date = new \DateTimeImmutable();
         $isAvailable = $this->faker->boolean();
         $turn = Turn::getByStartTime('12:30:00');
         $otherTurn = Turn::getByStartTime('13:00:00');
@@ -49,7 +51,7 @@ final class OpenCloseEventTest extends TestCase
 
     public function testEqualsShouldBeFalseWhenDateIsDifferent(): void
     {
-        $date = new DateTimeImmutable();
+        $date = new \DateTimeImmutable();
         $isAvailable = $this->faker->boolean();
         $turn = Turn::getByStartTime('14:30:00');
         $openCloseEvent = new OpenCloseEvent($date, $isAvailable, $turn);

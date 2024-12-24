@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Domain\Shared\Turn;
+namespace Tests\Unit\Domain\Shared;
+
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+
+use App\Domain\Shared\Turn;
 
 final class TurnTest extends TestCase
 {
@@ -31,7 +34,7 @@ final class TurnTest extends TestCase
 
     public function testGetByIdShouldFailWhenRetrieveWithInvalidId(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         Turn::getById(0);
     }
@@ -72,7 +75,7 @@ final class TurnTest extends TestCase
 
     public function testGetByStartTimeShouldFailWhenRetrieveWithInvalidValue(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         Turn::getByStartTime($this->faker->lexify('?????'));
     }
