@@ -27,46 +27,46 @@ final class AddUserTest extends TestCase
 
     public function testAddUserShouldCreateNewAdmin(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldCreateNewUser(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldSendEmailToNewUser(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenNewUserAlreadyExists(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenProjectDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenCreatorIsNotAuthorized(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenCreatorDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenUsernameIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddUserShouldFailWhenUsernameIsDuplicate(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

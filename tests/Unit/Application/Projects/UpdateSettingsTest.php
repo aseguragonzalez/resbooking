@@ -27,46 +27,46 @@ final class UpdateSettingsTest extends TestCase
 
     public function testUpdateSettingsShouldUpdateProjectSettings(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenProjectDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenUserIsNotAuthorized(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenDinersLimitAreInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenNameIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenClaimIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenEmailIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenPhoneIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testUpdateSettingsShouldFailWhenAddressIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

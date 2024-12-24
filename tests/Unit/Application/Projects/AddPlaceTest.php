@@ -27,46 +27,46 @@ final class AddPlaceTest extends TestCase
 
     public function testAddPlaceShouldCreateNewPlace(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenPlaceAlreadyExists(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenProjectDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenUserIsNotAuthorized(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenUserDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenNameIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenNameIsDuplicate(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenDescriptionIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddPlaceShouldFailWhenCapacityIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

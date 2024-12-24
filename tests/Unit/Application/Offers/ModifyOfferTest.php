@@ -27,6 +27,6 @@ final class ModifyOfferTest extends TestCase
 
     public function testFake(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

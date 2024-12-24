@@ -27,46 +27,46 @@ final class AddTurnsTest extends TestCase
 
     public function testAddTurnsShouldCreateNewTurns(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenTurnsAlreadyExists(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenProjectDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenUserIsNotAuthorized(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenUserDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenCapacityIsInvalid(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenDayOfWeekDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldFailWhenTurnDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testAddTurnsShouldDoNothingWhenTurnsIsEmpty(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

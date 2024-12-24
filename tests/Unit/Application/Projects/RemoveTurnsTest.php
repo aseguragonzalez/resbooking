@@ -27,31 +27,31 @@ final class RemoveTurnsTest extends TestCase
 
     public function testRemoveTurnsShouldRemoveTurns(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testRemoveTurnsShouldFailWhenTurnsDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testRemoveTurnsShouldFailWhenProjectDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testRemoveTurnsShouldFailWhenUserIsNotAuthorized(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testRemoveTurnsShouldFailWhenUserDoesNotExist(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     public function testRemoveTurnsShouldDoNothingWhenTurnsIsEmpty(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }
