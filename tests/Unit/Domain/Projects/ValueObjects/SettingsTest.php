@@ -60,7 +60,7 @@ final class SettingsTest extends TestCase
         new Settings(
             email: new Email($this->faker->email),
             hasRemainders: $this->faker->boolean,
-            name: $name,
+            name: '',
             maxNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
             minNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
             phone: new Phone($this->faker->phoneNumber)
