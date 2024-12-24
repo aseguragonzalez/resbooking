@@ -25,7 +25,7 @@ final class UserTest extends TestCase
         $this->faker = null;
     }
 
-    public function testUserShouldCreateInstance(): void
+    public function testConstructorShouldCreateInstance(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
@@ -42,7 +42,7 @@ final class UserTest extends TestCase
         $this->assertEmpty($user->getRoles());
     }
 
-    public function testLockShouldLockedUser(): void
+    public function testLockShouldLockTheUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
@@ -55,7 +55,7 @@ final class UserTest extends TestCase
         $this->assertTrue($user->isLocked());
     }
 
-    public function testUnlockShouldUnlockedUser(): void
+    public function testUnlockShouldUnlockTheUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
@@ -68,7 +68,7 @@ final class UserTest extends TestCase
         $this->assertFalse($user->isLocked());
     }
 
-    public function testDisableShouldDisableUser(): void
+    public function testDisableShouldDisableTheUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
@@ -81,7 +81,7 @@ final class UserTest extends TestCase
         $this->assertFalse($user->isAvailable());
     }
 
-    public function testEnableShouldEnableUser(): void
+    public function testEnableShouldEnableTheUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
@@ -185,7 +185,7 @@ final class UserTest extends TestCase
         $this->assertTrue($user->hasRole(Role::ADMIN));
     }
 
-    public function testCreateNewUser(): void
+    public function testCreateNewUserShouldReturnAnNewUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new(
