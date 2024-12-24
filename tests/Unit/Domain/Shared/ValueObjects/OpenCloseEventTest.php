@@ -55,7 +55,7 @@ final class OpenCloseEventTest extends TestCase
         $isAvailable = $this->faker->boolean();
         $turn = Turn::getByStartTime('14:30:00');
         $openCloseEvent = new OpenCloseEvent($date, $isAvailable, $turn);
-        $other = new OpenCloseEvent($date->add(new DateInterval('P1D')), $isAvailable, $turn);
+        $other = new OpenCloseEvent($date->add(new \DateInterval('P1D')), $isAvailable, $turn);
 
         $this->assertFalse($openCloseEvent->equals($other));
     }

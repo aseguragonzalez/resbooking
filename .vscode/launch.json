@@ -1,6 +1,12 @@
 {
   "configurations": [
     {
+      "name": "Listen for Xdebug",
+      "port": 9003,
+      "request": "launch",
+      "type": "php"
+    },
+    {
       "name": "Listen tests",
       "port": 9000,
       "request": "launch",

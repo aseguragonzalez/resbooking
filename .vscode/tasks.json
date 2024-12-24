@@ -1,0 +1,45 @@
+{
+  "tasks": [
+    {
+      "command": "vendor/bin/php-cs-fixer fix",
+      "group": {
+        "isDefault": true,
+        "kind": "build"
+      },
+      "label": "Run PHP CS Fixer",
+      "problemMatcher": [],
+      "type": "shell"
+    },
+    {
+      "command": "vendor/bin/phpcs --standard=PSR12 src/",
+      "group": {
+        "isDefault": false,
+        "kind": "build"
+      },
+      "label": "Run PHP CodeSniffer",
+      "problemMatcher": [],
+      "type": "shell"
+    },
+    {
+      "command": "vendor/bin/phpunit --configuration phpunit.xml",
+      "group": {
+        "isDefault": true,
+        "kind": "test"
+      },
+      "label": "Run PHPUnit",
+      "problemMatcher": [],
+      "type": "shell"
+    },
+    {
+      "command": "vendor/bin/phpstan analyse src/ --level=max",
+      "group": {
+        "isDefault": false,
+        "kind": "test"
+      },
+      "label": "Run PHPStan",
+      "problemMatcher": [],
+      "type": "shell"
+    }
+  ],
+  "version": "2.0.0"
+}

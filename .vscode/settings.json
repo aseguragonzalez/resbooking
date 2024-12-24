@@ -1,4 +1,15 @@
 {
+  "editor.formatOnSave": true,
+  "intelephense.environment.phpVersion": "8.2.0",
+  "intelephense.files.associations": [
+    "*.php",
+    "*.phtml"
+  ],
+  "intelephense.format.enable": true,
+  "php-cs-fixer.executablePath": "~/.composer/vendor/bin/php-cs-fixer",
+  "php-cs-fixer.rules": "@PSR12",
+  "phpSniffer.executablesFolder": "vendor/bin",
+  "phpSniffer.standard": "PSR12",
   "phpunit.args": [
     "-c",
     "${workspaceFolder}/tests/phpunit.xml"

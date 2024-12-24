@@ -27,6 +27,6 @@ final class AddOpenCloseEventTest extends TestCase
 
     public function testFake(): void
     {
-        $this->assertTrue(false);
+        $this->markTestIncomplete('Not implemented yet.');
     }
 }

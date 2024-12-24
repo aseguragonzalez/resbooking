@@ -14,7 +14,9 @@
         "xdebug.php-debug",
         "zobo.php-intellisense",
         "formulahendry.vscode-mysql",
-        "redhat.vscode-xml"
+        "redhat.vscode-xml",
+        "junstyle.php-cs-fixer",
+        "wongjn.php-sniffer"
       ]
     }
   },
