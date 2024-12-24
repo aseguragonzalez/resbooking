@@ -6,4 +6,5 @@ namespace App\Domain\Offers;
 
 interface OfferRepository
 {
+
 }
