@@ -8,9 +8,9 @@ abstract class DomainEvent
 {
     public function __construct(
         public readonly string $eventType = "DomainEvent",
-        public readonly DateTimeImmutable $createdAt = new DateTimeImmutable(
+        public readonly \DateTimeImmutable $createdAt = new \DateTimeImmutable(
             'now',
-            new DateTimeZone('UTC')
+            new \DateTimeZone('UTC')
         )
     ) {
     }

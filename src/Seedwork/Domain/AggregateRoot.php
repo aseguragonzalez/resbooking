@@ -6,6 +6,10 @@ namespace App\Seedwork\Domain;
 
 abstract class AggregateRoot
 {
+    /**
+     * @param string $id
+     * @param array<DomainEvent> $domainEvents
+     */
     public function __construct(private string $id, private array $domainEvents = [])
     {
     }
@@ -20,6 +24,9 @@ abstract class AggregateRoot
         return $this->id;
     }
 
+    /**
+     * @return array<DomainEvent>
+     */
     public function getDomainEvents(): array
     {
         $domainEvents = array_map(
@@ -35,8 +42,11 @@ abstract class AggregateRoot
         $this->domainEvents[] = $domainEvent;
     }
 
+    /**
+     * @param array<DomainEvent> $domainEvents
+     */
     protected function addDomainEvents(array $domainEvents): void
     {
-        $this->domainEvents[] = $domainEvents;
+        $this->domainEvents = array_merge($this->domainEvents, $domainEvents);
     }
 }

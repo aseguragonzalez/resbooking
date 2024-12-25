@@ -1,14 +1,44 @@
 {
-  "editor.formatOnSave": true,
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "[php]": {
+    "editor.defaultFormatter": "wongjn.php-sniffer",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  },
   "intelephense.environment.phpVersion": "8.2.0",
   "intelephense.files.associations": [
     "*.php",
     "*.phtml"
   ],
   "intelephense.format.enable": true,
+  "namespaceResolver.sortAlphabetically": true,
+  "namespaceResolver.sortNatural": true,
+  "namespaceResolver.sortOnSave": true,
+  "php-cs-fixer.autoFixByBracket": true,
+  "php-cs-fixer.autoFixBySemicolon": true,
   "php-cs-fixer.executablePath": "vendor/bin/php-cs-fixer",
+  "php-cs-fixer.onsave": false,
   "php-cs-fixer.rules": "@PSR12",
-  "phpSniffer.executablesFolder": "vendor/bin",
+  "phpCodeSniffer.autoExecutable": true,
+  "phpCodeSniffer.lintAction": "Save",
+  "phpCodeSniffer.standard": "PSR12",
+  "phpSniffer.autoDetect": true,
+  "phpSniffer.executablesFolder": "",
+  "phpSniffer.run": "onSave",
   "phpSniffer.standard": "PSR12",
   "phpunit.args": [
     "-c",
