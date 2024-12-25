@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\Entities\{Place, User};
+use App\Domain\Projects\Exceptions\UserAlreadyExistsException;
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
@@ -13,17 +14,26 @@ final class Project extends AggregateRoot
 {
     public function __construct(
         private readonly string $id,
-        public readonly Settings $settings,
-        public readonly array $users = [],
-        public readonly array $places = [],
-        public readonly array $turns = [],
-        public readonly array $openCloseEvents = [],
+        private Settings $settings,
+        private array $users = [],
+        private array $places = [],
+        private array $turns = [],
+        private array $openCloseEvents = [],
     ) {
         parent::__construct($id);
     }
 
+    public function getUsers(): array
+    {
+        return $this->users;
+    }
+
     public function addUser(User $user): void
     {
+        $users = array_filter($this->users, fn (User $s) => $s->equals($user));
+        if (!empty($users)) {
+            throw new UserAlreadyExistsException();
+        }
         $this->users[] = $user;
     }
 
@@ -33,6 +43,11 @@ final class Project extends AggregateRoot
             $this->users,
             fn (User $s) => $s->equals($user)
         );
+    }
+
+    public function getPlaces(): array
+    {
+        return $this->places;
     }
 
     public function addPlace(Place $place): void
@@ -48,6 +63,11 @@ final class Project extends AggregateRoot
         );
     }
 
+    public function getTurns(): array
+    {
+        return $this->turns;
+    }
+
     public function addTurn(TurnAvailability $turn): void
     {
         $this->turns[] = $turn;
@@ -61,6 +81,11 @@ final class Project extends AggregateRoot
         );
     }
 
+    public function getOpenCloseEvents(): array
+    {
+        return $this->openCloseEvents;
+    }
+
     public function addOpenCloseEvent(OpenCloseEvent $event): void
     {
         $this->openCloseEvents[] = $event;
@@ -69,7 +94,13 @@ final class Project extends AggregateRoot
     public function removeOpenCloseEvent(OpenCloseEvent $event): void
     {
         $this->openCloseEvents = array_filter(
-            $this->openCloseEvents, fn (OpenCloseEvent $event) => $event->equals($event)
+            $this->openCloseEvents,
+            fn (OpenCloseEvent $event) => $event->equals($event)
         );
+    }
+
+    public function getSettings(): Settings
+    {
+        return $this->settings;
     }
 }

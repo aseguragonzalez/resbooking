@@ -7,7 +7,8 @@ namespace Tests\Unit\Domain\Projects\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place, User};
-use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Projects\Exceptions\UserAlreadyExistsException;
+use App\Domain\Projects\ValueObjects\{Credential, Settings};
 use App\Domain\Shared\{Capacity, Email, Phone};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 
@@ -28,16 +29,13 @@ final class ProjectTest extends TestCase
 
     private function project(): Project
     {
-        return new Project(
-            id: $this->faker->uuid,
-            settings: $this->settings()
-        );
+        return new Project(id: $this->faker->uuid, settings: $this->settings());
     }
 
     private function settings(): Settings
     {
         return new Settings(
-            email: $this->faker->email,
+            email: new Email($this->faker->email),
             hasRemainders: $this->faker->boolean,
             name: $this->faker->name,
             maxNumberOfDiners: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
@@ -55,21 +53,33 @@ final class ProjectTest extends TestCase
 
         $this->assertInstanceOf(Project::class, $project);
         $this->assertEquals($id, $project->getId());
-        $this->assertEquals($settings, $project->settings);
-        $this->assertEmpty($project->users);
-        $this->assertEmpty($project->places);
-        $this->assertEmpty($project->turns);
-        $this->assertEmpty($project->openCloseEvents);
+        $this->assertEquals($settings, $project->getSettings());
+        $this->assertEmpty($project->getUsers());
+        $this->assertEmpty($project->getPlaces());
+        $this->assertEmpty($project->getTurns());
+        $this->assertEmpty($project->getOpenCloseEvents());
     }
 
     public function testAddUserShouldAddUserToProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $project = $this->project();
+        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+
+        $project->addUser($user);
+
+        $this->assertContains($user, $project->getUsers());
     }
 
     public function testAddUserShouldFailWhenUserAlreadyExists(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->expectException(UserAlreadyExistsException::class);
+        $project = $this->project();
+        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $project->addUser($user);
+
+        $project->addUser($user);
     }
 
     public function testRemoveUserShouldRemoveUserFromProject(): void
