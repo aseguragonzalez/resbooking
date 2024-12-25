@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\Exceptions;
 
-use App\Seedwork\Domain\Exceptions\InvalidOperationException;
+use App\Seedwork\Domain\Exceptions\DomainException;
 
-final class UserDoesNotExistsException extends InvalidOperationException
+final class UserDoesNotExists extends DomainException
 {
     public function __construct()
     {

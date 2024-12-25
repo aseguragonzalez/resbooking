@@ -13,10 +13,11 @@ final class TurnAvailability extends ValueObject
         public readonly Capacity $capacity,
         public readonly DayOfWeek $dayOfWeek,
         public readonly Turn $turn,
-    ) { }
+    ) {
+    }
 
     public function equals(TurnAvailability $other): bool
     {
-        return $this->dayOfWeek->equals($other->dayOfWeek) && $this->turn->equals($other->turn);
+        return $this->dayOfWeek == $other->dayOfWeek && $this->turn == $other->turn;
     }
 }

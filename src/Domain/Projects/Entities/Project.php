@@ -5,7 +5,17 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\Entities\{Place, User};
-use App\Domain\Projects\Exceptions\UserAlreadyExistsException;
+use App\Domain\Projects\Exceptions\{
+    OpenCloseEventAlreadyExists,
+    OpenCloseEventDoesNotExists,
+    OpenCloseEventOutOfRange,
+    PlaceAlreadyExists,
+    PlaceDoesNotExists,
+    TurnAlreadyExists,
+    TurnDoesNotExists,
+    UserAlreadyExists,
+    UserDoesNotExists
+};
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
@@ -32,16 +42,21 @@ final class Project extends AggregateRoot
     {
         $users = array_filter($this->users, fn (User $s) => $s->equals($user));
         if (!empty($users)) {
-            throw new UserAlreadyExistsException();
+            throw new UserAlreadyExists();
         }
         $this->users[] = $user;
     }
 
     public function removeUser(User $user): void
     {
+        $users = array_filter($this->users, fn (User $s) => $s->equals($user));
+        if (empty($users)) {
+            throw new UserDoesNotExists();
+        }
+
         $this->users = array_filter(
             $this->users,
-            fn (User $s) => $s->equals($user)
+            fn (User $s) => !$s->equals($user)
         );
     }
 
@@ -52,14 +67,22 @@ final class Project extends AggregateRoot
 
     public function addPlace(Place $place): void
     {
+        $places = array_filter($this->places, fn (Place $s) => $s->equals($place));
+        if (!empty($places)) {
+            throw new PlaceAlreadyExists();
+        }
         $this->places[] = $place;
     }
 
     public function removePlace(Place $place): void
     {
+        $places = array_filter($this->places, fn (Place $s) => $s->equals($place));
+        if (empty($places)) {
+            throw new PlaceDoesNotExists();
+        }
         $this->places = array_filter(
             $this->places,
-            fn (Place $s) => $s->equals($place)
+            fn (Place $s) => !$s->equals($place)
         );
     }
 
@@ -70,14 +93,22 @@ final class Project extends AggregateRoot
 
     public function addTurn(TurnAvailability $turn): void
     {
+        $turns = array_filter($this->turns, fn (TurnAvailability $s) => $s->equals($turn));
+        if (!empty($turns)) {
+            throw new TurnAlreadyExists();
+        }
         $this->turns[] = $turn;
     }
 
     public function removeTurn(TurnAvailability $turn): void
     {
+        $turns = array_filter($this->turns, fn (TurnAvailability $s) => $s->equals($turn));
+        if (empty($turns)) {
+            throw new TurnDoesNotExists();
+        }
         $this->turns = array_filter(
             $this->turns,
-            fn (TurnAvailability $s) => $s->equals($turn)
+            fn (TurnAvailability $s) => !$s->equals($turn)
         );
     }
 
@@ -88,14 +119,28 @@ final class Project extends AggregateRoot
 
     public function addOpenCloseEvent(OpenCloseEvent $event): void
     {
+        $events = array_filter($this->openCloseEvents, fn (OpenCloseEvent $s) => $s->equals($event));
+        if (!empty($events)) {
+            throw new OpenCloseEventAlreadyExists();
+        }
+        $yesterday = (new \DateTimeImmutable())->sub(new \DateInterval('P1D'));
+
+        if ($event->date <= $yesterday) {
+            throw new OpenCloseEventOutOfRange();
+        }
+
         $this->openCloseEvents[] = $event;
     }
 
     public function removeOpenCloseEvent(OpenCloseEvent $event): void
     {
+        $events = array_filter($this->openCloseEvents, fn (OpenCloseEvent $s) => $s->equals($event));
+        if (empty($events)) {
+            throw new OpenCloseEventDoesNotExists();
+        }
         $this->openCloseEvents = array_filter(
             $this->openCloseEvents,
-            fn (OpenCloseEvent $event) => $event->equals($event)
+            fn (OpenCloseEvent $event) => !$event->equals($event)
         );
     }
 
