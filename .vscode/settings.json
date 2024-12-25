@@ -6,7 +6,7 @@
     "*.phtml"
   ],
   "intelephense.format.enable": true,
-  "php-cs-fixer.executablePath": "~/.composer/vendor/bin/php-cs-fixer",
+  "php-cs-fixer.executablePath": "vendor/bin/php-cs-fixer",
   "php-cs-fixer.rules": "@PSR12",
   "phpSniffer.executablesFolder": "vendor/bin",
   "phpSniffer.standard": "PSR12",

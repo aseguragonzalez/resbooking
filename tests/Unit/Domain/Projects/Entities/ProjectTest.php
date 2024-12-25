@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\Projects\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place, User};
-use App\Domain\Projects\Exceptions\UserAlreadyExistsException;
+use App\Domain\Projects\Exceptions\{UserAlreadyExistsException, UserDoesNotExistsException};
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
 use App\Domain\Shared\{Capacity, Email, Phone};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
@@ -27,9 +27,17 @@ final class ProjectTest extends TestCase
         $this->faker = null;
     }
 
-    private function project(): Project
+    private function project(
+        array $users = [],
+        array $places = [],
+    ): Project
     {
-        return new Project(id: $this->faker->uuid, settings: $this->settings());
+        return new Project(
+            id: $this->faker->uuid,
+            settings: $this->settings(),
+            users: $users,
+            places: $places,
+        );
     }
 
     private function settings(): Settings
@@ -73,28 +81,48 @@ final class ProjectTest extends TestCase
 
     public function testAddUserShouldFailWhenUserAlreadyExists(): void
     {
-        $this->expectException(UserAlreadyExistsException::class);
         $project = $this->project();
         $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
         $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
         $project->addUser($user);
+        $this->expectException(UserAlreadyExistsException::class);
 
         $project->addUser($user);
     }
 
     public function testRemoveUserShouldRemoveUserFromProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $project = $this->project(users: [$user]);
+
+        $project->removeUser($user);
+
+        $this->assertContains($user, $project->getUsers());
     }
 
     public function testRemoveUserShouldFailWhenUserDoesNotExists(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $project = $this->project();
+        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $this->expectException(UserDoesNotExistsException::class);
+
+        $project->removeUser($user);
     }
 
     public function testAddPlaceShouldAddPlaceToProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $project = $this->project();
+        $place = new Place(
+            id: $this->faker->uuid,
+            name: $this->faker->name,
+            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
+        );
+
+        $project->addPlace($place);
+
+        $this->assertContains($place, $project->getPlaces());
     }
 
     public function testAddPlaceShouldFailWhenPlaceAlreadyExists(): void
@@ -104,7 +132,16 @@ final class ProjectTest extends TestCase
 
     public function testRemovePlaceShouldRemovePlaceFromProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $place = new Place(
+            id: $this->faker->uuid,
+            name: $this->faker->name,
+            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
+        );
+        $project = $this->project(places: [$place]);
+
+        $project->removePlace($place);
+
+        $this->assertEmpty($project->getPlaces());
     }
 
     public function testRemovePlaceShouldFailWhenPlaceDoesNotExists(): void
