@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place, User};
 use App\Domain\Projects\Exceptions\{UserAlreadyExistsException, UserDoesNotExistsException};
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
-use App\Domain\Shared\{Capacity, Email, Phone};
+use App\Domain\Shared\{Capacity, Email, Phone, Turn, DayOfWeek};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-
+use DateTime;
 
 final class ProjectTest extends TestCase
 {
@@ -30,8 +30,7 @@ final class ProjectTest extends TestCase
     private function project(
         array $users = [],
         array $places = [],
-    ): Project
-    {
+    ): Project {
         return new Project(
             id: $this->faker->uuid,
             settings: $this->settings(),
@@ -151,7 +150,16 @@ final class ProjectTest extends TestCase
 
     public function testAddTurnShouldAddTurnToProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $project = $this->project();
+        $turn = new TurnAvailability(
+            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            dayOfWeek: DayOfWeek::MONDAY,
+            turn: Turn::H1200,
+        );
+
+        $project->addTurn($turn);
+
+        $this->assertContains($turn, $project->getTurns());
     }
 
     public function testAddTurnShouldFailWhenTurnAlreadyExists(): void
@@ -171,7 +179,16 @@ final class ProjectTest extends TestCase
 
     public function testAddOpenCloseEventShouldAddOpenCloseEventToProject(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $project = $this->project();
+        $openCloseEvent = new OpenCloseEvent(
+            date: new \DateTimeImmutable(),
+            isAvailable: $this->faker->boolean,
+            turn: Turn::H1200,
+        );
+
+        $project->addOpenCloseEvent($openCloseEvent);
+
+        $this->assertContains($openCloseEvent, $project->getOpenCloseEvents());
     }
 
     public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExists(): void
