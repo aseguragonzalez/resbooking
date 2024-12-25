@@ -13,7 +13,8 @@ final class OpenCloseEvent extends ValueObject
         public readonly \DateTimeImmutable $date,
         public readonly bool $isAvailable,
         public readonly Turn $turn,
-    ) { }
+    ) {
+    }
 
     public function equals(OpenCloseEvent $other): bool
     {

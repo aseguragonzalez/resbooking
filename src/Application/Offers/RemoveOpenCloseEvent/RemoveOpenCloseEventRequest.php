@@ -8,5 +8,7 @@ use App\Seedwork\Application\UseCaseRequest;
 
 class RemoveOpenCloseEventRequest extends UseCaseRequest
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

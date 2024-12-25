@@ -22,8 +22,8 @@
  *
  * @author alfonso
  */
-interface IBookingServices {
-
+interface IBookingServices
+{
     /**
      * Obtiene la referencia actual al gestor de servicios
      * @param \BaseAggregate Referencia al agregado actual

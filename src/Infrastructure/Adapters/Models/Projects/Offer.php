@@ -18,5 +18,6 @@ readonly class Offer
         public ?string $createDate,
         public ?string $updateDate,
         public bool $web,
-    ) { }
+    ) {
+    }
 }

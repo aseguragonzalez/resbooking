@@ -23,8 +23,8 @@
  *
  * @author alfonso
  */
-interface IBookingManagement{
-
+interface IBookingManagement
+{
     /**
      * Registro de la reserva
      * @param \Booking $entity Referencia a la entidad
@@ -32,8 +32,11 @@ interface IBookingManagement{
      * @param boolean $sendNotification Flag para indicar si se envía notificación
      * @return array Resultado de la operación
      */
-    public function RegisterBooking($entity = null,
-            $saveClient = false, $sendNotification = true);
+    public function RegisterBooking(
+        $entity = null,
+        $saveClient = false,
+        $sendNotification = true
+    );
 
     /**
      * Actualización de la información de una reserva
@@ -45,8 +48,11 @@ interface IBookingManagement{
      *  -1 : No se ha encontrado la reserva por su Id
      *  -2 : Se ha producido un error durante la actualización
      */
-    public function SavePropertyBooking($id = 0,
-            $propName = "", $propValue = null);
+    public function SavePropertyBooking(
+        $id = 0,
+        $propName = "",
+        $propValue = null
+    );
 
     /**
      * Proceso de anulación de la reserva

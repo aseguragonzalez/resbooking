@@ -8,5 +8,7 @@ use App\Seedwork\Application\UseCaseRequest;
 
 class DisableOfferRequest extends UseCaseRequest
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

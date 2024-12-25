@@ -14,5 +14,6 @@ readonly class Block
         public bool $block,
         public int $year,
         public int $week,
-    ) { }
+    ) {
+    }
 }

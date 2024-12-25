@@ -8,5 +8,7 @@ use App\Seedwork\Application\UseCaseRequest;
 
 final class UpdateSettingsRequest extends UseCaseRequest
 {
-    public function __construct() { }
+    public function __construct()
+    {
+    }
 }

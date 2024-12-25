@@ -9,9 +9,11 @@ abstract class DomainEvent
     public function __construct(
         public readonly string $eventType = "DomainEvent",
         public readonly DateTimeImmutable $createdAt = new DateTimeImmutable(
-            'now', new DateTimeZone('UTC')
+            'now',
+            new DateTimeZone('UTC')
         )
-    ) { }
+    ) {
+    }
 
     abstract public function equals(DomainEvent $other): bool;
 }

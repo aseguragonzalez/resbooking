@@ -14,5 +14,6 @@ readonly class OfferShare
         public int $slotId,
         public ?int $turnId,
         public int $share,
-    ) { }
+    ) {
+    }
 }

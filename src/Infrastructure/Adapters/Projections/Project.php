@@ -16,5 +16,6 @@ readonly class Project
         public int $userId,
         public string $username,
         public bool $active,
-    ) { }
+    ) {
+    }
 }

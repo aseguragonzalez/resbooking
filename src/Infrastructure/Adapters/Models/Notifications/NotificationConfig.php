@@ -16,5 +16,6 @@ readonly class NotificationConfig
         public string $to,
         public string $template,
         public bool $state,
-    ) { }
+    ) {
+    }
 }

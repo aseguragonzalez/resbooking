@@ -15,5 +15,6 @@ readonly class TurnShare
         public int $bookingsFree,
         public int $dinersTotal,
         public int $dinersFree,
-    ) { }
+    ) {
+    }
 }

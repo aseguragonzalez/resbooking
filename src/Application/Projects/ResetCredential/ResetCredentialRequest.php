@@ -8,5 +8,7 @@ use App\Application\Projects\ResetCredentials\ResetCredentialRequest;
 
 final class ResetCredentialRequest
 {
-    public function __construct() { }
+    public function __construct()
+    {
+    }
 }

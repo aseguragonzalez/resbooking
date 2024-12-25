@@ -12,5 +12,6 @@ readonly class OfferConfig
         public int $dayId,
         public int $slotId,
         public int $turnId,
-    ) { }
+    ) {
+    }
 }

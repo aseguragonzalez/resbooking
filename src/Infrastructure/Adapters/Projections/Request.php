@@ -40,5 +40,6 @@ readonly class Request
         public string $offerStart,
         public string $offerEnd,
         public bool $offerActive,
-    ) { }
+    ) {
+    }
 }

@@ -14,5 +14,6 @@ readonly class Block
         public int $turnId,
         public string $date,
         public bool $block,
-    ) { }
+    ) {
+    }
 }

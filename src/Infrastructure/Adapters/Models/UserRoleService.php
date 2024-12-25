@@ -11,5 +11,6 @@ readonly class UserRoleService
         public int $userId,
         public int $serviceId,
         public int $roleId,
-    ) { }
+    ) {
+    }
 }

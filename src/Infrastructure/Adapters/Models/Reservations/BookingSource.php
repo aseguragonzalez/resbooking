@@ -10,5 +10,6 @@ readonly class BookingSource
         public int $id,
         public string $sourceName,
         public string $description,
-    ) { }
+    ) {
+    }
 }

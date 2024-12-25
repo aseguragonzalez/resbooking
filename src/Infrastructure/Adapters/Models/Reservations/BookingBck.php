@@ -11,5 +11,6 @@ readonly class BookingBck
         public int $idBooking,
         public string $data,
         public string $date,
-    ) { }
+    ) {
+    }
 }

@@ -19,7 +19,8 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param int $project Identidad del proyecto
      * @param int $service Identidad del servicio
      */
-    public function __construct($project = 0, $service = 0){
+    public function __construct($project = 0, $service = 0)
+    {
         parent::__construct($project, $service);
     }
 
@@ -29,8 +30,9 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param int $service Identidad del servicio
      * @return \BookingRepository
      */
-    public static function GetInstance($project = 0, $service = 0){
-        if(BookingRepository::$_reference == null){
+    public static function GetInstance($project = 0, $service = 0)
+    {
+        if (BookingRepository::$_reference == null) {
             BookingRepository::$_reference =
                     new \BookingRepository($project, $service);
         }
@@ -43,7 +45,8 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param int $service Identidad del servicio
      * @return \BaseAggregate
      */
-    public function GetAggregate($project = 0, $service = 0) {
+    public function GetAggregate($project = 0, $service = 0)
+    {
         // Instanciar agregado
         $agg = new \BookingAggregate($project, $service);
         // Información del proyecto
@@ -56,16 +59,16 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
         // Información filtrada por proyecto
         $filter = [ "Project" => $project ];
 
-        $configs = $this->GetByFilter("ConfigurationService" , $filter);
+        $configs = $this->GetByFilter("ConfigurationService", $filter);
         $agg->Configuration = (empty($configs))
                 ? new \ConfigurationService() : $configs[0];
 
-        $agg->Places = $this->GetByFilter("Place" , $filter);
-        $agg->Blocks = $this->GetByFilter("Block" , $filter);
+        $agg->Places = $this->GetByFilter("Place", $filter);
+        $agg->Blocks = $this->GetByFilter("Block", $filter);
         $agg->Configurations = $this->GetByFilter("Configuration", $filter);
-        $agg->Offers = $this->GetByFilter( "Offer" , $filter);
-        $agg->OffersEvents = $this->GetByFilter("OfferEvent" , $filter);
-        foreach($agg->Offers as $offer){
+        $agg->Offers = $this->GetByFilter("Offer", $filter);
+        $agg->OffersEvents = $this->GetByFilter("OfferEvent", $filter);
+        foreach ($agg->Offers as $offer) {
             $filtroOferta = ["Offer" => $offer->Id];
             $offer->Config =  $this->GetByFilter("OfferConfig", $filtroOferta);
         }
@@ -85,19 +88,19 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param boolean $advertising Flag para indicar si el cliente quiere publicidad
      * @return int Identidad del cliente
      */
-    public function GetClient($entity = null, $advertising = false){
+    public function GetClient($entity = null, $advertising = false)
+    {
         $filter = ["Project" => $entity->Project ];
         // Buscar el registro de cliente
-        if(empty($entity->Email)){
+        if (empty($entity->Email)) {
             $filter["Phone"] = "%$entity->Phone%";
-        }
-        else{
+        } else {
             $filter["Email"] = "%$entity->Email%";
         }
-        $clients = $this->Dao->GetByFilter( "Client", $filter);
+        $clients = $this->Dao->GetByFilter("Client", $filter);
         $client = (empty($clients)) ? null : $clients[0];
         // Crear el registro si no existe
-        if($client == null){
+        if ($client == null) {
             $client = new \Client();
             $client->Project = $entity->Project;
             $client->Name = $entity->ClientName;
@@ -105,9 +108,8 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
             $client->Phone = $entity->Phone;
             $client->Advertising = $advertising;
             $client->Id = $this->Dao->Create($client);
-        }
-        else{
-            if($client->Advertising == false){
+        } else {
+            if ($client->Advertising == false) {
                 $client->Advertising = $advertising;
                 $this->Dao->Update($client);
             }
@@ -121,13 +123,14 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param string $subject Asunto de la notificación
      * @return boolean Resultado del registro
      */
-    public function CreateNotification($entity = null, $subject = ""){
-        if($entity != null) {
+    public function CreateNotification($entity = null, $subject = "")
+    {
+        if ($entity != null) {
             $bookingDTO = $this->Read("BookingNotificationDTO", $entity->Id);
-            if($bookingDTO != null){
+            if ($bookingDTO != null) {
                 $date = new \DateTime($bookingDTO->Date);
                 $bookingDTO->ClientName = $bookingDTO->Name;
-                $bookingDTO->Date = strftime("%A %d de %B del %Y",$date->getTimestamp());
+                $bookingDTO->Date = strftime("%A %d de %B del %Y", $date->getTimestamp());
                 $bookingDTO->Turn = $bookingDTO->Start;
                 $bookingDTO->Offer = (!empty($bookingDTO->Title))
                         ? $bookingDTO->Title : "Sin oferta";
@@ -148,24 +151,25 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param string $subject Asunto de la notificación
      * @return boolean Resultado del registro
      */
-    private function RegisterNotification($entity = null, $subject = ""){
-        if($entity != null && is_object($entity)){
-            $date = new \DateTime( "NOW" );
+    private function RegisterNotification($entity = null, $subject = "")
+    {
+        if ($entity != null && is_object($entity)) {
+            $date = new \DateTime("NOW");
             $dto = new \Notification();
             $dto->Project = $this->IdProject;
             $dto->Service = $this->IdService;
             $dto->To = $entity->Email;
             $dto->Subject = $subject;
-            $dto->Date = $date->format( "y-m-d h:i:s" );
+            $dto->Date = $date->format("y-m-d h:i:s");
 
             $entity->Ticket = $this->GetTicket($dto->To, $entity);
             $dto->Content = json_encode($entity);
-            $this->Dao->Create( $dto );
+            $this->Dao->Create($dto);
 
             $dto->To = "";
             $entity->Ticket = $this->GetTicket("", $entity);
             $dto->Content = json_encode($entity);
-            $this->Dao->Create( $dto );
+            $this->Dao->Create($dto);
             return true;
         }
         return false;
@@ -177,9 +181,12 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param \BookingNotificationDTO $dto Referencia a la reserva
      * @return string Ticket generado
      */
-    private function GetTicket($user = "", $dto = ""){
+    private function GetTicket($user = "", $dto = "")
+    {
         // Establecer el destinatario de la notificación
-        if($user == ""){ $user = "admin"; }
+        if ($user == "") {
+            $user = "admin";
+        }
         // Array de parámetros del ticket
         $arr = ["User" => $user, "Project" => $dto->Project, "Id" => $dto->Id ];
         // Serialización de la información del ticket
@@ -194,7 +201,8 @@ final class MySQLBookingRepository extends BaseRepository implements BookingRepo
      * @param string $sSecretKey clave de cifrado
      * @return string
      */
-    private function fnEncrypt($sValue, $sSecretKey){
+    private function fnEncrypt($sValue, $sSecretKey)
+    {
         return base64_encode($sValue);
     }
 }

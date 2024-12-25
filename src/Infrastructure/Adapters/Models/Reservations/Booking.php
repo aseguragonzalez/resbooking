@@ -25,5 +25,6 @@ readonly class Booking
         public string $notes,
         public string $preOrder,
         public string $table,
-    ) { }
+    ) {
+    }
 }

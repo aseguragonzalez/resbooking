@@ -10,5 +10,6 @@ readonly class ProjectService
         public int $id,
         public int $projectId,
         public int $serviceId,
-    ) { }
+    ) {
+    }
 }

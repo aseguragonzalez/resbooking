@@ -11,5 +11,6 @@ readonly class State
         public string $name,
         public string $description,
         public int $level,
-    ) { }
+    ) {
+    }
 }

@@ -20,12 +20,12 @@ final class Credential extends ValueObject
         }
     }
 
-    public static function build(string $secret, string $seed): Self
+    public static function build(string $secret, string $seed): self
     {
         return new Credential($secret, $seed);
     }
 
-    public static function new(string $phrase, string $seed): Self
+    public static function new(string $phrase, string $seed): self
     {
         $secret = Credential::getSecret($phrase, $seed);
         return new Credential($secret, $seed);

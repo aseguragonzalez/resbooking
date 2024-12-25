@@ -13,5 +13,6 @@ readonly class Project
         public string $path,
         public string $date,
         public bool $active,
-    ) { }
+    ) {
+    }
 }

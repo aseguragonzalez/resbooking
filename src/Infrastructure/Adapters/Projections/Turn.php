@@ -13,5 +13,6 @@ readonly class Turn
         public int $slotId,
         public string $start,
         public string $end,
-    ) { }
+    ) {
+    }
 }

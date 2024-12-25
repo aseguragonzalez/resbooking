@@ -8,5 +8,7 @@ use App\Application\Projects\UpdateCredentials\UpdateCredentialRequest;
 
 final class UpdateCredentialRequest
 {
-    public function __construct() { }
+    public function __construct()
+    {
+    }
 }

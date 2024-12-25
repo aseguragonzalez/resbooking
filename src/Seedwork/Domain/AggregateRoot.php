@@ -23,7 +23,7 @@ abstract class AggregateRoot
     public function getDomainEvents(): array
     {
         $domainEvents = array_map(
-            fn(DomainEvent $domainEvent) => clone $domainEvent,
+            fn (DomainEvent $domainEvent) => clone $domainEvent,
             $this->domainEvents
         );
         $this->domainEvents = [];

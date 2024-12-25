@@ -18,5 +18,6 @@ readonly class Client
         public bool $vip,
         public string $comments,
         public bool $advertising,
-    ) { }
+    ) {
+    }
 }

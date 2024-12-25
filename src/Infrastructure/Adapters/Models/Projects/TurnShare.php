@@ -12,5 +12,6 @@ readonly class TurnShare
         public int $turnId,
         public int $dayOfWeekId,
         public int $share,
-    ) { }
+    ) {
+    }
 }

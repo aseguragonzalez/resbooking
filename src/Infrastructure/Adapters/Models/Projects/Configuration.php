@@ -12,5 +12,6 @@ readonly class Configuration
         public int $idTurn,
         public int $day,
         public int $count,
-    ) { }
+    ) {
+    }
 }

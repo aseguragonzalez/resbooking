@@ -31,7 +31,8 @@ final class Offer extends AggregateRoot
     public function removeTurn(TurnAvailability $turn): void
     {
         $this->turns = array_filter(
-            $this->turns, fn (TurnAvailability $s) => $s->equals($turn)
+            $this->turns,
+            fn (TurnAvailability $s) => $s->equals($turn)
         );
     }
 
@@ -43,7 +44,8 @@ final class Offer extends AggregateRoot
     public function removeOpenCloseEvent(OpenCloseEvent $event): void
     {
         $this->openCloseEvents = array_filter(
-            $this->openCloseEvents, fn (OpenCloseEvent $event) => $event->equals($event)
+            $this->openCloseEvents,
+            fn (OpenCloseEvent $event) => $event->equals($event)
         );
     }
 }

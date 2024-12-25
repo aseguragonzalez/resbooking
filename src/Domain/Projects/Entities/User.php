@@ -18,7 +18,7 @@ final class User extends Entity
         private array $roles = [],
     ) {
         parent::__construct((string) $username);
-     }
+    }
 
     public function lock(): void
     {
@@ -58,7 +58,8 @@ final class User extends Entity
     public function removeRole(Role $role): void
     {
         $this->roles = array_filter(
-            $this->roles, fn(Role $r) => $r !== $role
+            $this->roles,
+            fn (Role $r) => $r !== $role
         );
     }
 
@@ -91,13 +92,13 @@ final class User extends Entity
         return parent::equals($other) && $this->username->equals($other->username);
     }
 
-    public static function createNewAdmin(Email $username, Credential $credential): Self
+    public static function createNewAdmin(Email $username, Credential $credential): self
     {
-        return new Self($username, $credential, false, true, [Role::ADMIN]);
+        return new self($username, $credential, false, true, [Role::ADMIN]);
     }
 
-    public static function createNewUser(Email $username, Credential $credential): Self
+    public static function createNewUser(Email $username, Credential $credential): self
     {
-        return new Self($username, $credential, false, true, [Role::USER]);
+        return new self($username, $credential, false, true, [Role::USER]);
     }
 }

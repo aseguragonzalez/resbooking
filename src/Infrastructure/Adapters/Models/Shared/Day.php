@@ -10,5 +10,6 @@ readonly class Day
         public int $id,
         public string $name,
         public int $dayOfWeek,
-    ) { }
+    ) {
+    }
 }

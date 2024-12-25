@@ -18,5 +18,6 @@ readonly class ConfigurationService
         public int $diners,
         public bool $advertising,
         public bool $preOrder,
-    ) { }
+    ) {
+    }
 }

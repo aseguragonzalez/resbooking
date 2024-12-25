@@ -17,5 +17,6 @@ readonly class OfferEvent
         public int $dayOfWeek,
         public string $date,
         public bool $state,
-    ) { }
+    ) {
+    }
 }

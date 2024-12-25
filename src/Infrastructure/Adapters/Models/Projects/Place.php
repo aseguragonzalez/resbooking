@@ -13,5 +13,6 @@ readonly class Place
         public string $description,
         public int $size,
         public bool $active,
-    ) { }
+    ) {
+    }
 }

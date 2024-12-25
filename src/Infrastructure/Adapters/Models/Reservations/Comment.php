@@ -12,5 +12,6 @@ readonly class Comment
         public string $text,
         public string $date,
         public string $username,
-    ) { }
+    ) {
+    }
 }

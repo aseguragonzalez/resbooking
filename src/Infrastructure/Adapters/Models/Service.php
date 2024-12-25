@@ -13,5 +13,6 @@ readonly class Service
         public string $platform,
         public string $description,
         public bool $active,
-    ) { }
+    ) {
+    }
 }

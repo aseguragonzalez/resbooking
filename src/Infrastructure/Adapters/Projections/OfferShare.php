@@ -17,5 +17,6 @@ readonly class OfferShare
         public int $bookingsFree,
         public int $dinersTotal,
         public int $dinersFree,
-    ) { }
+    ) {
+    }
 }

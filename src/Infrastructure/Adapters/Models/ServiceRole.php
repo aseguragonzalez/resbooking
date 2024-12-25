@@ -10,5 +10,6 @@ readonly class ServiceRole
         public int $id,
         public int $serviceId,
         public int $roleId,
-    ) { }
+    ) {
+    }
 }

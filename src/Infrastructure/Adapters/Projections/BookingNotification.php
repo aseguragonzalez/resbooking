@@ -24,5 +24,6 @@ readonly class BookingNotification
         public string $notes,
         public string $preOrder,
         public string $qrContent,
-    ) { }
+    ) {
+    }
 }

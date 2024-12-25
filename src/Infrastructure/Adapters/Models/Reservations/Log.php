@@ -12,5 +12,6 @@ readonly class Log
         public string $address,
         public string $date,
         public string $information,
-    ) { }
+    ) {
+    }
 }

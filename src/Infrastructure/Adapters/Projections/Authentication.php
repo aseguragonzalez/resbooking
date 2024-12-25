@@ -15,5 +15,6 @@ readonly class Authentication
         public string $password,
         public string $role,
         public string $service,
-    ) { }
+    ) {
+    }
 }

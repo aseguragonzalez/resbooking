@@ -16,5 +16,6 @@ readonly class Notification
         public string $content,
         public string $date,
         public bool $dispatched,
-    ) { }
+    ) {
+    }
 }

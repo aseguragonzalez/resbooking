@@ -20,5 +20,6 @@ readonly class Notification
         public string $confTo,
         public string $confTemplate,
         public bool $confState,
-    ) { }
+    ) {
+    }
 }

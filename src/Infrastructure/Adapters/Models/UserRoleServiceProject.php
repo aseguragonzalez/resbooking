@@ -12,5 +12,6 @@ readonly class UserRoleServiceProject
         public int $serviceId,
         public int $roleId,
         public int $projectId,
-    ) { }
+    ) {
+    }
 }

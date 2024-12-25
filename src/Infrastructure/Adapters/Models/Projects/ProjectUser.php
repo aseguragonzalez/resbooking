@@ -10,5 +10,6 @@ readonly class ProjectUser
         public int $id,
         public int $projectId,
         public int $userId,
-    ) { }
+    ) {
+    }
 }

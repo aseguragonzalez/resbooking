@@ -9,5 +9,7 @@ use App\Seedwork\Exception\NotImplementedException;
 
 class RemoveTurnsRequest extends UseCaseRequest
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

@@ -40,5 +40,6 @@ readonly class Booking
         public int $clientCount,
         public string $table,
         public string $clientComments,
-    ) { }
+    ) {
+    }
 }

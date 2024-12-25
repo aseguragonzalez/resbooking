@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Booking;
 
-final class BookingAggregate extends \BaseAggregate{
-
+final class BookingAggregate extends \BaseAggregate
+{
     /**
      * Colección de fuentes de reserva registradas
      * @var array
@@ -143,7 +143,8 @@ final class BookingAggregate extends \BaseAggregate{
      * @param int $projectId Identidad del proyecto
      * @param int $serviceId Identidad del servicio
      */
-    public function __construct($projectId = 0, $serviceId = 0) {
+    public function __construct($projectId = 0, $serviceId = 0)
+    {
         $this->IdProject = $projectId;
         $this->IdService = $serviceId;
         $this->Booking = new \Booking();
@@ -155,7 +156,8 @@ final class BookingAggregate extends \BaseAggregate{
      * Configuración de las propiedades filtrando por fecha
      * @param string $sDate
      */
-    public function SetAggregate($sDate = ""){
+    public function SetAggregate($sDate = "")
+    {
         $this->Date = ($sDate != "") ?
                 new \DateTime($sDate) : new \DateTime("NOW");
         $this->MaxDiners = $this->Configuration->MaxDiners;
@@ -168,9 +170,9 @@ final class BookingAggregate extends \BaseAggregate{
 
         $yesterday = new \DateTime("YESTERDAY");
         $arr = [];
-        foreach($this->OffersShare as $item){
+        foreach ($this->OffersShare as $item) {
             $date = new \DateTime($item->Date);
-            if($date <= $yesterday){
+            if ($date <= $yesterday) {
                 continue;
             }
             $arr[] = $item;
@@ -178,9 +180,9 @@ final class BookingAggregate extends \BaseAggregate{
 
         $this->OffersShare = $arr;
         $arr = [];
-        foreach($this->TurnsShare as $item){
+        foreach ($this->TurnsShare as $item) {
             $date = new \DateTime($item->Date);
-            if($date <= $yesterday){
+            if ($date <= $yesterday) {
                 continue;
             }
             $arr[] = $item;
@@ -191,49 +193,57 @@ final class BookingAggregate extends \BaseAggregate{
     /**
      * Filtra los espacios activos en la colección de espacios disponibles
      */
-    private function FilterAvailablePlaces(){
-        $this->AvailablePlaces = array_filter($this->Places, function($item){
-           return  $item->Active == true;
+    private function FilterAvailablePlaces()
+    {
+        $this->AvailablePlaces = array_filter($this->Places, function ($item) {
+            return  $item->Active == true;
         });
     }
 
     /**
      * Filtra los bloqueos activos desde el día anterior(AYER)
      */
-    private function FilterAvailableBlocks(){
-        $yesterday = new \DateTime( "YESTERDAY" );
-        $this->AvailableBlocks = array_filter($this->Blocks,
-                function($item) use ($yesterday){
-            $dateBlocked = new \DateTime($item->Date);
-            return $dateBlocked >= $yesterday;
-        });
+    private function FilterAvailableBlocks()
+    {
+        $yesterday = new \DateTime("YESTERDAY");
+        $this->AvailableBlocks = array_filter(
+            $this->Blocks,
+            function ($item) use ($yesterday) {
+                $dateBlocked = new \DateTime($item->Date);
+                return $dateBlocked >= $yesterday;
+            }
+        );
     }
 
     /**
      * Filtra los eventos de ofertas activos desde el día anterior(AYER)
      */
-    private function FilterAvailableOffersEvents(){
-        $yesterday = new \DateTime( "YESTERDAY" );
-        $this->AvailableOffersEvents = array_filter($this->OffersEvents,
-                function($item) use ($yesterday){
-            $date = new \DateTime($item->Date);
-            return $date >= $yesterday;
-        });
+    private function FilterAvailableOffersEvents()
+    {
+        $yesterday = new \DateTime("YESTERDAY");
+        $this->AvailableOffersEvents = array_filter(
+            $this->OffersEvents,
+            function ($item) use ($yesterday) {
+                $date = new \DateTime($item->Date);
+                return $date >= $yesterday;
+            }
+        );
     }
 
     /**
      * Filtra las ofertas activas válidas
      */
-    private function FilterAvailableOffers(){
+    private function FilterAvailableOffers()
+    {
         $this->AvailableOffers = [];
         $yesterday = new \DateTime("YESTERDAY");
-        foreach($this->Offers as $offer){
-            if($offer->Active != 1){
+        foreach ($this->Offers as $offer) {
+            if ($offer->Active != 1) {
                 continue;
             }
-            $end = ($offer->End == "0000-00-00 00:00:00" )
+            $end = ($offer->End == "0000-00-00 00:00:00")
                     ? null : new \DateTime($offer->End);
-            if($end > $yesterday || $end == null){
+            if ($end > $yesterday || $end == null) {
                 $this->AvailableOffers[] = $offer;
             }
         }
@@ -242,11 +252,12 @@ final class BookingAggregate extends \BaseAggregate{
     /**
      * Filtra y configura los turnos establecidos para el proyecto
      */
-    private function FilterAvailableTurns(){
+    private function FilterAvailableTurns()
+    {
         $this->AvailableTurns = array();
-        foreach($this->Turns as $turn){
+        foreach ($this->Turns as $turn) {
             $t = $this->SetTurnData($turn);
-            if($t != null){
+            if ($t != null) {
                 $this->AvailableTurns[] = $t;
             }
         }
@@ -259,11 +270,12 @@ final class BookingAggregate extends \BaseAggregate{
      * @return \Turn Referencia al turno a agregar o null si
      * no tiene configuraciones válidas
      */
-    private function SetTurnData($turn = null){
+    private function SetTurnData($turn = null)
+    {
         $configs = $this->GetConfigByTurn($turn->Id);
-        if(!empty($configs)){
+        if (!empty($configs)) {
             $days = [];
-            foreach($configs as $item){
+            foreach ($configs as $item) {
                 $days[] = $item->Day;
             }
             $turn->Days = $days;
@@ -279,11 +291,14 @@ final class BookingAggregate extends \BaseAggregate{
      * @param int $id Identidad del turno
      * @return array Colección de configuraciones registradas
      */
-    private function GetConfigByTurn($id = 0){
-        $configs = array_filter($this->Configurations,
-                function ($item) use ($id) {
-            return ($item->Turn == $id);
-        });
+    private function GetConfigByTurn($id = 0)
+    {
+        $configs = array_filter(
+            $this->Configurations,
+            function ($item) use ($id) {
+                return ($item->Turn == $id);
+            }
+        );
         return (empty($configs)) ? [] : $configs;
     }
 }

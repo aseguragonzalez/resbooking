@@ -28,5 +28,6 @@ readonly class Client
         public int $estado_7,
         public string $ultimaFecha,
         public bool $advertising,
-    ) { }
+    ) {
+    }
 }
