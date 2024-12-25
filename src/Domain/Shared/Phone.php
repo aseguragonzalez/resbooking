@@ -9,7 +9,7 @@ final class Phone
     public function __construct(private readonly string $value)
     {
         // if (!preg_match('/^\(\d{2}\) \d{4,5}-\d{4}$/', $value)) {
-        // 	throw new \InvalidArgumentException('Invalid phone number');
+        //      throw new \InvalidArgumentException('Invalid phone number');
         // }
     }
 

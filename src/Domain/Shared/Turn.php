@@ -95,7 +95,7 @@ enum Turn: int
 
     public function toString(): string
     {
-        return match($this->value) {
+        return match ($this->value) {
             1 => '12:00:00',
             2 => '12:30:00',
             3 => '13:00:00',
