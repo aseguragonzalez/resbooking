@@ -39,6 +39,9 @@ final class Project extends AggregateRoot
         parent::__construct($id);
     }
 
+    /**
+     * @return array<User>
+     */
     public function getUsers(): array
     {
         return $this->users;
@@ -66,6 +69,9 @@ final class Project extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<Place>
+     */
     public function getPlaces(): array
     {
         return $this->places;
@@ -92,6 +98,9 @@ final class Project extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<TurnAvailability>
+     */
     public function getTurns(): array
     {
         return $this->turns;
@@ -118,6 +127,9 @@ final class Project extends AggregateRoot
         );
     }
 
+    /**
+     * @return array<OpenCloseEvent>
+     */
     public function getOpenCloseEvents(): array
     {
         return $this->openCloseEvents;
