@@ -10,7 +10,7 @@ readonly class Booking
         public int $id,
         public int $projectId,
         public int $turnId,
-        public ?ClientDTO $client,
+        public ?Client $client,
         public ?string $date,
         public int $diners,
         public string $clientName,

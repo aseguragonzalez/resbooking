@@ -11,7 +11,7 @@ use App\Seedwork\Domain\Exceptions\ValueException;
 final class Place extends Entity
 {
     public function __construct(
-        private readonly string $id,
+        string $id,
         public readonly Capacity $capacity,
         public readonly string $name,
     ) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Projects\AddOpenCloseEvent;
 
 use App\Seedwork\Application\UseCase;
-use App\Seedwork\Exception\NotImplementedException;
+use App\Seedwork\Exceptions\NotImplementedException;
 
 class AddOpenCloseEvent extends UseCase
 {

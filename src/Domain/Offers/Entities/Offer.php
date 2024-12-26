@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Domain\Offers\Entities;
 
-use App\Domain\Shared\{OpenCloseEvent, TurnAvailability};
+use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
 
 final class Offer extends AggregateRoot
 {
+    /**
+     * @param $openCloseEvents array<OpenCloseEvent>
+     * @param $turns array<TurnAvailability>
+     */
     public function __construct(
         private readonly string $id,
         public string $description,
         public string $title,
         public string $termsAndConditions,
-        public DateTimeInmutable $startDate,
-        public DateTimeInmutable $endDate,
+        public \DateTimeImmutable $startDate,
+        public \DateTimeImmutable $endDate,
         private bool $isEnable = true,
         public array $openCloseEvents = [],
         public array $turns = [],

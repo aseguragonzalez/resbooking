@@ -10,6 +10,9 @@ use App\Seedwork\Domain\Entity;
 
 final class User extends Entity
 {
+    /**
+     * @param $roles array<Role>
+     */
     public function __construct(
         public readonly Email $username,
         private Credential $credential,
@@ -59,7 +62,7 @@ final class User extends Entity
     {
         $this->roles = array_filter(
             $this->roles,
-            fn (Role $r) => $r !== $role
+            fn (Role $r) => $r != $role
         );
     }
 
@@ -73,6 +76,9 @@ final class User extends Entity
         return $this->credential;
     }
 
+    /**
+     * @return array<Role>
+     */
     public function getRoles(): array
     {
         return $this->roles;

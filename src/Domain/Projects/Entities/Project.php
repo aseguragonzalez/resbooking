@@ -22,6 +22,12 @@ use App\Seedwork\Domain\AggregateRoot;
 
 final class Project extends AggregateRoot
 {
+    /**
+     * @param $users array<User>
+     * @param $places array<Place>
+     * @param $turns array<TurnAvailability>
+     * @param $openCloseEvents array<OpenCloseEvent>
+     */
     public function __construct(
         private readonly string $id,
         private Settings $settings,
