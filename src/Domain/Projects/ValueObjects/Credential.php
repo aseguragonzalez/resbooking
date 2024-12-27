@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\ValueObjects;
 
+use App\Domain\Shared\Password;
 use App\Seedwork\Domain\ValueObject;
 use App\Seedwork\Domain\Exceptions\ValueException;
 
@@ -25,9 +26,9 @@ final class Credential extends ValueObject
         return new Credential($secret, $seed);
     }
 
-    public static function new(string $phrase, string $seed): self
+    public static function new(Password $phrase, string $seed): self
     {
-        $secret = Credential::getSecret($phrase, $seed);
+        $secret = Credential::getSecret($phrase->getValue(), $seed);
         return new Credential($secret, $seed);
     }
 
