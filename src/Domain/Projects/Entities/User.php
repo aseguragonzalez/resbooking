@@ -11,7 +11,7 @@ use App\Seedwork\Domain\Entity;
 final class User extends Entity
 {
     /**
-     * @param $roles array<Role>
+     * @param array<Role> $roles An array representing the roles assigned to the user.
      */
     public function __construct(
         public readonly Email $username,
