@@ -1,9 +1,0 @@
-<Files config.xml>
-Order allow,deny
-Deny from all
-</Files>
-
-<Files database.xml>
-Order allow,deny
-Deny from all
-</Files>

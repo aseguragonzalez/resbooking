@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<application>
-
-    <interfaces>
-        <interface name="nombre_interfaz" mapTo="nombre_implementacion" src="ruta..." />
-    </interfaces>
-
-</application>
