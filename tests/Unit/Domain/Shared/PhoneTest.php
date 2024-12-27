@@ -6,7 +6,6 @@ namespace Tests\Unit\Domain\Shared;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-
 use App\Domain\Shared\Phone;
 
 final class PhoneTest extends TestCase
@@ -23,43 +22,43 @@ final class PhoneTest extends TestCase
         $this->faker = null;
     }
 
-	public function testPhoneShouldCreateInstance(): void
-	{
-		$expected = $this->faker->phoneNumber;
+    public function testPhoneShouldCreateInstance(): void
+    {
+        $expected = $this->faker->phoneNumber;
 
-		$phone = new Phone($expected);
+        $phone = new Phone($expected);
 
-		$this->assertSame($expected, $phone->getValue());
-	}
+        $this->assertSame($expected, $phone->getValue());
+    }
 
-	public function testPhoneShouldFailWhenValueInvalid(): void
-	{
-		$this->markTestIncomplete('Not implemented yet.');
-		$this->expectException(InvalidArgumentException::class);
+    public function testPhoneShouldFailWhenValueInvalid(): void
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+        $this->expectException(\InvalidArgumentException::class);
 
-		new Phone($this->faker->word);
-	}
+        new Phone($this->faker->word);
+    }
 
-	public function testPhoneShouldBeCastedToString(): void
-	{
-		$expected = $this->faker->phoneNumber;
+    public function testPhoneShouldBeCastedToString(): void
+    {
+        $expected = $this->faker->phoneNumber;
 
-		$phone = new Phone($expected);
+        $phone = new Phone($expected);
 
-		$this->assertSame($expected, (string) $phone);
-	}
+        $this->assertSame($expected, (string) $phone);
+    }
 
-	public function testPhoneShouldTrueWhenComparedWithSameValues(): void
-	{
-		$phone = new Phone($this->faker->phoneNumber);
+    public function testPhoneShouldTrueWhenComparedWithSameValues(): void
+    {
+        $phone = new Phone($this->faker->phoneNumber);
 
-		$this->assertTrue($phone->equals(new Phone($phone->getValue())));
-	}
+        $this->assertTrue($phone->equals(new Phone($phone->getValue())));
+    }
 
-	public function testPhoneShouldFalseWhenComparedWithDifferentValues(): void
-	{
-		$phone = new Phone($this->faker->phoneNumber);
+    public function testPhoneShouldFalseWhenComparedWithDifferentValues(): void
+    {
+        $phone = new Phone($this->faker->phoneNumber);
 
-		$this->assertFalse($phone->equals(new Phone($this->faker->phoneNumber)));
-	}
+        $this->assertFalse($phone->equals(new Phone($this->faker->phoneNumber)));
+    }
 }
