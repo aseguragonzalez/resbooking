@@ -6,8 +6,8 @@
   },
   "[php]": {
     "editor.defaultFormatter": "wongjn.php-sniffer",
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8",
