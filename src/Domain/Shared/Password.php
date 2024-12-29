@@ -6,9 +6,11 @@ namespace App\Domain\Shared;
 
 final class Password
 {
+    public const MIN_LENGTH = 8;
+
     public function __construct(private readonly string $value)
     {
-        if (strlen($value) < 8) {
+        if (strlen($value) < self::MIN_LENGTH) {
             throw new \InvalidArgumentException('Password must be at least 8 characters');
         }
     }

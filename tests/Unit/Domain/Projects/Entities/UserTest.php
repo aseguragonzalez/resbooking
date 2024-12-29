@@ -6,18 +6,19 @@ namespace Tests\Unit\Domain\Projects\Entities;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-
 use App\Domain\Projects\Entities\User;
 use App\Domain\Projects\ValueObjects\Credential;
-use App\Domain\Shared\{Email, Role};
+use App\Domain\Shared\{Email, Password, Role};
 
 final class UserTest extends TestCase
 {
     private $faker = null;
+    private ?Password $password = null;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->password = new Password(value: $this->faker->password(Password::MIN_LENGTH));
     }
 
     protected function tearDown(): void
@@ -28,9 +29,7 @@ final class UserTest extends TestCase
     public function testConstructorShouldCreateInstance(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
 
         $user = new User($email, $credential);
 
@@ -45,9 +44,7 @@ final class UserTest extends TestCase
     public function testLockShouldLockTheUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential);
 
         $user->lock();
@@ -58,9 +55,7 @@ final class UserTest extends TestCase
     public function testUnlockShouldUnlockTheUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential, locked: true);
 
         $user->unlock();
@@ -71,9 +66,7 @@ final class UserTest extends TestCase
     public function testDisableShouldDisableTheUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential);
 
         $user->disable();
@@ -84,9 +77,7 @@ final class UserTest extends TestCase
     public function testEnableShouldEnableTheUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential, available: false);
 
         $user->enable();
@@ -97,9 +88,7 @@ final class UserTest extends TestCase
     public function testHasRoleShouldBeTrueWhenUserContainsTheRole(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $role = Role::ADMIN;
         $user = new User($email, $credential, roles: [$role]);
 
@@ -109,9 +98,7 @@ final class UserTest extends TestCase
     public function testHasRoleShouldBeFalseWhenUserDoesNotContainesTheRole(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential);
 
         $this->assertFalse($user->hasRole(Role::ADMIN));
@@ -120,9 +107,7 @@ final class UserTest extends TestCase
     public function testGetRolesShouldReturnAllRolesFromUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $roles = [Role::ADMIN, Role::USER];
         $user = new User($email, $credential, roles: $roles);
 
@@ -132,9 +117,7 @@ final class UserTest extends TestCase
     public function testAddRoleShouldSetANewRoleToUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential);
         $role = Role::ADMIN;
 
@@ -146,9 +129,7 @@ final class UserTest extends TestCase
     public function testRemoveRoleShouldDeleteRoleFromUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $role = Role::ADMIN;
         $user = new User($email, $credential, roles: [$role]);
 
@@ -160,13 +141,9 @@ final class UserTest extends TestCase
     public function testChangeCredentialShouldUpdateCredential(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
         $user = new User($email, $credential);
-        $newCredential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $newCredential = Credential::new($this->password, $this->faker->uuid);
 
         $user->changeCredential($newCredential);
 
@@ -176,9 +153,7 @@ final class UserTest extends TestCase
     public function testCreateNewAdminShouldReturnAnAdminUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
 
         $user = User::createNewAdmin($email, $credential);
 
@@ -188,9 +163,7 @@ final class UserTest extends TestCase
     public function testCreateNewUserShouldReturnAnNewUser(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new(
-            $this->faker->password, $this->faker->uuid
-        );
+        $credential = Credential::new($this->password, $this->faker->uuid);
 
         $user = User::createNewUser($email, $credential);
 

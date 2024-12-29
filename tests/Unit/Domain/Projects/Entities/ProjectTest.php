@@ -19,16 +19,18 @@ use App\Domain\Projects\Exceptions\{
     UserDoesNotExists
 };
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
-use App\Domain\Shared\{Capacity, Email, Phone, Turn, DayOfWeek};
+use App\Domain\Shared\{Capacity, DayOfWeek, Email, Password, Phone, Turn};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 
 final class ProjectTest extends TestCase
 {
     private $faker = null;
+    private ?Password $password = null;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->password = new Password($this->faker->password(Password::MIN_LENGTH));
     }
 
     protected function tearDown(): void
@@ -83,7 +85,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldAddUserToProject(): void
     {
         $project = $this->project();
-        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
         $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
 
         $project->addUser($user);
@@ -94,7 +96,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldFailWhenUserAlreadyExists(): void
     {
         $project = $this->project();
-        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
         $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
         $project->addUser($user);
         $this->expectException(UserAlreadyExists::class);
@@ -104,7 +106,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveUserShouldRemoveUserFromProject(): void
     {
-        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
         $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
         $project = $this->project(users: [$user]);
 
@@ -116,7 +118,7 @@ final class ProjectTest extends TestCase
     public function testRemoveUserShouldFailWhenUserDoesNotExists(): void
     {
         $project = $this->project();
-        $credential = Credential::new(phrase: $this->faker->password, seed: $this->faker->uuid);
+        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
         $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
         $this->expectException(UserDoesNotExists::class);
 

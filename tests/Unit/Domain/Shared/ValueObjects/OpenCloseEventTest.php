@@ -6,7 +6,6 @@ namespace Tests\Unit\Domain\Shared\ValueObjects;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-
 use App\Domain\Shared\Turn;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
 

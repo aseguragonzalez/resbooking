@@ -26,15 +26,15 @@ final class Credential extends ValueObject
         return new Credential($secret, $seed);
     }
 
-    public static function new(Password $phrase, string $seed): self
+    public static function new(Password $password, string $seed): self
     {
-        $secret = Credential::getSecret($phrase->getValue(), $seed);
+        $secret = Credential::getSecret($password, $seed);
         return new Credential($secret, $seed);
     }
 
-    private static function getSecret(string $phrase, string $seed): string
+    private static function getSecret(Password $password, string $seed): string
     {
-        if (empty($phrase)) {
+        if (empty($password->getValue())) {
             throw new ValueException("Phrase cannot be empty.");
         }
 
@@ -42,15 +42,14 @@ final class Credential extends ValueObject
             throw new ValueException("Seed cannot be empty.");
         }
 
-        return "{$phrase}.{$seed}";
+        return "{$password->getValue()}.{$seed}";
     }
 
-    public function check(string $phrase): bool
+    public function check(Password $password): bool
     {
-        if (empty($phrase)) {
+        if (empty($password->getValue())) {
             throw new ValueException("Phrase cannot be empty.");
         }
-
-        return $this->secret === Credential::getSecret($phrase, $this->seed);
+        return $this->secret === Credential::getSecret($password, $this->seed);
     }
 }

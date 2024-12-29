@@ -6,24 +6,25 @@ namespace Tests\Unit\Domain\Projects\ValueObjects;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-
 use App\Domain\Projects\ValueObjects\Credential;
+use App\Domain\Shared\Password;
 use App\Seedwork\Domain\Exceptions\ValueException;
 
 final class CredentialTest extends TestCase
 {
-    private string $message = "This feature is not implemented yet.";
-
     private $faker = null;
+    private ?Password $password = null;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->password = new Password(value: $this->faker->password(Password::MIN_LENGTH));
     }
 
     protected function tearDown(): void
     {
         $this->faker = null;
+        $this->password = null;
     }
 
     public function testBuildShouldInstantiateCredential(): void
@@ -53,49 +54,32 @@ final class CredentialTest extends TestCase
 
     public function testNewShouldCreateCredential(): void
     {
-        $phrase = $this->faker->word();
         $seed = $this->faker->uuid();
 
-        $credential = Credential::new($phrase, $seed);
+        $credential = Credential::new($this->password, $seed);
 
         $this->assertNotEmpty($credential->secret);
         $this->assertEquals($seed, $credential->seed);
-    }
-
-    public function testNewShouldFailWhenPhraseIsInvalid(): void
-    {
-        $this->expectException(ValueException::class);
-
-        Credential::new('', $this->faker->uuid());
     }
 
     public function testNewShouldFailWhenSeedIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
-        Credential::new($this->faker->word(), '');
+        Credential::new($this->password, '');
     }
 
     public function testCheckShouldBeTrueWhenPhraseMatches(): void
     {
-        $phrase = $this->faker->word();
-        $credential = Credential::new($phrase, $this->faker->uuid());
+        $credential = Credential::new($this->password, $this->faker->uuid());
 
-        $this->assertTrue($credential->check($phrase));
+        $this->assertTrue($credential->check($this->password));
     }
 
     public function testCheckShouldBeFalseWhenPhraseDoesNotMatch(): void
     {
-        $credential = Credential::new($this->faker->word(), $this->faker->uuid());
+        $credential = Credential::new($this->password, $this->faker->uuid());
 
-        $this->assertFalse($credential->check($this->faker->word()));
-    }
-
-    public function testCheckShouldFailWhenPhraseIsInvalid(): void
-    {
-        $credential = Credential::new($this->faker->word(), $this->faker->uuid());
-        $this->expectException(ValueException::class);
-
-        $credential->check('');
+        $this->assertFalse($credential->check(new Password($this->faker->uuid())));
     }
 }

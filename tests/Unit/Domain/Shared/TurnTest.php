@@ -6,7 +6,6 @@ namespace Tests\Unit\Domain\Shared;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-
 use App\Domain\Shared\Turn;
 
 final class TurnTest extends TestCase
