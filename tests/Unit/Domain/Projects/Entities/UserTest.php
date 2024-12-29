@@ -128,7 +128,7 @@ final class UserTest extends TestCase
         $this->assertTrue($user->hasRole($role));
     }
 
-    public function testAddRoleShouldFailWhenRoleAlreadyExists(): void
+    public function testAddRoleShouldFailWhenRoleAlreadyExist(): void
     {
         $role = Role::ADMIN;
         $user = new User(
@@ -155,7 +155,7 @@ final class UserTest extends TestCase
         $this->assertFalse($user->hasRole($role));
     }
 
-    public function testRemoveRoleShouldFailWhenRoleDoesNotExists(): void
+    public function testRemoveRoleShouldFailWhenRoleDoesNotExist(): void
     {
         $role = Role::ADMIN;
         $user = new User(

@@ -6,10 +6,10 @@ namespace App\Domain\Projects\Exceptions;
 
 use App\Seedwork\Domain\Exceptions\DomainException;
 
-final class OpenCloseEventAlreadyExists extends DomainException
+final class UserDoesNotExist extends DomainException
 {
     public function __construct()
     {
-        parent::__construct(message: 'OpenCloseEvent already exists in project');
+        parent::__construct('User does not exists in project');
     }
 }

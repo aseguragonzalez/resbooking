@@ -30,7 +30,7 @@ final class AddPlaceTest extends TestCase
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testAddPlaceShouldFailWhenPlaceAlreadyExists(): void
+    public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

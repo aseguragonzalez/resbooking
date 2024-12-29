@@ -6,7 +6,7 @@ namespace App\Domain\Projects\Exceptions;
 
 use App\Seedwork\Domain\Exceptions\DomainException;
 
-final class PlaceAlreadyExists extends DomainException
+final class PlaceAlreadyExist extends DomainException
 {
     public function __construct()
     {

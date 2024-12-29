@@ -6,10 +6,10 @@ namespace App\Domain\Projects\Exceptions;
 
 use App\Seedwork\Domain\Exceptions\DomainException;
 
-final class UserDoesNotExists extends DomainException
+final class TurnDoesNotExist extends DomainException
 {
     public function __construct()
     {
-        parent::__construct('User does not exists in project');
+        parent::__construct('Turn does not exists in project');
     }
 }

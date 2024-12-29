@@ -8,15 +8,15 @@ use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place, User};
 use App\Domain\Projects\Exceptions\{
-    OpenCloseEventAlreadyExists,
-    OpenCloseEventDoesNotExists,
+    OpenCloseEventAlreadyExist,
+    OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
-    PlaceAlreadyExists,
-    PlaceDoesNotExists,
-    TurnAlreadyExists,
-    TurnDoesNotExists,
-    UserAlreadyExists,
-    UserDoesNotExists
+    PlaceAlreadyExist,
+    PlaceDoesNotExist,
+    TurnAlreadyExist,
+    TurnDoesNotExist,
+    UserAlreadyExist,
+    UserDoesNotExist
 };
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
 use App\Domain\Shared\{Capacity, DayOfWeek, Email, Password, Phone, Turn};
@@ -92,12 +92,12 @@ final class ProjectTest extends TestCase
         $this->assertContains($user, $project->getUsers());
     }
 
-    public function testAddUserShouldFailWhenUserAlreadyExists(): void
+    public function testAddUserShouldFailWhenUserAlreadyExist(): void
     {
         $project = $this->project();
         $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
         $project->addUser($user);
-        $this->expectException(UserAlreadyExists::class);
+        $this->expectException(UserAlreadyExist::class);
 
         $project->addUser($user);
     }
@@ -112,11 +112,11 @@ final class ProjectTest extends TestCase
         $this->assertEmpty($project->getUsers());
     }
 
-    public function testRemoveUserShouldFailWhenUserDoesNotExists(): void
+    public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
     {
         $project = $this->project();
         $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
-        $this->expectException(UserDoesNotExists::class);
+        $this->expectException(UserDoesNotExist::class);
 
         $project->removeUser($user);
     }
@@ -135,7 +135,7 @@ final class ProjectTest extends TestCase
         $this->assertContains($place, $project->getPlaces());
     }
 
-    public function testAddPlaceShouldFailWhenPlaceAlreadyExists(): void
+    public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
     {
         $place = new Place(
             id: $this->faker->uuid,
@@ -143,7 +143,7 @@ final class ProjectTest extends TestCase
             capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
         );
         $project = $this->project(places: [$place]);
-        $this->expectException(PlaceAlreadyExists::class);
+        $this->expectException(PlaceAlreadyExist::class);
 
         $project->addPlace($place);
     }
@@ -162,7 +162,7 @@ final class ProjectTest extends TestCase
         $this->assertEmpty($project->getPlaces());
     }
 
-    public function testRemovePlaceShouldFailWhenPlaceDoesNotExists(): void
+    public function testRemovePlaceShouldFailWhenPlaceDoesNotExist(): void
     {
         $project = $this->project();
         $place = new Place(
@@ -170,7 +170,7 @@ final class ProjectTest extends TestCase
             name: $this->faker->name,
             capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
         );
-        $this->expectException(PlaceDoesNotExists::class);
+        $this->expectException(PlaceDoesNotExist::class);
 
         $project->removePlace($place);
     }
@@ -189,7 +189,7 @@ final class ProjectTest extends TestCase
         $this->assertContains($turn, $project->getTurns());
     }
 
-    public function testAddTurnShouldFailWhenTurnAlreadyExists(): void
+    public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
@@ -197,7 +197,7 @@ final class ProjectTest extends TestCase
             turn: Turn::H1200,
         );
         $project = $this->project(turns: [$turn]);
-        $this->expectException(TurnAlreadyExists::class);
+        $this->expectException(TurnAlreadyExist::class);
 
         $project->addTurn($turn);
     }
@@ -216,7 +216,7 @@ final class ProjectTest extends TestCase
         $this->assertEmpty($project->getTurns());
     }
 
-    public function testRemoveTurnShouldFailWhenTurnDoesNotExists(): void
+    public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
     {
         $project = $this->project();
         $turn = new TurnAvailability(
@@ -224,7 +224,7 @@ final class ProjectTest extends TestCase
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
-        $this->expectException(TurnDoesNotExists::class);
+        $this->expectException(TurnDoesNotExist::class);
 
         $project->removeTurn($turn);
     }
@@ -243,7 +243,7 @@ final class ProjectTest extends TestCase
         $this->assertContains($openCloseEvent, $project->getOpenCloseEvents());
     }
 
-    public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExists(): void
+    public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
     {
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
@@ -251,7 +251,7 @@ final class ProjectTest extends TestCase
             turn: Turn::H1200,
         );
         $project = $this->project(openCloseEvents: [$openCloseEvent]);
-        $this->expectException(OpenCloseEventAlreadyExists::class);
+        $this->expectException(OpenCloseEventAlreadyExist::class);
 
         $project->addOpenCloseEvent($openCloseEvent);
     }
@@ -283,10 +283,10 @@ final class ProjectTest extends TestCase
         $this->assertEmpty($project->getOpenCloseEvents());
     }
 
-    public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExists(): void
+    public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void
     {
         $project = $this->project();
-        $this->expectException(OpenCloseEventDoesNotExists::class);
+        $this->expectException(OpenCloseEventDoesNotExist::class);
 
         $project->removeOpenCloseEvent(new OpenCloseEvent(
             date: new \DateTimeImmutable(),

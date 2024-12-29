@@ -40,7 +40,7 @@ final class AddUserTest extends TestCase
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testAddUserShouldFailWhenNewUserAlreadyExists(): void
+    public function testAddUserShouldFailWhenNewUserAlreadyExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

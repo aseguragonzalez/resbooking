@@ -6,7 +6,7 @@ namespace App\Domain\Projects\Exceptions;
 
 use App\Seedwork\Domain\Exceptions\DomainException;
 
-final class UserAlreadyExists extends DomainException
+final class UserAlreadyExist extends DomainException
 {
     public function __construct()
     {

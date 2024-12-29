@@ -30,7 +30,7 @@ final class AddTurnsTest extends TestCase
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testAddTurnsShouldFailWhenTurnsAlreadyExists(): void
+    public function testAddTurnsShouldFailWhenTurnsAlreadyExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
