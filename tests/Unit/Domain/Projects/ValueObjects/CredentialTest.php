@@ -62,13 +62,6 @@ final class CredentialTest extends TestCase
         $this->assertEquals($seed, $credential->seed);
     }
 
-    public function testNewShouldFailWhenSeedIsInvalid(): void
-    {
-        $this->expectException(ValueException::class);
-
-        Credential::new($this->password, '');
-    }
-
     public function testCheckShouldBeTrueWhenPhraseMatches(): void
     {
         $credential = Credential::new($this->password, $this->faker->uuid());

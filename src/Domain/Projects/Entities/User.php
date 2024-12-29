@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\ValueObjects\Credential;
-use App\Domain\Shared\{Email, Role};
+use App\Domain\Shared\{Email, Role, Password};
 use App\Seedwork\Domain\Entity;
 
 final class User extends Entity
@@ -98,13 +98,17 @@ final class User extends Entity
         return parent::equals($other) && $this->username->equals($other->username);
     }
 
-    public static function createNewAdmin(Email $username, Credential $credential): self
+    public static function createNewAdmin(Email $username, Password $password): self
     {
+        $credential = Credential::new(password: $password);
+
         return new self($username, $credential, false, true, [Role::ADMIN]);
     }
 
-    public static function createNewUser(Email $username, Credential $credential): self
+    public static function createNewUser(Email $username, Password $password): self
     {
+        $credential = Credential::new(password: $password);
+
         return new self($username, $credential, false, true, [Role::USER]);
     }
 }

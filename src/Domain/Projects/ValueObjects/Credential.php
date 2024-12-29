@@ -26,8 +26,9 @@ final class Credential extends ValueObject
         return new Credential($secret, $seed);
     }
 
-    public static function new(Password $password, string $seed): self
+    public static function new(Password $password, string $seed = ''): self
     {
+        $seed = empty($seed) ? uniqid(more_entropy: true) : $seed;
         $secret = Credential::getSecret($password, $seed);
         return new Credential($secret, $seed);
     }

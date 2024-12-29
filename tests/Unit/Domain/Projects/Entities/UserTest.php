@@ -141,9 +141,9 @@ final class UserTest extends TestCase
     public function testChangeCredentialShouldUpdateCredential(): void
     {
         $email = new Email($this->faker->email);
-        $credential = Credential::new($this->password, $this->faker->uuid);
+        $credential = Credential::new($this->password);
         $user = new User($email, $credential);
-        $newCredential = Credential::new($this->password, $this->faker->uuid);
+        $newCredential = Credential::new($this->password);
 
         $user->changeCredential($newCredential);
 
@@ -152,20 +152,14 @@ final class UserTest extends TestCase
 
     public function testCreateNewAdminShouldReturnAnAdminUser(): void
     {
-        $email = new Email($this->faker->email);
-        $credential = Credential::new($this->password, $this->faker->uuid);
-
-        $user = User::createNewAdmin($email, $credential);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
 
         $this->assertTrue($user->hasRole(Role::ADMIN));
     }
 
     public function testCreateNewUserShouldReturnAnNewUser(): void
     {
-        $email = new Email($this->faker->email);
-        $credential = Credential::new($this->password, $this->faker->uuid);
-
-        $user = User::createNewUser($email, $credential);
+        $user = User::createNewUser(username: new Email($this->faker->email), password: $this->password);
 
         $this->assertTrue($user->hasRole(Role::USER));
     }

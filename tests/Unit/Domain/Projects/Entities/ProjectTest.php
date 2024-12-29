@@ -85,8 +85,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldAddUserToProject(): void
     {
         $project = $this->project();
-        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
-        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
 
         $project->addUser($user);
 
@@ -96,8 +95,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldFailWhenUserAlreadyExists(): void
     {
         $project = $this->project();
-        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
-        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
         $project->addUser($user);
         $this->expectException(UserAlreadyExists::class);
 
@@ -106,8 +104,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveUserShouldRemoveUserFromProject(): void
     {
-        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
-        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
         $project = $this->project(users: [$user]);
 
         $project->removeUser($user);
@@ -118,8 +115,7 @@ final class ProjectTest extends TestCase
     public function testRemoveUserShouldFailWhenUserDoesNotExists(): void
     {
         $project = $this->project();
-        $credential = Credential::new(password: $this->password, seed: $this->faker->uuid);
-        $user = User::createNewAdmin(username: new Email($this->faker->email), credential: $credential);
+        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
         $this->expectException(UserDoesNotExists::class);
 
         $project->removeUser($user);
