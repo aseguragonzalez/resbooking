@@ -13,7 +13,6 @@
         "SonarSource.sonarlint-vscode",
         "xdebug.php-debug",
         "zobo.php-intellisense",
-        "formulahendry.vscode-mysql",
         "redhat.vscode-xml",
         "junstyle.php-cs-fixer",
         "wongjn.php-sniffer"
@@ -21,7 +20,7 @@
     }
   },
   "dockerComposeFile": [
-    "docker-compose.yml"
+    "./docker-compose.override.yml"
   ],
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
@@ -29,10 +28,8 @@
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/python:1": {}
   },
-  "forwardPorts": [
-    8080
-  ],
-  "name": "Local environment",
+  "forwardPorts": [],
+  "name": "PHP App",
   "postCreateCommand": "chmod +x .devcontainer/startup.sh && .devcontainer/startup.sh",
   "remoteUser": "vscode",
   "service": "app",
