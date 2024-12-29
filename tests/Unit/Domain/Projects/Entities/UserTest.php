@@ -7,6 +7,7 @@ namespace Tests\Unit\Domain\Projects\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\User;
+use App\Domain\Projects\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
 use App\Domain\Projects\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
 
@@ -116,26 +117,54 @@ final class UserTest extends TestCase
 
     public function testAddRoleShouldSetANewRoleToUser(): void
     {
-        $email = new Email($this->faker->email);
-        $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential);
         $role = Role::ADMIN;
+        $user = new User(
+            username: new Email($this->faker->email),
+            credential: Credential::new($this->password)
+        );
 
         $user->addRole($role);
 
         $this->assertTrue($user->hasRole($role));
     }
 
+    public function testAddRoleShouldFailWhenRoleAlreadyExists(): void
+    {
+        $role = Role::ADMIN;
+        $user = new User(
+            username: new Email($this->faker->email),
+            credential: Credential::new($this->password),
+            roles: [$role]
+        );
+        $this->expectException(RoleAlreadyExist::class);
+
+        $user->addRole($role);
+    }
+
     public function testRemoveRoleShouldDeleteRoleFromUser(): void
     {
-        $email = new Email($this->faker->email);
-        $credential = Credential::new($this->password, $this->faker->uuid);
         $role = Role::ADMIN;
-        $user = new User($email, $credential, roles: [$role]);
+        $user = new User(
+            username: new Email($this->faker->email),
+            credential: Credential::new($this->password),
+            roles: [$role]
+        );
 
         $user->removeRole($role);
 
         $this->assertFalse($user->hasRole($role));
+    }
+
+    public function testRemoveRoleShouldFailWhenRoleDoesNotExists(): void
+    {
+        $role = Role::ADMIN;
+        $user = new User(
+            username: new Email($this->faker->email),
+            credential: Credential::new($this->password)
+        );
+        $this->expectException(RoleDoesNotExist::class);
+
+        $user->removeRole($role);
     }
 
     public function testChangeCredentialShouldUpdateCredential(): void
