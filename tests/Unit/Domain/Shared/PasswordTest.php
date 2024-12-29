@@ -41,7 +41,7 @@ final class PasswordTest extends TestCase
 
     public function testPasswordShouldBeCastedToString(): void
     {
-        $expected = $this->faker->password;
+        $expected = $this->faker->password(Password::MIN_LENGTH);
 
         $password = new Password($expected);
 
