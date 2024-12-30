@@ -3,7 +3,6 @@
     "vscode": {
       "extensions": [
         "bierner.markdown-mermaid",
-        "bmewburn.vscode-intelephense-client",
         "DavidAnson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
         "MehediDracula.php-namespace-resolver",
