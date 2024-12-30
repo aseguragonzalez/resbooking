@@ -8,15 +8,17 @@ use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place, User};
 use App\Domain\Projects\Exceptions\{
+    PlaceAlreadyExist,
+    PlaceDoesNotExist,
+    UserAlreadyExist,
+    UserDoesNotExist
+};
+use App\Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
-    PlaceAlreadyExist,
-    PlaceDoesNotExist,
     TurnAlreadyExist,
     TurnDoesNotExist,
-    UserAlreadyExist,
-    UserDoesNotExist
 };
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
 use App\Domain\Shared\{Capacity, DayOfWeek, Email, Password, Phone, Turn};

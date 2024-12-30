@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\Projects\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\User;
-use App\Domain\Projects\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
+use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
 use App\Domain\Projects\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
 

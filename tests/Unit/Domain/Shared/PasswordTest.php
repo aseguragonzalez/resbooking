@@ -59,6 +59,8 @@ final class PasswordTest extends TestCase
     {
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
 
-        $this->assertFalse($password->equals(new Password($this->faker->password)));
+        $this->assertFalse(
+            $password->equals(new Password($this->faker->password(Password::MIN_LENGTH)))
+        );
     }
 }

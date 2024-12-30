@@ -6,15 +6,17 @@ namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\Entities\{Place, User};
 use App\Domain\Projects\Exceptions\{
+    PlaceAlreadyExist,
+    PlaceDoesNotExist,
+    UserAlreadyExist,
+    UserDoesNotExist
+};
+use App\Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
-    PlaceAlreadyExist,
-    PlaceDoesNotExist,
     TurnAlreadyExist,
     TurnDoesNotExist,
-    UserAlreadyExist,
-    UserDoesNotExist
 };
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
