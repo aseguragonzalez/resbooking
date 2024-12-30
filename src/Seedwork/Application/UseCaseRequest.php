@@ -6,7 +6,4 @@ namespace App\Seedwork\Application;
 
 abstract class UseCaseRequest
 {
-    public function __construct()
-    {
-    }
 }

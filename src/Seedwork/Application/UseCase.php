@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Seedwork\Application;
 
 use App\Seedwork\Application\UseCaseRequest;
-use App\Seedwork\Exceptions\NotImplementedException;
 
+/**
+ * @template T of UseCaseRequest
+ */
 abstract class UseCase
 {
-    public function execute(UseCaseRequest $request): void
-    {
-        throw new NotImplementedException();
-    }
+    /**
+     * @param T $request
+     * @return void
+     */
+    abstract public function execute(UseCaseRequest $request): void;
 }
