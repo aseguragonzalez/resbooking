@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\Projects\AddTurns;
 
-use App\Application\Projects\AddTurns\AddTurnsRequest;
 use App\Domain\Projects\ProjectRepository;
 use App\Seedwork\Application\UseCase;
+use App\Seedwork\Exceptions\NotImplementedException;
 
+/**
+ * @extends UseCase<AddOpenCloseEventRequest>
+ */
 final class AddTurns extends UseCase
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
@@ -16,6 +19,6 @@ final class AddTurns extends UseCase
 
     public function execute(AddTurnsRequest $request): void
     {
-        throw new \Exception('Not implemented');
+        throw new NotImplementedException();
     }
 }
