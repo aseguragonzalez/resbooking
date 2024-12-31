@@ -62,8 +62,9 @@ final class ProjectTest extends TestCase
             email: new Email($this->faker->email),
             hasRemainders: $this->faker->boolean,
             name: $this->faker->name,
-            maxNumberOfDiners: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
-            minNumberOfDiners: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            maxNumberOfDiners: new Capacity(8),
+            minNumberOfDiners: new Capacity(1),
+            numberOfTables: new Capacity(25),
             phone: new Phone($this->faker->phoneNumber)
         );
     }

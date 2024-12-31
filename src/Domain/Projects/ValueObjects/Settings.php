@@ -16,10 +16,24 @@ final class Settings extends ValueObject
         public readonly string $name,
         public readonly Capacity $maxNumberOfDiners,
         public readonly Capacity $minNumberOfDiners,
+        public readonly Capacity $numberOfTables,
         public readonly Phone $phone,
     ) {
-        if (empty($name)) {
+        $this->checkName();
+        $this->checkMinMaxNumberOfDinners();
+    }
+
+    private function checkName(): void
+    {
+        if (empty($this->name)) {
             throw new ValueException('Name is required');
+        }
+    }
+
+    private function checkMinMaxNumberOfDinners(): void
+    {
+        if ($this->minNumberOfDiners->value > $this->maxNumberOfDiners->value) {
+            throw new ValueException('Min number of diners must be less than or equal to max number of diners');
         }
     }
 }

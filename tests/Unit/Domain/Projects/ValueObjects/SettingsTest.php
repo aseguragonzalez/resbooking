@@ -28,6 +28,7 @@ final class SettingsTest extends TestCase
     {
         $maxNumberOfDiners = new Capacity($this->faker->numberBetween(1, 100));
         $minNumberOfDiners = new Capacity($this->faker->numberBetween(1, 100));
+        $numberOfTables = new Capacity($this->faker->numberBetween(1, 100));
         $hasRemainders = $this->faker->boolean;
         $name = $this->faker->name;
         $email = new Email($this->faker->email);
@@ -39,6 +40,7 @@ final class SettingsTest extends TestCase
             name: $name,
             maxNumberOfDiners: $maxNumberOfDiners,
             minNumberOfDiners: $minNumberOfDiners,
+            numberOfTables: $numberOfTables,
             phone: $phone
         );
 
@@ -49,6 +51,7 @@ final class SettingsTest extends TestCase
         $this->assertEquals($name, $settings->name);
         $this->assertEquals($email, $settings->email);
         $this->assertEquals($phone, $settings->phone);
+        $this->assertEquals($numberOfTables, $settings->numberOfTables);
     }
 
     public function testConstructorShouldFailWhenNameIsEmpty(): void
@@ -62,6 +65,22 @@ final class SettingsTest extends TestCase
             name: '',
             maxNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
             minNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
+            numberOfTables: new Capacity($this->faker->numberBetween(1, 100)),
+            phone: new Phone($this->faker->phoneNumber)
+        );
+    }
+
+    public function testConstructShouldFailWhenMinMaxAreInvalid(): void
+    {
+        $this->expectException(ValueException::class);
+
+        new Settings(
+            email: new Email($this->faker->email),
+            hasRemainders: $this->faker->boolean,
+            name: $this->faker->name,
+            maxNumberOfDiners: new Capacity(1),
+            minNumberOfDiners: new Capacity(2),
+            numberOfTables: new Capacity($this->faker->numberBetween(1, 100)),
             phone: new Phone($this->faker->phoneNumber)
         );
     }
