@@ -41,12 +41,4 @@ abstract class AggregateRoot
     {
         $this->domainEvents[] = $domainEvent;
     }
-
-    /**
-     * @param array<DomainEvent> $domainEvents
-     */
-    protected function addEvents(array $domainEvents): void
-    {
-        $this->domainEvents = array_merge($this->domainEvents, $domainEvents);
-    }
 }
