@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace App\Seedwork\Domain;
 
-use Tuupola\Ksuid;
-
 abstract class DomainEvent
 {
-    private readonly string $id;
-
     protected function __construct(
-        ?string $id = null,
+        private readonly string $id,
         private readonly string $type = "DomainEvent",
         private readonly string $version = "1.0",
         private readonly array $payload = [],
@@ -20,7 +16,6 @@ abstract class DomainEvent
             new \DateTimeZone('UTC')
         )
     ) {
-        $this->id = $id ?? (string)new Ksuid();
     }
 
     public function getId(): string

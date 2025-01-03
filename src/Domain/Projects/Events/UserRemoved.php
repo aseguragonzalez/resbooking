@@ -6,12 +6,14 @@ namespace App\Domain\Projects\Events;
 
 use App\Domain\Projects\Entities\User;
 use App\Seedwork\Domain\DomainEvent;
+use Tuupola\Ksuid;
 
 final class UserRemoved extends DomainEvent
 {
     public static function new(string $projectId, User $user): self
     {
         return new self(
+            id: (string)new Ksuid(),
             type: 'UserRemoved',
             payload: ['projectId' => $projectId, 'user' => $user]
         );

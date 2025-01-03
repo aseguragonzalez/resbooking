@@ -7,7 +7,6 @@ namespace App\Seedwork\Domain;
 abstract class AggregateRoot
 {
     /**
-     * @param string $id
      * @param array<DomainEvent> $domainEvents
      */
     public function __construct(private string $id, private array $domainEvents = [])
