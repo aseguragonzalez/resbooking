@@ -27,7 +27,7 @@ abstract class AggregateRoot
     /**
      * @return array<DomainEvent>
      */
-    public function getDomainEvents(): array
+    public function getEvents(): array
     {
         $domainEvents = array_map(
             fn (DomainEvent $domainEvent) => clone $domainEvent,
@@ -37,7 +37,7 @@ abstract class AggregateRoot
         return $domainEvents;
     }
 
-    protected function addDomainEvent(DomainEvent $domainEvent): void
+    protected function addEvent(DomainEvent $domainEvent): void
     {
         $this->domainEvents[] = $domainEvent;
     }
@@ -45,7 +45,7 @@ abstract class AggregateRoot
     /**
      * @param array<DomainEvent> $domainEvents
      */
-    protected function addDomainEvents(array $domainEvents): void
+    protected function addEvents(array $domainEvents): void
     {
         $this->domainEvents = array_merge($this->domainEvents, $domainEvents);
     }
