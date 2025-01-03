@@ -26,9 +26,9 @@ final class SettingsTest extends TestCase
 
     public function testConstructorShouldCreateInstance(): void
     {
-        $maxNumberOfDiners = new Capacity($this->faker->numberBetween(1, 100));
-        $minNumberOfDiners = new Capacity($this->faker->numberBetween(1, 100));
-        $numberOfTables = new Capacity($this->faker->numberBetween(1, 100));
+        $maxNumberOfDiners = new Capacity(100);
+        $minNumberOfDiners = new Capacity(1);
+        $numberOfTables = new Capacity(25);
         $hasRemainders = $this->faker->boolean;
         $name = $this->faker->name;
         $email = new Email($this->faker->email);
@@ -63,9 +63,9 @@ final class SettingsTest extends TestCase
             email: new Email($this->faker->email),
             hasRemainders: $this->faker->boolean,
             name: '',
-            maxNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
-            minNumberOfDiners: new Capacity($this->faker->numberBetween(1, 100)),
-            numberOfTables: new Capacity($this->faker->numberBetween(1, 100)),
+            maxNumberOfDiners: new Capacity(100),
+            minNumberOfDiners: new Capacity(1),
+            numberOfTables: new Capacity(25),
             phone: new Phone($this->faker->phoneNumber)
         );
     }
