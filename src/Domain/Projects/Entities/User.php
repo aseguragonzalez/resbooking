@@ -14,7 +14,7 @@ final class User extends Entity
     /**
      * @param array<Role> $roles An array representing the roles assigned to the user.
      */
-    public function __construct(
+    private function __construct(
         public readonly Email $username,
         private Credential $credential,
         private bool $locked = false,
@@ -22,6 +22,16 @@ final class User extends Entity
         private array $roles = [],
     ) {
         parent::__construct((string) $username);
+    }
+
+    public static function build(
+        Email $username,
+        Credential $credential,
+        bool $locked = false,
+        bool $available = true,
+        array $roles = [],
+    ): self {
+        return new self($username, $credential, $locked, $available, $roles);
     }
 
     public function lock(): void

@@ -28,7 +28,7 @@ final class ProjectDeletedTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $project = new Project(
+        $project = Project::stored(
             id: $projectId,
             settings: new Settings(
                 email: new Email($this->faker->email),
@@ -54,7 +54,7 @@ final class ProjectDeletedTest extends TestCase
     public function testBuildShouldCreateStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $project = new Project(
+        $project = Project::stored(
             id: $projectId,
             settings: new Settings(
                 email: new Email($this->faker->email),

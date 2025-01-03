@@ -46,7 +46,7 @@ final class ProjectTest extends TestCase
         array $turns = [],
         array $openCloseEvents = []
     ): Project {
-        return new Project(
+        return Project::stored(
             id: $this->faker->uuid,
             settings: $this->settings(),
             users: $users,
@@ -69,12 +69,12 @@ final class ProjectTest extends TestCase
         );
     }
 
-    public function testConstructShouldCreateInstance(): void
+    public function testNewShouldCreateInstance(): void
     {
         $id = $this->faker->uuid;
         $settings = $this->settings();
 
-        $project = new Project(id: $id, settings: $settings);
+        $project = Project::new(id: $id, settings: $settings);
 
         $this->assertInstanceOf(Project::class, $project);
         $this->assertEquals($id, $project->getId());
@@ -127,11 +127,7 @@ final class ProjectTest extends TestCase
     public function testAddPlaceShouldAddPlaceToProject(): void
     {
         $project = $this->project();
-        $place = new Place(
-            id: $this->faker->uuid,
-            name: $this->faker->name,
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
-        );
+        $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
 
         $project->addPlace($place);
 
@@ -140,11 +136,7 @@ final class ProjectTest extends TestCase
 
     public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
     {
-        $place = new Place(
-            id: $this->faker->uuid,
-            name: $this->faker->name,
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
-        );
+        $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $project = $this->project(places: [$place]);
         $this->expectException(PlaceAlreadyExist::class);
 
@@ -153,11 +145,7 @@ final class ProjectTest extends TestCase
 
     public function testRemovePlaceShouldRemovePlaceFromProject(): void
     {
-        $place = new Place(
-            id: $this->faker->uuid,
-            name: $this->faker->name,
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
-        );
+        $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $project = $this->project(places: [$place]);
 
         $project->removePlace($place);
@@ -168,11 +156,7 @@ final class ProjectTest extends TestCase
     public function testRemovePlaceShouldFailWhenPlaceDoesNotExist(): void
     {
         $project = $this->project();
-        $place = new Place(
-            id: $this->faker->uuid,
-            name: $this->faker->name,
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber())
-        );
+        $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $this->expectException(PlaceDoesNotExist::class);
 
         $project->removePlace($place);

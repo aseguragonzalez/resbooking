@@ -21,6 +21,7 @@ use App\Domain\Shared\Exceptions\{
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
+use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot
 {
@@ -30,7 +31,7 @@ final class Project extends AggregateRoot
      * @param array<TurnAvailability> $turns
      * @param array<OpenCloseEvent> $openCloseEvents
      */
-    public function __construct(
+    private function __construct(
         string $id,
         private Settings $settings,
         private array $users = [],
@@ -39,6 +40,54 @@ final class Project extends AggregateRoot
         private array $openCloseEvents = [],
     ) {
         parent::__construct($id);
+    }
+
+    /**
+     * @param array<User> $users
+     * @param array<Place> $places
+     * @param array<TurnAvailability> $turns
+     * @param array<OpenCloseEvent> $openCloseEvents
+     */
+    public static function new(
+        Settings $settings,
+        ?string $id = null,
+        array $users = [],
+        array $places = [],
+        array $turns = [],
+        array $openCloseEvents = []
+    ): self {
+        return new self(
+            id: $id ?? (string) new Ksuid(),
+            settings: $settings,
+            users: $users,
+            places: $places,
+            turns: $turns,
+            openCloseEvents: $openCloseEvents,
+        );
+    }
+
+    /**
+     * @param array<User> $users
+     * @param array<Place> $places
+     * @param array<TurnAvailability> $turns
+     * @param array<OpenCloseEvent> $openCloseEvents
+     */
+    public static function stored(
+        string $id,
+        Settings $settings,
+        array $users = [],
+        array $places = [],
+        array $turns = [],
+        array $openCloseEvents = [],
+    ): self {
+        return new self(
+            id: $id,
+            settings: $settings,
+            users: $users,
+            places: $places,
+            turns: $turns,
+            openCloseEvents: $openCloseEvents,
+        );
     }
 
     /**

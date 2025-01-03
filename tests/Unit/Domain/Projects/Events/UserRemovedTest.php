@@ -28,7 +28,7 @@ final class UserRemovedTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new(
                 new Password($this->faker->password(Password::MIN_LENGTH))
@@ -48,7 +48,7 @@ final class UserRemovedTest extends TestCase
     public function testBuildShouldInstanciateStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new(
                 new Password($this->faker->password(Password::MIN_LENGTH))

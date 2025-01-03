@@ -6,7 +6,7 @@ namespace App\Seedwork\Domain;
 
 abstract class Entity
 {
-    public function __construct(private string $id)
+    protected function __construct(private string $id)
     {
     }
 

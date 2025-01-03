@@ -24,13 +24,27 @@ final class PlaceTest extends TestCase
         $this->faker = null;
     }
 
-    public function testConstructorShouldCreateNewInstance(): void
+    public function testNewShouldCreateNewInstance(): void
     {
         $id = $this->faker->uuid;
-        $capacity = new Capacity($this->faker->numberBetween(1, 100));
+        $capacity = new Capacity(100);
         $name = $this->faker->name;
 
-        $place = new Place($id, $capacity, $name);
+        $place = Place::new(id: $id, capacity: $capacity, name: $name);
+
+        $this->assertInstanceOf(Place::class, $place);
+        $this->assertEquals($id, $place->getId());
+        $this->assertEquals($capacity, $place->capacity);
+        $this->assertEquals($name, $place->name);
+    }
+
+    public function testStoredShouldCreateNewInstance(): void
+    {
+        $id = $this->faker->uuid;
+        $capacity = new Capacity(100);
+        $name = $this->faker->name;
+
+        $place = Place::stored(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(Place::class, $place);
         $this->assertEquals($id, $place->getId());
@@ -43,7 +57,7 @@ final class PlaceTest extends TestCase
         $this->expectException(ValueException::class);
         $this->expectExceptionMessage('Name is required');
 
-        new Place(
+        Place::new(
             id: $this->faker->uuid,
             capacity: new Capacity($this->faker->numberBetween(1, 100)),
             name: ''

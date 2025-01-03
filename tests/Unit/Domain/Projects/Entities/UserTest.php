@@ -32,7 +32,7 @@ final class UserTest extends TestCase
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
 
-        $user = new User($email, $credential);
+        $user = User::build($email, $credential);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($email, $user->username);
@@ -46,7 +46,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential);
+        $user = User::build($email, $credential);
 
         $user->lock();
 
@@ -57,7 +57,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential, locked: true);
+        $user = User::build($email, $credential, locked: true);
 
         $user->unlock();
 
@@ -68,7 +68,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential);
+        $user = User::build($email, $credential);
 
         $user->disable();
 
@@ -79,7 +79,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential, available: false);
+        $user = User::build($email, $credential, available: false);
 
         $user->enable();
 
@@ -91,7 +91,7 @@ final class UserTest extends TestCase
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
         $role = Role::ADMIN;
-        $user = new User($email, $credential, roles: [$role]);
+        $user = User::build($email, $credential, roles: [$role]);
 
         $this->assertTrue($user->hasRole($role));
     }
@@ -100,7 +100,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $user = new User($email, $credential);
+        $user = User::build($email, $credential);
 
         $this->assertFalse($user->hasRole(Role::ADMIN));
     }
@@ -110,7 +110,7 @@ final class UserTest extends TestCase
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
         $roles = [Role::ADMIN, Role::USER];
-        $user = new User($email, $credential, roles: $roles);
+        $user = User::build($email, $credential, roles: $roles);
 
         $this->assertEquals($roles, $user->getRoles());
     }
@@ -118,7 +118,7 @@ final class UserTest extends TestCase
     public function testAddRoleShouldSetANewRoleToUser(): void
     {
         $role = Role::ADMIN;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password)
         );
@@ -131,7 +131,7 @@ final class UserTest extends TestCase
     public function testAddRoleShouldFailWhenRoleAlreadyExist(): void
     {
         $role = Role::ADMIN;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password),
             roles: [$role]
@@ -144,7 +144,7 @@ final class UserTest extends TestCase
     public function testRemoveRoleShouldDeleteRoleFromUser(): void
     {
         $role = Role::ADMIN;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password),
             roles: [$role]
@@ -158,7 +158,7 @@ final class UserTest extends TestCase
     public function testRemoveRoleShouldFailWhenRoleDoesNotExist(): void
     {
         $role = Role::ADMIN;
-        $user = new User(
+        $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password)
         );
@@ -171,7 +171,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password);
-        $user = new User($email, $credential);
+        $user = User::build($email, $credential);
         $newCredential = Credential::new($this->password);
 
         $user->changeCredential($newCredential);
