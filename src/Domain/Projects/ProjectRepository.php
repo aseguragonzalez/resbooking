@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects;
 
-interface ProjectRepository
+use App\Seedwork\Domain\Repository;
+
+/**
+ * @extends Repository<Project>
+ */
+interface ProjectRepository extends Repository
 {
 }
