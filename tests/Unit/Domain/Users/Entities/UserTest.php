@@ -178,18 +178,4 @@ final class UserTest extends TestCase
 
         $this->assertEquals($newCredential, $user->getCredential());
     }
-
-    public function testCreateNewAdminShouldReturnAnAdminUser(): void
-    {
-        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
-
-        $this->assertTrue($user->hasRole(Role::ADMIN));
-    }
-
-    public function testCreateNewUserShouldReturnAnNewUser(): void
-    {
-        $user = User::createNewUser(username: new Email($this->faker->email), password: $this->password);
-
-        $this->assertTrue($user->hasRole(Role::USER));
-    }
 }

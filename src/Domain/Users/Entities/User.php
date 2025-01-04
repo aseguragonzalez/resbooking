@@ -105,18 +105,4 @@ final class User extends AggregateRoot
     {
         $this->credential = $credential;
     }
-
-    public static function createNewAdmin(Email $username, Password $password): self
-    {
-        $credential = Credential::new(password: $password);
-
-        return new self($username, $credential, false, true, [Role::ADMIN]);
-    }
-
-    public static function createNewUser(Email $username, Password $password): self
-    {
-        $credential = Credential::new(password: $password);
-
-        return new self($username, $credential, false, true, [Role::USER]);
-    }
 }
