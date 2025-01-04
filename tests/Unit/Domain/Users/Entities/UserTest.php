@@ -7,6 +7,15 @@ namespace Tests\Unit\Domain\Users\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Users\Entities\User;
+use App\Domain\Users\Events\{
+    UserLocked,
+    UserUnlocked,
+    UserDisabled,
+    UserEnabled,
+    RoleAddedToUser,
+    RoleRemovedFromUser,
+    CredentialUpdated
+};
 use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
@@ -51,6 +60,12 @@ final class UserTest extends TestCase
         $user->lock();
 
         $this->assertTrue($user->isLocked());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserLocked::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testUnlockShouldUnlockTheUser(): void
@@ -62,6 +77,12 @@ final class UserTest extends TestCase
         $user->unlock();
 
         $this->assertFalse($user->isLocked());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserUnlocked::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testDisableShouldDisableTheUser(): void
@@ -73,6 +94,12 @@ final class UserTest extends TestCase
         $user->disable();
 
         $this->assertFalse($user->isAvailable());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserDisabled::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testEnableShouldEnableTheUser(): void
@@ -84,6 +111,12 @@ final class UserTest extends TestCase
         $user->enable();
 
         $this->assertTrue($user->isAvailable());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserEnabled::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testHasRoleShouldBeTrueWhenUserContainsTheRole(): void
@@ -126,6 +159,12 @@ final class UserTest extends TestCase
         $user->addRole($role);
 
         $this->assertTrue($user->hasRole($role));
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(RoleAddedToUser::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($role, $event->getPayload()['role']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testAddRoleShouldFailWhenRoleAlreadyExist(): void
@@ -153,6 +192,12 @@ final class UserTest extends TestCase
         $user->removeRole($role);
 
         $this->assertFalse($user->hasRole($role));
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(RoleRemovedFromUser::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($role, $event->getPayload()['role']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
     public function testRemoveRoleShouldFailWhenRoleDoesNotExist(): void
@@ -172,10 +217,16 @@ final class UserTest extends TestCase
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password);
         $user = User::build($email, $credential);
-        $newCredential = Credential::new($this->password);
+        $currentCredential = $user->getCredential();
 
-        $user->changeCredential($newCredential);
+        $user->changeCredential(password: $this->password);
 
-        $this->assertEquals($newCredential, $user->getCredential());
+        $this->assertNotEquals($currentCredential, $user->getCredential());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(CredentialUpdated::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($this->password, $event->getPayload()['password']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 }

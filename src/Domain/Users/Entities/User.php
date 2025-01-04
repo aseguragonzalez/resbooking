@@ -5,6 +5,15 @@ declare(strict_types=1);
 namespace App\Domain\Users\Entities;
 
 use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
+use App\Domain\Users\Events\{
+    UserLocked,
+    UserUnlocked,
+    UserDisabled,
+    UserEnabled,
+    RoleAddedToUser,
+    RoleRemovedFromUser,
+    CredentialUpdated
+};
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
 use App\Seedwork\Domain\AggregateRoot;
@@ -37,11 +46,13 @@ final class User extends AggregateRoot
     public function lock(): void
     {
         $this->locked = true;
+        $this->addEvent(UserLocked::new(username: $this->username->getValue(), user: $this));
     }
 
     public function unlock(): void
     {
         $this->locked = false;
+        $this->addEvent(UserUnlocked::new(username: $this->username->getValue(), user: $this));
     }
 
     public function isLocked(): bool
@@ -52,11 +63,13 @@ final class User extends AggregateRoot
     public function disable(): void
     {
         $this->available = false;
+        $this->addEvent(UserDisabled::new(username: $this->username->getValue(), user: $this));
     }
 
     public function enable(): void
     {
         $this->available = true;
+        $this->addEvent(UserEnabled::new(username: $this->username->getValue(), user: $this));
     }
 
     public function isAvailable(): bool
@@ -70,6 +83,7 @@ final class User extends AggregateRoot
             throw new RoleAlreadyExist();
         }
         $this->roles[] = $role;
+        $this->addEvent(RoleAddedToUser::new(username: $this->username->getValue(), role: $role));
     }
 
     public function removeRole(Role $role): void
@@ -77,20 +91,13 @@ final class User extends AggregateRoot
         if (!in_array($role, $this->roles, true)) {
             throw new RoleDoesNotExist();
         }
-        $this->roles = array_filter(
-            $this->roles,
-            fn (Role $r) => $r != $role
-        );
+        $this->roles = array_filter($this->roles, fn (Role $r) => $r != $role);
+        $this->addEvent(RoleRemovedFromUser::new(username: $this->username->getValue(), role: $role));
     }
 
     public function hasRole(Role $role): bool
     {
         return in_array($role, $this->roles, true);
-    }
-
-    public function getCredential(): Credential
-    {
-        return $this->credential;
     }
 
     /**
@@ -101,8 +108,14 @@ final class User extends AggregateRoot
         return $this->roles;
     }
 
-    public function changeCredential(Credential $credential): void
+    public function changeCredential(Password $password): void
     {
-        $this->credential = $credential;
+        $this->credential = Credential::new(password: $password);
+        $this->addEvent(CredentialUpdated::new(username: $this->username->getValue(), password: $password));
+    }
+
+    public function getCredential(): Credential
+    {
+        return $this->credential;
     }
 }
