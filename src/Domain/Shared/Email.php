@@ -20,10 +20,10 @@ final class Email
 
     public function equals(Email $email): bool
     {
-        return $this->value === $email->value();
+        return $this->value === $email->getValue();
     }
 
-    public function value(): string
+    public function getValue(): string
     {
         return $this->value;
     }

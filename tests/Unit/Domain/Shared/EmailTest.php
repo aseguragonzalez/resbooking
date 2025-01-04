@@ -28,7 +28,7 @@ final class EmailTest extends TestCase
 
         $email = new Email($expected);
 
-        $this->assertSame($expected, $email->value());
+        $this->assertSame($expected, $email->getValue());
     }
 
     public function testEmailShouldFailWhenValueInvalid(): void
@@ -51,7 +51,7 @@ final class EmailTest extends TestCase
     {
         $email = new Email($this->faker->email);
 
-        $this->assertTrue($email->equals(new Email($email->value())));
+        $this->assertTrue($email->equals(new Email($email->getValue())));
     }
 
     public function testEmailShouldFalseWhenComparedWithDifferentValues(): void

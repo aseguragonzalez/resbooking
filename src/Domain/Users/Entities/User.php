@@ -7,9 +7,9 @@ namespace App\Domain\Users\Entities;
 use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
-use App\Seedwork\Domain\Entity;
+use App\Seedwork\Domain\AggregateRoot;
 
-final class User extends Entity
+final class User extends AggregateRoot
 {
     /**
      * @param array<Role> $roles An array representing the roles assigned to the user.
@@ -104,15 +104,6 @@ final class User extends Entity
     public function changeCredential(Credential $credential): void
     {
         $this->credential = $credential;
-    }
-
-    public function equals(Entity $other): bool
-    {
-        if (!$other instanceof self) {
-            return false;
-        }
-
-        return parent::equals($other) && $this->username->equals($other->username);
     }
 
     public static function createNewAdmin(Email $username, Password $password): self
