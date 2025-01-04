@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Projects\Entities;
+namespace Tests\Unit\Domain\Users\Entities;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\Entities\User;
+use App\Domain\Users\Entities\User;
 use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
-use App\Domain\Projects\ValueObjects\Credential;
+use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
 
 final class UserTest extends TestCase

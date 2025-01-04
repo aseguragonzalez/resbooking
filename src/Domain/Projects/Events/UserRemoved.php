@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\Events;
 
-use App\Domain\Projects\Entities\User;
+use App\Domain\Projects\ValueObjects\User;
 use App\Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 

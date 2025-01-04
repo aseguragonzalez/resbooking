@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\Entities;
 
-use App\Domain\Projects\Entities\{Place, User};
+use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\Exceptions\{
     PlaceAlreadyExist,
     PlaceDoesNotExist,
@@ -18,7 +18,7 @@ use App\Domain\Shared\Exceptions\{
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Projects\ValueObjects\{Settings, User};
 use App\Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
@@ -114,7 +114,7 @@ final class Project extends AggregateRoot
 
     public function addUser(User $user): void
     {
-        $users = array_filter($this->users, fn (User $s) => $s->equals($user));
+        $users = array_filter($this->users, fn (User $s) => $s == $user);
         if (!empty($users)) {
             throw new UserAlreadyExist();
         }
@@ -124,14 +124,14 @@ final class Project extends AggregateRoot
 
     public function removeUser(User $user): void
     {
-        $users = array_filter($this->users, fn (User $s) => $s->equals($user));
+        $users = array_filter($this->users, fn (User $s) => $s == $user);
         if (empty($users)) {
             throw new UserDoesNotExist();
         }
 
         $this->users = array_filter(
             $this->users,
-            fn (User $s) => !$s->equals($user)
+            fn (User $s) => $s != $user
         );
         $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
     }

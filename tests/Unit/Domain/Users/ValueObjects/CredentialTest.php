@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Projects\ValueObjects;
+namespace Tests\Unit\Domain\Users\ValueObjects;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\ValueObjects\Credential;
+use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\Password;
 use App\Seedwork\Domain\Exceptions\ValueException;
 

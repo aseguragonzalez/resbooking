@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\ValueObjects;
+namespace App\Domain\Users\ValueObjects;
 
 use App\Domain\Shared\Password;
 use App\Seedwork\Domain\ValueObject;

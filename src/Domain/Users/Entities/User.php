@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\Entities;
+namespace App\Domain\Users\Entities;
 
 use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
-use App\Domain\Projects\ValueObjects\Credential;
+use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
 use App\Seedwork\Domain\Entity;
 

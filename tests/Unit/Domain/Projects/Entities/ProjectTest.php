@@ -6,7 +6,7 @@ namespace Tests\Unit\Domain\Projects\Entities;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\Entities\{Project, Place, User};
+use App\Domain\Projects\Entities\{Project, Place};
 use App\Domain\Projects\Exceptions\{
     PlaceAlreadyExist,
     PlaceDoesNotExist,
@@ -20,7 +20,7 @@ use App\Domain\Shared\Exceptions\{
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Projects\ValueObjects\{Credential, Settings};
+use App\Domain\Projects\ValueObjects\{Credential, Settings, User};
 use App\Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
@@ -106,7 +106,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldAddUserToProject(): void
     {
         $project = $this->project();
-        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
+        $user = new User(username: new Email($this->faker->email));
 
         $project->addUser($user);
 
@@ -122,7 +122,7 @@ final class ProjectTest extends TestCase
     public function testAddUserShouldFailWhenUserAlreadyExist(): void
     {
         $project = $this->project();
-        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
+        $user = new User(username: new Email($this->faker->email));
         $project->addUser($user);
         $this->expectException(UserAlreadyExist::class);
 
@@ -131,7 +131,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveUserShouldRemoveUserFromProject(): void
     {
-        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
+        $user = new User(username: new Email($this->faker->email));
         $project = $this->project(users: [$user]);
 
         $project->removeUser($user);
@@ -148,7 +148,7 @@ final class ProjectTest extends TestCase
     public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
     {
         $project = $this->project();
-        $user = User::createNewAdmin(username: new Email($this->faker->email), password: $this->password);
+        $user = new User(username: new Email($this->faker->email));
         $this->expectException(UserDoesNotExist::class);
 
         $project->removeUser($user);
