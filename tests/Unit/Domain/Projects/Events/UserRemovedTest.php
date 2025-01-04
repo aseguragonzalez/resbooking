@@ -6,10 +6,9 @@ namespace Tests\Unit\Domain\Projects\Events;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\Entities\User;
-use App\Domain\Projects\ValueObjects\Credential;
 use App\Domain\Projects\Events\UserRemoved;
-use App\Domain\Shared\{Email, Password};
+use App\Domain\Projects\ValueObjects\User;
+use App\Domain\Shared\Email;
 
 final class UserRemovedTest extends TestCase
 {
@@ -28,12 +27,7 @@ final class UserRemovedTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $user = User::build(
-            username: new Email($this->faker->email),
-            credential: Credential::new(
-                new Password($this->faker->password(Password::MIN_LENGTH))
-            )
-        );
+        $user = new User(username: new Email($this->faker->email));
 
         $event = UserRemoved::new(projectId: $projectId, user: $user);
 
@@ -48,12 +42,7 @@ final class UserRemovedTest extends TestCase
     public function testBuildShouldInstanciateStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $user = User::build(
-            username: new Email($this->faker->email),
-            credential: Credential::new(
-                new Password($this->faker->password(Password::MIN_LENGTH))
-            )
-        );
+        $user = new User(username: new Email($this->faker->email));
 
         $event = UserRemoved::build(projectId: $projectId, user: $user, id: $this->faker->uuid);
 
