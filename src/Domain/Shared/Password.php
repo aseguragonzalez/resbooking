@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared;
 
+use Tuupola\Ksuid;
+
 final class Password
 {
     public const MIN_LENGTH = 8;
@@ -28,5 +30,10 @@ final class Password
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public static function new(): self
+    {
+        return new self(value: (string)new Ksuid());
     }
 }

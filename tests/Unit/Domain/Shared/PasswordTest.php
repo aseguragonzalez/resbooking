@@ -63,4 +63,12 @@ final class PasswordTest extends TestCase
             $password->equals(new Password($this->faker->password(Password::MIN_LENGTH)))
         );
     }
+
+    public function testNewShouldCreateNewPassword(): void
+    {
+        $password = Password::new();
+
+        $this->assertIsString($password->getValue());
+        $this->assertGreaterThanOrEqual(Password::MIN_LENGTH, strlen($password->getValue()));
+    }
 }

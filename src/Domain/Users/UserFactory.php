@@ -10,17 +10,13 @@ use App\Domain\Shared\{Email, Password, Role};
 
 final class UserFactory
 {
-    public function createNewAdmin(Email $username, Password $password): User
+    public function createNewAdmin(Email $username, Password $password = null): User
     {
-        $credential = Credential::new(password: $password);
-
-        return User::build(username: $username, credential: $credential, roles: [Role::ADMIN]);
+        return User::new(username: $username, password: $password, roles: [Role::ADMIN]);
     }
 
-    public function createNewUser(Email $username, Password $password): User
+    public function createNewUser(Email $username, Password $password = null): User
     {
-        $credential = Credential::new(password: $password);
-
-        return User::build(username: $username, credential: $credential, roles: [Role::USER]);
+        return User::new(username: $username, password: $password, roles: [Role::USER]);
     }
 }

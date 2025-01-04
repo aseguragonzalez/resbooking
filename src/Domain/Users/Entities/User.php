@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Users\Entities;
 
 use App\Domain\Users\Events\{
+    UserCreated,
     UserLocked,
     UserUnlocked,
     UserDisabled,
@@ -29,6 +30,7 @@ final class User extends AggregateRoot
 {
     /**
      * @param array<Role> $roles An array representing the roles assigned to the user.
+     * @param array<DomainEvent> $domainEvents An array representing the domain events.
      */
     private function __construct(
         public readonly Email $username,
@@ -36,8 +38,22 @@ final class User extends AggregateRoot
         private bool $locked = false,
         private bool $available = true,
         private array $roles = [],
+        array $domainEvents = []
     ) {
-        parent::__construct((string) $username);
+        parent::__construct((string) $username, domainEvents: $domainEvents);
+    }
+
+    public static function new(Email $username, Password $password = null, array $roles = []): self
+    {
+        $password = $password ?? Password::new();
+        return new self(
+            username: $username,
+            credential: Credential::new(password: $password),
+            roles: $roles,
+            domainEvents: [
+                UserCreated::new(username: $username->getValue(), roles: $roles, password: $password)
+            ]
+        );
     }
 
     public static function build(
