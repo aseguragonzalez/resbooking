@@ -16,7 +16,14 @@ use App\Domain\Users\Events\{
     RoleRemovedFromUser,
     CredentialUpdated
 };
-use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
+use App\Domain\Users\Exceptions\{
+    RoleAlreadyExist,
+    RoleDoesNotExist,
+    UserAlreadyEnabled,
+    UserAlreadyDisabled,
+    UserAlreadyLocked,
+    UserAlreadyUnlocked
+};
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
 
@@ -68,6 +75,16 @@ final class UserTest extends TestCase
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
+    public function testLockShouldFailWhenUserIsAlreadyLocked(): void
+    {
+        $email = new Email($this->faker->email);
+        $credential = Credential::new($this->password, $this->faker->uuid);
+        $user = User::build($email, $credential, locked: true);
+        $this->expectException(UserAlreadyLocked::class);
+
+        $user->lock();
+    }
+
     public function testUnlockShouldUnlockTheUser(): void
     {
         $email = new Email($this->faker->email);
@@ -83,6 +100,16 @@ final class UserTest extends TestCase
         $event = $events[0];
         $this->assertEquals($user, $event->getPayload()['user']);
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
+    }
+
+    public function testUnlockShouldFailWhenUserIsAlreadyUnlocked(): void
+    {
+        $email = new Email($this->faker->email);
+        $credential = Credential::new($this->password, $this->faker->uuid);
+        $user = User::build($email, $credential);
+        $this->expectException(UserAlreadyUnlocked::class);
+
+        $user->unlock();
     }
 
     public function testDisableShouldDisableTheUser(): void
@@ -102,6 +129,16 @@ final class UserTest extends TestCase
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
+    public function testDisableShouldFailWhenUserIsAlreadyDisabled(): void
+    {
+        $email = new Email($this->faker->email);
+        $credential = Credential::new($this->password, $this->faker->uuid);
+        $user = User::build($email, $credential, available: false);
+        $this->expectException(UserAlreadyDisabled::class);
+
+        $user->disable();
+    }
+
     public function testEnableShouldEnableTheUser(): void
     {
         $email = new Email($this->faker->email);
@@ -117,6 +154,16 @@ final class UserTest extends TestCase
         $event = $events[0];
         $this->assertEquals($user, $event->getPayload()['user']);
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
+    }
+
+    public function testEnableShouldFailWhenUserIsAlreadyEnabled(): void
+    {
+        $email = new Email($this->faker->email);
+        $credential = Credential::new($this->password, $this->faker->uuid);
+        $user = User::build($email, $credential);
+        $this->expectException(UserAlreadyEnabled::class);
+
+        $user->enable();
     }
 
     public function testHasRoleShouldBeTrueWhenUserContainsTheRole(): void

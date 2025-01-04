@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Users\Entities;
 
-use App\Domain\Shared\Exceptions\{RoleAlreadyExist, RoleDoesNotExist};
 use App\Domain\Users\Events\{
     UserLocked,
     UserUnlocked,
@@ -13,6 +12,14 @@ use App\Domain\Users\Events\{
     RoleAddedToUser,
     RoleRemovedFromUser,
     CredentialUpdated
+};
+use App\Domain\Users\Exceptions\{
+    RoleAlreadyExist,
+    RoleDoesNotExist,
+    UserAlreadyDisabled,
+    UserAlreadyEnabled,
+    UserAlreadyLocked,
+    UserAlreadyUnlocked
 };
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
@@ -45,12 +52,18 @@ final class User extends AggregateRoot
 
     public function lock(): void
     {
+        if ($this->locked) {
+            throw new UserAlreadyLocked();
+        }
         $this->locked = true;
         $this->addEvent(UserLocked::new(username: $this->username->getValue(), user: $this));
     }
 
     public function unlock(): void
     {
+        if (!$this->locked) {
+            throw new UserAlreadyUnlocked();
+        }
         $this->locked = false;
         $this->addEvent(UserUnlocked::new(username: $this->username->getValue(), user: $this));
     }
@@ -62,12 +75,18 @@ final class User extends AggregateRoot
 
     public function disable(): void
     {
+        if (!$this->available) {
+            throw new UserAlreadyDisabled();
+        }
         $this->available = false;
         $this->addEvent(UserDisabled::new(username: $this->username->getValue(), user: $this));
     }
 
     public function enable(): void
     {
+        if ($this->available) {
+            throw new UserAlreadyEnabled();
+        }
         $this->available = true;
         $this->addEvent(UserEnabled::new(username: $this->username->getValue(), user: $this));
     }
