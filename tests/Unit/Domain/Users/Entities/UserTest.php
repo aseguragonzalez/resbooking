@@ -14,6 +14,7 @@ use App\Domain\Users\Events\{
     UserEnabled,
     RoleAddedToUser,
     RoleRemovedFromUser,
+    CredentialReset,
     CredentialUpdated
 };
 use App\Domain\Users\Exceptions\{
@@ -274,6 +275,24 @@ final class UserTest extends TestCase
         $this->assertInstanceOf(CredentialUpdated::class, $events[0]);
         $event = $events[0];
         $this->assertEquals($this->password, $event->getPayload()['password']);
+        $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
+    }
+
+    public function testResetCredentailShouldSetRandomCredential(): void
+    {
+        $email = new Email($this->faker->email);
+        $credential = Credential::new($this->password);
+        $user = User::build($email, $credential);
+        $currentCredential = $user->getCredential();
+
+        $user->resetCredential();
+
+        $this->assertNotEquals($currentCredential, $user->getCredential());
+        $events = $user->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(CredentialReset::class, $events[0]);
+        $event = $events[0];
+        $this->assertNotEquals($this->password, $event->getPayload()['password']);
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 }

@@ -12,6 +12,7 @@ use App\Domain\Users\Events\{
     UserEnabled,
     RoleAddedToUser,
     RoleRemovedFromUser,
+    CredentialReset,
     CredentialUpdated
 };
 use App\Domain\Users\Exceptions\{
@@ -152,5 +153,14 @@ final class User extends AggregateRoot
     public function getCredential(): Credential
     {
         return $this->credential;
+    }
+
+    public function resetCredential(): void
+    {
+        $password = Password::new();
+        $this->credential = Credential::new(password: $password);
+        $this->addEvent(
+            CredentialReset::new(username: $this->username->getValue(), password: $password)
+        );
     }
 }
