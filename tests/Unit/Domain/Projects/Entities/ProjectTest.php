@@ -21,6 +21,18 @@ use App\Domain\Shared\Exceptions\{
     TurnDoesNotExist,
 };
 use App\Domain\Projects\ValueObjects\{Credential, Settings};
+use App\Domain\Projects\Events\{
+    OpenCloseEventCreated,
+    OpenCloseEventRemoved,
+    PlaceCreated,
+    PlaceRemoved,
+    ProjectCreated,
+    ProjectModified,
+    TurnAssigned,
+    TurnUnassigned,
+    UserCreated,
+    UserRemoved
+};
 use App\Domain\Shared\{Capacity, DayOfWeek, Email, Password, Phone, Turn};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 
@@ -83,6 +95,12 @@ final class ProjectTest extends TestCase
         $this->assertEmpty($project->getPlaces());
         $this->assertEmpty($project->getTurns());
         $this->assertEmpty($project->getOpenCloseEvents());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(ProjectCreated::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($project, $event->getPayload()['project']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddUserShouldAddUserToProject(): void
@@ -93,6 +111,12 @@ final class ProjectTest extends TestCase
         $project->addUser($user);
 
         $this->assertContains($user, $project->getUsers());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserCreated::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddUserShouldFailWhenUserAlreadyExist(): void
@@ -113,6 +137,12 @@ final class ProjectTest extends TestCase
         $project->removeUser($user);
 
         $this->assertEmpty($project->getUsers());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(UserRemoved::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($user, $event->getPayload()['user']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
@@ -132,6 +162,12 @@ final class ProjectTest extends TestCase
         $project->addPlace($place);
 
         $this->assertContains($place, $project->getPlaces());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(PlaceCreated::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($place, $event->getPayload()['place']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
@@ -151,6 +187,12 @@ final class ProjectTest extends TestCase
         $project->removePlace($place);
 
         $this->assertEmpty($project->getPlaces());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(PlaceRemoved::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($place, $event->getPayload()['place']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemovePlaceShouldFailWhenPlaceDoesNotExist(): void
@@ -174,6 +216,12 @@ final class ProjectTest extends TestCase
         $project->addTurn($turn);
 
         $this->assertContains($turn, $project->getTurns());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(TurnAssigned::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($turn, $event->getPayload()['turn']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
@@ -201,6 +249,12 @@ final class ProjectTest extends TestCase
         $project->removeTurn($turn);
 
         $this->assertEmpty($project->getTurns());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(TurnUnassigned::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($turn, $event->getPayload()['turn']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
@@ -228,6 +282,12 @@ final class ProjectTest extends TestCase
         $project->addOpenCloseEvent($openCloseEvent);
 
         $this->assertContains($openCloseEvent, $project->getOpenCloseEvents());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(OpenCloseEventCreated::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($openCloseEvent, $event->getPayload()['openCloseEvent']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
@@ -268,6 +328,12 @@ final class ProjectTest extends TestCase
         $project->removeOpenCloseEvent($openCloseEvent);
 
         $this->assertEmpty($project->getOpenCloseEvents());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(OpenCloseEventRemoved::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($openCloseEvent, $event->getPayload()['openCloseEvent']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void
@@ -280,5 +346,21 @@ final class ProjectTest extends TestCase
             isAvailable: $this->faker->boolean,
             turn: Turn::H1200,
         ));
+    }
+
+    public function testUpdateSettingsShouldModifySettings(): void
+    {
+        $project = $this->project();
+        $settings = $this->settings();
+
+        $project->updateSettings($settings);
+
+        $this->assertEquals($settings, $project->getSettings());
+        $events = $project->getEvents();
+        $this->assertEquals(1, count($events));
+        $this->assertInstanceOf(ProjectModified::class, $events[0]);
+        $event = $events[0];
+        $this->assertEquals($project, $event->getPayload()['project']);
+        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
 }

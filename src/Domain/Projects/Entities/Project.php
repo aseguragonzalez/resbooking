@@ -19,6 +19,18 @@ use App\Domain\Shared\Exceptions\{
     TurnDoesNotExist,
 };
 use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Projects\Events\{
+    OpenCloseEventCreated,
+    OpenCloseEventRemoved,
+    PlaceCreated,
+    PlaceRemoved,
+    ProjectCreated,
+    ProjectModified,
+    TurnAssigned,
+    TurnUnassigned,
+    UserCreated,
+    UserRemoved,
+};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
@@ -56,7 +68,7 @@ final class Project extends AggregateRoot
         array $turns = [],
         array $openCloseEvents = []
     ): self {
-        return new self(
+        $project = new self(
             id: $id ?? (string) new Ksuid(),
             settings: $settings,
             users: $users,
@@ -64,6 +76,8 @@ final class Project extends AggregateRoot
             turns: $turns,
             openCloseEvents: $openCloseEvents,
         );
+        $project->addEvent(ProjectCreated::new(projectId: $project->getId(), project: $project));
+        return $project;
     }
 
     /**
@@ -105,6 +119,7 @@ final class Project extends AggregateRoot
             throw new UserAlreadyExist();
         }
         $this->users[] = $user;
+        $this->addEvent(UserCreated::new(projectId: $this->getId(), user: $user));
     }
 
     public function removeUser(User $user): void
@@ -118,6 +133,7 @@ final class Project extends AggregateRoot
             $this->users,
             fn (User $s) => !$s->equals($user)
         );
+        $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
     }
 
     /**
@@ -135,6 +151,7 @@ final class Project extends AggregateRoot
             throw new PlaceAlreadyExist();
         }
         $this->places[] = $place;
+        $this->addEvent(PlaceCreated::new(projectId: $this->getId(), place: $place));
     }
 
     public function removePlace(Place $place): void
@@ -147,6 +164,7 @@ final class Project extends AggregateRoot
             $this->places,
             fn (Place $s) => !$s->equals($place)
         );
+        $this->addEvent(PlaceRemoved::new(projectId: $this->getId(), place: $place));
     }
 
     /**
@@ -164,6 +182,7 @@ final class Project extends AggregateRoot
             throw new TurnAlreadyExist();
         }
         $this->turns[] = $turn;
+        $this->addEvent(TurnAssigned::new(projectId: $this->getId(), turn: $turn));
     }
 
     public function removeTurn(TurnAvailability $turn): void
@@ -176,6 +195,7 @@ final class Project extends AggregateRoot
             $this->turns,
             fn (TurnAvailability $s) => !$s->equals($turn)
         );
+        $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
     }
 
     /**
@@ -199,6 +219,9 @@ final class Project extends AggregateRoot
         }
 
         $this->openCloseEvents[] = $event;
+        $this->addEvent(
+            OpenCloseEventCreated::new(projectId: $this->getId(), openCloseEvent: $event)
+        );
     }
 
     public function removeOpenCloseEvent(OpenCloseEvent $event): void
@@ -211,10 +234,19 @@ final class Project extends AggregateRoot
             $this->openCloseEvents,
             fn (OpenCloseEvent $event) => !$event->equals($event)
         );
+        $this->addEvent(
+            OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
+        );
     }
 
     public function getSettings(): Settings
     {
         return $this->settings;
+    }
+
+    public function updateSettings(Settings $settings): void
+    {
+        $this->settings = $settings;
+        $this->addEvent(ProjectModified::new(projectId: $this->getId(), project: $this));
     }
 }
