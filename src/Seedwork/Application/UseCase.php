@@ -12,8 +12,8 @@ use App\Seedwork\Application\UseCaseRequest;
 abstract class UseCase
 {
     /**
-     * @param T $request
+     * @param UseCaseRequest $request
      * @return void
      */
-    abstract public function execute(T $request): void;
+    public function execute(UseCaseRequest $request): void;
 }
