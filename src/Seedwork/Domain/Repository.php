@@ -7,17 +7,33 @@ namespace App\Seedwork\Domain;
 use App\Seedwork\Domain\AggregateRoot;
 
 /**
+ * Interface Repository
+ *
+ * This interface defines the contract for a generic repository.
+ *
+ * @package App\Seedwork\Domain
  * @template T of AggregateRoot
  */
 interface Repository
 {
     /**
+     * Save an entity to the repository.
      * @param T $aggregateRoot
      * @return void
      */
-    public function save(T $aggregateRoot): void;
+    public function save(AggregateRoot $aggregateRoot): void;
 
-    public function getById(string $id): T;
+    /**
+     * Retrieve an entity by its id.
+     * @param string $id AggreagateRoot id
+     * @return T
+     */
+    public function getById(string $id): AggregateRoot;
 
-    public function findById(string $id): ?T;
+    /**
+     * Check if an entity with the given id exists in the repository.
+     * @param string $id AggreagateRoot id
+     * @return bool
+     */
+    public function exist(string $id): bool;
 }
