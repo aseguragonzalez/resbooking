@@ -147,7 +147,7 @@ final class User extends AggregateRoot
     public function changeCredential(Password $password): void
     {
         $this->credential = Credential::new(password: $password);
-        $this->addEvent(CredentialUpdated::new(username: $this->username->getValue(), password: $password));
+        $this->addEvent(CredentialUpdated::new(username: $this->username->getValue()));
     }
 
     public function getCredential(): Credential

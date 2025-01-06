@@ -7,7 +7,22 @@ namespace Tests\Unit\Domain\Offers\Entities;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Offers\Entities\Offer;
-use App\Domain\Offers\Exceptions\InvalidDateRange;
+use App\Domain\Offers\Events\{
+    OfferCreated,
+    OfferUpdated,
+    OfferDisabled,
+    OfferEnabled,
+    OpenCloseEventCreated,
+    OpenCloseEventRemoved,
+    TurnAssigned,
+    TurnUnassigned
+};
+use App\Domain\Offers\Exceptions\{
+    InvalidDateRange,
+    OfferAlreadyDisabled,
+    OfferAlreadyEnabled
+};
+use App\Domain\Offers\ValueObjects\{Project, Settings};
 use App\Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
@@ -22,212 +37,135 @@ use App\Seedwork\Domain\Exceptions\ValueException;
 final class OfferTest extends TestCase
 {
     private $faker = null;
+    private $project = null;
+    private $settings = null;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->project = new Project($this->faker->uuid);
+        $startDate = new \DateTimeImmutable();
+        $endDate = $startDate->add(new \DateInterval('P10D'));
+        $this->setting = new Settings(
+            description: $this->faker->text,
+            title: $this->faker->sentence,
+            termsAndConditions: $this->faker->text,
+            startDate: $startDate,
+            endDate: $endDate,
+        );
     }
 
     protected function tearDown(): void
     {
         $this->faker = null;
+        $this->project = null;
+        $this->settings = null;
     }
 
-    private function offer(
-        array $openCloseEvents = [],
-        array $turns = [],
-        bool $isEnable = true
-    ): Offer {
-        $startDate = new \DateTimeImmutable();
-        $endDate = $startDate->add(new \DateInterval('P10D'));
-        return new Offer(
-            id: $this->faker->uuid,
-            description: $this->faker->text,
-            title: $this->faker->sentence,
-            termsAndConditions: $this->faker->text,
-            startDate: $startDate,
-            endDate: $endDate,
-            openCloseEvents: $openCloseEvents,
-            turns: $turns,
-            isEnable: $isEnable,
-        );
-    }
-
-    public function testConstructorShouldCreateInstance(): void
+    private function offer(array $openCloseEvents = [], array $turns = [], bool $available = true): Offer
     {
-        $id = $this->faker->uuid;
-        $description = $this->faker->text;
-        $title = $this->faker->sentence;
-        $termsAndConditions = $this->faker->text;
-        $startDate = new \DateTimeImmutable();
-        $endDate = $startDate->add(new \DateInterval('P10D'));
-        $offer = new Offer(
-            id: $id,
-            description: $description,
-            title: $title,
-            termsAndConditions: $termsAndConditions,
-            startDate: $startDate,
-            endDate: $endDate,
+        return Offer::stored(
+            id: $this->faker->uuid,
+            available: $available,
+            openCloseEvents: $openCloseEvents,
+            project: $this->project,
+            settings: $this->setting,
+            turns: $turns,
         );
+    }
+
+    public function testNewShouldCreateInstance(): void
+    {
+        $offer = Offer::new(project: $this->project, settings: $this->setting);
 
         $this->assertInstanceOf(Offer::class, $offer);
-        $this->assertEquals($id, $offer->getId());
-        $this->assertEquals($description, $offer->getDescription());
-        $this->assertEquals($title, $offer->getTitle());
-        $this->assertEquals($termsAndConditions, $offer->getTermsAndConditions());
-        $this->assertEquals($startDate, $offer->getStartDate());
-        $this->assertEquals($endDate, $offer->getEndDate());
+        $this->assertNotEmpty($offer->getId());
+        $this->assertEquals($this->project, $offer->project);
+        $this->assertEquals($this->setting, $offer->getSettings());
+        $this->assertEmpty($offer->getOpenCloseEvents());
+        $this->assertEmpty($offer->getTurns());
+        $this->assertTrue($offer->isAvailable());
+
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OfferCreated::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($offer, $payload["offer"]);
     }
 
-    public function testConstructorShouldFailWhenTitleIsInvalid(): void
+    public function testSetSettingsShouldUpdateOfferSettings(): void
     {
-        $this->expectException(ValueException::class);
-
-        new Offer(
-            id: $this->faker->uuid,
-            description: $this->faker->text,
-            title: '',
-            termsAndConditions: $this->faker->text,
-            startDate: new \DateTimeImmutable(),
-            endDate: new \DateTimeImmutable(),
-        );
-    }
-
-    public function testConstructorShouldFailWhenDescriptionIsInvalid(): void
-    {
-        $this->expectException(ValueException::class);
-
-        new Offer(
-            id: $this->faker->uuid,
-            description: '',
-            title: $this->faker->sentence,
-            termsAndConditions: $this->faker->text,
-            startDate: new \DateTimeImmutable(),
-            endDate: new \DateTimeImmutable(),
-        );
-    }
-
-    public function testConstructorShouldFailWhenTermsAndConditionsIsInvalid(): void
-    {
-        $this->expectException(ValueException::class);
-
-        new Offer(
-            id: $this->faker->uuid,
-            description: $this->faker->text,
-            title: $this->faker->sentence,
-            termsAndConditions: '',
-            startDate: new \DateTimeImmutable(),
-            endDate: new \DateTimeImmutable(),
-        );
-    }
-
-    public function testConstructorShouldFailWhenDateRangeIsInvalid(): void
-    {
+        $offer = $this->offer();
         $startDate = new \DateTimeImmutable();
-        $endDate = $startDate->sub(new \DateInterval('P1D'));
-        $this->expectException(InvalidDateRange::class);
-
-        new Offer(
-            id: $this->faker->uuid,
+        $endDate = $startDate->add(new \DateInterval('P10D'));
+        $newSetting = new Settings(
             description: $this->faker->text,
             title: $this->faker->sentence,
             termsAndConditions: $this->faker->text,
             startDate: $startDate,
             endDate: $endDate,
         );
+
+        $offer->setSettings($newSetting);
+
+        $this->assertEquals($newSetting, $offer->getSettings());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OfferUpdated::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($offer, $payload["offer"]);
     }
 
-    public function testUpdateShouldFailWhenDescriptionIsInvalid(): void
-    {
-        $offer = $this->offer();
-
-        $this->expectException(ValueException::class);
-
-        $offer->update(
-            description: '',
-            title: $this->faker->sentence,
-            termsAndConditions: $this->faker->text,
-            startDate: new \DateTimeImmutable(),
-            endDate: (new \DateTimeImmutable())->add(new \DateInterval('P10D')),
-        );
-    }
-
-    public function testUpdateShouldFailWhenTitleIsInvalid(): void
-    {
-        $offer = $this->offer();
-
-        $this->expectException(ValueException::class);
-
-        $offer->update(
-            description: $this->faker->text,
-            title: '',
-            termsAndConditions: $this->faker->text,
-            startDate: new \DateTimeImmutable(),
-            endDate: (new \DateTimeImmutable())->add(new \DateInterval('P10D')),
-        );
-    }
-
-    public function testUpdateShouldFailWhenTermsAndConditionsIsInvalid(): void
-    {
-        $offer = $this->offer();
-
-        $this->expectException(ValueException::class);
-
-        $offer->update(
-            description: $this->faker->text,
-            title: $this->faker->sentence,
-            termsAndConditions: '',
-            startDate: new \DateTimeImmutable(),
-            endDate: (new \DateTimeImmutable())->add(new \DateInterval('P10D')),
-        );
-    }
-
-    public function testUpdateShouldFailWhenStartDateIsInvalid(): void
-    {
-        $offer = $this->offer();
-        $endDate = $offer->getEndDate();
-        $this->expectException(InvalidDateRange::class);
-
-        $offer->update(
-            description: $this->faker->text,
-            title: $this->faker->sentence,
-            termsAndConditions: $this->faker->text,
-            startDate: $endDate->add(new \DateInterval('P1D')),
-            endDate: $endDate,
-        );
-    }
-
-    public function testUpdateShouldFailWhenEndDateIsInvalid(): void
-    {
-        $offer = $this->offer();
-        $startDate = $offer->getStartDate();
-        $this->expectException(InvalidDateRange::class);
-
-        $offer->update(
-            description: $this->faker->text,
-            title: $this->faker->sentence,
-            termsAndConditions: $this->faker->text,
-            startDate: $startDate,
-            endDate: $startDate->sub(new \DateInterval('P1D')),
-        );
-    }
-
-    public function testDisableShouldDisableOffer(): void
+    public function testDisableShouldSetUnavailableIt(): void
     {
         $offer = $this->offer();
 
         $offer->disable();
 
-        $this->assertFalse($offer->isEnable());
+        $this->assertFalse($offer->isAvailable());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OfferDisabled::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($offer, $payload["offer"]);
     }
 
-    public function testEnableShouldEnableOffer(): void
+    public function testDisableShouldFailWhenOfferIsAlreadyDisabled(): void
     {
-        $offer = $this->offer(isEnable: false);
+        $offer = $this->offer(available: false);
+        $this->expectException(OfferAlreadyDisabled::class);
+
+        $offer->disable();
+    }
+
+    public function testEnableShouldSetAvailableIt(): void
+    {
+        $offer = $this->offer(available: false);
 
         $offer->enable();
 
-        $this->assertTrue($offer->isEnable());
+        $this->assertTrue($offer->isAvailable());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OfferEnabled::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($offer, $payload["offer"]);
+    }
+
+    public function testEnabledShouldFailWhenOfferIsAlreadyEnabled(): void
+    {
+        $offer = $this->offer();
+        $this->expectException(OfferAlreadyEnabled::class);
+
+        $offer->enable();
     }
 
     public function testAddTurnShouldAddTurnToOffer(): void
@@ -242,6 +180,13 @@ final class OfferTest extends TestCase
         $offer->addTurn($turn);
 
         $this->assertContains($turn, $offer->getTurns());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(TurnAssigned::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($turn, $payload["turn"]);
     }
 
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
@@ -269,6 +214,13 @@ final class OfferTest extends TestCase
         $offer->removeTurn($turn);
 
         $this->assertEmpty($offer->getTurns());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(TurnUnassigned::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($turn, $payload["turn"]);
     }
 
     public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
@@ -296,6 +248,13 @@ final class OfferTest extends TestCase
         $offer->addOpenCloseEvent($openCloseEvent);
 
         $this->assertContains($openCloseEvent, $offer->getOpenCloseEvents());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OpenCloseEventCreated::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($openCloseEvent, $payload["openCloseEvent"]);
     }
 
     public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
@@ -336,6 +295,13 @@ final class OfferTest extends TestCase
         $offer->removeOpenCloseEvent($openCloseEvent);
 
         $this->assertEmpty($offer->getOpenCloseEvents());
+        $events = $offer->getEvents();
+        $this->assertCount(1, $events);
+        $event = $events[0];
+        $this->assertInstanceOf(OpenCloseEventRemoved::class, $event);
+        $payload = $event->getPayload();
+        $this->assertEquals($offer->getId(), $payload["offerId"]);
+        $this->assertEquals($openCloseEvent, $payload["openCloseEvent"]);
     }
 
     public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void

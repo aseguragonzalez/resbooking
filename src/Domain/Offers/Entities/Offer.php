@@ -4,7 +4,22 @@ declare(strict_types=1);
 
 namespace App\Domain\Offers\Entities;
 
-use App\Domain\Offers\Exceptions\InvalidDateRange;
+use App\Domain\Offers\Exceptions\{
+    InvalidDateRange,
+    OfferAlreadyDisabled,
+    OfferAlreadyEnabled
+};
+use App\Domain\Offers\Events\{
+    OfferCreated,
+    OfferUpdated,
+    OfferDisabled,
+    OfferEnabled,
+    OpenCloseEventCreated,
+    OpenCloseEventRemoved,
+    TurnAssigned,
+    TurnUnassigned
+};
+use App\Domain\Offers\ValueObjects\{Project, Settings};
 use App\Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
@@ -14,116 +29,95 @@ use App\Domain\Shared\Exceptions\{
 };
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Tuupola\Ksuid;
 
 final class Offer extends AggregateRoot
 {
     /**
-     * @param $openCloseEvents array<OpenCloseEvent>
-     * @param $turns array<TurnAvailability>
+     * @param array<OpenCloseEvent> $openCloseEvents
+     * @param array<TurnAvailability> $turns
      */
-    public function __construct(
-        private readonly string $id,
-        private string $description,
-        private string $title,
-        private string $termsAndConditions,
-        private \DateTimeImmutable $startDate,
-        private ?\DateTimeImmutable $endDate = null,
-        private bool $isEnable = true,
+    private function __construct(
+        string $id,
+        public readonly Project $project,
+        private Settings $settings,
+        private bool $available = true,
         private array $openCloseEvents = [],
         private array $turns = [],
     ) {
         parent::__construct($id);
-        $this->checkStartDateAndEndDateRange();
-        $this->checkDescription();
-        $this->checkTitle();
-        $this->checkTermsAndConditions();
     }
 
-    private function checkStartDateAndEndDateRange(): void
+    /**
+     * @param array<TurnAvailability> $turns
+     */
+    public static function new(Project $project, Settings $settings, array $turns = []): self
     {
-        if ($this->endDate !== null && $this->endDate < $this->startDate) {
-            throw new InvalidDateRange('End date must be greater than start date');
-        }
+        $offerId = (string) new Ksuid();
+        $offer = new self(
+            id: $offerId,
+            project: $project,
+            settings: $settings,
+            turns: $turns
+        );
+        $offer->addEvent(OfferCreated::new(offerId: $offerId, offer: $offer));
+        return $offer;
     }
 
-    private function checkDescription(): void
+    /**
+     * @param array<OpenCloseEvent> $openCloseEvents
+     * @param array<TurnAvailability> $turns
+     */
+    public static function stored(
+        string $id,
+        Project $project,
+        Settings $settings,
+        bool $available,
+        array $openCloseEvents,
+        array $turns
+    ): self {
+        return new self(
+            id: $id,
+            project: $project,
+            settings: $settings,
+            available: $available,
+            openCloseEvents: $openCloseEvents,
+            turns: $turns
+        );
+    }
+
+    public function getSettings(): Settings
     {
-        if (empty($this->description)) {
-            throw new ValueException('Description is required');
-        }
+        return $this->settings;
     }
 
-    private function checkTitle(): void
+    public function setSettings(Settings $settings): void
     {
-        if (empty($this->title)) {
-            throw new ValueException('Title is required');
-        }
-    }
-
-    private function checkTermsAndConditions(): void
-    {
-        if (empty($this->termsAndConditions)) {
-            throw new ValueException('Terms and conditions is required');
-        }
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getTermsAndConditions(): string
-    {
-        return $this->termsAndConditions;
-    }
-
-    public function getEndDate(): ?\DateTimeImmutable
-    {
-        return $this->endDate;
-    }
-
-    public function getStartDate(): \DateTimeImmutable
-    {
-        return $this->startDate;
-    }
-
-    public function update(
-        string $description,
-        string $title,
-        string $termsAndConditions,
-        \DateTimeImmutable $startDate,
-        ?\DateTimeImmutable $endDate = null,
-    ): void {
-        $this->description = $description;
-        $this->title = $title;
-        $this->termsAndConditions = $termsAndConditions;
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
-        $this->checkDescription();
-        $this->checkStartDateAndEndDateRange();
-        $this->checkTitle();
-        $this->checkTermsAndConditions();
+        $this->settings = $settings;
+        $this->addEvent(OfferUpdated::new(offerId: $this->getId(), offer: $this));
     }
 
     public function disable(): void
     {
-        $this->isEnable = false;
+        if (!$this->available) {
+            throw new OfferAlreadyDisabled();
+        }
+        $this->available = false;
+        $this->addEvent(OfferDisabled::new(offerId: $this->getId(), offer: $this));
     }
 
     public function enable(): void
     {
-        $this->isEnable = true;
+        if ($this->available) {
+            throw new OfferAlreadyEnabled();
+        }
+        $this->available = true;
+        $this->addEvent(OfferEnabled::new(offerId: $this->getId(), offer: $this));
     }
 
-    public function isEnable(): bool
+    public function isAvailable(): bool
     {
-        return $this->isEnable;
+        return $this->available;
     }
 
     /**
@@ -141,6 +135,7 @@ final class Offer extends AggregateRoot
             throw new TurnAlreadyExist();
         }
         $this->turns[] = $turn;
+        $this->addEvent(TurnAssigned::new(offerId: $this->getId(), turn: $turn));
     }
 
     public function removeTurn(TurnAvailability $turn): void
@@ -153,6 +148,7 @@ final class Offer extends AggregateRoot
             $this->turns,
             fn (TurnAvailability $s) => !$s->equals($turn)
         );
+        $this->addEvent(TurnUnassigned::new(offerId: $this->getId(), turn: $turn));
     }
 
     /**
@@ -176,6 +172,7 @@ final class Offer extends AggregateRoot
         }
 
         $this->openCloseEvents[] = $event;
+        $this->addEvent(OpenCloseEventCreated::new(offerId: $this->getId(), openCloseEvent: $event));
     }
 
     public function removeOpenCloseEvent(OpenCloseEvent $event): void
@@ -188,5 +185,6 @@ final class Offer extends AggregateRoot
             $this->openCloseEvents,
             fn (OpenCloseEvent $event) => !$event->equals($event)
         );
+        $this->addEvent(OpenCloseEventRemoved::new(offerId: $this->getId(), openCloseEvent: $event));
     }
 }

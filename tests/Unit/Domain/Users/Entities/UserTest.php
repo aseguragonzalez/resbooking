@@ -274,7 +274,6 @@ final class UserTest extends TestCase
         $this->assertEquals(1, count($events));
         $this->assertInstanceOf(CredentialUpdated::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($this->password, $event->getPayload()['password']);
         $this->assertEquals($user->username->getValue(), $event->getPayload()['username']);
     }
 
