@@ -26,6 +26,7 @@ use App\Domain\Users\Exceptions\{
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
 use App\Seedwork\Domain\AggregateRoot;
+use App\Seedwork\Domain\DomainEvent;
 
 final class User extends AggregateRoot
 {
@@ -44,6 +45,9 @@ final class User extends AggregateRoot
         parent::__construct((string) $username, domainEvents: $domainEvents);
     }
 
+    /**
+     * @param array<Role> $roles An array representing the roles assigned to the user.
+     */
     public static function new(Email $username, Password $password = null, array $roles = []): self
     {
         $password = $password ?? Password::new();
@@ -57,6 +61,9 @@ final class User extends AggregateRoot
         );
     }
 
+    /**
+     * @param array<Role> $roles An array representing the roles assigned to the user.
+     */
     public static function build(
         Email $username,
         Credential $credential,
