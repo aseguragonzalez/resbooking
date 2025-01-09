@@ -15,5 +15,5 @@ abstract class UseCase
      * @param UseCaseRequest $request
      * @return void
      */
-    public function execute(UseCaseRequest $request): void;
+    abstract public function execute(UseCaseRequest $request): void;
 }

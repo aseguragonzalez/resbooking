@@ -146,6 +146,7 @@ final class Project extends AggregateRoot
 
     public function addPlace(Place $place): void
     {
+        // TODO: check if other place with same name exists
         $places = array_filter($this->places, fn (Place $s) => $s->equals($place));
         if (!empty($places)) {
             throw new PlaceAlreadyExist();
