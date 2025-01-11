@@ -8,7 +8,11 @@ use App\Seedwork\Application\UseCaseRequest;
 
 class AddOpenCloseEventRequest extends UseCaseRequest
 {
-    public function __construct()
-    {
+    public function __construct(
+        public readonly string $projectId,
+        public readonly \DateTimeImmutable $date,
+        public readonly bool $isAvailable,
+        public readonly string $startTime
+    ) {
     }
 }

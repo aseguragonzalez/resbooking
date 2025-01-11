@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Projects\AddOpenCloseEvent;
 
 use App\Domain\Projects\ProjectRepository;
+use App\Domain\Shared\Turn;
+use App\Domain\Shared\ValueObjects\OpenCloseEvent;
 use App\Seedwork\Application\UseCase;
 use App\Seedwork\Exceptions\NotImplementedException;
 
@@ -17,8 +19,12 @@ class AddOpenCloseEvent extends UseCase
     {
     }
 
-    public function execute(AddOpenCloseEventRequest $request): void
+    public function execute($request): void
     {
-        throw new NotImplementedException();
+        $project = $this->projectRepository->getById($request->projectId);
+        $turn = Turn::getByStartTime($request->startTime);
+        $openCloseEvent = new OpenCloseEvent($request->date, $request->isAvailable, $turn);
+        $project->addOpenCloseEvent($openCloseEvent);
+        $this->projectRepository->save($project);
     }
 }
