@@ -9,7 +9,6 @@ use App\Domain\Projects\Entities\{Project, Place};
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\Capacity;
 use App\Seedwork\Application\{UseCase, UseCaseRequest};
-use App\Seedwork\Application\Exceptions\InvalidRequestException;
 
 /**
  * @extends UseCase<AddPlaceRequest>
@@ -20,12 +19,8 @@ final class AddPlace extends UseCase
     {
     }
 
-    public function execute(UseCaseRequest $request): void
+    public function execute($request): void
     {
-        if (!$request instanceof AddPlaceRequest) {
-            throw new InvalidRequestException();
-        }
-
         $project = $this->projectRepository->getById(id: $request->projectId);
         $place = Place::new(capacity: new Capacity(value: $request->capacity), name: $request->name);
         $project->addPlace(place: $place);

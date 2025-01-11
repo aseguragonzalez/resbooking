@@ -13,11 +13,5 @@ final class AddPlaceRequest extends UseCaseRequest
         public readonly string $name,
         public readonly int $capacity
     ) {
-        parent::__construct();
-    }
-
-    public function validate(): void
-    {
-        // not implemented
     }
 }

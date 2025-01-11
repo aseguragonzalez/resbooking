@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 final class AddPlaceRequestTest extends TestCase
 {
+    public const NOT_IMPLEMENTED = 'Not implemented yet.';
+
     private $faker = null;
 
     protected function setUp(): void
@@ -23,16 +25,16 @@ final class AddPlaceRequestTest extends TestCase
 
     public function testAddPlaceShouldFailWhenNameIsInvalid(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddPlaceRequestTest::NOT_IMPLEMENTED);
     }
 
     public function testAddPlaceShouldFailWhenDescriptionIsInvalid(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddPlaceRequestTest::NOT_IMPLEMENTED);
     }
 
     public function testAddPlaceShouldFailWhenCapacityIsInvalid(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddPlaceRequestTest::NOT_IMPLEMENTED);
     }
 }
