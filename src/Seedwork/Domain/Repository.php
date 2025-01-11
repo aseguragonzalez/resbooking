@@ -21,14 +21,14 @@ interface Repository
      * @param T $aggregateRoot
      * @return void
      */
-    public function save(AggregateRoot $aggregateRoot): void;
+    public function save($aggregateRoot): void;
 
     /**
      * Retrieve an entity by its id.
      * @param string $id AggreagateRoot id
      * @return T
      */
-    public function getById(string $id): AggregateRoot;
+    public function getById(string $id);
 
     /**
      * Check if an entity with the given id exists in the repository.
