@@ -8,7 +8,10 @@ use App\Seedwork\Application\UseCaseRequest;
 
 final class AddUserRequest extends UseCaseRequest
 {
-    public function __construct()
-    {
+    public function __construct(
+        public readonly string $projectId,
+        public readonly string $username,
+        public readonly bool $isAdmin
+    ) {
     }
 }
