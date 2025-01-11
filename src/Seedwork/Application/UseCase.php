@@ -7,13 +7,13 @@ namespace App\Seedwork\Application;
 use App\Seedwork\Application\UseCaseRequest;
 
 /**
+ * @phpstan-template T of UseCaseRequest
  * @template T of UseCaseRequest
  */
 abstract class UseCase
 {
     /**
-     * @param UseCaseRequest $request
-     * @return void
+     * @param T $request
      */
-    abstract public function execute(UseCaseRequest $request): void;
+    abstract public function execute($request): void;
 }
