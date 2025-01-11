@@ -7,8 +7,10 @@ namespace Tests\Unit\Application\Projects\AddTurns;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
 
-final class AddTurnsRequestRequestTest extends TestCase
+final class AddTurnsRequestTest extends TestCase
 {
+    public const NOT_IMPLEMENTED = 'Not implemented yet.';
+
     private $faker = null;
 
     protected function setUp(): void
@@ -23,21 +25,21 @@ final class AddTurnsRequestRequestTest extends TestCase
 
     public function testAddTurnsShouldFailWhenCapacityIsInvalid(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddTurnsRequestTest::NOT_IMPLEMENTED);
     }
 
     public function testAddTurnsShouldFailWhenDayOfWeekDoesNotExist(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddTurnsRequestTest::NOT_IMPLEMENTED);
     }
 
     public function testAddTurnsShouldFailWhenTurnDoesNotExist(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddTurnsRequestTest::NOT_IMPLEMENTED);
     }
 
     public function testAddTurnsShouldDoNothingWhenTurnsIsInvalid(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete(AddTurnsRequestTest::NOT_IMPLEMENTED);
     }
 }
