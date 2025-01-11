@@ -8,7 +8,6 @@ use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
 use App\Domain\Shared\ValueObjects\TurnAvailability;
 use App\Seedwork\Application\UseCase;
-use App\Seedwork\Exceptions\NotImplementedException;
 
 /**
  * @extends UseCase<AddOpenCloseEventRequest>
