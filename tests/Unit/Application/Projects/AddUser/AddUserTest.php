@@ -2,55 +2,50 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\Projects;
+namespace Tests\Unit\Application\Projects\AddUser;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
+use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ProjectRepository;
+use Tests\Unit\ProjectBuilder;
 
-final class RemoveTurnsTest extends TestCase
+final class AddUserTest extends TestCase
 {
     private $faker = null;
-    private ProjectRepository $projectRepository;
+    private $projectBuilder = null;
+    private ?ProjectRepository $projectRepository = null;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->projectBuilder = new ProjectBuilder($this->faker);
         $this->projectRepository = $this->createMock(ProjectRepository::class);
     }
 
     protected function tearDown(): void
     {
         $this->faker = null;
+        $this->projectBuilder = null;
         $this->projectRepository = null;
     }
 
-    public function testRemoveTurnsShouldRemoveTurns(): void
+    public function testAddUserShouldCreateNewAdmin(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveTurnsShouldFailWhenTurnsDoesNotExist(): void
+    public function testAddUserShouldCreateNewUser(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveTurnsShouldFailWhenProjectDoesNotExist(): void
+    public function testAddUserShouldFailWhenNewUserAlreadyExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveTurnsShouldFailWhenUserIsNotAuthorized(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testRemoveTurnsShouldFailWhenUserDoesNotExist(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testRemoveTurnsShouldDoNothingWhenTurnsIsEmpty(): void
+    public function testAddUserShouldFailWhenUsernameIsDuplicate(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

@@ -2,45 +2,41 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\Projects;
+namespace Tests\Unit\Application\Projects\AddTurns;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\ProjectRepository;
 
-final class RemoveUserTest extends TestCase
+final class AddTurnsRequestRequestTest extends TestCase
 {
     private $faker = null;
-    private ProjectRepository $projectRepository;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-        $this->projectRepository = $this->createMock(ProjectRepository::class);
     }
 
     protected function tearDown(): void
     {
         $this->faker = null;
-        $this->projectRepository = null;
     }
 
-    public function testRemoveUserShouldDeleteUser(): void
+    public function testAddTurnsShouldFailWhenCapacityIsInvalid(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
+    public function testAddTurnsShouldFailWhenDayOfWeekDoesNotExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveUserShouldFailWhenProjectDoesNotExist(): void
+    public function testAddTurnsShouldFailWhenTurnDoesNotExist(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testRemoveUserShouldFailWhenUserIsNotAuthorized(): void
+    public function testAddTurnsShouldDoNothingWhenTurnsIsInvalid(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
