@@ -1,6 +1,6 @@
-name: Tests
+name: CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   tests:
@@ -10,10 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4, 8.0, 8.1]
+        php: [8.2]
         experimental: [false]
         include:
-        - php: 8.1
+        - php: 8.2
           analysis: true
 
     steps:
@@ -31,14 +31,14 @@ jobs:
 
     - name: Coding standards
       if: matrix.analysis
-      run: vendor/bin/phpcs
+      run: vendor/bin/phpcs --standard=PSR12 ./src ./tests
 
     - name: Static analysis
       if: matrix.analysis
-      run: vendor/bin/phpstan
+      run: vendor/bin/phpstan analyse ./src
 
     - name: Tests
-      run: vendor/bin/phpunit --coverage-clover clover.xml
+      run: vendor/bin/phpunit --configuration=./tests/phpunit.xml ./tests/ --coverage-clover clover.xml
 
     - name: Upload coverage results to Coveralls
       if: matrix.analysis
