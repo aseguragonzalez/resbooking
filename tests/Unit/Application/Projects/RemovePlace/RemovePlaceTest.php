@@ -6,7 +6,9 @@ namespace Tests\Unit\Application\Projects\RemovePlace;
 
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Projects\Entities\Project;
+use App\Application\Projects\RemovePlace\{RemovePlace, RemovePlaceRequest};
+use App\Domain\Projects\Entities\{Place, Project};
+use App\SeedWork\Domain\{Capacity};
 use App\Domain\Projects\ProjectRepository;
 use Tests\Unit\ProjectBuilder;
 
@@ -32,6 +34,28 @@ final class RemovePlaceTest extends TestCase
 
     public function testRemovePlaceShouldRemovePlace(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $places = [new Place(
+            id: $this->faker->uuid,
+            capacity: new Capacity()
+        )];
+        $project = $this->projectBuilder->withPlaces($places)->build();
+        $this->projectRepository
+            ->expects($this->once())
+            ->method('getById')
+            ->with($this->isType('string'))
+            ->willReturn($project);
+        $this->projectRepository
+            ->expects($this->once())
+            ->method('save')
+            ->with($project);
+        $useCase = new RemovePlace($this->projectRepository);
+        $request = new RemovePlaceRequest(
+            projectId: $this->faker->uuid,
+            placeId: $this->faker->uuid
+        );
+
+        $useCase->execute($request);
+
+        $this->assertEquals(0, count($project->getPlaces()));
     }
 }

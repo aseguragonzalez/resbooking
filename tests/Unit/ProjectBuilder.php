@@ -11,6 +11,8 @@ use App\Domain\Shared\{Capacity, Email, Phone};
 
 class ProjectBuilder
 {
+    private ?array $places = null;
+
     public function __construct(private $faker)
     {
     }
@@ -26,6 +28,16 @@ class ProjectBuilder
             numberOfTables: new Capacity(25),
             phone: new Phone($this->faker->phoneNumber)
         );
-        return Project::stored(id: $this->faker->uuid, settings: $settings);
+        return Project::stored(
+            id: $this->faker->uuid,
+            settings: $settings,
+            places: $this->places ?? []
+        );
+    }
+
+    public function withPlaces($places = []): ProjectBuilder
+    {
+        $this->places = $places;
+        return $this;
     }
 }
