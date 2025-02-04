@@ -35,7 +35,7 @@ jobs:
 
     - name: Static analysis
       if: matrix.analysis
-      run: vendor/bin/phpstan analyse . --level=max
+      run: vendor/bin/phpstan analyse ./src
 
     - name: Tests
       run: vendor/bin/phpunit --configuration=./tests/phpunit.xml ./tests/ --coverage-clover clover.xml

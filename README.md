@@ -31,13 +31,13 @@ PHP CS Fixer
 PHP CodeSniffer
 
 ```shell
-./vendor/bin/phpcs --standard=PSR12 .
+./vendor/bin/phpcs --standard=PSR12 ./src ./tests
 ```
 
 PHPStan
 
 ```shell
-./vendor/bin/phpstan analyse . --level=max
+./vendor/bin/phpstan analyse ./src ./tests --level=max
 ```
 
 ## Build With
