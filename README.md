@@ -1,4 +1,4 @@
-# Resbooking
+# Resbooking WebApp
 
 ## How to
 
