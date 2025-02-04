@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "name": "Listen for Xdebug",
+      "port": 9000,
+      "request": "launch",
+      "type": "php"
+    }
+  ],
+  "version": "0.2.0"
+}
