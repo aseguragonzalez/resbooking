@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Shared\Password;
 use App\Domain\Users\Events\CredentialReset;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class CredentialResetTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -20,7 +21,6 @@ final class CredentialResetTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testNewShouldCreateNewEvent(): void

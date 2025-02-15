@@ -30,13 +30,14 @@ use App\Domain\Shared\Exceptions\{
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
 use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 
 final class OfferTest extends TestCase
 {
-    private $faker = null;
-    private $project = null;
-    private $settings = null;
+    private Faker $faker;
+    private Project $project;
+    private Settings $settings;
 
     protected function setUp(): void
     {
@@ -55,11 +56,12 @@ final class OfferTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->project = null;
-        $this->settings = null;
     }
 
+    /**
+     * @param array<OpenCloseEvent> $openCloseEvents
+     * @param array<TurnAvailability> $turns
+     */
     private function offer(array $openCloseEvents = [], array $turns = [], bool $available = true): Offer
     {
         return Offer::stored(
@@ -170,7 +172,7 @@ final class OfferTest extends TestCase
     {
         $offer = $this->offer();
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -190,7 +192,7 @@ final class OfferTest extends TestCase
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
     {
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -203,7 +205,7 @@ final class OfferTest extends TestCase
     public function testRemoveTurnShouldRemoveTurnFromOffer(): void
     {
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -225,7 +227,7 @@ final class OfferTest extends TestCase
     {
         $offer = $this->offer();
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );

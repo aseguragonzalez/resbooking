@@ -4,23 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Entities;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\{Project, Place};
-use App\Domain\Projects\Exceptions\{
-    PlaceAlreadyExist,
-    PlaceDoesNotExist,
-    UserAlreadyExist,
-    UserDoesNotExist
-};
-use App\Domain\Shared\Exceptions\{
-    OpenCloseEventAlreadyExist,
-    OpenCloseEventDoesNotExist,
-    OpenCloseEventOutOfRange,
-    TurnAlreadyExist,
-    TurnDoesNotExist,
-};
-use App\Domain\Projects\ValueObjects\{Credential, Settings, User};
 use App\Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
@@ -33,25 +17,45 @@ use App\Domain\Projects\Events\{
     UserCreated,
     UserRemoved
 };
-use App\Domain\Shared\{Capacity, DayOfWeek, Email, Password, Phone, Turn};
+use App\Domain\Projects\Exceptions\{
+    UserAlreadyExist,
+    UserDoesNotExist,
+    PlaceAlreadyExist,
+    PlaceDoesNotExist
+};
+use App\Domain\Projects\ValueObjects\{Settings, User};
+use App\Domain\Shared\Exceptions\{
+    OpenCloseEventAlreadyExist,
+    OpenCloseEventDoesNotExist,
+    OpenCloseEventOutOfRange,
+    TurnAlreadyExist,
+    TurnDoesNotExist
+};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class ProjectTest extends TestCase
 {
-    private $faker = null;
-    private ?Password $password = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
-        $this->password = new Password($this->faker->password(Password::MIN_LENGTH));
     }
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
+    /**
+     * @param array<User> $users
+     * @param array<Place> $places
+     * @param array<TurnAvailability> $turns
+     * @param array<OpenCloseEvent> $openCloseEvents
+     */
     private function project(
         array $users = [],
         array $places = [],
@@ -208,7 +212,7 @@ final class ProjectTest extends TestCase
     {
         $project = $this->project();
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -227,7 +231,7 @@ final class ProjectTest extends TestCase
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
     {
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -240,7 +244,7 @@ final class ProjectTest extends TestCase
     public function testRemoveTurnShouldRemoveTurnFromProject(): void
     {
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );
@@ -261,7 +265,7 @@ final class ProjectTest extends TestCase
     {
         $project = $this->project();
         $turn = new TurnAvailability(
-            capacity: new Capacity($this->faker->randomNumber(), $this->faker->randomNumber()),
+            capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::MONDAY,
             turn: Turn::H1200,
         );

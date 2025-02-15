@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddUser;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Application\Projects\AddUser\{AddUser, AddUserRequest};
-use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Role;
 use App\Domain\Users\{UserFactory, UserRepository};
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\ProjectBuilder;
 
 final class AddUserTest extends TestCase
 {
-    private $faker = null;
-    private ?ProjectBuilder $projectBuilder = null;
-    private ?ProjectRepository $projectRepository = null;
-    private ?UserRepository $userRepository = null;
+    private Faker $faker;
+    private ProjectBuilder $projectBuilder;
+    private MockObject&ProjectRepository $projectRepository;
+    private MockObject&UserRepository $userRepository;
 
     protected function setUp(): void
     {
@@ -30,10 +30,6 @@ final class AddUserTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->projectBuilder = null;
-        $this->projectRepository = null;
-        $this->userRepository = null;
     }
 
     public function testAddUserShouldCreateNewUser(): void

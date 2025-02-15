@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\ValueObjects;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\ValueObjects\Settings;
-use App\Seedwork\Domain\Exceptions\ValueException;
 use App\Domain\Shared\{Capacity, Email, Phone};
+use App\Seedwork\Domain\Exceptions\ValueException;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class SettingsTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -21,7 +22,6 @@ final class SettingsTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testConstructorShouldCreateInstance(): void

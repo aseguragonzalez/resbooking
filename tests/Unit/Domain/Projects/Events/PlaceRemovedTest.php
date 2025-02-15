@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\Place;
-use App\Domain\Shared\Capacity;
 use App\Domain\Projects\Events\PlaceRemoved;
+use App\Domain\Shared\Capacity;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class PlaceRemovedTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -21,7 +22,7 @@ final class PlaceRemovedTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
+
     }
 
     public function testNewShouldCreateNewEvent(): void

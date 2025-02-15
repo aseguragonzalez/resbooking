@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
-use App\Domain\Users\Entities\User;
-use App\Domain\Users\UserFactory;
 use App\Domain\Shared\{Email, Password, Role};
+use App\Domain\Users\UserFactory;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class UserFactoryTest extends TestCase
 {
-    private $faker = null;
-    private ?Email $email = null;
-    private ?Password $password = null;
-    private ?UserFactory $userFactory = null;
+    private Faker $faker;
+    private Email $email;
+    private Password $password;
+    private UserFactory $userFactory;
 
     protected function setUp(): void
     {
@@ -27,10 +27,6 @@ final class UserFactoryTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->email = null;
-        $this->password = null;
-        $this->userFactory = null;
     }
 
     public function testCreateNewAdminShouldReturnAnAdminUser(): void

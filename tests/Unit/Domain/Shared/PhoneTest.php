@@ -6,11 +6,12 @@ namespace Tests\Unit\Domain\Shared;
 
 use App\Domain\Shared\Phone;
 use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 
 final class PhoneTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -19,7 +20,6 @@ final class PhoneTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testPhoneShouldCreateInstance(): void

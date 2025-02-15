@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users\ValueObjects;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
-use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\Password;
+use App\Domain\Users\ValueObjects\Credential;
 use App\Seedwork\Domain\Exceptions\ValueException;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class CredentialTest extends TestCase
 {
-    private $faker = null;
-    private ?Password $password = null;
+    private Faker $faker;
+    private Password $password;
 
     protected function setUp(): void
     {
@@ -23,8 +24,6 @@ final class CredentialTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->password = null;
     }
 
     public function testBuildShouldInstantiateCredential(): void

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Shared\Role;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class RoleTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -19,7 +20,6 @@ final class RoleTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testGetByIdShouldRetrieveRoleById(): void

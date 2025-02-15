@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Users\Events\CredentialUpdated;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class CredentialUpdatedTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -19,7 +20,6 @@ final class CredentialUpdatedTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testNewShouldCreateNewEvent(): void
