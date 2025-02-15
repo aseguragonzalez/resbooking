@@ -40,6 +40,7 @@ final class DayOfWeekTest extends TestCase
 
     public function testShouldRetrieveDayOfWeekByName(): void
     {
+        /** @var string $name */
         $name = $this->faker->randomElement([
             'sunday',
             'monday',

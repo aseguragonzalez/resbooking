@@ -40,6 +40,7 @@ final class TurnTest extends TestCase
 
     public function testGetByStartTimeShouldRetrieveByStartTime(): void
     {
+        /** @var string $startTime */
         $startTime = $this->faker->randomElement([
             '12:00:00',
             '12:30:00',

@@ -26,6 +26,7 @@ final class RoleAddedToUserTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $username = $this->faker->email;
+        /** @var Role $role */
         $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
 
         $event = RoleAddedToUser::new(username: $username, role: $role);
@@ -41,6 +42,7 @@ final class RoleAddedToUserTest extends TestCase
     public function testBuildShouldCreateStoredEvent(): void
     {
         $username = $this->faker->email;
+        /** @var Role $role */
         $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
 
         $event = RoleAddedToUser::build(username: $username, role: $role, id: $this->faker->uuid);

@@ -19,7 +19,7 @@ lint:
 	@./vendor/bin/phpcs --standard=PSR12 ./src ./tests
 
 analyse:
-	@./vendor/bin/phpstan analyse ./src
+	@./vendor/bin/phpstan analyse ./src ./tests --level=max
 
 clean:
 	@rm -rf vendor

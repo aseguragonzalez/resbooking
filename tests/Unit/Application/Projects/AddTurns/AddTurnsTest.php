@@ -41,17 +41,22 @@ final class AddTurnsTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
+
+        /** @var int $day1 */
+        $day1 = $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]);
+        /** @var int $day2 */
+        $day2 = $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]);
         $request = new AddTurnsRequest(
             projectId: $this->faker->uuid,
             turns: [
                 new TurnItem(
                     capacity: $this->faker->numberBetween(1, 100),
-                    dayOfWeek: $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]),
+                    dayOfWeek: $day1,
                     startTime: '13:00'
                 ),
                 new TurnItem(
                     capacity: $this->faker->numberBetween(1, 100),
-                    dayOfWeek: $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]),
+                    dayOfWeek: $day2,
                     startTime: '14:00'
                 ),
             ]

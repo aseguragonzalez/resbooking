@@ -40,6 +40,7 @@ final class RoleTest extends TestCase
 
     public function testGeByNameShouldRetrieveRoleByName(): void
     {
+        /** @var string $name */
         $name = $this->faker->randomElement([
             'admin',
             'user',
