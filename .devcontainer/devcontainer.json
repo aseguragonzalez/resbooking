@@ -2,36 +2,20 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "bierner.markdown-mermaid",
         "DavidAnson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
         "MehediDracula.php-namespace-resolver",
-        "mrmlnc.vscode-apache",
-        "obliviousharmony.vscode-php-codesniffer",
         "recca0120.vscode-phpunit",
-        "SonarSource.sonarlint-vscode",
         "xdebug.php-debug",
-        "zobo.php-intellisense",
         "redhat.vscode-xml",
-        "junstyle.php-cs-fixer",
         "wongjn.php-sniffer"
       ]
     }
   },
-  "dockerComposeFile": [
-    "./docker-compose.override.yml"
-  ],
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers/features/python:1": {}
+    "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
-  "forwardPorts": [],
-  "name": "PHP App",
-  "postCreateCommand": "chmod +x .devcontainer/startup.sh && .devcontainer/startup.sh",
-  "remoteUser": "vscode",
-  "service": "app",
-  "shutdownAction": "stopCompose",
-  "workspaceFolder": "/workspace"
+  "image": "mcr.microsoft.com/devcontainers/php:1-8.2-bullseye",
+  "name": "PHP 8.2",
+  "remoteUser": "vscode"
 }
