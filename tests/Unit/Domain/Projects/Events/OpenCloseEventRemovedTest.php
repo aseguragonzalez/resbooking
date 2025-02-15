@@ -22,7 +22,6 @@ final class OpenCloseEventRemovedTest extends TestCase
 
     protected function tearDown(): void
     {
-
     }
 
     public function testNewShouldCreateNewEvent(): void
