@@ -11,6 +11,7 @@ use App\Domain\Users\{UserFactory, UserRepository};
 use App\Seedwork\Application\UseCase;
 
 /**
+ * @template-extends UseCase<AddUserRequest>
  * @extends UseCase<AddUserRequest>
  */
 final class AddUser extends UseCase
@@ -22,6 +23,9 @@ final class AddUser extends UseCase
     ) {
     }
 
+    /**
+     * @param AddUserRequest $request
+     */
     public function execute($request): void
     {
         $project = $this->projectRepository->getById($request->projectId);

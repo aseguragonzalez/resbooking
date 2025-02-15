@@ -18,6 +18,9 @@ class AddOpenCloseEvent extends UseCase
     {
     }
 
+    /**
+     * @param AddOpenCloseEventRequest $request
+     */
     public function execute($request): void
     {
         $project = $this->projectRepository->getById($request->projectId);
