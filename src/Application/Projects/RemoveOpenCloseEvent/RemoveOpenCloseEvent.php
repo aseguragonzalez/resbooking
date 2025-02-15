@@ -17,7 +17,7 @@ class RemoveOpenCloseEvent extends UseCase
     {
     }
 
-    public function execute(RemoveOpenCloseEventRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

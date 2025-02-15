@@ -17,7 +17,7 @@ final class ResetCredential extends UseCase
     {
     }
 
-    public function execute(ResetCredentialRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

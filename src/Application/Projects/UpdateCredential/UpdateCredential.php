@@ -17,7 +17,7 @@ final class UpdateCredential extends UseCase
     {
     }
 
-    public function execute(UpdateCredentialRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

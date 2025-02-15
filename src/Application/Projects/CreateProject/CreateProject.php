@@ -17,7 +17,7 @@ final class CreateProject extends UseCase
     {
     }
 
-    public function execute(CreateProjectRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

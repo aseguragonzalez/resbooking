@@ -17,7 +17,7 @@ final class RemoveTurns extends UseCase
     {
     }
 
-    public function execute(RemoveTurnsRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

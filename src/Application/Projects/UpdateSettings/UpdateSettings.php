@@ -17,7 +17,7 @@ final class UpdateSettings extends UseCase
     {
     }
 
-    public function execute(UpdateSettingsRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

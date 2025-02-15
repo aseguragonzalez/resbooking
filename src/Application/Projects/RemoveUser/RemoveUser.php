@@ -17,7 +17,7 @@ final class RemoveUser extends UseCase
     {
     }
 
-    public function execute(RemoveUserRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

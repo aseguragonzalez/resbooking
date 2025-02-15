@@ -17,7 +17,7 @@ final class ModifyPlace extends UseCase
     {
     }
 
-    public function execute(ModifyPlaceRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }

@@ -17,7 +17,7 @@ final class RemovePlace extends UseCase
     {
     }
 
-    public function execute(RemovePlaceRequest $request): void
+    public function execute($request): void
     {
         throw new NotImplementedException();
     }
