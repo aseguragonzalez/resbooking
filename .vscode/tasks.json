@@ -1,7 +1,7 @@
 {
   "tasks": [
     {
-      "command": "vendor/bin/php-cs-fixer fix .",
+      "command": "vendor/bin/php-cs-fixer fix . --rules=@PSR12",
       "group": {
         "isDefault": true,
         "kind": "build"
@@ -11,7 +11,7 @@
       "type": "shell"
     },
     {
-      "command": "vendor/bin/phpcs --standard=PSR12 .",
+      "command": "vendor/bin/phpcs --standard=PSR12 ./src ./tests",
       "group": {
         "isDefault": false,
         "kind": "build"
@@ -21,7 +21,7 @@
       "type": "shell"
     },
     {
-      "command": "vendor/bin/phpunit --configuration phpunit.xml",
+      "command": "vendor/bin/phpunit",
       "group": {
         "isDefault": true,
         "kind": "test"
