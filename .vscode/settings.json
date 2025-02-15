@@ -27,7 +27,7 @@
   "phpSniffer.standard": "PSR12",
   "phpunit.args": [
     "-c",
-    "${workspaceFolder}/tests/phpunit.xml"
+    "${workspaceFolder}/phpunit.xml"
   ],
   "phpunit.paths": {
     "${workspaceFolder}": "${workspaceFolder}"
