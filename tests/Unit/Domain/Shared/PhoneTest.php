@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
+use App\Domain\Shared\Phone;
 use Faker\Factory as FakerFactory;
 use PHPUnit\Framework\TestCase;
-use App\Domain\Shared\Phone;
 
 final class PhoneTest extends TestCase
 {
@@ -29,14 +29,6 @@ final class PhoneTest extends TestCase
         $phone = new Phone($expected);
 
         $this->assertSame($expected, $phone->getValue());
-    }
-
-    public function testPhoneShouldFailWhenValueInvalid(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-        $this->expectException(\InvalidArgumentException::class);
-
-        new Phone($this->faker->word);
     }
 
     public function testPhoneShouldBeCastedToString(): void

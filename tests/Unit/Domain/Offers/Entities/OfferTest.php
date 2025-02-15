@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\Entities;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Offers\Entities\Offer;
 use App\Domain\Offers\Events\{
     OfferCreated,
@@ -18,9 +16,8 @@ use App\Domain\Offers\Events\{
     TurnUnassigned
 };
 use App\Domain\Offers\Exceptions\{
-    InvalidDateRange,
     OfferAlreadyDisabled,
-    OfferAlreadyEnabled
+    OfferAlreadyEnabled,
 };
 use App\Domain\Offers\ValueObjects\{Project, Settings};
 use App\Domain\Shared\Exceptions\{
@@ -30,9 +27,10 @@ use App\Domain\Shared\Exceptions\{
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Seedwork\Domain\Exceptions\ValueException;
+use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Faker\Factory as FakerFactory;
+use PHPUnit\Framework\TestCase;
 
 final class OfferTest extends TestCase
 {
@@ -46,7 +44,7 @@ final class OfferTest extends TestCase
         $this->project = new Project($this->faker->uuid);
         $startDate = new \DateTimeImmutable();
         $endDate = $startDate->add(new \DateInterval('P10D'));
-        $this->setting = new Settings(
+        $this->settings = new Settings(
             description: $this->faker->text,
             title: $this->faker->sentence,
             termsAndConditions: $this->faker->text,
@@ -69,19 +67,19 @@ final class OfferTest extends TestCase
             available: $available,
             openCloseEvents: $openCloseEvents,
             project: $this->project,
-            settings: $this->setting,
+            settings: $this->settings,
             turns: $turns,
         );
     }
 
     public function testNewShouldCreateInstance(): void
     {
-        $offer = Offer::new(project: $this->project, settings: $this->setting);
+        $offer = Offer::new(project: $this->project, settings: $this->settings);
 
         $this->assertInstanceOf(Offer::class, $offer);
         $this->assertNotEmpty($offer->getId());
         $this->assertEquals($this->project, $offer->project);
-        $this->assertEquals($this->setting, $offer->getSettings());
+        $this->assertEquals($this->settings, $offer->getSettings());
         $this->assertEmpty($offer->getOpenCloseEvents());
         $this->assertEmpty($offer->getTurns());
         $this->assertTrue($offer->isAvailable());
