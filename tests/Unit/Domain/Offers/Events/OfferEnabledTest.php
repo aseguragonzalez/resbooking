@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Offers\Entities\Offer;
 use App\Domain\Offers\Events\OfferEnabled;
 use App\Domain\Offers\ValueObjects\{Project, Settings};
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class OfferEnabledTest extends TestCase
 {
-    private $faker = null;
-    private $offer = null;
-    private $offerId = null;
+    private Faker $faker;
+    private Offer $offer;
+    private string $offerId;
 
     protected function setUp(): void
     {
@@ -35,9 +36,6 @@ final class OfferEnabledTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->offer = null;
-        $this->offerId = null;
     }
 
     public function testNewShouldCreateNewEvent(): void

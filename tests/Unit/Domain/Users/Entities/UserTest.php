@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users\Entities;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
+use App\Domain\Shared\{Email, Password, Role};
 use App\Domain\Users\Entities\User;
 use App\Domain\Users\Events\{
     UserLocked,
@@ -26,12 +25,14 @@ use App\Domain\Users\Exceptions\{
     UserAlreadyUnlocked
 };
 use App\Domain\Users\ValueObjects\Credential;
-use App\Domain\Shared\{Email, Password, Role};
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
-    private $faker = null;
-    private ?Password $password = null;
+    private Faker $faker;
+    private Password $password;
 
     protected function setUp(): void
     {
@@ -41,7 +42,6 @@ final class UserTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testConstructorShouldCreateInstance(): void

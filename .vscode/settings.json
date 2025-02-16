@@ -21,26 +21,17 @@
   },
   "namespaceResolver.sortAlphabetically": true,
   "namespaceResolver.sortNatural": true,
-  "namespaceResolver.sortOnSave": false,
-  "php-cs-fixer.autoFixByBracket": true,
-  "php-cs-fixer.autoFixBySemicolon": true,
-  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
-  "php-cs-fixer.onsave": false,
-  "php-cs-fixer.rules": "@PSR12",
-  "phpCodeSniffer.autoExecutable": true,
-  "phpCodeSniffer.lintAction": "Save",
-  "phpCodeSniffer.standard": "PSR12",
+  "namespaceResolver.sortOnSave": true,
   "phpSniffer.autoDetect": true,
   "phpSniffer.executablesFolder": "",
   "phpSniffer.standard": "PSR12",
   "phpunit.args": [
     "-c",
-    "${workspaceFolder}/tests/phpunit.xml"
+    "${workspaceFolder}/phpunit.xml"
   ],
   "phpunit.paths": {
     "${workspaceFolder}": "${workspaceFolder}"
   },
   "phpunit.php": "php",
-  "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit",
-  "sonarlint.testFilePattern": "**/test/**,**/*test*,**/*Test*"
+  "phpunit.phpunit": "${workspaceFolder}/vendor/bin/phpunit"
 }

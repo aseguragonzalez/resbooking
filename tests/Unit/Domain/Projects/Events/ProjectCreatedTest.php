@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Projects\Entities\Project;
-use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Projects\Events\ProjectCreated;
+use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\{Capacity, Email, Phone};
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class ProjectCreatedTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -22,7 +23,6 @@ final class ProjectCreatedTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testNewShouldCreateNewEvent(): void

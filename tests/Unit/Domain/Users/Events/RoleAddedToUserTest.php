@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Users\Events;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Shared\Role;
 use App\Domain\Users\Events\RoleAddedToUser;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class RoleAddedToUserTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -20,12 +21,12 @@ final class RoleAddedToUserTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testNewShouldCreateNewEvent(): void
     {
         $username = $this->faker->email;
+        /** @var Role $role */
         $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
 
         $event = RoleAddedToUser::new(username: $username, role: $role);
@@ -41,6 +42,7 @@ final class RoleAddedToUserTest extends TestCase
     public function testBuildShouldCreateStoredEvent(): void
     {
         $username = $this->faker->email;
+        /** @var Role $role */
         $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
 
         $event = RoleAddedToUser::build(username: $username, role: $role, id: $this->faker->uuid);

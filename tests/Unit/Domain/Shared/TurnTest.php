@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Shared\Turn;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class TurnTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -19,7 +20,6 @@ final class TurnTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testGetByIdShouldRetrieveById(): void
@@ -40,6 +40,7 @@ final class TurnTest extends TestCase
 
     public function testGetByStartTimeShouldRetrieveByStartTime(): void
     {
+        /** @var string $startTime */
         $startTime = $this->faker->randomElement([
             '12:00:00',
             '12:30:00',

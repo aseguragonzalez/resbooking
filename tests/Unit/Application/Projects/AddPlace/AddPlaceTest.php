@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddPlace;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Application\Projects\AddPlace\{AddPlace, AddPlaceRequest};
-use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ProjectRepository;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\ProjectBuilder;
 
 final class AddPlaceTest extends TestCase
 {
-    private $faker = null;
-    private $projectBuilder = null;
-    private ?ProjectRepository $projectRepository = null;
+    private Faker $faker;
+    private ProjectBuilder $projectBuilder;
+    private MockObject&ProjectRepository $projectRepository;
 
     protected function setUp(): void
     {
@@ -26,9 +27,6 @@ final class AddPlaceTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
-        $this->projectBuilder = null;
-        $this->projectRepository = null;
     }
 
     public function testAddPlaceShouldCreateNewPlace(): void

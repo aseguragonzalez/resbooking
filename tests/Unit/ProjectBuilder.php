@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Faker\Factory as FakerFactory;
+use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\{Capacity, Email, Phone};
+use Faker\Generator as Faker;
 
 class ProjectBuilder
 {
-    private ?array $places = null;
+    /**
+     * @var array<Place> $places
+     */
+    private array $places;
 
-    public function __construct(private $faker)
+    public function __construct(private readonly Faker $faker)
     {
+        $this->places = [];
     }
 
     public function build(): Project
@@ -35,7 +40,11 @@ class ProjectBuilder
         );
     }
 
-    public function withPlaces($places = []): ProjectBuilder
+    /**
+     * @param array<Place> $places
+     * @return ProjectBuilder
+     */
+    public function withPlaces(array $places = []): ProjectBuilder
     {
         $this->places = $places;
         return $this;

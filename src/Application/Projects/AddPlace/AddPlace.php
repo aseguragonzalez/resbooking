@@ -19,6 +19,9 @@ final class AddPlace extends UseCase
     {
     }
 
+    /**
+     * @param AddPlaceRequest $request
+     */
     public function execute($request): void
     {
         $project = $this->projectRepository->getById(id: $request->projectId);

@@ -1,5 +1,39 @@
 # Resbooking WebApp
 
+## Makefile Commands
+
+The following commands are available in the `Makefile`:
+
+Install dependencies
+
+```shell
+make install
+```
+
+Run tests
+
+```shell
+make test
+```
+
+Run PHP CS Fixer
+
+```shell
+make fix
+```
+
+Run PHP CodeSniffer
+
+```shell
+make lint
+```
+
+Run PHPStan
+
+```shell
+make analyse
+```
+
 ## How to
 
 Install dependencies

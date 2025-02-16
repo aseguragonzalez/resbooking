@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
-use Faker\Factory as FakerFactory;
-use PHPUnit\Framework\TestCase;
 use App\Domain\Shared\Phone;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
+use PHPUnit\Framework\TestCase;
 
 final class PhoneTest extends TestCase
 {
-    private $faker = null;
+    private Faker $faker;
 
     protected function setUp(): void
     {
@@ -19,7 +20,6 @@ final class PhoneTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->faker = null;
     }
 
     public function testPhoneShouldCreateInstance(): void
@@ -29,14 +29,6 @@ final class PhoneTest extends TestCase
         $phone = new Phone($expected);
 
         $this->assertSame($expected, $phone->getValue());
-    }
-
-    public function testPhoneShouldFailWhenValueInvalid(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-        $this->expectException(\InvalidArgumentException::class);
-
-        new Phone($this->faker->word);
     }
 
     public function testPhoneShouldBeCastedToString(): void
