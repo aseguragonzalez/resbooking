@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\Entities\Project;
-use App\Domain\Projects\ValueObjects\Settings;
+use App\Domain\Projects\ValueObjects\{Settings, User};
 use App\Domain\Shared\{Capacity, Email, Phone};
 use Faker\Generator as Faker;
 
@@ -17,9 +17,15 @@ class ProjectBuilder
      */
     private array $places;
 
+    /**
+     * @var array<User> $users
+     */
+    private array $users;
+
     public function __construct(private readonly Faker $faker)
     {
         $this->places = [];
+        $this->users = [];
     }
 
     public function build(): Project
@@ -36,7 +42,8 @@ class ProjectBuilder
         return Project::build(
             id: $this->faker->uuid,
             settings: $settings,
-            places: $this->places ?? []
+            places: $this->places ?? [],
+            users: $this->users ?? [],
         );
     }
 
@@ -47,6 +54,16 @@ class ProjectBuilder
     public function withPlaces(array $places = []): ProjectBuilder
     {
         $this->places = $places;
+        return $this;
+    }
+
+    /**
+     * @param array<User> $users
+     * @return ProjectBuilder
+     */
+    public function withUsers(array $users = []): ProjectBuilder
+    {
+        $this->users = $users;
         return $this;
     }
 }

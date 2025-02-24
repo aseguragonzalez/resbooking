@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Users;
 
-use App\Domain\Users\Entities\User;
-use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Password, Role};
+use App\Domain\Users\Entities\User;
 
 final class UserFactory
 {
