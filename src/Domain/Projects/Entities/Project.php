@@ -5,20 +5,6 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Entities;
 
 use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\Exceptions\{
-    PlaceAlreadyExist,
-    PlaceDoesNotExist,
-    UserAlreadyExist,
-    UserDoesNotExist
-};
-use App\Domain\Shared\Exceptions\{
-    OpenCloseEventAlreadyExist,
-    OpenCloseEventDoesNotExist,
-    OpenCloseEventOutOfRange,
-    TurnAlreadyExist,
-    TurnDoesNotExist,
-};
-use App\Domain\Projects\ValueObjects\{Settings, User};
 use App\Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
@@ -30,6 +16,20 @@ use App\Domain\Projects\Events\{
     TurnUnassigned,
     UserCreated,
     UserRemoved,
+};
+use App\Domain\Projects\Exceptions\{
+    PlaceAlreadyExist,
+    PlaceDoesNotExist,
+    UserAlreadyExist,
+    UserDoesNotExist,
+};
+use App\Domain\Projects\ValueObjects\{Settings, User};
+use App\Domain\Shared\Exceptions\{
+    OpenCloseEventAlreadyExist,
+    OpenCloseEventDoesNotExist,
+    OpenCloseEventOutOfRange,
+    TurnAlreadyExist,
+    TurnDoesNotExist,
 };
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Seedwork\Domain\AggregateRoot;
@@ -137,6 +137,18 @@ final class Project extends AggregateRoot
     }
 
     /**
+     * @param callable(User): bool $filter
+     */
+    public function removeUsers(callable $filter): void
+    {
+        $usersToBeRemoved = array_filter($this->users, $filter);
+        foreach ($usersToBeRemoved as $user) {
+            $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
+        }
+        $this->users = array_filter($this->users, fn(User $user) => !$filter($user));
+    }
+
+    /**
      * @return array<Place>
      */
     public function getPlaces(): array
@@ -169,6 +181,18 @@ final class Project extends AggregateRoot
     }
 
     /**
+     * @param callable(Place): bool $filter
+     */
+    public function removePlaces(callable $filter): void
+    {
+        $placesToBeRemoved = array_filter($this->places, $filter);
+        foreach ($placesToBeRemoved as $place) {
+            $this->addEvent(PlaceRemoved::new(projectId: $this->getId(), place: $place));
+        }
+        $this->places = array_filter($this->places, fn(Place $place) => !$filter($place));
+    }
+
+    /**
      * @return array<TurnAvailability>
      */
     public function getTurns(): array
@@ -197,6 +221,18 @@ final class Project extends AggregateRoot
             fn (TurnAvailability $s) => !$s->equals($turn)
         );
         $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
+    }
+
+    /**
+     * @param callable(TurnAvailability): bool $filter
+     */
+    public function removeTurns(callable $filter): void
+    {
+        $turnsToBeRemoved = array_filter($this->turns, $filter);
+        foreach ($turnsToBeRemoved as $turn) {
+            $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
+        }
+        $this->turns = array_filter($this->turns, fn(TurnAvailability $turn) => !$filter($turn));
     }
 
     /**
@@ -238,6 +274,20 @@ final class Project extends AggregateRoot
         $this->addEvent(
             OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
         );
+    }
+
+    /**
+     * @param callable(OpenCloseEvent): bool $filter
+     */
+    public function removeOpenCloseEvents(callable $filter): void
+    {
+        $eventsToBeRemoved = array_filter($this->openCloseEvents, $filter);
+        foreach ($eventsToBeRemoved as $event) {
+            $this->addEvent(
+                OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
+            );
+        }
+        $this->openCloseEvents = array_filter($this->openCloseEvents, fn(OpenCloseEvent $event) => !$filter($event));
     }
 
     public function getSettings(): Settings

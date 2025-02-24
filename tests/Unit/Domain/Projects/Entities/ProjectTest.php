@@ -367,4 +367,90 @@ final class ProjectTest extends TestCase
         $this->assertEquals($project, $event->getPayload()['project']);
         $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
     }
+
+    public function testRemoveUsersShouldFilterUsersRelatedToTheProject(): void
+    {
+        $email = new Email($this->faker->email);
+        $users = [
+            new User(username: new Email($this->faker->email)),
+            new User(username: $email),
+            new User(username: new Email($this->faker->email)),
+        ];
+        $project = $this->project(users: $users);
+
+        $project->removeUsers(fn(User $user) => $user->username === $email);
+
+        $this->assertNotContains($users[1], $project->getUsers());
+        $this->assertCount(1, $project->getEvents());
+    }
+
+    public function testRemovePlacesShouldFilterPlacesRelatedToTheProject(): void
+    {
+        $name = $this->faker->name;
+        $places = [
+            Place::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            Place::new(name: $name, capacity: new Capacity(value: 100)),
+            Place::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
+        ];
+        $project = $this->project(places: $places);
+
+        $project->removePlaces(fn(Place $place) => $place->name === $name);
+
+        $this->assertNotContains($places[1], $project->getPlaces());
+        $this->assertCount(1, $project->getEvents());
+    }
+
+    public function testRemoveTurnsShouldFilterTurnsRelatedToTheProject(): void
+    {
+        $turns = [
+            new TurnAvailability(
+                capacity: new Capacity($this->faker->randomNumber()),
+                dayOfWeek: DayOfWeek::MONDAY,
+                turn: Turn::H1200,
+            ),
+            new TurnAvailability(
+                capacity: new Capacity($this->faker->randomNumber()),
+                dayOfWeek: DayOfWeek::MONDAY,
+                turn: Turn::H1230,
+            ),
+            new TurnAvailability(
+                capacity: new Capacity($this->faker->randomNumber()),
+                dayOfWeek: DayOfWeek::MONDAY,
+                turn: Turn::H1200,
+            ),
+        ];
+        $project = $this->project(turns: $turns);
+
+        $project->removeTurns(fn(TurnAvailability $turn) => $turn->turn === Turn::H1230);
+
+        $this->assertNotContains($turns[1], $project->getTurns());
+        $this->assertCount(1, $project->getEvents());
+    }
+
+    public function testRemoveOpenCloseEventsShouldFilterOpenCloseEventsRelatedToTheProject(): void
+    {
+        $openCloseEvents = [
+            new OpenCloseEvent(
+                date: new \DateTimeImmutable(),
+                isAvailable: $this->faker->boolean,
+                turn: Turn::H1200,
+            ),
+            new OpenCloseEvent(
+                date: new \DateTimeImmutable(),
+                isAvailable: $this->faker->boolean,
+                turn: Turn::H1230,
+            ),
+            new OpenCloseEvent(
+                date: new \DateTimeImmutable(),
+                isAvailable: $this->faker->boolean,
+                turn: Turn::H1200,
+            ),
+        ];
+        $project = $this->project(openCloseEvents: $openCloseEvents);
+
+        $project->removeOpenCloseEvents(fn(OpenCloseEvent $openCloseEvent) => $openCloseEvent->turn === Turn::H1230);
+
+        $this->assertNotContains($openCloseEvents[1], $project->getOpenCloseEvents());
+        $this->assertCount(1, $project->getEvents());
+    }
 }
