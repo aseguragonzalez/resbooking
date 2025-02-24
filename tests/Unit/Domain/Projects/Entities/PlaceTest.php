@@ -44,7 +44,7 @@ final class PlaceTest extends TestCase
         $capacity = new Capacity(100);
         $name = $this->faker->name;
 
-        $place = Place::stored(id: $id, capacity: $capacity, name: $name);
+        $place = Place::build(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(Place::class, $place);
         $this->assertEquals($id, $place->getId());

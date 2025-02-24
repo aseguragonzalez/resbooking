@@ -27,7 +27,7 @@ final class PlaceCreatedTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $place = Place::stored(
+        $place = Place::build(
             id: $this->faker->uuid,
             capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
             name: $this->faker->name
@@ -46,7 +46,7 @@ final class PlaceCreatedTest extends TestCase
     public function testBuildShouldCreateStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
-        $place = Place::stored(
+        $place = Place::build(
             id: $this->faker->uuid,
             capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
             name: $this->faker->name

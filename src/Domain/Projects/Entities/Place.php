@@ -32,7 +32,7 @@ final class Place extends Entity
         );
     }
 
-    public static function stored(string $id, Capacity $capacity, string $name): self
+    public static function build(string $id, Capacity $capacity, string $name): self
     {
         return new self($id, $capacity, $name);
     }

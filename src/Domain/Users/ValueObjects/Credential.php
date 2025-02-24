@@ -22,7 +22,7 @@ final class Credential extends ValueObject
         }
     }
 
-    public static function stored(string $secret, string $seed): self
+    public static function build(string $secret, string $seed): self
     {
         return new Credential($secret, $seed);
     }

@@ -68,7 +68,7 @@ final class Offer extends AggregateRoot
      * @param array<OpenCloseEvent> $openCloseEvents
      * @param array<TurnAvailability> $turns
      */
-    public static function stored(
+    public static function build(
         string $id,
         Project $project,
         Settings $settings,

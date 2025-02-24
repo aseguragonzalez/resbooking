@@ -31,7 +31,7 @@ final class CredentialTest extends TestCase
         $secret = $this->faker->uuid();
         $seed = $this->faker->uuid();
 
-        $credential = Credential::stored($secret, $seed);
+        $credential = Credential::build($secret, $seed);
 
         $this->assertEquals($secret, $credential->secret);
         $this->assertEquals($seed, $credential->seed);
@@ -41,14 +41,14 @@ final class CredentialTest extends TestCase
     {
         $this->expectException(ValueException::class);
 
-        Credential::stored('', $this->faker->uuid());
+        Credential::build('', $this->faker->uuid());
     }
 
     public function testBuildShouldFailWhenSeedIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
-        Credential::stored($this->faker->uuid(), '');
+        Credential::build($this->faker->uuid(), '');
     }
 
     public function testNewShouldCreateCredential(): void
