@@ -124,7 +124,7 @@ final class Project extends AggregateRoot
 
     public function removeUser(User $user): void
     {
-        $users = array_filter($this->users, fn (User $s) => $s == $user);
+        $users = array_filter($this->users, fn (User $s) => $s->username->equals($user->username));
         if (empty($users)) {
             throw new UserDoesNotExist();
         }
