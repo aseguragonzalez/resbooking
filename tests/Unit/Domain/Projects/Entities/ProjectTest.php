@@ -62,7 +62,7 @@ final class ProjectTest extends TestCase
         array $turns = [],
         array $openCloseEvents = []
     ): Project {
-        return Project::stored(
+        return Project::build(
             id: $this->faker->uuid,
             settings: $this->settings(),
             users: $users,

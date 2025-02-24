@@ -64,7 +64,7 @@ final class OfferTest extends TestCase
      */
     private function offer(array $openCloseEvents = [], array $turns = [], bool $available = true): Offer
     {
-        return Offer::stored(
+        return Offer::build(
             id: $this->faker->uuid,
             available: $available,
             openCloseEvents: $openCloseEvents,

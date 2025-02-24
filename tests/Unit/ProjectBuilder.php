@@ -33,7 +33,7 @@ class ProjectBuilder
             numberOfTables: new Capacity(25),
             phone: new Phone($this->faker->phoneNumber)
         );
-        return Project::stored(
+        return Project::build(
             id: $this->faker->uuid,
             settings: $settings,
             places: $this->places ?? []

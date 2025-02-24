@@ -86,7 +86,7 @@ final class Project extends AggregateRoot
      * @param array<TurnAvailability> $turns
      * @param array<OpenCloseEvent> $openCloseEvents
      */
-    public static function stored(
+    public static function build(
         string $id,
         Settings $settings,
         array $users = [],
