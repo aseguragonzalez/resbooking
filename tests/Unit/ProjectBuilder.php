@@ -7,11 +7,11 @@ namespace Tests\Unit;
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ValueObjects\{Settings, User};
-use App\Domain\Shared\ValueObjects\TurnAvailability;
+use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use App\Domain\Shared\{Capacity, Email, Phone};
 use Faker\Generator as Faker;
 
-class ProjectBuilder
+final class ProjectBuilder
 {
     /**
      * @var array<Place> $places
@@ -28,8 +28,14 @@ class ProjectBuilder
      */
     private array $turns;
 
+    /**
+     * @var array<OpenCloseEvent> $openCloseEvents
+     */
+    private array $openCloseEvents;
+
     public function __construct(private readonly Faker $faker)
     {
+        $this->openCloseEvents = [];
         $this->places = [];
         $this->turns = [];
         $this->users = [];
@@ -51,8 +57,19 @@ class ProjectBuilder
             settings: $settings,
             places: $this->places ?? [],
             users: $this->users ?? [],
-            turns: $this->turns ?? []
+            turns: $this->turns ?? [],
+            openCloseEvents: $this->openCloseEvents ?? []
         );
+    }
+
+    /**
+     * @param array<OpenCloseEvent> $openCloseEvents
+     * @return ProjectBuilder
+     */
+    public function withOpenCloseEvents(array $openCloseEvents = []): ProjectBuilder
+    {
+        $this->openCloseEvents = $openCloseEvents;
+        return $this;
     }
 
     /**
@@ -66,22 +83,22 @@ class ProjectBuilder
     }
 
     /**
-     * @param array<User> $users
-     * @return ProjectBuilder
-     */
-    public function withUsers(array $users = []): ProjectBuilder
-    {
-        $this->users = $users;
-        return $this;
-    }
-
-    /**
      * @param array<TurnAvailability> $turns
      * @return ProjectBuilder
      */
     public function withTurns(array $turns = []): ProjectBuilder
     {
         $this->turns = $turns;
+        return $this;
+    }
+
+    /**
+     * @param array<User> $users
+     * @return ProjectBuilder
+     */
+    public function withUsers(array $users = []): ProjectBuilder
+    {
+        $this->users = $users;
         return $this;
     }
 }
