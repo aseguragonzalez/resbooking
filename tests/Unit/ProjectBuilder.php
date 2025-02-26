@@ -33,12 +33,15 @@ final class ProjectBuilder
      */
     private array $openCloseEvents;
 
+    private ?Settings $settings;
+
     public function __construct(private readonly Faker $faker)
     {
         $this->openCloseEvents = [];
         $this->places = [];
         $this->turns = [];
         $this->users = [];
+        $this->settings = null;
     }
 
     public function build(): Project
@@ -54,11 +57,11 @@ final class ProjectBuilder
         );
         return Project::build(
             id: $this->faker->uuid,
-            settings: $settings,
+            settings: $this->settings ?? $settings,
             places: $this->places ?? [],
             users: $this->users ?? [],
             turns: $this->turns ?? [],
-            openCloseEvents: $this->openCloseEvents ?? []
+            openCloseEvents: $this->openCloseEvents ?? [],
         );
     }
 
@@ -79,6 +82,12 @@ final class ProjectBuilder
     public function withPlaces(array $places = []): ProjectBuilder
     {
         $this->places = $places;
+        return $this;
+    }
+
+    public function withSettings(Settings $settings): ProjectBuilder
+    {
+        $this->settings = $settings;
         return $this;
     }
 
