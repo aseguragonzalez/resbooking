@@ -6,8 +6,8 @@ namespace Tests\Unit\Application\Projects\RemoveOpenCloseEvent;
 
 use App\Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventRequest};
 use App\Domain\Projects\ProjectRepository;
+use App\Domain\Shared\Turn;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
-use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

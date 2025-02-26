@@ -29,7 +29,7 @@ final class LockUserTest extends TestCase
     {
     }
 
-    public function testRemoveUserShouldUpdateProjectWithoutUser(): void
+    public function testLockUserShouldSetUserAsLocked(): void
     {
         $user = User::build(
             username: new Email($this->faker->email),

@@ -31,7 +31,7 @@ final class UpdateSettingsTest extends TestCase
     {
     }
 
-    public function testRemoveTurnShouldUpdateProjectWithoutTurn(): void
+    public function testUpdateSettingsShouldUpdateProjectSettings(): void
     {
         $settings = new Settings(
             email: new Email($this->faker->email),
