@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\Projects\RemovePlace;
+namespace Tests\Unit\Application\Projects\RemoveTurn;
 
-use App\Application\Projects\RemovePlace\{RemovePlace, RemovePlaceRequest};
-use App\Domain\Projects\Entities\Place;
+use App\Application\Projects\RemoveTurn\{RemoveTurn, RemoveTurnRequest};
 use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Capacity;
+use App\Domain\Shared\ValueObjects\TurnAvailability;
+use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\ProjectBuilder;
 
-final class RemovePlaceTest extends TestCase
+final class RemoveTurnTest extends TestCase
 {
     private Faker $faker;
     private ProjectBuilder $projectBuilder;
@@ -31,14 +31,14 @@ final class RemovePlaceTest extends TestCase
     {
     }
 
-    public function testRemovePlaceShouldUpdateProjectWithoutPlace(): void
+    public function testRemoveTurnShouldUpdateProjectWithoutTurn(): void
     {
-        $place = Place::new(new Capacity(10), name: $this->faker->name);
-        $places = [
-            $place,
-            Place::new(new Capacity(10), name: $this->faker->name),
+        $turn = new TurnAvailability(new Capacity(10), DayOfWeek::MONDAY, Turn::H1200);
+        $turns = [
+            $turn,
+            new TurnAvailability(new Capacity(10), DayOfWeek::MONDAY, Turn::H1230),
         ];
-        $project = $this->projectBuilder->withPlaces($places)->build();
+        $project = $this->projectBuilder->withTurns($turns)->build();
         $this->projectRepository
             ->expects($this->once())
             ->method('getById')
@@ -47,11 +47,15 @@ final class RemovePlaceTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $request = new RemovePlaceRequest(projectId: $this->faker->uuid, placeId: $place->getId());
-        $useCase = new RemovePlace(projectRepository: $this->projectRepository);
+        $request = new RemoveTurnRequest(
+            projectId: $this->faker->uuid,
+            turn: Turn::H1200,
+            dayOfWeek: DayOfWeek::MONDAY
+        );
+        $useCase = new RemoveTurn(projectRepository: $this->projectRepository);
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getPlaces()));
+        $this->assertEquals(1, count($project->getTurns()));
     }
 }
