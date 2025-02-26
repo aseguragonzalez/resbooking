@@ -7,6 +7,7 @@ namespace Tests\Unit;
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\Entities\Project;
 use App\Domain\Projects\ValueObjects\{Settings, User};
+use App\Domain\Shared\ValueObjects\TurnAvailability;
 use App\Domain\Shared\{Capacity, Email, Phone};
 use Faker\Generator as Faker;
 
