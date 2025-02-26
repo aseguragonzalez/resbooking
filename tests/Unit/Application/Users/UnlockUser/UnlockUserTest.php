@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Application\Users\LockUser;
+namespace Tests\Unit\Application\Users\UnLockUser;
 
-use App\Application\Users\LockUser\{LockUser, LockUserRequest};
+use App\Application\Users\UnlockUser\{UnlockUser, UnlockUserRequest};
 use App\Domain\Shared\{Email, Password};
 use App\Domain\Users\Entities\User;
 use App\Domain\Users\UserRepository;
@@ -14,7 +14,7 @@ use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class LockUserTest extends TestCase
+final class UnlockUserTest extends TestCase
 {
     private Faker $faker;
     private MockObject&UserRepository $userRepository;
@@ -29,11 +29,12 @@ final class LockUserTest extends TestCase
     {
     }
 
-    public function testLockUserShouldSetUserAsLocked(): void
+    public function testUnlockUserShouldSetUserAsUnlocked(): void
     {
         $user = User::build(
             username: new Email($this->faker->email),
-            credential: Credential::new(new Password($this->faker->password(Password::MIN_LENGTH)))
+            credential: Credential::new(new Password($this->faker->password(Password::MIN_LENGTH))),
+            locked: true
         );
         $this->userRepository
             ->expects($this->once())
@@ -43,11 +44,11 @@ final class LockUserTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($user);
-        $request = new LockUserRequest(username: $user->username->getValue());
-        $useCase = new LockUser(userRepository: $this->userRepository);
+        $request = new UnlockUserRequest(username: $user->username->getValue());
+        $useCase = new UnlockUser(userRepository: $this->userRepository);
 
         $useCase->execute($request);
 
-        $this->assertTrue($user->isLocked());
+        $this->assertFalse($user->isLocked());
     }
 }

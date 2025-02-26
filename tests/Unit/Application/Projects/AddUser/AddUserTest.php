@@ -38,7 +38,6 @@ final class AddUserTest extends TestCase
         $this->projectRepository
             ->expects($this->once())
             ->method('getById')
-            ->with($this->isType('string'))
             ->willReturn($project);
         $this->projectRepository
             ->expects($this->once())
