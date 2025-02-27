@@ -33,13 +33,13 @@ final class UserFactoryTest extends TestCase
     {
         $user = $this->userFactory->createNewAdmin(username: $this->email, password: $this->password);
 
-        $this->assertTrue($user->hasRole(Role::ADMIN));
+        $this->assertTrue($user->hasRole(Role::Admin));
     }
 
     public function testCreateNewUserShouldReturnAnNewUser(): void
     {
         $user = $this->userFactory->createNewUser(username: $this->email, password: $this->password);
 
-        $this->assertTrue($user->hasRole(Role::USER));
+        $this->assertTrue($user->hasRole(Role::User));
     }
 }

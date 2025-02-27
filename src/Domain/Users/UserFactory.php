@@ -11,11 +11,11 @@ final class UserFactory
 {
     public function createNewAdmin(Email $username, Password $password = null): User
     {
-        return User::new(username: $username, password: $password, roles: [Role::ADMIN]);
+        return User::new(username: $username, password: $password, roles: [Role::Admin]);
     }
 
     public function createNewUser(Email $username, Password $password = null): User
     {
-        return User::new(username: $username, password: $password, roles: [Role::USER]);
+        return User::new(username: $username, password: $password, roles: [Role::User]);
     }
 }

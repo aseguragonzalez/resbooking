@@ -29,7 +29,7 @@ final class TurnAssignedTest extends TestCase
         $projectId = $this->faker->uuid;
         $turn = new TurnAvailability(
             capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
 
@@ -48,7 +48,7 @@ final class TurnAssignedTest extends TestCase
         $projectId = $this->faker->uuid;
         $turn = new TurnAvailability(
             capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
 

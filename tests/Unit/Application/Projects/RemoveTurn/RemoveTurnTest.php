@@ -33,10 +33,10 @@ final class RemoveTurnTest extends TestCase
 
     public function testRemoveTurnShouldUpdateProjectWithoutTurn(): void
     {
-        $turn = new TurnAvailability(new Capacity(10), DayOfWeek::MONDAY, Turn::H1200);
+        $turn = new TurnAvailability(new Capacity(10), DayOfWeek::Monday, Turn::H1200);
         $turns = [
             $turn,
-            new TurnAvailability(new Capacity(10), DayOfWeek::MONDAY, Turn::H1230),
+            new TurnAvailability(new Capacity(10), DayOfWeek::Monday, Turn::H1230),
         ];
         $project = $this->projectBuilder->withTurns($turns)->build();
         $this->projectRepository
@@ -50,7 +50,7 @@ final class RemoveTurnTest extends TestCase
         $request = new RemoveTurnRequest(
             projectId: $this->faker->uuid,
             turn: Turn::H1200,
-            dayOfWeek: DayOfWeek::MONDAY
+            dayOfWeek: DayOfWeek::Monday
         );
         $useCase = new RemoveTurn(projectRepository: $this->projectRepository);
 
