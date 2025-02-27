@@ -12,7 +12,7 @@ use App\Seedwork\Application\UseCase;
 /**
  * @extends UseCase<AddOpenCloseEventRequest>
  */
-class AddOpenCloseEvent extends UseCase
+final class AddOpenCloseEvent extends UseCase
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
