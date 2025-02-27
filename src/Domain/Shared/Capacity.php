@@ -22,4 +22,9 @@ final class Capacity
     {
         return $this->value === $other->value;
     }
+
+    public function __toString()
+    {
+        return (string) $this->value;
+    }
 }
