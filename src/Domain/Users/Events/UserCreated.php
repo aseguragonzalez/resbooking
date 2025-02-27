@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Users\Events;
 
-use App\Domain\Users\Entities\User;
-use App\Seedwork\Domain\DomainEvent;
 use App\Domain\Shared\{Password, Role};
+use App\Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 
 final class UserCreated extends DomainEvent
