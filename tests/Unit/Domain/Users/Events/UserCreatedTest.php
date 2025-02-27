@@ -36,7 +36,7 @@ final class UserCreatedTest extends TestCase
     public function testNewShouldCreateNewEvent(): void
     {
         $username = $this->user->username->getValue();
-        $roles = [Role::USER, Role::ADMIN];
+        $roles = [Role::User, Role::Admin];
         $password = Password::new();
         $event = UserCreated::new(username: $username, roles: $roles, password: $password);
 
@@ -52,7 +52,7 @@ final class UserCreatedTest extends TestCase
     public function testBuildShouldCreateStoredEvent(): void
     {
         $username = $this->user->username->getValue();
-        $roles = [Role::USER, Role::ADMIN];
+        $roles = [Role::User, Role::Admin];
         $password = Password::new();
         $event = UserCreated::build(
             username: $username,

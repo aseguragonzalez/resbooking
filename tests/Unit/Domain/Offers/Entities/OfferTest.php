@@ -173,7 +173,7 @@ final class OfferTest extends TestCase
         $offer = $this->offer();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
 
@@ -193,7 +193,7 @@ final class OfferTest extends TestCase
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $offer = $this->offer(turns: [$turn]);
@@ -206,7 +206,7 @@ final class OfferTest extends TestCase
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $offer = $this->offer(turns: [$turn]);
@@ -228,7 +228,7 @@ final class OfferTest extends TestCase
         $offer = $this->offer();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $this->expectException(TurnDoesNotExist::class);

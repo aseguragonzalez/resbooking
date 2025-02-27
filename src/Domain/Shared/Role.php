@@ -6,14 +6,14 @@ namespace App\Domain\Shared;
 
 enum Role: int
 {
-    case ADMIN = 1;
-    case USER = 2;
+    case Admin = 1;
+    case User = 2;
 
     public static function getById(int $id): self
     {
         return match ($id) {
-            1 => self::ADMIN,
-            2 => self::USER,
+            1 => self::Admin,
+            2 => self::User,
             default => throw new \InvalidArgumentException("Invalid role id: $id"),
         };
     }
@@ -21,8 +21,8 @@ enum Role: int
     public static function getByName(string $name): self
     {
         return match (strtolower($name)) {
-            'admin' => self::ADMIN,
-            'user' => self::USER,
+            'admin' => self::Admin,
+            'user' => self::User,
             default => throw new \InvalidArgumentException("Invalid role name: $name"),
         };
     }

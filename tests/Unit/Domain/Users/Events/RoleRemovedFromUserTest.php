@@ -27,7 +27,7 @@ final class RoleRemovedFromUserTest extends TestCase
     {
         $username = $this->faker->email;
         /** @var Role $role */
-        $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
+        $role = $this->faker->randomElement([Role::Admin, Role::User]);
 
         $event = RoleRemovedFromUser::new(username: $username, role: $role);
 
@@ -43,7 +43,7 @@ final class RoleRemovedFromUserTest extends TestCase
     {
         $username = $this->faker->email;
         /** @var Role $role */
-        $role = $this->faker->randomElement([Role::ADMIN, Role::USER]);
+        $role = $this->faker->randomElement([Role::Admin, Role::User]);
 
         $event = RoleRemovedFromUser::build(username: $username, role: $role, id: $this->faker->uuid);
 

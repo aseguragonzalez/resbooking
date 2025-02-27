@@ -213,7 +213,7 @@ final class ProjectTest extends TestCase
         $project = $this->project();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
 
@@ -232,7 +232,7 @@ final class ProjectTest extends TestCase
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $project = $this->project(turns: [$turn]);
@@ -245,7 +245,7 @@ final class ProjectTest extends TestCase
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $project = $this->project(turns: [$turn]);
@@ -266,7 +266,7 @@ final class ProjectTest extends TestCase
         $project = $this->project();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
-            dayOfWeek: DayOfWeek::MONDAY,
+            dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
         $this->expectException(TurnDoesNotExist::class);
@@ -405,17 +405,17 @@ final class ProjectTest extends TestCase
         $turns = [
             new TurnAvailability(
                 capacity: new Capacity($this->faker->randomNumber()),
-                dayOfWeek: DayOfWeek::MONDAY,
+                dayOfWeek: DayOfWeek::Monday,
                 turn: Turn::H1200,
             ),
             new TurnAvailability(
                 capacity: new Capacity($this->faker->randomNumber()),
-                dayOfWeek: DayOfWeek::MONDAY,
+                dayOfWeek: DayOfWeek::Monday,
                 turn: Turn::H1230,
             ),
             new TurnAvailability(
                 capacity: new Capacity($this->faker->randomNumber()),
-                dayOfWeek: DayOfWeek::MONDAY,
+                dayOfWeek: DayOfWeek::Monday,
                 turn: Turn::H1200,
             ),
         ];

@@ -171,7 +171,7 @@ final class UserTest extends TestCase
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $role = Role::ADMIN;
+        $role = Role::Admin;
         $user = User::build($email, $credential, roles: [$role]);
 
         $this->assertTrue($user->hasRole($role));
@@ -183,14 +183,14 @@ final class UserTest extends TestCase
         $credential = Credential::new($this->password, $this->faker->uuid);
         $user = User::build($email, $credential);
 
-        $this->assertFalse($user->hasRole(Role::ADMIN));
+        $this->assertFalse($user->hasRole(Role::Admin));
     }
 
     public function testGetRolesShouldReturnAllRolesFromUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
-        $roles = [Role::ADMIN, Role::USER];
+        $roles = [Role::Admin, Role::User];
         $user = User::build($email, $credential, roles: $roles);
 
         $this->assertEquals($roles, $user->getRoles());
@@ -198,7 +198,7 @@ final class UserTest extends TestCase
 
     public function testAddRoleShouldSetANewRoleToUser(): void
     {
-        $role = Role::ADMIN;
+        $role = Role::Admin;
         $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password)
@@ -217,7 +217,7 @@ final class UserTest extends TestCase
 
     public function testAddRoleShouldFailWhenRoleAlreadyExist(): void
     {
-        $role = Role::ADMIN;
+        $role = Role::Admin;
         $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password),
@@ -230,7 +230,7 @@ final class UserTest extends TestCase
 
     public function testRemoveRoleShouldDeleteRoleFromUser(): void
     {
-        $role = Role::ADMIN;
+        $role = Role::Admin;
         $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password),
@@ -250,7 +250,7 @@ final class UserTest extends TestCase
 
     public function testRemoveRoleShouldFailWhenRoleDoesNotExist(): void
     {
-        $role = Role::ADMIN;
+        $role = Role::Admin;
         $user = User::build(
             username: new Email($this->faker->email),
             credential: Credential::new($this->password)
