@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Models\Projects;
 
-readonly class ProjectUser
+final readonly class ProjectUser
 {
-    public function __construct(
-        public int $id,
-        public int $projectId,
-        public int $userId,
-    ) {
+    public function __construct(public int $projectId, public int $userId)
+    {
     }
 }

@@ -2,17 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models;
+namespace App\Infrastructure\Adapters\Models\Projects;
 
-readonly class Project
+final readonly class Project
 {
     public function __construct(
         public int $id,
+        public bool $available,
+        public string $email,
+        public bool $hasRemainders,
+        public int $maxNumberOfDiners,
+        public int $minNumberOfDiners,
         public string $name,
-        public string $description,
-        public string $path,
-        public string $date,
-        public bool $active,
+        public int $numberOfTables,
+        public ?string $phone,
+        public \DateTimeImmutable $createdAt,
+        public ?\DateTimeImmutable $updatedAt = null,
     ) {
     }
 }

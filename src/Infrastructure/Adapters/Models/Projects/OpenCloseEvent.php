@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Adapters\Models\Projects;
 
-final readonly class Place
+final readonly class OpenCloseEvent
 {
     public function __construct(
         public int $id,
         public int $projectId,
-        public int $capacity,
-        public string $name,
-        public bool $available,
+        public \DateTimeImmutable $date,
+        public bool $isAvailable,
+        public int $turnId,
         public \DateTimeImmutable $createdAt,
         public ?\DateTimeImmutable $updatedAt = null,
     ) {
