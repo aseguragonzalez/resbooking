@@ -20,45 +20,110 @@ final class View extends Response
         if (!$template) {
             throw new \RuntimeException("Template not found: {$this->path}");
         }
-        return $this->replaceObjectProperty(propertyName: "", template: $template, data: $this->data);
+        $tags_to_replace = $this->replaceObjectProperty(
+            propertyName: "",
+            model: $this->data,
+            template: $template
+        );
+        $body = str_replace(array_keys($tags_to_replace), array_values($tags_to_replace), $template);
+        // clean empty lines
+        return preg_replace("/^\s*\n/m", '', $body) ?? "";
     }
 
-    private function replaceObjectProperty(string $propertyName, string $template, object $data): string
+    /**
+     * @return array<string, string>
+     */
+    private function replaceObjectProperty(string $propertyName, object $model, string $template): array
     {
         $prefix = $propertyName == "" ? "" : "{$propertyName}->";
-        /* @var array $keys */
-        $keys = [];
-        /* @var array $values */
-        $values = [];
-        foreach ((array)$data as $property => $value) {
+        /* @var array<string, string> $tags_to_replace */
+        $tags_to_replace = [];
+        $values = get_object_vars($model);
+        foreach ($values as $property => $value) {
+            # TODO: try to use match pattern using gettype($value)
             $replace_property_key = "{{{$prefix}{$property}}}";
-            $keys[] = $replace_property_key;
-            if ($value instanceof \DateTimeImmutable) {
-                $formated_date = $value->format(\DateTime::ISO8601_EXPANDED);
-                $values[] = $formated_date;
-                # $template = str_replace($replace_property_key, $formated_date, $template);
+            if ($value instanceof \DateTimeImmutable or $value instanceof \DateTime) {
+                $tags_to_replace[$replace_property_key] = $value->format(\DateTime::ISO8601_EXPANDED);
                 continue;
             }
+
+            if (is_array($value)) {
+                $tags_to_replace = array_merge(
+                    $tags_to_replace,
+                    $this->replaceArrayProperty(
+                        propertyName: "{$prefix}{$property}",
+                        model: $value,
+                        template: $template
+                    )
+                );
+                continue;
+            }
+
+            if (is_object($value)) {
+                $tags_to_replace = array_merge(
+                    $tags_to_replace,
+                    $this->replaceObjectProperty(
+                        propertyName: "{$prefix}{$property}",
+                        model: $value,
+                        template: $template
+                    )
+                );
+                continue;
+            }
+
             if (is_bool($value)) {
-                $formated_value = $value ? 'true' : 'false';
-                $values[] = $formated_value;
-                # $template = str_replace($replace_property_key, $formated_value, $template);
+                $tags_to_replace[$replace_property_key] = $value ? 'true' : 'false';
                 continue;
             }
+
             if (is_numeric($value)) {
-                $values[] = "{$value}";
-                # $template = str_replace($replace_property_key, "{$value}", $template);
+                # TODO: format number
+                $tags_to_replace[$replace_property_key] = "{$value}";
                 continue;
             }
 
             if (is_string($value)) {
-                $values[] = $value;
-                # $template = str_replace($replace_property_key, $value, $template);
+                $tags_to_replace[$replace_property_key] = $value;
                 continue;
             }
-            # $template = str_replace($replace_property_key, "{$value}", $template);
         }
-        return str_replace($keys, $values, $template);
-        # return $template;
+        return $tags_to_replace;
+    }
+
+    /**
+     * @param array<mixed, mixed> $model
+     * @return array<string, string>
+     */
+    private function replaceArrayProperty(string $propertyName, array $model, string $template): array
+    {
+        $tags_to_replace = [];
+        preg_match_all(
+            "/\{\{#for (.*?) in {$propertyName}:\}\}(.*?)\{\{#endfor {$propertyName}:\}\}/s",
+            $template,
+            $matches,
+            PREG_SET_ORDER
+        );
+        foreach ($matches as $match) {
+            $loopVariable = $match[1];
+            $blockContent = $match[2];
+            $content = '';
+            foreach ($model as $item) {
+                if (!is_object($item)) {
+                    continue;
+                }
+                $properties_to_replace = $this->replaceObjectProperty(
+                    propertyName: $loopVariable,
+                    model: $item,
+                    template: $blockContent
+                );
+                $content .= str_replace(
+                    array_keys($properties_to_replace),
+                    array_values($properties_to_replace),
+                    $blockContent
+                );
+            }
+            $tags_to_replace[$match[0]] = $content;
+        }
+        return $tags_to_replace;
     }
 }
