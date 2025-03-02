@@ -155,12 +155,29 @@ final class ViewTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldAppliesLayout(): void
+    public function testViewShouldShowBranchOptions(): void
     {
-        $this->markTestSkipped("Not implemented yet.");
+        $model = new BranchModel(
+            name: "Peter Parker",
+            description: "Friendly neighborhood Spider",
+            isBooleanProperty: true
+        );
+        $data = new \stdClass();
+        $data->model = $model;
+        $view = new View(
+            path: __DIR__ . '/Files/branch_view.html',
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $expected = file_get_contents(__DIR__ . '/Files/branch_view_expected.html');
+
+        $body = $view->getBody();
+
+        $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldAppliesBranch(): void
+    public function testViewShouldAppliesLayout(): void
     {
         $this->markTestSkipped("Not implemented yet.");
     }

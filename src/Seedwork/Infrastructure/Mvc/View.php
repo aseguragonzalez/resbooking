@@ -20,12 +20,19 @@ final class View extends Response
         if (!$template) {
             throw new \RuntimeException("Template not found: {$this->path}");
         }
+        // get direct properties
         $tags_to_replace = $this->replaceObjectProperty(
             propertyName: "",
             model: $this->data,
             template: $template
         );
-        $body = str_replace(array_keys($tags_to_replace), array_values($tags_to_replace), $template);
+        // get branches
+        $branches_to_replace = $this->replaceBranches(
+            model: $this->data,
+            template: $template
+        );
+        $replacements = array_merge($tags_to_replace, $branches_to_replace);
+        $body = str_replace(array_keys($replacements), array_values($replacements), $template);
         // clean empty lines
         return preg_replace("/^\s*\n/m", '', $body) ?? "";
     }
@@ -126,5 +133,48 @@ final class View extends Response
             $tags_to_replace[$match[0]] = $content;
         }
         return $tags_to_replace;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function replaceBranches(object $model, string $template): array
+    {
+        $expressions_to_replace = [];
+        preg_match_all(
+            "/\{\{#if (.*?):\}\}(.*?)\{\{#endif:\}\}/s",
+            $template,
+            $matches,
+            PREG_SET_ORDER
+        );
+        foreach ($matches as $match) {
+            $expression = $match[1];
+            $blockContent = $match[2];
+            $expressions_to_replace[$match[0]] = $this->checkExpression($expression, $model) ? $blockContent : '';
+        }
+        return $expressions_to_replace;
+    }
+
+    private function checkExpression(string $expression, object $model): bool
+    {
+        $expression_path = trim(str_replace(['!', '()'], ['', ''], $expression));
+        $parts = explode('->', $expression_path);
+        $value = $model;
+        foreach ($parts as $part) {
+            if (!is_object($value)) {
+                return false;
+            }
+            if (method_exists($value, $part)) {
+                $value = $value->$part();
+            } elseif (property_exists($value, $part)) {
+                $value = $value->$part;
+            } else {
+                return false;
+            }
+        }
+        if (str_starts_with($expression, '!')) {
+            return !(bool)$value;
+        }
+        return (bool) $value;
     }
 }
