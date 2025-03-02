@@ -20,12 +20,12 @@ final class ViewEngine
         // use layout if defined
         $template = $this->applyLayout($templateFile);
         // get direct properties
-        $tags_to_replace = $view->data == null
+        $tagsToReplace = $view->data == null
             ? [] : $this->replaceObjectProperty(propertyName: "", model: $view->data, template: $template);
         // get branches
-        $branches_to_replace = $view->data == null
+        $branchesToReplace = $view->data == null
             ? [] : $this->replaceBranches(model: $view->data, template: $template);
-        $replacements = array_merge($tags_to_replace, $branches_to_replace);
+        $replacements = array_merge($tagsToReplace, $branchesToReplace);
         $body = str_replace(array_keys($replacements), array_values($replacements), $template);
         // clean empty lines
         return preg_replace("/^\s*\n/m", "", $body) ?? "";
@@ -56,58 +56,39 @@ final class ViewEngine
     private function replaceObjectProperty(string $propertyName, object $model, string $template): array
     {
         $prefix = $propertyName == "" ? "" : "{$propertyName}->";
-        /* @var array<string, string> $tags_to_replace */
-        $tags_to_replace = [];
+        $tagsToReplace = [];
         $values = get_object_vars($model);
         foreach ($values as $property => $value) {
-            # TODO: try to use match pattern using gettype($value)
-            $replace_property_key = "{{{$prefix}{$property}}}";
-            if ($value instanceof \DateTimeImmutable or $value instanceof \DateTime) {
-                $tags_to_replace[$replace_property_key] = $value->format(\DateTime::ISO8601_EXPANDED);
+            $replacePropertyKey = "{{{$prefix}{$property}}}";
+            $propertyName = "{$prefix}{$property}";
+
+            if (is_array($value) || (is_object($value) && !$this->isDatetime($value))) {
+                $subTagsToReplace = match (true) {
+                    is_array($value) => $this->replaceArrayProperty($propertyName, $value, $template),
+                    is_object($value) => $this->replaceObjectProperty($propertyName, $value, $template),
+                };
+                $tagsToReplace = array_merge($tagsToReplace, $subTagsToReplace);
                 continue;
             }
 
-            if (is_array($value)) {
-                $tags_to_replace = array_merge(
-                    $tags_to_replace,
-                    $this->replaceArrayProperty(
-                        propertyName: "{$prefix}{$property}",
-                        model: $value,
-                        template: $template
-                    )
-                );
-                continue;
-            }
-
-            if (is_object($value)) {
-                $tags_to_replace = array_merge(
-                    $tags_to_replace,
-                    $this->replaceObjectProperty(
-                        propertyName: "{$prefix}{$property}",
-                        model: $value,
-                        template: $template
-                    )
-                );
-                continue;
-            }
-
-            if (is_bool($value)) {
-                $tags_to_replace[$replace_property_key] = $value ? 'true' : 'false';
-                continue;
-            }
-
-            if (is_numeric($value)) {
-                # TODO: format number
-                $tags_to_replace[$replace_property_key] = "{$value}";
-                continue;
-            }
-
-            if (is_string($value)) {
-                $tags_to_replace[$replace_property_key] = $value;
-                continue;
-            }
+            $tagsToReplace[$replacePropertyKey] = match (true) {
+                $value instanceof \DateTimeImmutable => $value->format(\DateTime::ISO8601_EXPANDED),
+                $value instanceof \DateTime => $value->format(\DateTime::ISO8601_EXPANDED),
+                is_bool($value) => $value ? 'true' : 'false',
+                is_numeric($value) => "{$value}",
+                is_string($value) => $value,
+                default => "",
+            };
         }
-        return $tags_to_replace;
+        return $tagsToReplace;
+    }
+
+    /**
+     * @param mixed $object
+     */
+    private function isDatetime($object): bool
+    {
+        return $object instanceof \DateTimeImmutable || $object instanceof \DateTime;
     }
 
     /**
@@ -116,7 +97,7 @@ final class ViewEngine
      */
     private function replaceArrayProperty(string $propertyName, array $model, string $template): array
     {
-        $tags_to_replace = [];
+        $tagsToReplace = [];
         preg_match_all(
             "/\{\{#for (.*?) in {$propertyName}:\}\}(.*?)\{\{#endfor {$propertyName}:\}\}/s",
             $template,
@@ -132,20 +113,20 @@ final class ViewEngine
                     continue;
                 }
 
-                $properties_to_replace = $this->replaceObjectProperty(
+                $propertiesToReplace = $this->replaceObjectProperty(
                     propertyName: $loopVariable,
                     model: $item,
                     template: $blockContent
                 );
                 $content .= str_replace(
-                    array_keys($properties_to_replace),
-                    array_values($properties_to_replace),
+                    array_keys($propertiesToReplace),
+                    array_values($propertiesToReplace),
                     $blockContent
                 );
             }
-            $tags_to_replace[$match[0]] = $content;
+            $tagsToReplace[$match[0]] = $content;
         }
-        return $tags_to_replace;
+        return $tagsToReplace;
     }
 
     /**
@@ -153,7 +134,7 @@ final class ViewEngine
      */
     private function replaceBranches(object $model, string $template): array
     {
-        $expressions_to_replace = [];
+        $expressionsToReplace = [];
         preg_match_all(
             "/\{\{#if (.*?):\}\}(.*?)\{\{#endif:\}\}/s",
             $template,
@@ -163,15 +144,15 @@ final class ViewEngine
         foreach ($matches as $match) {
             $expression = $match[1];
             $blockContent = $match[2];
-            $expressions_to_replace[$match[0]] = $this->checkExpression($expression, $model) ? $blockContent : '';
+            $expressionsToReplace[$match[0]] = $this->checkExpression($expression, $model) ? $blockContent : '';
         }
-        return $expressions_to_replace;
+        return $expressionsToReplace;
     }
 
     private function checkExpression(string $expression, object $model): bool
     {
-        $expression_path = trim(str_replace(['!', '()'], ['', ''], $expression));
-        $parts = explode('->', $expression_path);
+        $expressionPath = trim(str_replace(['!', '()'], ['', ''], $expression));
+        $parts = explode('->', $expressionPath);
         $value = $model;
         foreach ($parts as $part) {
             if (!is_object($value)) {
