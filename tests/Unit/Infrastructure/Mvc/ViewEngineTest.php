@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\{StatusCode, View};
+use Seedwork\Infrastructure\Mvc\{StatusCode, ViewEngine, ViewResponse as View};
 
-final class ViewTest extends TestCase
+final class ViewEngineTest extends TestCase
 {
+    private string $basePath = __DIR__ . "/Files/";
+
+    private ViewEngine $viewEngine;
+
     protected function setUp(): void
     {
+        $this->viewEngine = new ViewEngine(basePath: __DIR__ . "/Files/");
     }
 
     protected function tearDown(): void
@@ -29,15 +34,14 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "primitive_properties",
+            name: "primitive_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/primitive_properties_expected.html');
+        $expected = file_get_contents("{$this->basePath}/primitive_properties_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }
@@ -59,15 +63,14 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "object_properties",
+            name: "object_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/object_properties_expected.html');
+        $expected = file_get_contents("{$this->basePath}/object_properties_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }
@@ -87,15 +90,14 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "array_of_objects",
+            name: "array_of_objects",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/array_of_objects_expected.html');
+        $expected = file_get_contents("{$this->basePath}/array_of_objects_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }
@@ -146,15 +148,14 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "complex_view",
+            name: "complex_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/complex_view_expected.html');
+        $expected = file_get_contents("{$this->basePath}/complex_view_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }
@@ -169,15 +170,14 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "branch_view",
+            name: "branch_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/branch_view_expected.html');
+        $expected = file_get_contents("{$this->basePath}/branch_view_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }
@@ -193,15 +193,14 @@ final class ViewTest extends TestCase
         $data->model = $model;
         $data->pageTitle = "Layout page title";
         $view = new View(
-            path: __DIR__ . "/Files/",
-            viewName: "view_with_layout",
+            name: "view_with_layout",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
         );
-        $expected = file_get_contents(__DIR__ . '/Files/view_with_layout_expected.html');
+        $expected = file_get_contents("{$this->basePath}/view_with_layout_expected.html");
 
-        $body = $view->getBody();
+        $body = $this->viewEngine->render($view);
 
         $this->assertEquals($expected, $body);
     }

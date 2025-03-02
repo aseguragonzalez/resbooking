@@ -4,44 +4,31 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
-final class View extends Response
+final class ViewEngine
 {
-    /**
-     * @param array<string, string> $headers
-     */
-    public function __construct(
-        private string $path,
-        private string $viewName,
-        object $data,
-        array $headers,
-        StatusCode $statusCode
-    ) {
-        parent::__construct(headers: $headers, statusCode: $statusCode, data: $data);
+    public function __construct(private readonly string $basePath)
+    {
     }
 
-    public function getBody(): string
+    public function render(ViewResponse $view): string
     {
-        $templateFile = file_get_contents("{$this->path}/{$this->viewName}.html");
+        $viewPath = "{$this->basePath}/{$view->name}.html";
+        $templateFile = file_get_contents($viewPath);
         if (!$templateFile) {
-            throw new \RuntimeException("Template not found: {$this->path}");
+            throw new \RuntimeException("Template not found: {$viewPath}");
         }
         // use layout if defined
         $template = $this->applyLayout($templateFile);
         // get direct properties
-        $tags_to_replace = $this->replaceObjectProperty(
-            propertyName: "",
-            model: $this->data,
-            template: $template
-        );
+        $tags_to_replace = $view->data == null
+            ? [] : $this->replaceObjectProperty(propertyName: "", model: $view->data, template: $template);
         // get branches
-        $branches_to_replace = $this->replaceBranches(
-            model: $this->data,
-            template: $template
-        );
+        $branches_to_replace = $view->data == null
+            ? [] : $this->replaceBranches(model: $view->data, template: $template);
         $replacements = array_merge($tags_to_replace, $branches_to_replace);
         $body = str_replace(array_keys($replacements), array_values($replacements), $template);
         // clean empty lines
-        return preg_replace("/^\s*\n/m", '', $body) ?? "";
+        return preg_replace("/^\s*\n/m", "", $body) ?? "";
     }
 
     private function applyLayout(string $template): string
@@ -49,7 +36,7 @@ final class View extends Response
         preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
         if ($matches) {
             $layoutFilename = $matches[1];
-            $layout = file_get_contents("{$this->path}/{$layoutFilename}.html");
+            $layout = file_get_contents("{$this->basePath}/{$layoutFilename}.html");
             if (!$layout) {
                 throw new \RuntimeException("Layout not found: {$layoutFilename}");
             }
