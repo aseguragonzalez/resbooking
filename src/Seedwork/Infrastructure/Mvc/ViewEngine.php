@@ -151,24 +151,15 @@ final class ViewEngine
 
     private function checkExpression(string $expression, object $model): bool
     {
-        $expressionPath = trim(str_replace(['!', '()'], ['', ''], $expression));
-        $parts = explode('->', $expressionPath);
+        $parts = explode('->', trim(str_replace(['!', '()'], ['', ''], $expression)));
         $value = $model;
         foreach ($parts as $part) {
-            if (!is_object($value)) {
-                return false;
-            }
-            if (method_exists($value, $part)) {
-                $value = $value->$part();
-            } elseif (property_exists($value, $part)) {
-                $value = $value->$part;
-            } else {
-                return false;
-            }
+            $value = match (true) {
+                is_object($value) && method_exists($value, $part) => $value->$part(),
+                is_object($value) && property_exists($value, $part) => $value->$part,
+                default => false,
+            };
         }
-        if (str_starts_with($expression, '!')) {
-            return !(bool)$value;
-        }
-        return (bool) $value;
+        return str_starts_with($expression, '!') ? !(bool)$value : (bool)$value;
     }
 }
