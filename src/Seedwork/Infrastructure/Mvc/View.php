@@ -9,17 +9,24 @@ final class View extends Response
     /**
      * @param array<string, string> $headers
      */
-    public function __construct(private string $path, object $data, array $headers, StatusCode $statusCode)
-    {
+    public function __construct(
+        private string $path,
+        private string $viewName,
+        object $data,
+        array $headers,
+        StatusCode $statusCode
+    ) {
         parent::__construct(headers: $headers, statusCode: $statusCode, data: $data);
     }
 
     public function getBody(): string
     {
-        $template = file_get_contents($this->path);
-        if (!$template) {
+        $templateFile = file_get_contents("{$this->path}/{$this->viewName}.html");
+        if (!$templateFile) {
             throw new \RuntimeException("Template not found: {$this->path}");
         }
+        // use layout if defined
+        $template = $this->applyLayout($templateFile);
         // get direct properties
         $tags_to_replace = $this->replaceObjectProperty(
             propertyName: "",
@@ -35,6 +42,25 @@ final class View extends Response
         $body = str_replace(array_keys($replacements), array_values($replacements), $template);
         // clean empty lines
         return preg_replace("/^\s*\n/m", '', $body) ?? "";
+    }
+
+    private function applyLayout(string $template): string
+    {
+        preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
+        if ($matches) {
+            $layoutFilename = $matches[1];
+            $layout = file_get_contents("{$this->path}/{$layoutFilename}.html");
+            if (!$layout) {
+                throw new \RuntimeException("Layout not found: {$layoutFilename}");
+            }
+            $indentation = '';
+            if (preg_match('/^(\s*)\{\{content\}\}/m', $layout, $indentMatches)) {
+                $indentation = $indentMatches[1];
+            }
+            $content = str_replace("{{#layout {$layoutFilename}:}}", "", $template);
+            return str_replace("{{content}}", (string)preg_replace('/^/m', $indentation, $content), $layout);
+        }
+        return $template;
     }
 
     /**

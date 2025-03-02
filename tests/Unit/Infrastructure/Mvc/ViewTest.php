@@ -29,7 +29,8 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . '/Files/primitive_properties.html',
+            path: __DIR__ . "/Files/",
+            viewName: "primitive_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -58,7 +59,8 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . '/Files/object_properties.html',
+            path: __DIR__ . "/Files/",
+            viewName: "object_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -85,7 +87,8 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . '/Files/array_of_objects.html',
+            path: __DIR__ . "/Files/",
+            viewName: "array_of_objects",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -143,7 +146,8 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . '/Files/complex_view.html',
+            path: __DIR__ . "/Files/",
+            viewName: "complex_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -165,7 +169,8 @@ final class ViewTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $view = new View(
-            path: __DIR__ . '/Files/branch_view.html',
+            path: __DIR__ . "/Files/",
+            viewName: "branch_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -179,6 +184,25 @@ final class ViewTest extends TestCase
 
     public function testViewShouldAppliesLayout(): void
     {
-        $this->markTestSkipped("Not implemented yet.");
+        $model = new \stdClass();
+        $model->name = "Peter Parker";
+        $model->age = 25;
+        $model->height = 1.75;
+        $model->title = "Layout Test";
+        $data = new \stdClass();
+        $data->model = $model;
+        $data->pageTitle = "Layout page title";
+        $view = new View(
+            path: __DIR__ . "/Files/",
+            viewName: "view_with_layout",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $expected = file_get_contents(__DIR__ . '/Files/view_with_layout_expected.html');
+
+        $body = $view->getBody();
+
+        $this->assertEquals($expected, $body);
     }
 }
