@@ -111,6 +111,7 @@ final class View extends Response
                 if (!is_object($item)) {
                     continue;
                 }
+
                 $properties_to_replace = $this->replaceObjectProperty(
                     propertyName: $loopVariable,
                     model: $item,
