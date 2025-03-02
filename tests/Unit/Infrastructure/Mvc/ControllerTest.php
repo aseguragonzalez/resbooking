@@ -28,7 +28,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals([], $view->headers);
         $this->assertInstanceOf(\stdClass::class, $view->data);
         if ($view instanceof ViewResponse) {
-            $this->assertEquals('Example/getDefaultView', $view->name);
+            $this->assertEquals('Example/getDefaultView', $view->viewPath);
         }
     }
 
@@ -39,7 +39,7 @@ final class ControllerTest extends TestCase
         $view = $this->controller->getCustomView($viewName);
 
         if ($view instanceof ViewResponse) {
-            $this->assertEquals("Example/{$viewName}", $view->name);
+            $this->assertEquals("Example/{$viewName}", $view->viewPath);
         }
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\{StatusCode, ViewEngine, ViewResponse as View};
+use Seedwork\Infrastructure\Mvc\{StatusCode, ViewEngine, ViewResponse};
 
 final class ViewEngineTest extends TestCase
 {
@@ -33,8 +33,8 @@ final class ViewEngineTest extends TestCase
         $model->createdAt = new \DateTimeImmutable('2025-01-02T12:01:02.000Z');
         $data = new \stdClass();
         $data->model = $model;
-        $view = new View(
-            name: "primitive_properties",
+        $view = new ViewResponse(
+            viewPath: "primitive_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -62,8 +62,8 @@ final class ViewEngineTest extends TestCase
         $model->address = $address;
         $data = new \stdClass();
         $data->model = $model;
-        $view = new View(
-            name: "object_properties",
+        $view = new ViewResponse(
+            viewPath: "object_properties",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -89,8 +89,8 @@ final class ViewEngineTest extends TestCase
         $model->users = [$user1, $user2];
         $data = new \stdClass();
         $data->model = $model;
-        $view = new View(
-            name: "array_of_objects",
+        $view = new ViewResponse(
+            viewPath: "array_of_objects",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -147,8 +147,8 @@ final class ViewEngineTest extends TestCase
         $model->customer = $customer;
         $data = new \stdClass();
         $data->model = $model;
-        $view = new View(
-            name: "complex_view",
+        $view = new ViewResponse(
+            viewPath: "complex_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -169,8 +169,8 @@ final class ViewEngineTest extends TestCase
         );
         $data = new \stdClass();
         $data->model = $model;
-        $view = new View(
-            name: "branch_view",
+        $view = new ViewResponse(
+            viewPath: "branch_view",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok
@@ -192,8 +192,8 @@ final class ViewEngineTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $data->pageTitle = "Layout page title";
-        $view = new View(
-            name: "view_with_layout",
+        $view = new ViewResponse(
+            viewPath: "view_with_layout",
             data: $data,
             headers: [],
             statusCode: StatusCode::Ok

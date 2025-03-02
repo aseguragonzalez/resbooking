@@ -12,7 +12,7 @@ final class ViewEngine
 
     public function render(ViewResponse $view): string
     {
-        $viewPath = "{$this->basePath}/{$view->name}.html";
+        $viewPath = "{$this->basePath}/{$view->viewPath}.html";
         $templateFile = file_get_contents($viewPath);
         if (!$templateFile) {
             throw new \RuntimeException("Template not found: {$viewPath}");

@@ -18,11 +18,6 @@ abstract class Controller
 
         $viewName = $name ? $name : $backtrace[1]['function'];
         $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
-        return new ViewResponse(name: "{$viewPath}/{$viewName}", data: $model, statusCode: $statusCode);
-    }
-
-    protected function json(?object $model = null, StatusCode $statusCode = StatusCode::Ok): Response
-    {
-        throw new \Exception('Not implemented');
+        return new ViewResponse(viewPath: "{$viewPath}/{$viewName}", data: $model, statusCode: $statusCode);
     }
 }
