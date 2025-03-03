@@ -6,8 +6,8 @@ namespace App\Seedwork\Domain\Exceptions;
 
 class ValueException extends DomainException
 {
-    public function __construct(string $message, int $code = 0, \Throwable $previous = null)
+    public function __construct(string $message, int $code = 0)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }

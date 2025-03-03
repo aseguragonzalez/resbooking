@@ -1,0 +1,23 @@
+<div>
+    <p>
+        {{model->name}}
+    </p>
+    <p>
+        {{model->description}}
+    </p>
+    {{#if model->isBranch():}}
+    <p>
+        Use a method expression
+    </p>
+    {{#endif:}}
+    {{#if !model->invertBranch():}}
+    <p>
+        Invert method expression
+    </p>
+    {{#endif:}}
+    {{#if model->isBooleanProperty:}}
+    <p>
+        Use a boolean property
+    </p>
+    {{#endif:}}
+</div>
