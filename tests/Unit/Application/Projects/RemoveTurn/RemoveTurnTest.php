@@ -31,7 +31,7 @@ final class RemoveTurnTest extends TestCase
     {
     }
 
-    public function testRemoveTurnShouldUpdateProjectWithoutTurn(): void
+    public function testRemoveTurnFromProject(): void
     {
         $turn = new TurnAvailability(new Capacity(10), DayOfWeek::Monday, Turn::H1200);
         $turns = [
@@ -56,6 +56,6 @@ final class RemoveTurnTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getTurns()));
+        $this->assertSame(1, count($project->getTurns()));
     }
 }

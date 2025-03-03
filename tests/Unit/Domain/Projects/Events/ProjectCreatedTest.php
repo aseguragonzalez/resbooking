@@ -25,7 +25,7 @@ final class ProjectCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $project = Project::build(
@@ -44,14 +44,14 @@ final class ProjectCreatedTest extends TestCase
         $event = ProjectCreated::new(projectId: $projectId, project: $project);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('ProjectCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('ProjectCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($project, $payload['project']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($project, $payload['project']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
         $project = Project::build(
@@ -70,10 +70,10 @@ final class ProjectCreatedTest extends TestCase
         $event = ProjectCreated::build(projectId: $projectId, project: $project, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('ProjectCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('ProjectCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($project, $payload['project']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($project, $payload['project']);
     }
 }

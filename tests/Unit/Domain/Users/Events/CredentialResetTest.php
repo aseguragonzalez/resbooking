@@ -23,7 +23,7 @@ final class CredentialResetTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->faker->email;
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
@@ -31,14 +31,14 @@ final class CredentialResetTest extends TestCase
         $event = CredentialReset::new(username: $username, password: $password);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('CredentialReset', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('CredentialReset', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($password, $payload['password']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($password, $payload['password']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->faker->email;
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
@@ -50,10 +50,10 @@ final class CredentialResetTest extends TestCase
         );
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('CredentialReset', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('CredentialReset', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($password, $payload['password']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($password, $payload['password']);
     }
 }

@@ -29,7 +29,7 @@ final class ChangeUserCredentialTest extends TestCase
     {
     }
 
-    public function testChangeUserCredentialShouldAssignNewPassword(): void
+    public function testAssignNewUserPassword(): void
     {
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
         $user = User::build(username: new Email($this->faker->email), credential: Credential::new($password));

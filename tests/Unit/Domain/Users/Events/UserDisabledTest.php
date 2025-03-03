@@ -33,29 +33,29 @@ final class UserDisabledTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->user->username->getValue();
         $event = UserDisabled::new(username: $username, user: $this->user);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserDisabled', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserDisabled', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($this->user, $payload['user']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($this->user, $payload['user']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->user->username->getValue();
         $event = UserDisabled::build(username: $username, user: $this->user, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserDisabled', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserDisabled', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($this->user, $payload['user']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($this->user, $payload['user']);
     }
 }

@@ -22,7 +22,7 @@ final class PhoneTest extends TestCase
     {
     }
 
-    public function testPhoneShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $expected = $this->faker->phoneNumber;
 
@@ -31,7 +31,7 @@ final class PhoneTest extends TestCase
         $this->assertSame($expected, $phone->getValue());
     }
 
-    public function testPhoneShouldBeCastedToString(): void
+    public function testCastingToString(): void
     {
         $expected = $this->faker->phoneNumber;
 
@@ -40,14 +40,14 @@ final class PhoneTest extends TestCase
         $this->assertSame($expected, (string) $phone);
     }
 
-    public function testPhoneShouldTrueWhenComparedWithSameValues(): void
+    public function testEquals(): void
     {
         $phone = new Phone($this->faker->phoneNumber);
 
         $this->assertTrue($phone->equals(new Phone($phone->getValue())));
     }
 
-    public function testPhoneShouldFalseWhenComparedWithDifferentValues(): void
+    public function testEqualsIsFalseWhenComparedWithDifferentValues(): void
     {
         $phone = new Phone($this->faker->phoneNumber);
 

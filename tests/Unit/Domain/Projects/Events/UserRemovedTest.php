@@ -24,7 +24,7 @@ final class UserRemovedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $user = new User(username: new Email($this->faker->email));
@@ -32,11 +32,11 @@ final class UserRemovedTest extends TestCase
         $event = UserRemoved::new(projectId: $projectId, user: $user);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserRemoved', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserRemoved', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($user, $payload['user']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($user, $payload['user']);
     }
 
     public function testBuildShouldInstanciateStoredEvent(): void
@@ -47,10 +47,10 @@ final class UserRemovedTest extends TestCase
         $event = UserRemoved::build(projectId: $projectId, user: $user, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserRemoved', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserRemoved', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($user, $payload['user']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($user, $payload['user']);
     }
 }

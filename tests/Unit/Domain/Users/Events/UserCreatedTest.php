@@ -33,7 +33,7 @@ final class UserCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->user->username->getValue();
         $roles = [Role::User, Role::Admin];
@@ -41,15 +41,15 @@ final class UserCreatedTest extends TestCase
         $event = UserCreated::new(username: $username, roles: $roles, password: $password);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($roles, $payload['roles']);
-        $this->assertEquals($password, $payload['password']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($roles, $payload['roles']);
+        $this->assertSame($password, $payload['password']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->user->username->getValue();
         $roles = [Role::User, Role::Admin];
@@ -62,11 +62,11 @@ final class UserCreatedTest extends TestCase
         );
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($roles, $payload['roles']);
-        $this->assertEquals($password, $payload['password']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($roles, $payload['roles']);
+        $this->assertSame($password, $payload['password']);
     }
 }

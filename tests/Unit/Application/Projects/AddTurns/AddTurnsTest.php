@@ -29,19 +29,17 @@ final class AddTurnsTest extends TestCase
     {
     }
 
-    public function testAddTurnsShouldCreateNewTurns(): void
+    public function testCreateNewTurns(): void
     {
         $project = $this->projectBuilder->build();
         $this->projectRepository
             ->expects($this->once())
             ->method('getById')
-            ->with($this->isType('string'))
             ->willReturn($project);
         $this->projectRepository
             ->expects($this->once())
             ->method('save')
             ->with($project);
-
         /** @var int $day1 */
         $day1 = $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]);
         /** @var int $day2 */
@@ -65,6 +63,6 @@ final class AddTurnsTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(count($request->turns), count($project->getTurns()));
+        $this->assertSame(count($request->turns), count($project->getTurns()));
     }
 }

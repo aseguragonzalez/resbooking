@@ -23,7 +23,7 @@ final class RoleRemovedFromUserTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->faker->email;
         /** @var Role $role */
@@ -32,14 +32,14 @@ final class RoleRemovedFromUserTest extends TestCase
         $event = RoleRemovedFromUser::new(username: $username, role: $role);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('RoleRemovedFromUser', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('RoleRemovedFromUser', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($role, $payload['role']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($role, $payload['role']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->faker->email;
         /** @var Role $role */
@@ -48,10 +48,10 @@ final class RoleRemovedFromUserTest extends TestCase
         $event = RoleRemovedFromUser::build(username: $username, role: $role, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('RoleRemovedFromUser', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('RoleRemovedFromUser', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
-        $this->assertEquals($role, $payload['role']);
+        $this->assertSame($username, $payload['username']);
+        $this->assertSame($role, $payload['role']);
     }
 }

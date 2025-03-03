@@ -24,7 +24,7 @@ final class PlaceCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $place = Place::build(
@@ -36,14 +36,14 @@ final class PlaceCreatedTest extends TestCase
         $event = PlaceCreated::new(projectId: $projectId, place: $place);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('PlaceCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('PlaceCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($place, $payload['place']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($place, $payload['place']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
         $place = Place::build(
@@ -55,10 +55,10 @@ final class PlaceCreatedTest extends TestCase
         $event = PlaceCreated::build(projectId: $projectId, place: $place, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('PlaceCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('PlaceCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($place, $payload['place']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($place, $payload['place']);
     }
 }

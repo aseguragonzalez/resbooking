@@ -31,7 +31,7 @@ final class RemovePlaceTest extends TestCase
     {
     }
 
-    public function testRemovePlaceShouldUpdateProjectWithoutPlace(): void
+    public function testPlaceFromProject(): void
     {
         $place = Place::new(new Capacity(10), name: $this->faker->name);
         $places = [
@@ -52,6 +52,6 @@ final class RemovePlaceTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getPlaces()));
+        $this->assertSame(1, count($project->getPlaces()));
     }
 }

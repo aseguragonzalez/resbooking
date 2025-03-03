@@ -22,7 +22,7 @@ final class PasswordTest extends TestCase
     {
     }
 
-    public function testPasswordShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $expected = $this->faker->password(Password::MIN_LENGTH);
 
@@ -31,7 +31,7 @@ final class PasswordTest extends TestCase
         $this->assertSame($expected, $password->getValue());
     }
 
-    public function testPasswordShouldFailWhenValueInvalid(): void
+    public function testCreateInstanceFailWhenValueInvalid(): void
     {
         $invalidPassword = substr($this->faker->password, 0, Password::MIN_LENGTH - 1);
         $this->expectException(\InvalidArgumentException::class);
@@ -39,7 +39,7 @@ final class PasswordTest extends TestCase
         new Password(value: $invalidPassword);
     }
 
-    public function testPasswordShouldBeCastedToString(): void
+    public function testCastingToString(): void
     {
         $expected = $this->faker->password(Password::MIN_LENGTH);
 
@@ -48,14 +48,14 @@ final class PasswordTest extends TestCase
         $this->assertSame($expected, (string) $password);
     }
 
-    public function testPasswordShouldTrueWhenComparedWithSameValues(): void
+    public function testEquals(): void
     {
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
 
         $this->assertTrue($password->equals(new Password($password->getValue())));
     }
 
-    public function testPasswordShouldFalseWhenComparedWithDifferentValues(): void
+    public function testEqualsIsFalseWhenComparedWithDifferentValues(): void
     {
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
 
@@ -64,7 +64,7 @@ final class PasswordTest extends TestCase
         );
     }
 
-    public function testNewShouldCreateNewPassword(): void
+    public function testCreateNewPassword(): void
     {
         $password = Password::new();
 

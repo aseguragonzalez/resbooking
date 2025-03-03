@@ -24,7 +24,7 @@ final class SettingsTest extends TestCase
     {
     }
 
-    public function testConstructorShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $maxNumberOfDiners = new Capacity(100);
         $minNumberOfDiners = new Capacity(1);
@@ -45,16 +45,16 @@ final class SettingsTest extends TestCase
         );
 
         $this->assertInstanceOf(Settings::class, $settings);
-        $this->assertEquals($maxNumberOfDiners, $settings->maxNumberOfDiners);
-        $this->assertEquals($minNumberOfDiners, $settings->minNumberOfDiners);
-        $this->assertEquals($hasRemainders, $settings->hasRemainders);
-        $this->assertEquals($name, $settings->name);
-        $this->assertEquals($email, $settings->email);
-        $this->assertEquals($phone, $settings->phone);
-        $this->assertEquals($numberOfTables, $settings->numberOfTables);
+        $this->assertSame($maxNumberOfDiners, $settings->maxNumberOfDiners);
+        $this->assertSame($minNumberOfDiners, $settings->minNumberOfDiners);
+        $this->assertSame($hasRemainders, $settings->hasRemainders);
+        $this->assertSame($name, $settings->name);
+        $this->assertSame($email, $settings->email);
+        $this->assertSame($phone, $settings->phone);
+        $this->assertSame($numberOfTables, $settings->numberOfTables);
     }
 
-    public function testConstructorShouldFailWhenNameIsEmpty(): void
+    public function testCreateInstanceFailWhenNameIsEmpty(): void
     {
         $this->expectException(ValueException::class);
         $this->expectExceptionMessage('Name is required');
@@ -70,7 +70,7 @@ final class SettingsTest extends TestCase
         );
     }
 
-    public function testConstructShouldFailWhenMinMaxAreInvalid(): void
+    public function testCreateInstanceFailWhenMinMaxAreInvalid(): void
     {
         $this->expectException(ValueException::class);
 

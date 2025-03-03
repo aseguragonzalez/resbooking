@@ -29,7 +29,7 @@ final class EnableUserTest extends TestCase
     {
     }
 
-    public function testDisableUserShouldSetUserAsDisabled(): void
+    public function testSetUserAsEnabled(): void
     {
         $user = User::build(
             username: new Email($this->faker->email),

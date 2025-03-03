@@ -26,49 +26,49 @@ final class CredentialTest extends TestCase
     {
     }
 
-    public function testBuildShouldInstantiateCredential(): void
+    public function testBuildCredential(): void
     {
         $secret = $this->faker->uuid();
         $seed = $this->faker->uuid();
 
         $credential = Credential::build($secret, $seed);
 
-        $this->assertEquals($secret, $credential->secret);
-        $this->assertEquals($seed, $credential->seed);
+        $this->assertSame($secret, $credential->secret);
+        $this->assertSame($seed, $credential->seed);
     }
 
-    public function testBuildShouldFailWhenSecretIsInvalid(): void
+    public function testBuildFailWhenSecretIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
         Credential::build('', $this->faker->uuid());
     }
 
-    public function testBuildShouldFailWhenSeedIsInvalid(): void
+    public function testBuildFailWhenSeedIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
         Credential::build($this->faker->uuid(), '');
     }
 
-    public function testNewShouldCreateCredential(): void
+    public function testCreateInstance(): void
     {
         $seed = $this->faker->uuid();
 
         $credential = Credential::new($this->password, $seed);
 
         $this->assertNotEmpty($credential->secret);
-        $this->assertEquals($seed, $credential->seed);
+        $this->assertSame($seed, $credential->seed);
     }
 
-    public function testCheckShouldBeTrueWhenPhraseMatches(): void
+    public function testCheckWhenPaswordMatches(): void
     {
         $credential = Credential::new($this->password, $this->faker->uuid());
 
         $this->assertTrue($credential->check($this->password));
     }
 
-    public function testCheckShouldBeFalseWhenPhraseDoesNotMatch(): void
+    public function testCheckWhenPasswordDoesNotMatch(): void
     {
         $credential = Credential::new($this->password, $this->faker->uuid());
 

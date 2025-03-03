@@ -24,7 +24,7 @@ final class PlaceTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewInstance(): void
+    public function testCreateNewInstance(): void
     {
         $id = $this->faker->uuid;
         $capacity = new Capacity(100);
@@ -33,12 +33,12 @@ final class PlaceTest extends TestCase
         $place = Place::new(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(Place::class, $place);
-        $this->assertEquals($id, $place->getId());
-        $this->assertEquals($capacity, $place->capacity);
-        $this->assertEquals($name, $place->name);
+        $this->assertSame($id, $place->getId());
+        $this->assertSame($capacity, $place->capacity);
+        $this->assertSame($name, $place->name);
     }
 
-    public function testStoredShouldCreateNewInstance(): void
+    public function testBuildCreatedInstance(): void
     {
         $id = $this->faker->uuid;
         $capacity = new Capacity(100);
@@ -47,12 +47,12 @@ final class PlaceTest extends TestCase
         $place = Place::build(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(Place::class, $place);
-        $this->assertEquals($id, $place->getId());
-        $this->assertEquals($capacity, $place->capacity);
-        $this->assertEquals($name, $place->name);
+        $this->assertSame($id, $place->getId());
+        $this->assertSame($capacity, $place->capacity);
+        $this->assertSame($name, $place->name);
     }
 
-    public function testConstructorShouldFailWhenNameIsInvalid(): void
+    public function testCreateInstanceFailWhenNameIsInvalid(): void
     {
         $this->expectException(ValueException::class);
         $this->expectExceptionMessage('Name is required');

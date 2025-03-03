@@ -31,7 +31,7 @@ final class RemoveUserTest extends TestCase
     {
     }
 
-    public function testRemoveUserShouldUpdateProjectWithoutUser(): void
+    public function testRemoveUserFromProject(): void
     {
         $email = $this->faker->email;
         $users = [
@@ -52,6 +52,6 @@ final class RemoveUserTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getUsers()));
+        $this->assertSame(1, count($project->getUsers()));
     }
 }

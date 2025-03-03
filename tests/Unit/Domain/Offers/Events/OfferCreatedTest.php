@@ -38,27 +38,27 @@ final class OfferCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $event = OfferCreated::new(offerId: $this->offerId, offer: $this->offer);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('OfferCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('OfferCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($this->offerId, $payload['offerId']);
-        $this->assertEquals($this->offer, $payload['offer']);
+        $this->assertSame($this->offerId, $payload['offerId']);
+        $this->assertSame($this->offer, $payload['offer']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $event = OfferCreated::build(offerId: $this->offerId, offer: $this->offer, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('OfferCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('OfferCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($this->offerId, $payload['offerId']);
-        $this->assertEquals($this->offer, $payload['offer']);
+        $this->assertSame($this->offerId, $payload['offerId']);
+        $this->assertSame($this->offer, $payload['offer']);
     }
 }

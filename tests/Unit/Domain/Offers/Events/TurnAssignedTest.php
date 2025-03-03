@@ -24,7 +24,7 @@ final class TurnAssignedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $offerId = $this->faker->uuid;
         $turn = new TurnAvailability(
@@ -36,14 +36,14 @@ final class TurnAssignedTest extends TestCase
         $event = TurnAssigned::new(offerId: $offerId, turn: $turn);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('TurnAssigned', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('TurnAssigned', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($offerId, $payload['offerId']);
-        $this->assertEquals($turn, $payload['turn']);
+        $this->assertSame($offerId, $payload['offerId']);
+        $this->assertSame($turn, $payload['turn']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $offerId = $this->faker->uuid;
         $turn = new TurnAvailability(
@@ -55,10 +55,10 @@ final class TurnAssignedTest extends TestCase
         $event = TurnAssigned::build(offerId: $offerId, turn: $turn, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('TurnAssigned', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('TurnAssigned', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($offerId, $payload['offerId']);
-        $this->assertEquals($turn, $payload['turn']);
+        $this->assertSame($offerId, $payload['offerId']);
+        $this->assertSame($turn, $payload['turn']);
     }
 }

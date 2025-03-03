@@ -29,7 +29,7 @@ final class UnlockUserTest extends TestCase
     {
     }
 
-    public function testUnlockUserShouldSetUserAsUnlocked(): void
+    public function testSetUserAsUnlocked(): void
     {
         $user = User::build(
             username: new Email($this->faker->email),

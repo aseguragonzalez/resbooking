@@ -23,7 +23,7 @@ final class CapacityTest extends TestCase
     {
     }
 
-    public function testShouldBeCreated(): void
+    public function testCreateInstance(): void
     {
         $value = $this->faker->numberBetween(0, 100);
 
@@ -32,7 +32,7 @@ final class CapacityTest extends TestCase
         $this->assertSame($value, $capacity->value);
     }
 
-    public function testShouldThrowExceptionForInvalidValue(): void
+    public function testCreateInstanceFailWhenValueIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
