@@ -65,6 +65,6 @@ final class AddTurnsTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(count($request->turns), count($project->getTurns()));
+        $this->assertSame(count($request->turns), count($project->getTurns()));
     }
 }

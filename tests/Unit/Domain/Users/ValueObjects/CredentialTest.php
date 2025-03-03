@@ -33,8 +33,8 @@ final class CredentialTest extends TestCase
 
         $credential = Credential::build($secret, $seed);
 
-        $this->assertEquals($secret, $credential->secret);
-        $this->assertEquals($seed, $credential->seed);
+        $this->assertSame($secret, $credential->secret);
+        $this->assertSame($seed, $credential->seed);
     }
 
     public function testBuildShouldFailWhenSecretIsInvalid(): void
@@ -58,7 +58,7 @@ final class CredentialTest extends TestCase
         $credential = Credential::new($this->password, $seed);
 
         $this->assertNotEmpty($credential->secret);
-        $this->assertEquals($seed, $credential->seed);
+        $this->assertSame($seed, $credential->seed);
     }
 
     public function testCheckShouldBeTrueWhenPhraseMatches(): void

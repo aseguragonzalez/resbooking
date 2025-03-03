@@ -32,11 +32,11 @@ final class UserCreatedTest extends TestCase
         $event = UserCreated::new(projectId: $projectId, user: $user);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($user, $payload['user']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($user, $payload['user']);
     }
 
     public function testBuildShouldInstanciateStoredEvent(): void
@@ -47,10 +47,10 @@ final class UserCreatedTest extends TestCase
         $event = UserCreated::build(projectId: $projectId, user: $user, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('UserCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('UserCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($user, $payload['user']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($user, $payload['user']);
     }
 }

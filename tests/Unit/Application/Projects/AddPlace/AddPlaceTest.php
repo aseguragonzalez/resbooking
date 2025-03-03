@@ -50,6 +50,6 @@ final class AddPlaceTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getPlaces()));
+        $this->assertSame(1, count($project->getPlaces()));
     }
 }

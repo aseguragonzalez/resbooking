@@ -60,6 +60,6 @@ final class AddUserTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getUsers()));
+        $this->assertSame(1, count($project->getUsers()));
     }
 }

@@ -80,8 +80,8 @@ final class OfferTest extends TestCase
 
         $this->assertInstanceOf(Offer::class, $offer);
         $this->assertNotEmpty($offer->getId());
-        $this->assertEquals($this->project, $offer->project);
-        $this->assertEquals($this->settings, $offer->getSettings());
+        $this->assertSame($this->project, $offer->project);
+        $this->assertSame($this->settings, $offer->getSettings());
         $this->assertEmpty($offer->getOpenCloseEvents());
         $this->assertEmpty($offer->getTurns());
         $this->assertTrue($offer->isAvailable());
@@ -91,8 +91,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(OfferCreated::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($offer, $payload["offer"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($offer, $payload["offer"]);
     }
 
     public function testSetSettingsShouldUpdateOfferSettings(): void
@@ -110,14 +110,14 @@ final class OfferTest extends TestCase
 
         $offer->setSettings($newSetting);
 
-        $this->assertEquals($newSetting, $offer->getSettings());
+        $this->assertSame($newSetting, $offer->getSettings());
         $events = $offer->getEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
         $this->assertInstanceOf(OfferUpdated::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($offer, $payload["offer"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($offer, $payload["offer"]);
     }
 
     public function testDisableShouldSetUnavailableIt(): void
@@ -132,8 +132,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(OfferDisabled::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($offer, $payload["offer"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($offer, $payload["offer"]);
     }
 
     public function testDisableShouldFailWhenOfferIsAlreadyDisabled(): void
@@ -156,8 +156,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(OfferEnabled::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($offer, $payload["offer"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($offer, $payload["offer"]);
     }
 
     public function testEnabledShouldFailWhenOfferIsAlreadyEnabled(): void
@@ -185,8 +185,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(TurnAssigned::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($turn, $payload["turn"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($turn, $payload["turn"]);
     }
 
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
@@ -219,8 +219,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(TurnUnassigned::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($turn, $payload["turn"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($turn, $payload["turn"]);
     }
 
     public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
@@ -253,8 +253,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(OpenCloseEventCreated::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($openCloseEvent, $payload["openCloseEvent"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($openCloseEvent, $payload["openCloseEvent"]);
     }
 
     public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
@@ -300,8 +300,8 @@ final class OfferTest extends TestCase
         $event = $events[0];
         $this->assertInstanceOf(OpenCloseEventRemoved::class, $event);
         $payload = $event->getPayload();
-        $this->assertEquals($offer->getId(), $payload["offerId"]);
-        $this->assertEquals($openCloseEvent, $payload["openCloseEvent"]);
+        $this->assertSame($offer->getId(), $payload["offerId"]);
+        $this->assertSame($openCloseEvent, $payload["openCloseEvent"]);
     }
 
     public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void

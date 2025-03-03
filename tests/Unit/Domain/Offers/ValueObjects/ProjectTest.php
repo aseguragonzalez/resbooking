@@ -29,7 +29,7 @@ final class ProjectTest extends TestCase
 
         $project = new Project(id: $projectId);
 
-        $this->assertEquals($project->id, $projectId);
+        $this->assertSame($project->id, $projectId);
     }
 
     public function testProjectShouldFailsWhenIdIsInvalid(): void

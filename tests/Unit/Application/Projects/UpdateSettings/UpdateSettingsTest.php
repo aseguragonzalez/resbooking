@@ -67,12 +67,12 @@ final class UpdateSettingsTest extends TestCase
         $useCase->execute($request);
 
         $currentSettings = $project->getSettings();
-        $this->assertEquals($request->email, $currentSettings->email);
-        $this->assertEquals($request->hasRemainders, $currentSettings->hasRemainders);
-        $this->assertEquals($request->name, $currentSettings->name);
-        $this->assertEquals($request->maxNumberOfDiners, $currentSettings->maxNumberOfDiners);
-        $this->assertEquals($request->minNumberOfDiners, $currentSettings->minNumberOfDiners);
-        $this->assertEquals($request->numberOfTables, $currentSettings->numberOfTables);
-        $this->assertEquals($request->phone, $currentSettings->phone);
+        $this->assertSame($request->email, $currentSettings->email);
+        $this->assertSame($request->hasRemainders, $currentSettings->hasRemainders);
+        $this->assertSame($request->name, $currentSettings->name);
+        $this->assertSame($request->maxNumberOfDiners, $currentSettings->maxNumberOfDiners);
+        $this->assertSame($request->minNumberOfDiners, $currentSettings->minNumberOfDiners);
+        $this->assertSame($request->numberOfTables, $currentSettings->numberOfTables);
+        $this->assertSame($request->phone, $currentSettings->phone);
     }
 }

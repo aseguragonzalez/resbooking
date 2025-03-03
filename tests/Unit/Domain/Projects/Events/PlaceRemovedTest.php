@@ -36,11 +36,11 @@ final class PlaceRemovedTest extends TestCase
         $event = PlaceRemoved::new(projectId: $projectId, place: $place);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('PlaceRemoved', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('PlaceRemoved', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($place, $payload['place']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($place, $payload['place']);
     }
 
     public function testBuildShouldCreateStoredEvent(): void
@@ -55,10 +55,10 @@ final class PlaceRemovedTest extends TestCase
         $event = PlaceRemoved::build(projectId: $projectId, place: $place, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('PlaceRemoved', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('PlaceRemoved', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($place, $payload['place']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($place, $payload['place']);
     }
 }

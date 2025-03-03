@@ -93,18 +93,18 @@ final class ProjectTest extends TestCase
         $project = Project::new(id: $id, settings: $settings);
 
         $this->assertInstanceOf(Project::class, $project);
-        $this->assertEquals($id, $project->getId());
-        $this->assertEquals($settings, $project->getSettings());
+        $this->assertSame($id, $project->getId());
+        $this->assertSame($settings, $project->getSettings());
         $this->assertEmpty($project->getUsers());
         $this->assertEmpty($project->getPlaces());
         $this->assertEmpty($project->getTurns());
         $this->assertEmpty($project->getOpenCloseEvents());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(ProjectCreated::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($project, $event->getPayload()['project']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($project, $event->getPayload()['project']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddUserShouldAddUserToProject(): void
@@ -116,11 +116,11 @@ final class ProjectTest extends TestCase
 
         $this->assertContains($user, $project->getUsers());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(UserCreated::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($user, $event->getPayload()['user']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($user, $event->getPayload()['user']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddUserShouldFailWhenUserAlreadyExist(): void
@@ -142,11 +142,11 @@ final class ProjectTest extends TestCase
 
         $this->assertEmpty($project->getUsers());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(UserRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($user, $event->getPayload()['user']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($user, $event->getPayload()['user']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
@@ -167,11 +167,11 @@ final class ProjectTest extends TestCase
 
         $this->assertContains($place, $project->getPlaces());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(PlaceCreated::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($place, $event->getPayload()['place']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($place, $event->getPayload()['place']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
@@ -192,11 +192,11 @@ final class ProjectTest extends TestCase
 
         $this->assertEmpty($project->getPlaces());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(PlaceRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($place, $event->getPayload()['place']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($place, $event->getPayload()['place']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemovePlaceShouldFailWhenPlaceDoesNotExist(): void
@@ -221,11 +221,11 @@ final class ProjectTest extends TestCase
 
         $this->assertContains($turn, $project->getTurns());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(TurnAssigned::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($turn, $event->getPayload()['turn']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($turn, $event->getPayload()['turn']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
@@ -254,11 +254,11 @@ final class ProjectTest extends TestCase
 
         $this->assertEmpty($project->getTurns());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(TurnUnassigned::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($turn, $event->getPayload()['turn']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($turn, $event->getPayload()['turn']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
@@ -287,11 +287,11 @@ final class ProjectTest extends TestCase
 
         $this->assertContains($openCloseEvent, $project->getOpenCloseEvents());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(OpenCloseEventCreated::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($openCloseEvent, $event->getPayload()['openCloseEvent']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($openCloseEvent, $event->getPayload()['openCloseEvent']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
@@ -333,11 +333,11 @@ final class ProjectTest extends TestCase
 
         $this->assertEmpty($project->getOpenCloseEvents());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(OpenCloseEventRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($openCloseEvent, $event->getPayload()['openCloseEvent']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($openCloseEvent, $event->getPayload()['openCloseEvent']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void
@@ -359,13 +359,13 @@ final class ProjectTest extends TestCase
 
         $project->updateSettings($settings);
 
-        $this->assertEquals($settings, $project->getSettings());
+        $this->assertSame($settings, $project->getSettings());
         $events = $project->getEvents();
-        $this->assertEquals(1, count($events));
+        $this->assertSame(1, count($events));
         $this->assertInstanceOf(ProjectModified::class, $events[0]);
         $event = $events[0];
-        $this->assertEquals($project, $event->getPayload()['project']);
-        $this->assertEquals($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($project, $event->getPayload()['project']);
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
     public function testRemoveUsersShouldFilterUsersRelatedToTheProject(): void

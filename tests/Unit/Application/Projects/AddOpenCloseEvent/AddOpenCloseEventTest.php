@@ -51,6 +51,6 @@ final class AddOpenCloseEventTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getOpenCloseEvents()));
+        $this->assertSame(1, count($project->getOpenCloseEvents()));
     }
 }

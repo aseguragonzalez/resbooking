@@ -56,6 +56,6 @@ final class RemoveTurnTest extends TestCase
 
         $useCase->execute($request);
 
-        $this->assertEquals(1, count($project->getTurns()));
+        $this->assertSame(1, count($project->getTurns()));
     }
 }

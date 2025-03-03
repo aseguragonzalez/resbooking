@@ -39,11 +39,11 @@ final class OpenCloseEventCreatedTest extends TestCase
         );
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('OpenCloseEventCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('OpenCloseEventCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($openCloseEvent, $payload['openCloseEvent']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($openCloseEvent, $payload['openCloseEvent']);
     }
 
     public function testBuildShouldCreateStoredEvent(): void
@@ -62,10 +62,10 @@ final class OpenCloseEventCreatedTest extends TestCase
         );
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('OpenCloseEventCreated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('OpenCloseEventCreated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($openCloseEvent, $payload['openCloseEvent']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($openCloseEvent, $payload['openCloseEvent']);
     }
 }

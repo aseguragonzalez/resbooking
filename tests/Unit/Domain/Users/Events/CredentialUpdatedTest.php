@@ -29,10 +29,10 @@ final class CredentialUpdatedTest extends TestCase
         $event = CredentialUpdated::new(username: $username);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('CredentialUpdated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('CredentialUpdated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
+        $this->assertSame($username, $payload['username']);
     }
 
     public function testBuildShouldCreateStoredEvent(): void
@@ -42,9 +42,9 @@ final class CredentialUpdatedTest extends TestCase
         $event = CredentialUpdated::build(username: $username, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('CredentialUpdated', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('CredentialUpdated', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($username, $payload['username']);
+        $this->assertSame($username, $payload['username']);
     }
 }

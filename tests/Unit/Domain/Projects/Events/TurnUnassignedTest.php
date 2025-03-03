@@ -36,11 +36,11 @@ final class TurnUnassignedTest extends TestCase
         $event = TurnUnassigned::new(projectId: $projectId, turn: $turn);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('TurnUnassigned', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('TurnUnassigned', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($turn, $payload['turn']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($turn, $payload['turn']);
     }
 
     public function testBuildShouldCreateStoredEvent(): void
@@ -55,10 +55,10 @@ final class TurnUnassignedTest extends TestCase
         $event = TurnUnassigned::build(projectId: $projectId, turn: $turn, id: $this->faker->uuid);
 
         $this->assertNotEmpty($event->getId());
-        $this->assertEquals('TurnUnassigned', $event->getType());
-        $this->assertEquals('1.0', $event->getVersion());
+        $this->assertSame('TurnUnassigned', $event->getType());
+        $this->assertSame('1.0', $event->getVersion());
         $payload = $event->getPayload();
-        $this->assertEquals($projectId, $payload['projectId']);
-        $this->assertEquals($turn, $payload['turn']);
+        $this->assertSame($projectId, $payload['projectId']);
+        $this->assertSame($turn, $payload['turn']);
     }
 }

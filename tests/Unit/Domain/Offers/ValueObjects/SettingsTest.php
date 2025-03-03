@@ -41,11 +41,11 @@ final class SettingsTest extends TestCase
         );
 
         $this->assertInstanceOf(Settings::class, $settings);
-        $this->assertEquals($description, $settings->description);
-        $this->assertEquals($title, $settings->title);
-        $this->assertEquals($termsAndConditions, $settings->termsAndConditions);
-        $this->assertEquals($startDate, $settings->startDate);
-        $this->assertEquals($endDate, $settings->endDate);
+        $this->assertSame($description, $settings->description);
+        $this->assertSame($title, $settings->title);
+        $this->assertSame($termsAndConditions, $settings->termsAndConditions);
+        $this->assertSame($startDate, $settings->startDate);
+        $this->assertSame($endDate, $settings->endDate);
     }
 
     public function testConstructorShouldFailWhenTitleIsInvalid(): void
