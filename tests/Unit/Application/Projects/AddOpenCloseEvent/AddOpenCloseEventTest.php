@@ -29,7 +29,7 @@ final class AddOpenCloseEventTest extends TestCase
     {
     }
 
-    public function testAddOpenCloseEventShouldCreateNewOpenCloseEvent(): void
+    public function testCreateNewOpenCloseEvent(): void
     {
         $project = $this->projectBuilder->build();
         $this->projectRepository

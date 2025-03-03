@@ -14,7 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\ProjectBuilder;
 
-final class RemoveTurnTest extends TestCase
+final class RemoveOpenCloseEventTest extends TestCase
 {
     private Faker $faker;
     private ProjectBuilder $projectBuilder;
@@ -31,7 +31,7 @@ final class RemoveTurnTest extends TestCase
     {
     }
 
-    public function testRemoveOpenCloseEventShouldUpdateProjectWithoutEvent(): void
+    public function testRemoveOpenCloseEventFromProject(): void
     {
         $today = new \DateTimeImmutable("now");
         $event = new OpenCloseEvent(date: $today, isAvailable: true, turn: Turn::H1200);

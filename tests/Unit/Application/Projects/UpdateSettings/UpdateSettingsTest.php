@@ -31,7 +31,7 @@ final class UpdateSettingsTest extends TestCase
     {
     }
 
-    public function testUpdateSettingsShouldUpdateProjectSettings(): void
+    public function testUpdateProjectSettings(): void
     {
         $settings = new Settings(
             email: new Email($this->faker->email),
@@ -42,7 +42,6 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: new Capacity(10),
             phone: new Phone($this->faker->phoneNumber)
         );
-
         $project = $this->projectBuilder->withSettings($settings)->build();
         $this->projectRepository
             ->expects($this->once())

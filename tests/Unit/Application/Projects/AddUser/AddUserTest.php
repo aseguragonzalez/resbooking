@@ -32,7 +32,7 @@ final class AddUserTest extends TestCase
     {
     }
 
-    public function testAddUserShouldCreateNewUser(): void
+    public function testCreateNewAdmin(): void
     {
         $project = $this->projectBuilder->build();
         $this->projectRepository
@@ -46,11 +46,40 @@ final class AddUserTest extends TestCase
         $this->userRepository
             ->expects($this->once())
             ->method('save');
-
         $request = new AddUserRequest(
             projectId: $this->faker->uuid,
             username: $this->faker->email,
-            isAdmin: $this->faker->boolean
+            isAdmin: true
+        );
+        $useCase = new AddUser(
+            projectRepository: $this->projectRepository,
+            userFactory: new UserFactory(),
+            userRepository: $this->userRepository
+        );
+
+        $useCase->execute($request);
+
+        $this->assertSame(1, count($project->getUsers()));
+    }
+
+    public function testCreateNewUser(): void
+    {
+        $project = $this->projectBuilder->build();
+        $this->projectRepository
+            ->expects($this->once())
+            ->method('getById')
+            ->willReturn($project);
+        $this->projectRepository
+            ->expects($this->once())
+            ->method('save')
+            ->with($project);
+        $this->userRepository
+            ->expects($this->once())
+            ->method('save');
+        $request = new AddUserRequest(
+            projectId: $this->faker->uuid,
+            username: $this->faker->email,
+            isAdmin: false
         );
         $useCase = new AddUser(
             projectRepository: $this->projectRepository,

@@ -29,7 +29,7 @@ final class AddPlaceTest extends TestCase
     {
     }
 
-    public function testAddPlaceShouldCreateNewPlace(): void
+    public function testCreateNewPlace(): void
     {
         $project = $this->projectBuilder->build();
         $this->projectRepository

@@ -29,7 +29,7 @@ final class ResetUserCredentialTest extends TestCase
     {
     }
 
-    public function testResetUserCredentialShouldAssingNewRandomPassword(): void
+    public function testAssingNewRandomPassword(): void
     {
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
         $user = User::build(

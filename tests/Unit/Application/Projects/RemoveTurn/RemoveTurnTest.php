@@ -31,7 +31,7 @@ final class RemoveTurnTest extends TestCase
     {
     }
 
-    public function testRemoveTurnShouldUpdateProjectWithoutTurn(): void
+    public function testRemoveTurnFromProject(): void
     {
         $turn = new TurnAvailability(new Capacity(10), DayOfWeek::Monday, Turn::H1200);
         $turns = [
