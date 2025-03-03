@@ -20,7 +20,7 @@ final class ControllerTest extends TestCase
     {
     }
 
-    public function testControllerShouldUseDefaultValues(): void
+    public function testGetDefaultView(): void
     {
         $view = $this->controller->getDefaultView();
 
@@ -32,7 +32,7 @@ final class ControllerTest extends TestCase
         }
     }
 
-    public function testControllerShouldUseCustomViewName(): void
+    public function testGetViewByName(): void
     {
         $viewName = "index";
 
@@ -43,7 +43,7 @@ final class ControllerTest extends TestCase
         }
     }
 
-    public function testControllerShouldUseCustomStatusCode(): void
+    public function testGetViewWithStatusCode(): void
     {
         $statusCode = StatusCode::NotFound;
 
@@ -52,7 +52,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals($statusCode, $view->statusCode);
     }
 
-    public function testControllerShouldUseCustomModel(): void
+    public function testGetViewWithModel(): void
     {
         $model = new \stdClass();
         $model->name = "John Doe";
@@ -62,7 +62,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals($model, $view->data);
     }
 
-    public function testControllerShouldRedirectToAction(): void
+    public function testRedirectToAction(): void
     {
         $action = 'index';
         $args = new \stdClass();
@@ -82,7 +82,7 @@ final class ControllerTest extends TestCase
         }
     }
 
-    public function testControllerShouldRedirectToControllerAction(): void
+    public function testRedirectToActionWithController(): void
     {
         $controller = 'HomeController';
         $action = 'index';
@@ -107,7 +107,7 @@ final class ControllerTest extends TestCase
         }
     }
 
-    public function testControllerShouldRedirectToUrl(): void
+    public function testRedirectToUrl(): void
     {
         $url = 'https://example.com';
         $args = new \stdClass();
@@ -120,7 +120,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals(['Location' => "{$url}?offset={$args->offset}&limit={$args->limit}"], $response->headers);
     }
 
-    public function testControllerShouldFailsWhenUrlIsInvalid(): void
+    public function testRedirectToUrlWithInvalidUrl(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
