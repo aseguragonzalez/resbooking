@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc;
+namespace Tests\Unit\Infrastructure\Mvc\Fixtures;
 
-use Seedwork\Infrastructure\Mvc\{Controller, StatusCode, Response};
+use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
 
-class ExampleController extends Controller
+final class ExampleController extends Controller
 {
     public function getDefaultView(): Response
     {

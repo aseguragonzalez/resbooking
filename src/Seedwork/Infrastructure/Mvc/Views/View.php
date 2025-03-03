@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Views;
 
-final class ViewResponse extends Response
+use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
+
+final class View extends Response
 {
     /**
      * @param array<string, string> $headers

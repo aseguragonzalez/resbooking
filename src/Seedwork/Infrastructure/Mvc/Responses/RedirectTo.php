@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Responses;
 
-final class RedirectToResponse extends Response
+final class RedirectTo extends Response
 {
     public function __construct(
         public readonly string $url,

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc;
+namespace Tests\Unit\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\{StatusCode, ViewEngine, ViewResponse};
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
+use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, View};
+use Tests\Unit\Infrastructure\Mvc\Fixtures\BranchModel;
 
-final class ViewEngineTest extends TestCase
+final class HtmlViewEngineTest extends TestCase
 {
     private string $basePath = __DIR__ . "/Files/";
 
@@ -15,7 +17,7 @@ final class ViewEngineTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->viewEngine = new ViewEngine(basePath: __DIR__ . "/Files/");
+        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . "/Files");
     }
 
     protected function tearDown(): void
@@ -33,7 +35,7 @@ final class ViewEngineTest extends TestCase
         $model->createdAt = new \DateTimeImmutable('2025-01-02T12:01:02.000Z');
         $data = new \stdClass();
         $data->model = $model;
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "primitive_properties",
             data: $data,
             headers: [],
@@ -62,7 +64,7 @@ final class ViewEngineTest extends TestCase
         $model->address = $address;
         $data = new \stdClass();
         $data->model = $model;
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "object_properties",
             data: $data,
             headers: [],
@@ -89,7 +91,7 @@ final class ViewEngineTest extends TestCase
         $model->users = [$user1, $user2];
         $data = new \stdClass();
         $data->model = $model;
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "array_of_objects",
             data: $data,
             headers: [],
@@ -147,7 +149,7 @@ final class ViewEngineTest extends TestCase
         $model->customer = $customer;
         $data = new \stdClass();
         $data->model = $model;
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "complex_view",
             data: $data,
             headers: [],
@@ -169,7 +171,7 @@ final class ViewEngineTest extends TestCase
         );
         $data = new \stdClass();
         $data->model = $model;
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "branch_view",
             data: $data,
             headers: [],
@@ -192,7 +194,7 @@ final class ViewEngineTest extends TestCase
         $data = new \stdClass();
         $data->model = $model;
         $data->pageTitle = "Layout page title";
-        $view = new ViewResponse(
+        $view = new View(
             viewPath: "view_with_layout",
             data: $data,
             headers: [],
