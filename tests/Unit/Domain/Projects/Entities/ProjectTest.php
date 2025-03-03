@@ -36,40 +36,21 @@ use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
+use Tests\Unit\ProjectBuilder;
 
 final class ProjectTest extends TestCase
 {
     private Faker $faker;
+    private ProjectBuilder $projectBuilder;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
+        $this->projectBuilder = new ProjectBuilder($this->faker);
     }
 
     protected function tearDown(): void
     {
-    }
-
-    /**
-     * @param array<User> $users
-     * @param array<Place> $places
-     * @param array<TurnAvailability> $turns
-     * @param array<OpenCloseEvent> $openCloseEvents
-     */
-    private function project(
-        array $users = [],
-        array $places = [],
-        array $turns = [],
-        array $openCloseEvents = []
-    ): Project {
-        return Project::build(
-            id: $this->faker->uuid,
-            settings: $this->settings(),
-            users: $users,
-            places: $places,
-            turns: $turns,
-            openCloseEvents: $openCloseEvents
-        );
     }
 
     private function settings(): Settings
@@ -109,7 +90,7 @@ final class ProjectTest extends TestCase
 
     public function testAddUserToProject(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $user = new User(username: new Email($this->faker->email));
 
         $project->addUser($user);
@@ -125,7 +106,7 @@ final class ProjectTest extends TestCase
 
     public function testAddUserFailWhenUserAlreadyExist(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $user = new User(username: new Email($this->faker->email));
         $project->addUser($user);
         $this->expectException(UserAlreadyExist::class);
@@ -136,7 +117,7 @@ final class ProjectTest extends TestCase
     public function testRemoveUserFromProject(): void
     {
         $user = new User(username: new Email($this->faker->email));
-        $project = $this->project(users: [$user]);
+        $project = $this->projectBuilder->withSettings($this->settings())->withUsers([$user])->build();
 
         $project->removeUser($user);
 
@@ -151,7 +132,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveUserFailWhenUserDoesNotExist(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $user = new User(username: new Email($this->faker->email));
         $this->expectException(UserDoesNotExist::class);
 
@@ -160,7 +141,7 @@ final class ProjectTest extends TestCase
 
     public function testAddPlaceToProject(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
 
         $project->addPlace($place);
@@ -177,7 +158,7 @@ final class ProjectTest extends TestCase
     public function testAddPlaceFailWhenPlaceAlreadyExist(): void
     {
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
-        $project = $this->project(places: [$place]);
+        $project = $this->projectBuilder->withSettings($this->settings())->withPlaces([$place])->build();
         $this->expectException(PlaceAlreadyExist::class);
 
         $project->addPlace($place);
@@ -186,7 +167,7 @@ final class ProjectTest extends TestCase
     public function testRemovePlaceFromProject(): void
     {
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
-        $project = $this->project(places: [$place]);
+        $project = $this->projectBuilder->withSettings($this->settings())->withPlaces([$place])->build();
 
         $project->removePlace($place);
 
@@ -201,7 +182,7 @@ final class ProjectTest extends TestCase
 
     public function testRemovePlaceFailWhenPlaceDoesNotExist(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $this->expectException(PlaceDoesNotExist::class);
 
@@ -210,7 +191,7 @@ final class ProjectTest extends TestCase
 
     public function testAddTurnToProject(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::Monday,
@@ -235,7 +216,7 @@ final class ProjectTest extends TestCase
             dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
-        $project = $this->project(turns: [$turn]);
+        $project = $this->projectBuilder->withSettings($this->settings())->withTurns([$turn])->build();
         $this->expectException(TurnAlreadyExist::class);
 
         $project->addTurn($turn);
@@ -248,7 +229,7 @@ final class ProjectTest extends TestCase
             dayOfWeek: DayOfWeek::Monday,
             turn: Turn::H1200,
         );
-        $project = $this->project(turns: [$turn]);
+        $project = $this->projectBuilder->withSettings($this->settings())->withTurns([$turn])->build();
 
         $project->removeTurn($turn);
 
@@ -263,7 +244,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveTurnFailWhenTurnDoesNotExist(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
             dayOfWeek: DayOfWeek::Monday,
@@ -276,7 +257,7 @@ final class ProjectTest extends TestCase
 
     public function testAddOpenCloseEventToProject(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
             isAvailable: $this->faker->boolean,
@@ -301,7 +282,10 @@ final class ProjectTest extends TestCase
             isAvailable: $this->faker->boolean,
             turn: Turn::H1200,
         );
-        $project = $this->project(openCloseEvents: [$openCloseEvent]);
+        $project = $this->projectBuilder
+            ->withSettings($this->settings())
+            ->withOpenCloseEvents([$openCloseEvent])
+            ->build();
         $this->expectException(OpenCloseEventAlreadyExist::class);
 
         $project->addOpenCloseEvent($openCloseEvent);
@@ -309,7 +293,7 @@ final class ProjectTest extends TestCase
 
     public function testAddOpenCloseEventFailWhenDateIsOutOfRange(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $date = new \DateTimeImmutable();
         $this->expectException(OpenCloseEventOutOfRange::class);
 
@@ -327,7 +311,10 @@ final class ProjectTest extends TestCase
             isAvailable: $this->faker->boolean,
             turn: Turn::H1200,
         );
-        $project = $this->project(openCloseEvents: [$openCloseEvent]);
+        $project = $this->projectBuilder
+            ->withSettings($this->settings())
+            ->withOpenCloseEvents([$openCloseEvent])
+            ->build();
 
         $project->removeOpenCloseEvent($openCloseEvent);
 
@@ -342,7 +329,7 @@ final class ProjectTest extends TestCase
 
     public function testRemoveOpenCloseEventFailWhenOpenCloseEventDoesNotExist(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $this->expectException(OpenCloseEventDoesNotExist::class);
 
         $project->removeOpenCloseEvent(new OpenCloseEvent(
@@ -354,7 +341,7 @@ final class ProjectTest extends TestCase
 
     public function testUpdateProjectSettings(): void
     {
-        $project = $this->project();
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
         $settings = $this->settings();
 
         $project->updateSettings($settings);
@@ -376,7 +363,7 @@ final class ProjectTest extends TestCase
             new User(username: $email),
             new User(username: new Email($this->faker->email)),
         ];
-        $project = $this->project(users: $users);
+        $project = $this->projectBuilder->withSettings($this->settings())->withUsers($users)->build();
 
         $project->removeUsers(fn(User $user) => $user->username === $email);
 
@@ -392,7 +379,7 @@ final class ProjectTest extends TestCase
             Place::new(name: $name, capacity: new Capacity(value: 100)),
             Place::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
         ];
-        $project = $this->project(places: $places);
+        $project = $this->projectBuilder->withSettings($this->settings())->withPlaces($places)->build();
 
         $project->removePlaces(fn(Place $place) => $place->name === $name);
 
@@ -419,7 +406,7 @@ final class ProjectTest extends TestCase
                 turn: Turn::H1200,
             ),
         ];
-        $project = $this->project(turns: $turns);
+        $project = $this->projectBuilder->withSettings($this->settings())->withTurns($turns)->build();
 
         $project->removeTurns(fn(TurnAvailability $turn) => $turn->turn === Turn::H1230);
 
@@ -446,7 +433,10 @@ final class ProjectTest extends TestCase
                 turn: Turn::H1200,
             ),
         ];
-        $project = $this->project(openCloseEvents: $openCloseEvents);
+        $project = $this->projectBuilder
+            ->withSettings($this->settings())
+            ->withOpenCloseEvents($openCloseEvents)
+            ->build();
 
         $project->removeOpenCloseEvents(fn(OpenCloseEvent $openCloseEvent) => $openCloseEvent->turn === Turn::H1230);
 
