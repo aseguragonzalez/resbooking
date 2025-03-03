@@ -22,7 +22,7 @@ final class ViewEngineTest extends TestCase
     {
     }
 
-    public function testViewShouldReplacePrimitiveProperties(): void
+    public function testRenderWithPrimitiveProperties(): void
     {
         $model = new \stdClass();
         $model->name = "Peter Parker";
@@ -46,7 +46,7 @@ final class ViewEngineTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldReplaceObjectProperty(): void
+    public function testRenderObjectProperties(): void
     {
         $address = new \stdClass();
         $address->street = "Elm Street";
@@ -75,7 +75,7 @@ final class ViewEngineTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldReplaceArrayOfObjects(): void
+    public function testRenderArrayOfObjects(): void
     {
         $user1 = new \stdClass();
         $user1->id = "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p";
@@ -102,7 +102,7 @@ final class ViewEngineTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldReplaceComplexModel(): void
+    public function testRenderComplexModel(): void
     {
         $address = new \stdClass();
         $address->street = "Elm Street";
@@ -160,7 +160,7 @@ final class ViewEngineTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldShowBranchOptions(): void
+    public function testRenderWithBranchOptions(): void
     {
         $model = new BranchModel(
             name: "Peter Parker",
@@ -182,7 +182,7 @@ final class ViewEngineTest extends TestCase
         $this->assertEquals($expected, $body);
     }
 
-    public function testViewShouldAppliesLayout(): void
+    public function testRenderWithLayout(): void
     {
         $model = new \stdClass();
         $model->name = "Peter Parker";
