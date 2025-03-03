@@ -10,6 +10,8 @@ enum StatusCode: int
     case Created = 201;
     case Accepted = 202;
     case NoContent = 204;
+    case MovedPermanently = 301;
+    case Found = 302;
     case BadRequest = 400;
     case Unauthorized = 401;
     case Forbidden = 403;

@@ -20,4 +20,29 @@ abstract class Controller
         $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
         return new ViewResponse(viewPath: "{$viewPath}/{$viewName}", data: $model, statusCode: $statusCode);
     }
+
+    protected function redirectTo(string $url, ?object $args = null): Response
+    {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new \InvalidArgumentException('Invalid URL provided');
+        }
+        return new RedirectToResponse($url, $args ?? new \stdClass());
+    }
+
+    protected function redirectToAction(
+        string $action,
+        ?string $controller = null,
+        ?object $args = null,
+    ): Response {
+        $backtrace = debug_backtrace();
+        if (!isset($backtrace[1]['class'])) {
+            throw new \Exception('Class not found in backtrace');
+        }
+
+        return new LocalRedirectToResponse(
+            controller: $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class'])),
+            action: $action,
+            args: $args ?? new \stdClass()
+        );
+    }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\{StatusCode, ViewResponse};
+use Seedwork\Infrastructure\Mvc\{StatusCode, ViewResponse, LocalRedirectToResponse};
 
 final class ControllerTest extends TestCase
 {
@@ -60,5 +60,75 @@ final class ControllerTest extends TestCase
         $view = $this->controller->getCustomModel($model);
 
         $this->assertEquals($model, $view->data);
+    }
+
+    public function testControllerShouldRedirectToAction(): void
+    {
+        $action = 'index';
+        $args = new \stdClass();
+        $args->offset = 1;
+        $args->limit = 10;
+
+        $response = $this->controller->customRedirectToAction($action, $args);
+
+        $this->assertEquals(StatusCode::Found, $response->statusCode);
+        $this->assertEquals([], $response->headers);
+        $this->assertInstanceOf(\stdClass::class, $response->data);
+        $this->assertEquals($args, $response->data);
+
+        if ($response instanceof LocalRedirectToResponse) {
+            $this->assertEquals('ExampleController', $response->controller);
+            $this->assertEquals($action, $response->action);
+        }
+    }
+
+    public function testControllerShouldRedirectToControllerAction(): void
+    {
+        $controller = 'HomeController';
+        $action = 'index';
+        $args = new \stdClass();
+        $args->offset = 1;
+        $args->limit = 10;
+
+        $response = $this->controller->customRedirectToControllerAction(
+            controller: $controller,
+            action: $action,
+            args: $args
+        );
+
+        $this->assertEquals(StatusCode::Found, $response->statusCode);
+        $this->assertEquals([], $response->headers);
+        $this->assertInstanceOf(\stdClass::class, $response->data);
+        $this->assertEquals($args, $response->data);
+
+        if ($response instanceof LocalRedirectToResponse) {
+            $this->assertEquals($controller, $response->controller);
+            $this->assertEquals($action, $response->action);
+        }
+    }
+
+    public function testControllerShouldRedirectToUrl(): void
+    {
+        $url = 'https://example.com';
+        $args = new \stdClass();
+        $args->offset = 1;
+        $args->limit = 10;
+
+        $response = $this->controller->customRedirectToUrl($url, $args);
+
+        $this->assertEquals(StatusCode::Found, $response->statusCode);
+        $this->assertEquals(['Location' => "{$url}?offset={$args->offset}&limit={$args->limit}"], $response->headers);
+    }
+
+    public function testControllerShouldFailsWhenUrlIsInvalid(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $url = '/home';
+        $args = new \stdClass();
+        $args->offset = 1;
+        $args->limit = 10;
+
+        $this->controller->customRedirectToUrl($url, $args);
     }
 }

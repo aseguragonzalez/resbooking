@@ -27,4 +27,19 @@ class ExampleController extends Controller
     {
         return $this->view(model: $model);
     }
+
+    public function customRedirectToAction(string $action, object $args): Response
+    {
+        return $this->redirectToAction($action, args: $args);
+    }
+
+    public function customRedirectToControllerAction(string $controller, string $action, object $args): Response
+    {
+        return $this->redirectToAction(action: $action, controller: $controller, args: $args);
+    }
+
+    public function customRedirectToUrl(string $url, object $args): Response
+    {
+        return $this->redirectTo(url: $url, args: $args);
+    }
 }
