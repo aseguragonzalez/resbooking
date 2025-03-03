@@ -9,7 +9,7 @@ use Seedwork\Infrastructure\Mvc\{RedirectToResponse, StatusCode};
 
 final class RedirectToResponseTest extends TestCase
 {
-    public function testRedirectToResponseShouldSetLocationUrl(): void
+    public function testSetLocationUrl(): void
     {
         $data = new \stdClass();
         $data->offset = 1;
@@ -22,14 +22,14 @@ final class RedirectToResponseTest extends TestCase
         $this->assertEquals($data, $response->data);
     }
 
-    public function testRedirectToResponseShouldSetLocationWithoutArgs(): void
+    public function testSetLocationWithoutArgs(): void
     {
         $response = new RedirectToResponse('Books/Index');
 
         $this->assertEquals(['Location' => '/books/index?'], $response->headers);
     }
 
-    public function testRedirectToResponseShouldKeepHeaders(): void
+    public function testSetHeadersAndKeepPrevious(): void
     {
         $expected = ['Content-Type' => 'application/json', 'Location' => '/books/index?'];
         $response = new RedirectToResponse('Books/Index', headers: ['Content-Type' => 'application/json']);
