@@ -24,7 +24,7 @@ final class OpenCloseEventRemovedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $openCloseEvent = new OpenCloseEvent(
@@ -46,7 +46,7 @@ final class OpenCloseEventRemovedTest extends TestCase
         $this->assertSame($openCloseEvent, $payload['openCloseEvent']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
         $openCloseEvent = new OpenCloseEvent(

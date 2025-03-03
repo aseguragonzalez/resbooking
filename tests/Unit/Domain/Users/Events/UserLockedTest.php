@@ -33,7 +33,7 @@ final class UserLockedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->user->username->getValue();
         $event = UserLocked::new(username: $username, user: $this->user);
@@ -46,7 +46,7 @@ final class UserLockedTest extends TestCase
         $this->assertSame($this->user, $payload['user']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->user->username->getValue();
         $event = UserLocked::build(username: $username, user: $this->user, id: $this->faker->uuid);

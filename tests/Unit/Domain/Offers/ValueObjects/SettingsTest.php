@@ -25,7 +25,7 @@ final class SettingsTest extends TestCase
     {
     }
 
-    public function testConstructorShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $description = $this->faker->text;
         $title = $this->faker->sentence;
@@ -48,7 +48,7 @@ final class SettingsTest extends TestCase
         $this->assertSame($endDate, $settings->endDate);
     }
 
-    public function testConstructorShouldFailWhenTitleIsInvalid(): void
+    public function testCreateInstanceFailWhenTitleIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
@@ -61,7 +61,7 @@ final class SettingsTest extends TestCase
         );
     }
 
-    public function testConstructorShouldFailWhenDescriptionIsInvalid(): void
+    public function testCreateInstanceFailWhenDescriptionIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
@@ -74,7 +74,7 @@ final class SettingsTest extends TestCase
         );
     }
 
-    public function testConstructorShouldFailWhenTermsAndConditionsIsInvalid(): void
+    public function testCreateInstanceFailWhenTermsAndConditionsIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 
@@ -87,7 +87,7 @@ final class SettingsTest extends TestCase
         );
     }
 
-    public function testConstructorShouldFailWhenDateRangeIsInvalid(): void
+    public function testCreateInstanceFailWhenDateRangeIsInvalid(): void
     {
         $startDate = new \DateTimeImmutable();
         $endDate = $startDate->sub(new \DateInterval('P1D'));

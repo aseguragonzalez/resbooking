@@ -23,7 +23,7 @@ final class ProjectTest extends TestCase
     {
     }
 
-    public function testProjectShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $projectId = $this->faker->uuid;
 
@@ -32,7 +32,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->id, $projectId);
     }
 
-    public function testProjectShouldFailsWhenIdIsInvalid(): void
+    public function testCreateInstanceFailsWhenIdIsInvalid(): void
     {
         $this->expectException(ValueException::class);
 

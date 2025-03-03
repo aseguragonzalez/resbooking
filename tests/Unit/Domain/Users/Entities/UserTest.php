@@ -44,7 +44,7 @@ final class UserTest extends TestCase
     {
     }
 
-    public function testConstructorShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -59,7 +59,7 @@ final class UserTest extends TestCase
         $this->assertEmpty($user->getRoles());
     }
 
-    public function testLockShouldLockTheUser(): void
+    public function testLockUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -76,7 +76,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testLockShouldFailWhenUserIsAlreadyLocked(): void
+    public function testLockFailWhenUserIsAlreadyLocked(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -86,7 +86,7 @@ final class UserTest extends TestCase
         $user->lock();
     }
 
-    public function testUnlockShouldUnlockTheUser(): void
+    public function testUnlockUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -103,7 +103,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testUnlockShouldFailWhenUserIsAlreadyUnlocked(): void
+    public function testUnlockFailWhenUserIsAlreadyUnlocked(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -113,7 +113,7 @@ final class UserTest extends TestCase
         $user->unlock();
     }
 
-    public function testDisableShouldDisableTheUser(): void
+    public function testDisableUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -130,7 +130,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testDisableShouldFailWhenUserIsAlreadyDisabled(): void
+    public function testDisableFailWhenUserIsAlreadyDisabled(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -140,7 +140,7 @@ final class UserTest extends TestCase
         $user->disable();
     }
 
-    public function testEnableShouldEnableTheUser(): void
+    public function testEnableUser(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -157,7 +157,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testEnableShouldFailWhenUserIsAlreadyEnabled(): void
+    public function testEnableFailWhenUserIsAlreadyEnabled(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -167,7 +167,7 @@ final class UserTest extends TestCase
         $user->enable();
     }
 
-    public function testHasRoleShouldBeTrueWhenUserContainsTheRole(): void
+    public function testHasRole(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -177,7 +177,7 @@ final class UserTest extends TestCase
         $this->assertTrue($user->hasRole($role));
     }
 
-    public function testHasRoleShouldBeFalseWhenUserDoesNotContainesTheRole(): void
+    public function testHasRoleIsFalseWhenUserDoesNotContainsTheRole(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -186,7 +186,7 @@ final class UserTest extends TestCase
         $this->assertFalse($user->hasRole(Role::Admin));
     }
 
-    public function testGetRolesShouldReturnAllRolesFromUser(): void
+    public function testGetRoles(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password, $this->faker->uuid);
@@ -196,7 +196,7 @@ final class UserTest extends TestCase
         $this->assertSame($roles, $user->getRoles());
     }
 
-    public function testAddRoleShouldSetANewRoleToUser(): void
+    public function testAddRoleToUser(): void
     {
         $role = Role::Admin;
         $user = User::build(
@@ -215,7 +215,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testAddRoleShouldFailWhenRoleAlreadyExist(): void
+    public function testAddRoleFailWhenRoleAlreadyExist(): void
     {
         $role = Role::Admin;
         $user = User::build(
@@ -228,7 +228,7 @@ final class UserTest extends TestCase
         $user->addRole($role);
     }
 
-    public function testRemoveRoleShouldDeleteRoleFromUser(): void
+    public function testRemoveRoleFromUser(): void
     {
         $role = Role::Admin;
         $user = User::build(
@@ -248,7 +248,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testRemoveRoleShouldFailWhenRoleDoesNotExist(): void
+    public function testRemoveRoleFailWhenRoleDoesNotExist(): void
     {
         $role = Role::Admin;
         $user = User::build(
@@ -260,7 +260,7 @@ final class UserTest extends TestCase
         $user->removeRole($role);
     }
 
-    public function testChangeCredentialShouldUpdateCredential(): void
+    public function testChangeCredential(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password);
@@ -277,7 +277,7 @@ final class UserTest extends TestCase
         $this->assertSame($user->username->getValue(), $event->getPayload()['username']);
     }
 
-    public function testResetCredentailShouldSetRandomCredential(): void
+    public function testResetCredentail(): void
     {
         $email = new Email($this->faker->email);
         $credential = Credential::new($this->password);

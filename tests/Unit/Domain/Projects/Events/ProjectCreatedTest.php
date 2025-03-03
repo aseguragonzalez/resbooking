@@ -25,7 +25,7 @@ final class ProjectCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $project = Project::build(
@@ -51,7 +51,7 @@ final class ProjectCreatedTest extends TestCase
         $this->assertSame($project, $payload['project']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $projectId = $this->faker->uuid;
         $project = Project::build(

@@ -74,7 +74,7 @@ final class OfferTest extends TestCase
         );
     }
 
-    public function testNewShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $offer = Offer::new(project: $this->project, settings: $this->settings);
 
@@ -95,7 +95,7 @@ final class OfferTest extends TestCase
         $this->assertSame($offer, $payload["offer"]);
     }
 
-    public function testSetSettingsShouldUpdateOfferSettings(): void
+    public function testUpdateOfferSettings(): void
     {
         $offer = $this->offer();
         $startDate = new \DateTimeImmutable();
@@ -120,7 +120,7 @@ final class OfferTest extends TestCase
         $this->assertSame($offer, $payload["offer"]);
     }
 
-    public function testDisableShouldSetUnavailableIt(): void
+    public function testSetAsDisabled(): void
     {
         $offer = $this->offer();
 
@@ -136,7 +136,7 @@ final class OfferTest extends TestCase
         $this->assertSame($offer, $payload["offer"]);
     }
 
-    public function testDisableShouldFailWhenOfferIsAlreadyDisabled(): void
+    public function testSetAsDisabledFailsWhenOfferIsAlreadyDisabled(): void
     {
         $offer = $this->offer(available: false);
         $this->expectException(OfferAlreadyDisabled::class);
@@ -144,7 +144,7 @@ final class OfferTest extends TestCase
         $offer->disable();
     }
 
-    public function testEnableShouldSetAvailableIt(): void
+    public function testSetAsEnabled(): void
     {
         $offer = $this->offer(available: false);
 
@@ -160,7 +160,7 @@ final class OfferTest extends TestCase
         $this->assertSame($offer, $payload["offer"]);
     }
 
-    public function testEnabledShouldFailWhenOfferIsAlreadyEnabled(): void
+    public function testSetAsEnabledFailsWhenOfferIsAlreadyEnabled(): void
     {
         $offer = $this->offer();
         $this->expectException(OfferAlreadyEnabled::class);
@@ -168,7 +168,7 @@ final class OfferTest extends TestCase
         $offer->enable();
     }
 
-    public function testAddTurnShouldAddTurnToOffer(): void
+    public function testAddTurnToOffer(): void
     {
         $offer = $this->offer();
         $turn = new TurnAvailability(
@@ -189,7 +189,7 @@ final class OfferTest extends TestCase
         $this->assertSame($turn, $payload["turn"]);
     }
 
-    public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
+    public function testAddTurnFailWhenTurnAlreadyExist(): void
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
@@ -202,7 +202,7 @@ final class OfferTest extends TestCase
         $offer->addTurn($turn);
     }
 
-    public function testRemoveTurnShouldRemoveTurnFromOffer(): void
+    public function testRemoveTurnFromOffer(): void
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
@@ -223,7 +223,7 @@ final class OfferTest extends TestCase
         $this->assertSame($turn, $payload["turn"]);
     }
 
-    public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
+    public function testRemoveTurnFailWhenTurnDoesNotExist(): void
     {
         $offer = $this->offer();
         $turn = new TurnAvailability(
@@ -236,7 +236,7 @@ final class OfferTest extends TestCase
         $offer->removeTurn($turn);
     }
 
-    public function testAddOpenCloseEventShouldAddOpenCloseEventToOffer(): void
+    public function testAddOpenCloseEventToOffer(): void
     {
         $offer = $this->offer();
         $openCloseEvent = new OpenCloseEvent(
@@ -257,7 +257,7 @@ final class OfferTest extends TestCase
         $this->assertSame($openCloseEvent, $payload["openCloseEvent"]);
     }
 
-    public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
+    public function testAddOpenCloseEventFailWhenOpenCloseEventAlreadyExist(): void
     {
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
@@ -270,7 +270,7 @@ final class OfferTest extends TestCase
         $offer->addOpenCloseEvent($openCloseEvent);
     }
 
-    public function testAddOpenCloseEventShouldFailWhenDateIsOutOfRange(): void
+    public function testAddOpenCloseEventFailWhenDateIsOutOfRange(): void
     {
         $offer = $this->offer();
         $date = new \DateTimeImmutable();
@@ -283,7 +283,7 @@ final class OfferTest extends TestCase
         ));
     }
 
-    public function testRemoveOpenCloseEventShouldRemoveOpenCloseEventFromOffer(): void
+    public function testRemoveOpenCloseEventFromOffer(): void
     {
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
@@ -304,7 +304,7 @@ final class OfferTest extends TestCase
         $this->assertSame($openCloseEvent, $payload["openCloseEvent"]);
     }
 
-    public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void
+    public function testRemoveOpenCloseEventFailWhenOpenCloseEventDoesNotExist(): void
     {
         $offer = $this->offer();
         $this->expectException(OpenCloseEventDoesNotExist::class);

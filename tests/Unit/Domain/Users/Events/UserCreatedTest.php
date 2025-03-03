@@ -33,7 +33,7 @@ final class UserCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->user->username->getValue();
         $roles = [Role::User, Role::Admin];
@@ -49,7 +49,7 @@ final class UserCreatedTest extends TestCase
         $this->assertSame($password, $payload['password']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->user->username->getValue();
         $roles = [Role::User, Role::Admin];

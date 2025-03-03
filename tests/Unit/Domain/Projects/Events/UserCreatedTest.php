@@ -24,7 +24,7 @@ final class UserCreatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $projectId = $this->faker->uuid;
         $user = new User(username: new Email($this->faker->email));

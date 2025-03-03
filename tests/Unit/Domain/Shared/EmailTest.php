@@ -22,7 +22,7 @@ final class EmailTest extends TestCase
     {
     }
 
-    public function testEmailShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $expected = $this->faker->email;
 
@@ -31,14 +31,14 @@ final class EmailTest extends TestCase
         $this->assertSame($expected, $email->getValue());
     }
 
-    public function testEmailShouldFailWhenValueInvalid(): void
+    public function testCreateInstanceFailWhenValueInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new Email($this->faker->word);
     }
 
-    public function testEmailShouldBeCastedToString(): void
+    public function testCastingToString(): void
     {
         $expected = $this->faker->email;
 
@@ -47,14 +47,14 @@ final class EmailTest extends TestCase
         $this->assertSame($expected, (string) $email);
     }
 
-    public function testEmailShouldTrueWhenComparedWithSameValues(): void
+    public function testEquals(): void
     {
         $email = new Email($this->faker->email);
 
         $this->assertTrue($email->equals(new Email($email->getValue())));
     }
 
-    public function testEmailShouldFalseWhenComparedWithDifferentValues(): void
+    public function testEqualsIsFalseWhenComparedWithDifferentValues(): void
     {
         $email = new Email($this->faker->email);
 

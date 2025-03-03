@@ -22,7 +22,7 @@ final class DayOfWeekTest extends TestCase
     {
     }
 
-    public function testShouldRetrieveDayOfWeekById(): void
+    public function testGetById(): void
     {
         $id = $this->faker->numberBetween(1, 7);
 
@@ -31,14 +31,14 @@ final class DayOfWeekTest extends TestCase
         $this->assertSame($id, $dayOfWeek->value);
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveDayOfWeekByIdWithInvalidId(): void
+    public function testGetByIdFailWhenIsInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         DayOfWeek::getById(0);
     }
 
-    public function testShouldRetrieveDayOfWeekByName(): void
+    public function testGetByName(): void
     {
         /** @var string $name */
         $name = $this->faker->randomElement([
@@ -56,7 +56,7 @@ final class DayOfWeekTest extends TestCase
         $this->assertSame($name, strtolower($dayOfWeek->name));
     }
 
-    public function testShouldRaiseExceptionWhenRetrieveDayOfWeekByNameWithInvalidValue(): void
+    public function testGetByNameFailWhenIsInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

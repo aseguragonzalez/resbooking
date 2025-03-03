@@ -23,7 +23,7 @@ final class RoleAddedToUserTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->faker->email;
         /** @var Role $role */
@@ -39,7 +39,7 @@ final class RoleAddedToUserTest extends TestCase
         $this->assertSame($role, $payload['role']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->faker->email;
         /** @var Role $role */

@@ -85,7 +85,7 @@ final class ProjectTest extends TestCase
         );
     }
 
-    public function testNewShouldCreateInstance(): void
+    public function testCreateInstance(): void
     {
         $id = $this->faker->uuid;
         $settings = $this->settings();
@@ -107,7 +107,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testAddUserShouldAddUserToProject(): void
+    public function testAddUserToProject(): void
     {
         $project = $this->project();
         $user = new User(username: new Email($this->faker->email));
@@ -123,7 +123,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testAddUserShouldFailWhenUserAlreadyExist(): void
+    public function testAddUserFailWhenUserAlreadyExist(): void
     {
         $project = $this->project();
         $user = new User(username: new Email($this->faker->email));
@@ -133,7 +133,7 @@ final class ProjectTest extends TestCase
         $project->addUser($user);
     }
 
-    public function testRemoveUserShouldRemoveUserFromProject(): void
+    public function testRemoveUserFromProject(): void
     {
         $user = new User(username: new Email($this->faker->email));
         $project = $this->project(users: [$user]);
@@ -149,7 +149,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testRemoveUserShouldFailWhenUserDoesNotExist(): void
+    public function testRemoveUserFailWhenUserDoesNotExist(): void
     {
         $project = $this->project();
         $user = new User(username: new Email($this->faker->email));
@@ -158,7 +158,7 @@ final class ProjectTest extends TestCase
         $project->removeUser($user);
     }
 
-    public function testAddPlaceShouldAddPlaceToProject(): void
+    public function testAddPlaceToProject(): void
     {
         $project = $this->project();
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
@@ -174,7 +174,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testAddPlaceShouldFailWhenPlaceAlreadyExist(): void
+    public function testAddPlaceFailWhenPlaceAlreadyExist(): void
     {
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $project = $this->project(places: [$place]);
@@ -183,7 +183,7 @@ final class ProjectTest extends TestCase
         $project->addPlace($place);
     }
 
-    public function testRemovePlaceShouldRemovePlaceFromProject(): void
+    public function testRemovePlaceFromProject(): void
     {
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
         $project = $this->project(places: [$place]);
@@ -199,7 +199,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testRemovePlaceShouldFailWhenPlaceDoesNotExist(): void
+    public function testRemovePlaceFailWhenPlaceDoesNotExist(): void
     {
         $project = $this->project();
         $place = Place::new(name: $this->faker->name, capacity: new Capacity(value: 100));
@@ -208,7 +208,7 @@ final class ProjectTest extends TestCase
         $project->removePlace($place);
     }
 
-    public function testAddTurnShouldAddTurnToProject(): void
+    public function testAddTurnToProject(): void
     {
         $project = $this->project();
         $turn = new TurnAvailability(
@@ -228,7 +228,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testAddTurnShouldFailWhenTurnAlreadyExist(): void
+    public function testAddTurnFailWhenTurnAlreadyExist(): void
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
@@ -241,7 +241,7 @@ final class ProjectTest extends TestCase
         $project->addTurn($turn);
     }
 
-    public function testRemoveTurnShouldRemoveTurnFromProject(): void
+    public function testRemoveTurnFromProject(): void
     {
         $turn = new TurnAvailability(
             capacity: new Capacity($this->faker->randomNumber()),
@@ -261,7 +261,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testRemoveTurnShouldFailWhenTurnDoesNotExist(): void
+    public function testRemoveTurnFailWhenTurnDoesNotExist(): void
     {
         $project = $this->project();
         $turn = new TurnAvailability(
@@ -274,7 +274,7 @@ final class ProjectTest extends TestCase
         $project->removeTurn($turn);
     }
 
-    public function testAddOpenCloseEventShouldAddOpenCloseEventToProject(): void
+    public function testAddOpenCloseEventToProject(): void
     {
         $project = $this->project();
         $openCloseEvent = new OpenCloseEvent(
@@ -294,7 +294,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testAddOpenCloseEventShouldFailWhenOpenCloseEventAlreadyExist(): void
+    public function testAddOpenCloseEventFailWhenOpenCloseEventAlreadyExist(): void
     {
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
@@ -307,7 +307,7 @@ final class ProjectTest extends TestCase
         $project->addOpenCloseEvent($openCloseEvent);
     }
 
-    public function testAddOpenCloseEventShouldFailWhenDateIsOutOfRange(): void
+    public function testAddOpenCloseEventFailWhenDateIsOutOfRange(): void
     {
         $project = $this->project();
         $date = new \DateTimeImmutable();
@@ -320,7 +320,7 @@ final class ProjectTest extends TestCase
         ));
     }
 
-    public function testRemoveOpenCloseEventShouldRemoveOpenCloseEventFromProject(): void
+    public function testRemoveOpenCloseEventFromProject(): void
     {
         $openCloseEvent = new OpenCloseEvent(
             date: new \DateTimeImmutable(),
@@ -340,7 +340,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testRemoveOpenCloseEventShouldFailWhenOpenCloseEventDoesNotExist(): void
+    public function testRemoveOpenCloseEventFailWhenOpenCloseEventDoesNotExist(): void
     {
         $project = $this->project();
         $this->expectException(OpenCloseEventDoesNotExist::class);
@@ -352,7 +352,7 @@ final class ProjectTest extends TestCase
         ));
     }
 
-    public function testUpdateSettingsShouldModifySettings(): void
+    public function testUpdateProjectSettings(): void
     {
         $project = $this->project();
         $settings = $this->settings();
@@ -368,7 +368,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($project->getId(), $event->getPayload()['projectId']);
     }
 
-    public function testRemoveUsersShouldFilterUsersRelatedToTheProject(): void
+    public function testRemoveUsersFromProject(): void
     {
         $email = new Email($this->faker->email);
         $users = [
@@ -384,7 +384,7 @@ final class ProjectTest extends TestCase
         $this->assertCount(1, $project->getEvents());
     }
 
-    public function testRemovePlacesShouldFilterPlacesRelatedToTheProject(): void
+    public function testRemovePlacesFromProject(): void
     {
         $name = $this->faker->name;
         $places = [
@@ -400,7 +400,7 @@ final class ProjectTest extends TestCase
         $this->assertCount(1, $project->getEvents());
     }
 
-    public function testRemoveTurnsShouldFilterTurnsRelatedToTheProject(): void
+    public function testRemoveTurnsFromProject(): void
     {
         $turns = [
             new TurnAvailability(
@@ -427,7 +427,7 @@ final class ProjectTest extends TestCase
         $this->assertCount(1, $project->getEvents());
     }
 
-    public function testRemoveOpenCloseEventsShouldFilterOpenCloseEventsRelatedToTheProject(): void
+    public function testRemoveOpenCloseEventsFromProject(): void
     {
         $openCloseEvents = [
             new OpenCloseEvent(

@@ -23,7 +23,7 @@ final class CredentialResetTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->faker->email;
         $password = new Password($this->faker->password(Password::MIN_LENGTH));
@@ -38,7 +38,7 @@ final class CredentialResetTest extends TestCase
         $this->assertSame($password, $payload['password']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->faker->email;
         $password = new Password($this->faker->password(Password::MIN_LENGTH));

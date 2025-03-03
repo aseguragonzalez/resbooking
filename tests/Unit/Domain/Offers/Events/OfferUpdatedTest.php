@@ -38,7 +38,7 @@ final class OfferUpdatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $event = OfferUpdated::new(offerId: $this->offerId, offer: $this->offer);
 
@@ -50,7 +50,7 @@ final class OfferUpdatedTest extends TestCase
         $this->assertSame($this->offer, $payload['offer']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $event = OfferUpdated::build(offerId: $this->offerId, offer: $this->offer, id: $this->faker->uuid);
 

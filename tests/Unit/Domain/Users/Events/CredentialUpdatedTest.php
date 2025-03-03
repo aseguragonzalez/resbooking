@@ -22,7 +22,7 @@ final class CredentialUpdatedTest extends TestCase
     {
     }
 
-    public function testNewShouldCreateNewEvent(): void
+    public function testCreateNewEvent(): void
     {
         $username = $this->faker->email;
 
@@ -35,7 +35,7 @@ final class CredentialUpdatedTest extends TestCase
         $this->assertSame($username, $payload['username']);
     }
 
-    public function testBuildShouldCreateStoredEvent(): void
+    public function testBuildStoredEvent(): void
     {
         $username = $this->faker->email;
 

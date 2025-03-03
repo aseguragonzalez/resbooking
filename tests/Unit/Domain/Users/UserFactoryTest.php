@@ -29,14 +29,14 @@ final class UserFactoryTest extends TestCase
     {
     }
 
-    public function testCreateNewAdminShouldReturnAnAdminUser(): void
+    public function testCreateNewAdmin(): void
     {
         $user = $this->userFactory->createNewAdmin(username: $this->email, password: $this->password);
 
         $this->assertTrue($user->hasRole(Role::Admin));
     }
 
-    public function testCreateNewUserShouldReturnAnNewUser(): void
+    public function testCreateNewUser(): void
     {
         $user = $this->userFactory->createNewUser(username: $this->email, password: $this->password);
 
