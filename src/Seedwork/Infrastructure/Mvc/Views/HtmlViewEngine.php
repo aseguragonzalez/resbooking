@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Views;
 
-final class ViewEngine
+final class HtmlViewEngine implements ViewEngine
 {
     public function __construct(private readonly string $basePath)
     {
     }
 
-    public function render(ViewResponse $view): string
+    public function render(View $view): string
     {
         $viewPath = "{$this->basePath}/{$view->viewPath}.html";
         $templateFile = file_get_contents($viewPath);

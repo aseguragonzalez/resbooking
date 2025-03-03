@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\{StatusCode, ViewResponse, LocalRedirectToResponse};
+use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
+use Seedwork\Infrastructure\Mvc\Views\View;
+use Tests\Unit\Infrastructure\Mvc\Fixtures\ExampleController;
 
 final class ControllerTest extends TestCase
 {
@@ -27,7 +30,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals(StatusCode::Ok, $view->statusCode);
         $this->assertEquals([], $view->headers);
         $this->assertInstanceOf(\stdClass::class, $view->data);
-        if ($view instanceof ViewResponse) {
+        if ($view instanceof View) {
             $this->assertEquals('Example/getDefaultView', $view->viewPath);
         }
     }
@@ -38,7 +41,7 @@ final class ControllerTest extends TestCase
 
         $view = $this->controller->getCustomView($viewName);
 
-        if ($view instanceof ViewResponse) {
+        if ($view instanceof View) {
             $this->assertEquals("Example/{$viewName}", $view->viewPath);
         }
     }
@@ -76,7 +79,7 @@ final class ControllerTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $response->data);
         $this->assertEquals($args, $response->data);
 
-        if ($response instanceof LocalRedirectToResponse) {
+        if ($response instanceof LocalRedirectTo) {
             $this->assertEquals('ExampleController', $response->controller);
             $this->assertEquals($action, $response->action);
         }
@@ -101,7 +104,7 @@ final class ControllerTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $response->data);
         $this->assertEquals($args, $response->data);
 
-        if ($response instanceof LocalRedirectToResponse) {
+        if ($response instanceof LocalRedirectTo) {
             $this->assertEquals($controller, $response->controller);
             $this->assertEquals($action, $response->action);
         }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc;
+namespace Tests\Unit\Infrastructure\Mvc\Fixtures;
 
-class BranchModel
+final class BranchModel
 {
     public function __construct(
         public readonly string $name,

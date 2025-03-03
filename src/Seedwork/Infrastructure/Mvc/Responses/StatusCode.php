@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Responses;
 
 enum StatusCode: int
 {

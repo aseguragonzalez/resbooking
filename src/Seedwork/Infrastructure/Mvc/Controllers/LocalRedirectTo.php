@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Controllers;
 
-final class LocalRedirectToResponse extends Response
+use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
+
+final class LocalRedirectTo extends Response
 {
     public function __construct(
         public readonly string $controller,

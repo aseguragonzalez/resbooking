@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Controllers;
+
+use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, Response, StatusCode};
+use Seedwork\Infrastructure\Mvc\Views\View;
 
 abstract class Controller
 {
@@ -18,7 +21,7 @@ abstract class Controller
 
         $viewName = $name ? $name : $backtrace[1]['function'];
         $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
-        return new ViewResponse(viewPath: "{$viewPath}/{$viewName}", data: $model, statusCode: $statusCode);
+        return new View(viewPath: "{$viewPath}/{$viewName}", data: $model, statusCode: $statusCode);
     }
 
     protected function redirectTo(string $url, ?object $args = null): Response
@@ -26,7 +29,7 @@ abstract class Controller
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('Invalid URL provided');
         }
-        return new RedirectToResponse($url, $args ?? new \stdClass());
+        return new RedirectTo($url, $args ?? new \stdClass());
     }
 
     protected function redirectToAction(
@@ -39,7 +42,7 @@ abstract class Controller
             throw new \Exception('Class not found in backtrace');
         }
 
-        return new LocalRedirectToResponse(
+        return new LocalRedirectTo(
             controller: $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class'])),
             action: $action,
             args: $args ?? new \stdClass()
