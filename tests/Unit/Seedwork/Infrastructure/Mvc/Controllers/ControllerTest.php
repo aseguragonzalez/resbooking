@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\View;
-use Tests\Unit\Infrastructure\Mvc\Fixtures\ExampleController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
 
 final class ControllerTest extends TestCase
 {

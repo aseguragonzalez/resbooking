@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc\Responses;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Responses;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, StatusCode};

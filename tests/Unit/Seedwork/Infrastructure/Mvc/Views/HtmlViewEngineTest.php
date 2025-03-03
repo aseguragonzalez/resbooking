@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc\Views;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, View};
-use Tests\Unit\Infrastructure\Mvc\Fixtures\BranchModel;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
