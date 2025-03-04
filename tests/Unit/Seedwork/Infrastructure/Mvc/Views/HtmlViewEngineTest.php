@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc\Views;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, View};
-use Tests\Unit\Infrastructure\Mvc\Fixtures\BranchModel;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
@@ -45,7 +45,7 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderObjectProperties(): void
@@ -74,7 +74,7 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderArrayOfObjects(): void
@@ -101,7 +101,7 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderComplexModel(): void
@@ -159,7 +159,7 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderWithBranchOptions(): void
@@ -181,7 +181,7 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderWithLayout(): void
@@ -204,6 +204,6 @@ final class HtmlViewEngineTest extends TestCase
 
         $body = $this->viewEngine->render($view);
 
-        $this->assertEquals($expected, $body);
+        $this->assertSame($expected, $body);
     }
 }

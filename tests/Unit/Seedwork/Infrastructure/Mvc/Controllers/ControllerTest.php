@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Mvc;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\View;
-use Tests\Unit\Infrastructure\Mvc\Fixtures\ExampleController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
 
 final class ControllerTest extends TestCase
 {
@@ -27,11 +27,11 @@ final class ControllerTest extends TestCase
     {
         $view = $this->controller->getDefaultView();
 
-        $this->assertEquals(StatusCode::Ok, $view->statusCode);
-        $this->assertEquals([], $view->headers);
+        $this->assertSame(StatusCode::Ok, $view->statusCode);
+        $this->assertSame([], $view->headers);
         $this->assertInstanceOf(\stdClass::class, $view->data);
         if ($view instanceof View) {
-            $this->assertEquals('Example/getDefaultView', $view->viewPath);
+            $this->assertSame('Example/getDefaultView', $view->viewPath);
         }
     }
 
@@ -42,7 +42,7 @@ final class ControllerTest extends TestCase
         $view = $this->controller->getCustomView($viewName);
 
         if ($view instanceof View) {
-            $this->assertEquals("Example/{$viewName}", $view->viewPath);
+            $this->assertSame("Example/{$viewName}", $view->viewPath);
         }
     }
 
@@ -52,7 +52,7 @@ final class ControllerTest extends TestCase
 
         $view = $this->controller->getCustomStatusCode($statusCode);
 
-        $this->assertEquals($statusCode, $view->statusCode);
+        $this->assertSame($statusCode, $view->statusCode);
     }
 
     public function testGetViewWithModel(): void
@@ -62,7 +62,7 @@ final class ControllerTest extends TestCase
 
         $view = $this->controller->getCustomModel($model);
 
-        $this->assertEquals($model, $view->data);
+        $this->assertSame($model, $view->data);
     }
 
     public function testRedirectToAction(): void
@@ -74,14 +74,14 @@ final class ControllerTest extends TestCase
 
         $response = $this->controller->customRedirectToAction($action, $args);
 
-        $this->assertEquals(StatusCode::Found, $response->statusCode);
-        $this->assertEquals([], $response->headers);
+        $this->assertSame(StatusCode::Found, $response->statusCode);
+        $this->assertSame([], $response->headers);
         $this->assertInstanceOf(\stdClass::class, $response->data);
-        $this->assertEquals($args, $response->data);
+        $this->assertSame($args, $response->data);
 
         if ($response instanceof LocalRedirectTo) {
-            $this->assertEquals('ExampleController', $response->controller);
-            $this->assertEquals($action, $response->action);
+            $this->assertSame('ExampleController', $response->controller);
+            $this->assertSame($action, $response->action);
         }
     }
 
@@ -99,14 +99,14 @@ final class ControllerTest extends TestCase
             args: $args
         );
 
-        $this->assertEquals(StatusCode::Found, $response->statusCode);
-        $this->assertEquals([], $response->headers);
+        $this->assertSame(StatusCode::Found, $response->statusCode);
+        $this->assertSame([], $response->headers);
         $this->assertInstanceOf(\stdClass::class, $response->data);
-        $this->assertEquals($args, $response->data);
+        $this->assertSame($args, $response->data);
 
         if ($response instanceof LocalRedirectTo) {
-            $this->assertEquals($controller, $response->controller);
-            $this->assertEquals($action, $response->action);
+            $this->assertSame($controller, $response->controller);
+            $this->assertSame($action, $response->action);
         }
     }
 
@@ -119,8 +119,8 @@ final class ControllerTest extends TestCase
 
         $response = $this->controller->customRedirectToUrl($url, $args);
 
-        $this->assertEquals(StatusCode::Found, $response->statusCode);
-        $this->assertEquals(['Location' => "{$url}?offset={$args->offset}&limit={$args->limit}"], $response->headers);
+        $this->assertSame(StatusCode::Found, $response->statusCode);
+        $this->assertSame(['Location' => "{$url}?offset={$args->offset}&limit={$args->limit}"], $response->headers);
     }
 
     public function testRedirectToUrlWithInvalidUrl(): void
