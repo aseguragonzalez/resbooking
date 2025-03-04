@@ -60,6 +60,6 @@ final class AccessControlAllowMethods extends Header
             $methods[] = 'TRACE';
         }
 
-        return count($methods) === 8 ? '*' : implode(', ', $methods);
+        return count($methods) === 9 ? '*' : implode(', ', $methods);
     }
 }
