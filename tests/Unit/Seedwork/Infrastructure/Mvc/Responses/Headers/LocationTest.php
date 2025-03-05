@@ -12,7 +12,7 @@ class LocationTest extends TestCase
     public function testLocationHeaderIsSetCorrectly(): void
     {
         $url = 'https://example.com';
-        $location = new Location($url);
+        $location = Location::new(url: $url);
 
         $this->assertSame('Location', $location->name);
         $this->assertSame($url, $location->value);
@@ -21,7 +21,7 @@ class LocationTest extends TestCase
     public function testLocationHeaderWithEmptyUrl(): void
     {
         $url = '';
-        $location = new Location($url);
+        $location = Location::new(url: $url);
 
         $this->assertSame('Location', $location->name);
         $this->assertSame($url, $location->value);
@@ -30,7 +30,7 @@ class LocationTest extends TestCase
     public function testLocationHeaderWithSpecialCharacters(): void
     {
         $url = 'https://example.com/path?query=param&another=param';
-        $location = new Location($url);
+        $location = Location::new(url: $url);
 
         $this->assertSame('Location', $location->name);
         $this->assertSame($url, $location->value);

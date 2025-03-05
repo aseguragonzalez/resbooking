@@ -6,6 +6,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\View;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
@@ -28,7 +29,7 @@ final class ControllerTest extends TestCase
         $view = $this->controller->getDefaultView();
 
         $this->assertSame(StatusCode::Ok, $view->statusCode);
-        $this->assertSame([], $view->headers);
+        $this->assertEquals([ContentType::html()], $view->headers);
         $this->assertInstanceOf(\stdClass::class, $view->data);
         if ($view instanceof View) {
             $this->assertSame('Example/getDefaultView', $view->viewPath);
@@ -120,7 +121,10 @@ final class ControllerTest extends TestCase
         $response = $this->controller->customRedirectToUrl($url, $args);
 
         $this->assertSame(StatusCode::Found, $response->statusCode);
-        $this->assertSame(['Location' => "{$url}?offset={$args->offset}&limit={$args->limit}"], $response->headers);
+        $this->assertEquals(
+            [Location::new("{$url}?offset={$args->offset}&limit={$args->limit}"), ContentType::html()],
+            $response->headers
+        );
     }
 
     public function testRedirectToUrlWithInvalidUrl(): void

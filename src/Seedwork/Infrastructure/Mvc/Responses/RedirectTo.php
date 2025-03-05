@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses;
 
+use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Header, Location};
+
 final class RedirectTo extends Response
 {
+    /**
+     * @param array<Header> $headers
+     */
     public function __construct(
         public readonly string $url,
         public readonly ?object $args = null,
@@ -19,7 +24,12 @@ final class RedirectTo extends Response
         }
         // create queryString from arguments
         $queryString = http_build_query(get_object_vars($data));
-        $updatedHeaders = array_merge($headers, ['Location' => "{$normalizedUrl}?{$queryString}"]);
-        parent::__construct(data: $data, headers: $updatedHeaders, statusCode: StatusCode::Found);
+
+        $customHeaders = [Location::new(url: "{$normalizedUrl}?{$queryString}")];
+        if (empty(array_filter($headers, fn (Header $header) => $header instanceof ContentType === true))) {
+            $customHeaders[] = ContentType::html();
+        }
+
+        parent::__construct($data, headers: array_merge($headers, $customHeaders), statusCode: StatusCode::Found);
     }
 }
