@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Responses;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, StatusCode};
 
 final class RedirectToTest extends TestCase
@@ -18,7 +19,11 @@ final class RedirectToTest extends TestCase
         $response = new RedirectTo('Books/Index', $data);
 
         $this->assertSame(StatusCode::Found, $response->statusCode);
-        $this->assertSame(['Location' => '/books/index?offset=1&limit=10'], $response->headers);
+        $this->assertCount(2, $response->headers);
+        $this->assertEquals(
+            [Location::new(url: '/books/index?offset=1&limit=10'), ContentType::html()],
+            $response->headers
+        );
         $this->assertSame($data, $response->data);
     }
 
@@ -26,14 +31,18 @@ final class RedirectToTest extends TestCase
     {
         $response = new RedirectTo('Books/Index');
 
-        $this->assertSame(['Location' => '/books/index?'], $response->headers);
+        $this->assertCount(2, $response->headers);
+        $this->assertEquals(
+            [Location::new(url: '/books/index?'), ContentType::html()],
+            $response->headers
+        );
     }
 
     public function testSetHeadersAndKeepPrevious(): void
     {
-        $expected = ['Content-Type' => 'application/json', 'Location' => '/books/index?'];
-        $response = new RedirectTo('Books/Index', headers: ['Content-Type' => 'application/json']);
+        $expected = [ContentType::html(), Location::new(url: '/books/index?')];
+        $response = new RedirectTo('Books/Index', headers: [ContentType::html()]);
 
-        $this->assertSame($expected, $response->headers);
+        $this->assertEquals($expected, $response->headers);
     }
 }
