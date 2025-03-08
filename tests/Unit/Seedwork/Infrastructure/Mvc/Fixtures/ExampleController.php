@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures;
 
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
 use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
 
 final class ExampleController extends Controller
@@ -42,5 +43,12 @@ final class ExampleController extends Controller
     public function customRedirectToUrl(string $url, object $args): Response
     {
         return $this->redirectTo(url: $url, args: $args);
+    }
+
+    public function customHeader(Header $header): Response
+    {
+        $this->addHeader($header);
+
+        return $this->view();
     }
 }

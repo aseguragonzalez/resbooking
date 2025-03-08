@@ -6,7 +6,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Location};
+use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\View;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
@@ -137,5 +137,25 @@ final class ControllerTest extends TestCase
         $args->limit = 10;
 
         $this->controller->customRedirectToUrl($url, $args);
+    }
+
+    public function testAddHeaders(): void
+    {
+        $header = new AccessControlAllowMethods(
+            get: true,
+            post: true,
+            put: false,
+            delete: false,
+            options: false,
+            head: false,
+            patch: false,
+            connect: false,
+            trace: false
+        );
+
+        $response = $this->controller->customHeader($header);
+
+        $this->assertSame(StatusCode::Ok, $response->statusCode);
+        $this->assertEquals([$header, ContentType::html()], $response->headers);
     }
 }
