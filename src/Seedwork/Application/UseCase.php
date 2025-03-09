@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Application;
+namespace Seedwork\Application;
 
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 /**
  * @phpstan-template T of UseCaseRequest

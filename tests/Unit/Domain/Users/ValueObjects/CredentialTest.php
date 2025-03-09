@@ -6,7 +6,7 @@ namespace Tests\Unit\Domain\Users\ValueObjects;
 
 use App\Domain\Shared\Password;
 use App\Domain\Users\ValueObjects\Credential;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

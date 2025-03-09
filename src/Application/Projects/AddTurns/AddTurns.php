@@ -7,7 +7,7 @@ namespace App\Application\Projects\AddTurns;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\TurnAvailability;
 use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @extends UseCase<AddTurnsRequest>

@@ -6,7 +6,7 @@ namespace App\Application\Projects\RemoveOpenCloseEvent;
 
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<RemoveOpenCloseEventRequest>

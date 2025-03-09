@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Projects\RemoveTurn;
 
 use App\Domain\Shared\{DayOfWeek, Turn};
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 final class RemoveTurnRequest extends UseCaseRequest
 {

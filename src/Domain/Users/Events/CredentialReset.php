@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Users\Events;
 
 use App\Domain\Shared\Password;
-use App\Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 
 final class CredentialReset extends DomainEvent

@@ -6,7 +6,7 @@ namespace App\Application\Projects\UpdateSettings;
 
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Projects\ValueObjects\Settings;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<UpdateSettingsRequest>

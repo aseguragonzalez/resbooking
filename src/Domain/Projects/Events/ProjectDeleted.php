@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Events;
 
 use App\Domain\Projects\Entities\Project;
-use App\Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 
 final class ProjectDeleted extends DomainEvent

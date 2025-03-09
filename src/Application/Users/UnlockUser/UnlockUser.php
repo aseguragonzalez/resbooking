@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Users\UnlockUser;
 
 use App\Domain\Users\UserRepository;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<UnlockUserRequest>

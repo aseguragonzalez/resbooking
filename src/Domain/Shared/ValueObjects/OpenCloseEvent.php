@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Shared\ValueObjects;
 
 use App\Domain\Shared\Turn;
-use App\Seedwork\Domain\ValueObject;
+use Seedwork\Domain\ValueObject;
 
 final class OpenCloseEvent extends ValueObject
 {

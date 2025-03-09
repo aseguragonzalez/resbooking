@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Domain;
+namespace Seedwork\Domain;
 
-use App\Seedwork\Domain\AggregateRoot;
+use Seedwork\Domain\AggregateRoot;
 
 /**
  * Interface Repository
  *
  * This interface defines the contract for a generic repository.
  *
- * @package App\Seedwork\Domain
+ * @package Seedwork\Domain
  * @template T of AggregateRoot
  */
 interface Repository

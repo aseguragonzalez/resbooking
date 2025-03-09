@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Projects\AddTurns;
 
 use App\Application\Projects\AddTurns\TurnItem;
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 final class AddTurnsRequest extends UseCaseRequest
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Users\LockUser;
 
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 final class LockUserRequest extends UseCaseRequest
 {

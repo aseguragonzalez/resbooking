@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Offers\Exceptions;
 
-use App\Seedwork\Domain\Exceptions\DomainException;
+use Seedwork\Domain\Exceptions\DomainException;
 
 final class OfferAlreadyDisabled extends DomainException
 {
