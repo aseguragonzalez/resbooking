@@ -32,7 +32,7 @@ use App\Domain\Shared\Exceptions\{
     TurnDoesNotExist,
 };
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Seedwork\Domain\AggregateRoot;
+use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot

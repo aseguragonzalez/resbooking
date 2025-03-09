@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Users\ValueObjects;
 
 use App\Domain\Shared\Password;
-use App\Seedwork\Domain\ValueObject;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\ValueObject;
+use Seedwork\Domain\Exceptions\ValueException;
 use Tuupola\Ksuid;
 
 final class Credential extends ValueObject

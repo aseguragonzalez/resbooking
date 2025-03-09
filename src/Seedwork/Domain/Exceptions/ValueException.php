@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Domain\Exceptions;
+namespace Seedwork\Domain\Exceptions;
 
 class ValueException extends DomainException
 {

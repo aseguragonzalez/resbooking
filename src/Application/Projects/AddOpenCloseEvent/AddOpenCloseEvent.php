@@ -7,7 +7,7 @@ namespace App\Application\Projects\AddOpenCloseEvent;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\Turn;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @extends UseCase<AddOpenCloseEventRequest>

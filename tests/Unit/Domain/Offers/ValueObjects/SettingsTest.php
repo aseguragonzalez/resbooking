@@ -7,7 +7,7 @@ namespace Tests\Unit\Domain\Offers\ValueObjects;
 use App\Domain\Offers\Exceptions\InvalidDateRange;
 use App\Domain\Offers\ValueObjects\Settings;
 use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

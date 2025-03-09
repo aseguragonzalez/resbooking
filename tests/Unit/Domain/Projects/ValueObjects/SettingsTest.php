@@ -6,7 +6,7 @@ namespace Tests\Unit\Domain\Projects\ValueObjects;
 
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\{Capacity, Email, Phone};
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

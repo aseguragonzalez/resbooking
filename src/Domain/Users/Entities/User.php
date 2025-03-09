@@ -25,8 +25,8 @@ use App\Domain\Users\Exceptions\{
 };
 use App\Domain\Users\ValueObjects\Credential;
 use App\Domain\Shared\{Email, Role, Password};
-use App\Seedwork\Domain\AggregateRoot;
-use App\Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\AggregateRoot;
+use Seedwork\Domain\DomainEvent;
 
 final class User extends AggregateRoot
 {

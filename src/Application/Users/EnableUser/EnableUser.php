@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Users\EnableUser;
 
 use App\Domain\Users\UserRepository;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<EnableUserRequest>

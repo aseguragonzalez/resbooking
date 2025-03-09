@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared;
 
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 
 final class Capacity
 {

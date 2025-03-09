@@ -7,7 +7,7 @@ namespace App\Application\Projects\RemoveUser;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Projects\ValueObjects\User;
 use App\Domain\Shared\Email;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<RemoveUserRequest>

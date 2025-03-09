@@ -6,7 +6,7 @@ namespace App\Application\Users\ChangeUserCredential;
 
 use App\Domain\Shared\Password;
 use App\Domain\Users\UserRepository;
-use App\Seedwork\Application\UseCase;
+use Seedwork\Application\UseCase;
 
 /**
  * @template-extends UseCase<ChangeUserCredentialRequest>
