@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Offers\Events;
 
 use App\Domain\Shared\ValueObjects\TurnAvailability;
-use App\Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 
 final class TurnAssigned extends DomainEvent

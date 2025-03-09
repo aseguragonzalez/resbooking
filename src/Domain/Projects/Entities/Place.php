@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Projects\Entities;
 
 use App\Domain\Shared\Capacity;
-use App\Seedwork\Domain\Entity;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Entity;
+use Seedwork\Domain\Exceptions\ValueException;
 use Tuupola\Ksuid;
 
 final class Place extends Entity

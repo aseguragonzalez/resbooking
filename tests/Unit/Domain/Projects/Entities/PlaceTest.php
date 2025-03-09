@@ -6,7 +6,7 @@ namespace Tests\Unit\Domain\Projects\Entities;
 
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Shared\Capacity;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

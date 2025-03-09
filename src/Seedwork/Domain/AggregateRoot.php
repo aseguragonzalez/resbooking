@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Domain;
+namespace Seedwork\Domain;
 
 abstract class AggregateRoot
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Offers\ValueObjects;
 
 use App\Domain\Offers\ValueObjects\Project;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

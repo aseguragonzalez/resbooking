@@ -8,7 +8,7 @@ use App\Application\Projects\AddPlace\AddPlaceRequest;
 use App\Domain\Projects\Entities\{Project, Place};
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\Capacity;
-use App\Seedwork\Application\{UseCase, UseCaseRequest};
+use Seedwork\Application\{UseCase, UseCaseRequest};
 
 /**
  * @extends UseCase<AddPlaceRequest>

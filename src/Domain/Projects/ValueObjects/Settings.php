@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Projects\ValueObjects;
 
-use App\Seedwork\Domain\ValueObject;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\ValueObject;
+use Seedwork\Domain\Exceptions\ValueException;
 use App\Domain\Shared\{Capacity, Email, Phone};
 
 final class Settings extends ValueObject
