@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
-use App\Seedwork\Infrastructure\Mvc\Routes\Route;
+use App\Seedwork\Infrastructure\Mvc\Routes\{Route, RouteMethod};
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -12,9 +12,9 @@ final class RouteTest extends TestCase
 {
     public function testCreate(): void
     {
-        $route = Route::create('GET', '/foo', 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
 
-        $this->assertSame('GET', $route->method);
+        $this->assertSame(RouteMethod::Get, $route->method);
         $this->assertSame('/foo', $route->path);
         $this->assertSame('FooController', $route->controller);
         $this->assertSame('bar', $route->action);
@@ -23,9 +23,9 @@ final class RouteTest extends TestCase
 
     public function testEquals(): void
     {
-        $route1 = Route::create('GET', '/foo', 'FooController', 'bar', 'FooRequest');
-        $route2 = Route::create('GET', '/foo', 'FooController', 'bar', 'FooRequest');
-        $route3 = Route::create('GET', '/bar', 'FooController', 'bar', 'FooRequest');
+        $route1 = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
+        $route2 = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
+        $route3 = Route::create(RouteMethod::Get, '/bar', 'FooController', 'bar', 'FooRequest');
 
         $this->assertTrue($route1->equals($route2));
         $this->assertFalse($route1->equals($route3));
@@ -34,9 +34,9 @@ final class RouteTest extends TestCase
     #[DataProvider('routeProvider')]
     public function testMatch(string $path, string $testPath, bool $expected): void
     {
-        $route = Route::create('GET', $path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, $path, 'FooController', 'bar', 'FooRequest');
 
-        $this->assertTrue($route->match(method: 'GET', path: $testPath) === $expected);
+        $this->assertTrue($route->match(method: RouteMethod::Get, path: $testPath) === $expected);
     }
 
     /**
@@ -45,7 +45,7 @@ final class RouteTest extends TestCase
     #[DataProvider('argsProvider')]
     public function testGetArgs(string $path, string $testPath, array $args): void
     {
-        $route = Route::create('GET', $path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, $path, 'FooController', 'bar', 'FooRequest');
 
         $this->assertSame($args, $route->getArgs($testPath));
     }

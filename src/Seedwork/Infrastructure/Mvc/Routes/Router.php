@@ -29,7 +29,7 @@ final class Router
         $this->routes[] = $route;
     }
 
-    public function get(string $method, string $path): Route
+    public function get(RouteMethod $method, string $path): Route
     {
         $matches = array_filter($this->routes, fn (Route $route) => $route->match($method, $path));
         if (empty($matches)) {

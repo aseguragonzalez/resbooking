@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
+use App\Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use PHPUnit\Framework\TestCase;
-use Src\Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 
 class RouteMethodTest extends TestCase
 {

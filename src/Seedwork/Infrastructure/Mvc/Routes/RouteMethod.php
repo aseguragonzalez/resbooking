@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src\Seedwork\Infrastructure\Mvc\Routes;
+namespace App\Seedwork\Infrastructure\Mvc\Routes;
 
 enum RouteMethod: string
 {

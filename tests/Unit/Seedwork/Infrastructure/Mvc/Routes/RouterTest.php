@@ -7,6 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 use App\Seedwork\Infrastructure\Mvc\Routes\{
     DuplicatedRouteException,
     Route,
+    RouteMethod,
     Router,
     RouteDoesNotFoundException
 };
@@ -24,7 +25,7 @@ final class RouterTest extends TestCase
 
     public function testRegister(): void
     {
-        $route = Route::create('GET', '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
         $router = new Router();
 
         $router->register($route);
@@ -34,7 +35,7 @@ final class RouterTest extends TestCase
 
     public function testRegisterFailsWhenRouteIsDuplicated(): void
     {
-        $route = Route::create('GET', '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
         $router = new Router();
         $router->register($route);
 
@@ -45,14 +46,14 @@ final class RouterTest extends TestCase
 
     public function testGet(): void
     {
-        $route = Route::create('GET', '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
         $router = new Router(routes: [
             $route,
-            Route::create('GET', '/other1', 'controllerName', 'actionName', 'requestName'),
-            Route::create('GET', '/other2', 'controllerName', 'actionName', 'requestName'),
+            Route::create(RouteMethod::Get, '/other1', 'controllerName', 'actionName', 'requestName'),
+            Route::create(RouteMethod::Get, '/other2', 'controllerName', 'actionName', 'requestName'),
         ]);
 
-        $this->assertEquals($route, $router->get('GET', '/test'));
+        $this->assertEquals($route, $router->get(RouteMethod::Get, '/test'));
     }
 
     public function testGetFailsWhenRouteIsNotFound(): void
@@ -61,6 +62,6 @@ final class RouterTest extends TestCase
 
         $this->expectException(RouteDoesNotFoundException::class);
         $this->expectExceptionMessage('Route not found: GET /test');
-        $router->get('GET', '/test');
+        $router->get(RouteMethod::Get, '/test');
     }
 }

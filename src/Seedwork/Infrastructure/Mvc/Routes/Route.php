@@ -9,7 +9,7 @@ final class Route
     private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:)?([^\}]+)\}/';
 
     private function __construct(
-        public readonly string $method,
+        public readonly RouteMethod $method,
         public readonly string $path,
         public readonly string $controller,
         public readonly string $action,
@@ -17,14 +17,14 @@ final class Route
     ) {
     }
 
-    public function match(string $method, string $path): bool
+    public function match(RouteMethod $method, string $path): bool
     {
         return $this->isSameMethod($method) && $this->isEquivalentPath($path);
     }
 
-    private function isSameMethod(string $method): bool
+    private function isSameMethod(RouteMethod $method): bool
     {
-        return strtoupper($this->method) === strtoupper($method);
+        return $this->method === $method;
     }
 
     private function isEquivalentPath(string $path): bool
@@ -74,11 +74,11 @@ final class Route
 
     public function __toString(): string
     {
-        return "{$this->method} {$this->path}";
+        return "{$this->method->value} {$this->path}";
     }
 
     public static function create(
-        string $method,
+        RouteMethod $method,
         string $path,
         string $controller,
         string $action,
