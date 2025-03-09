@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
-use App\Seedwork\Infrastructure\Mvc\Routes\{Route, RouteMethod};
+use Seedwork\Infrastructure\Mvc\Routes\{Route, RouteMethod};
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 
-use App\Seedwork\Infrastructure\Mvc\MvcRequestHandler;
+use Seedwork\Infrastructure\Mvc\MvcRequestHandler;
 use PHPUnit\Framework\TestCase;
 
 final class MvcRequestHandlerTest extends TestCase

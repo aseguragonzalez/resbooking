@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc;
 
-use App\Seedwork\Infrastructure\Mvc\Routes\{Router, RouteMethod};
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Mvc\Responses\Response;
+use Seedwork\Infrastructure\Mvc\Routes\{Router, RouteMethod};
 
 final class MvcRequestHandler implements RequestHandlerInterface
 {
