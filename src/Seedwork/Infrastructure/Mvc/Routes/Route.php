@@ -17,7 +17,17 @@ final class Route
     ) {
     }
 
-    public function match(string $path): bool
+    public function match(string $method, string $path): bool
+    {
+        return $this->isSameMethod($method) && $this->isEquivalentPath($path);
+    }
+
+    private function isSameMethod(string $method): bool
+    {
+        return strtoupper($this->method) === strtoupper($method);
+    }
+
+    private function isEquivalentPath(string $path): bool
     {
         return preg_match($this->getMatchPattern(), $path) ? true : false;
     }

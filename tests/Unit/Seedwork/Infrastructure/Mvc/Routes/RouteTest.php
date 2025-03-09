@@ -36,7 +36,7 @@ final class RouteTest extends TestCase
     {
         $route = Route::create('GET', $path, 'FooController', 'bar', 'FooRequest');
 
-        $this->assertTrue($route->match($testPath) === $expected);
+        $this->assertTrue($route->match(method: 'GET', path: $testPath) === $expected);
     }
 
     /**
