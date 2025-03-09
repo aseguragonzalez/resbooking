@@ -8,11 +8,11 @@ final class Route
 {
     private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:)?([^\}]+)\}/';
 
-    public function __construct(
+    private function __construct(
         public readonly string $path,
-        public readonly string $controllerTypeName,
-        public readonly string $actionMethodName,
-        public readonly string $requestTypeName
+        public readonly string $controller,
+        public readonly string $action,
+        public readonly string $request
     ) {
     }
 
@@ -50,5 +50,10 @@ final class Route
             }
         }
         return $args;
+    }
+
+    public static function create(string $path, string $controller, string $action, string $request): Route
+    {
+        return new Route($path, $controller, $action, $request);
     }
 }

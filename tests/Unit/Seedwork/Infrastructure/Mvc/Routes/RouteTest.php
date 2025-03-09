@@ -10,10 +10,20 @@ use PHPUnit\Framework\TestCase;
 
 final class RouteTest extends TestCase
 {
+    public function testCreate(): void
+    {
+        $route = Route::create('/foo', 'FooController', 'bar', 'FooRequest');
+
+        $this->assertSame('/foo', $route->path);
+        $this->assertSame('FooController', $route->controller);
+        $this->assertSame('bar', $route->action);
+        $this->assertSame('FooRequest', $route->request);
+    }
+
     #[DataProvider('routeProvider')]
     public function testMatch(string $path, string $testPath, bool $expected): void
     {
-        $route = new Route($path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create($path, 'FooController', 'bar', 'FooRequest');
 
         $this->assertTrue($route->match($testPath) === $expected);
     }
@@ -24,7 +34,7 @@ final class RouteTest extends TestCase
     #[DataProvider('argsProvider')]
     public function testGetArgs(string $path, string $testPath, array $args): void
     {
-        $route = new Route($path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create($path, 'FooController', 'bar', 'FooRequest');
 
         $this->assertSame($args, $route->getArgs($testPath));
     }
