@@ -20,6 +20,16 @@ final class RouteTest extends TestCase
         $this->assertSame('FooRequest', $route->request);
     }
 
+    public function testEquals(): void
+    {
+        $route1 = Route::create('/foo', 'FooController', 'bar', 'FooRequest');
+        $route2 = Route::create('/foo', 'FooController', 'bar', 'FooRequest');
+        $route3 = Route::create('/bar', 'FooController', 'bar', 'FooRequest');
+
+        $this->assertTrue($route1->equals($route2));
+        $this->assertFalse($route1->equals($route3));
+    }
+
     #[DataProvider('routeProvider')]
     public function testMatch(string $path, string $testPath, bool $expected): void
     {

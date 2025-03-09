@@ -52,6 +52,14 @@ final class Route
         return $args;
     }
 
+    public function equals(Route $other): bool
+    {
+        return $this->path === $other->path &&
+               $this->controller === $other->controller &&
+               $this->action === $other->action &&
+               $this->request === $other->request;
+    }
+
     public static function create(string $path, string $controller, string $action, string $request): Route
     {
         return new Route($path, $controller, $action, $request);
