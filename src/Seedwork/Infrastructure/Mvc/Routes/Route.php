@@ -9,6 +9,7 @@ final class Route
     private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:)?([^\}]+)\}/';
 
     private function __construct(
+        public readonly string $method,
         public readonly string $path,
         public readonly string $controller,
         public readonly string $action,
@@ -54,14 +55,25 @@ final class Route
 
     public function equals(Route $other): bool
     {
-        return $this->path === $other->path &&
-               $this->controller === $other->controller &&
-               $this->action === $other->action &&
-               $this->request === $other->request;
+        return $this->method === $other->method &&
+            $this->path === $other->path &&
+            $this->controller === $other->controller &&
+            $this->action === $other->action &&
+            $this->request === $other->request;
     }
 
-    public static function create(string $path, string $controller, string $action, string $request): Route
+    public function __toString(): string
     {
-        return new Route($path, $controller, $action, $request);
+        return "{$this->method} {$this->path}";
+    }
+
+    public static function create(
+        string $method,
+        string $path,
+        string $controller,
+        string $action,
+        string $request
+    ): Route {
+        return new Route($method, $path, $controller, $action, $request);
     }
 }
