@@ -17,6 +17,7 @@ final class RequestObject
         public readonly ?\DateTime $date = null,
         public readonly ?\DateTimeImmutable $dateImmutable = null,
         public readonly bool $active = false,
+        public readonly ?InnerTypeObject $innerTypeObject = null,
     ) {
     }
 }

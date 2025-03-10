@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
+use PHPUnit\Event\Runtime\Runtime;
+use RuntimeException;
 use Tuupola\Ksuid;
 use Tuupola\KsuidFactory;
-
-use function PHPUnit\Framework\isInstanceOf;
 
 final class RequestBuilder
 {
     /** @var array<string, string> */
-    private array $body = [];
+    private array $args = [];
 
     /** @var class-string */
     private string $requestType;
@@ -26,17 +26,21 @@ final class RequestBuilder
      */
     public function withRequestType(string $requestType): RequestBuilder
     {
+        if (!class_exists($requestType)) {
+            throw new \InvalidArgumentException("Class $requestType does not exist.");
+        }
+
         $this->requestType = $requestType;
 
         return $this;
     }
 
     /**
-     * @param array<string, string> $body
+     * @param array<string, string> $args
      */
-    public function withBody(array $body): RequestBuilder
+    public function withArgs(array $args): RequestBuilder
     {
-        $this->body = $body;
+        $this->args = $args;
 
         return $this;
     }
@@ -47,9 +51,16 @@ final class RequestBuilder
         $constructor = $reflectionClass->getConstructor();
         $constructorParameters = $constructor ? $constructor->getParameters() : [];
         $arguments = array_map(
-            fn (\ReflectionParameter $param) => array_key_exists($param->getName(), $this->body)
-                ? $this->getArgumentValue($param)
-                : $this->getDefaultValue($param),
+            function (\ReflectionParameter $param) {
+                $args = array_filter(
+                    $this->args,
+                    fn ($key) => str_starts_with($key, $param->getName() . '.'),
+                    ARRAY_FILTER_USE_KEY
+                );
+                return (array_key_exists($param->getName(), $this->args) || !empty($args))
+                    ? $this->getArgumentValue($param)
+                    : $this->getDefaultValue($param);
+            },
             $constructorParameters
         );
         return $reflectionClass->newInstanceArgs($arguments);
@@ -57,20 +68,39 @@ final class RequestBuilder
 
     private function getArgumentValue(\ReflectionParameter $param): mixed
     {
-        $name = $param->getName();
         $type = $param->getType();
-        $typeName = $type instanceof \ReflectionNamedType ? $type->getName() : 'mixed';
-        return match ($typeName) {
-            // TODO: add uuid type
-            'int' => (int)$this->body[$name],
-            'float' => (float)$this->body[$name],
-            'string' => (string)$this->body[$name],
-            'bool' => (bool)$this->body[$name],
-            \DateTime::class => new \DateTime((string)$this->body[$name]),
-            \DateTimeImmutable::class => new \DateTimeImmutable((string)$this->body[$name]),
-            Ksuid::class => KsuidFactory::fromString((string)$this->body[$name]),
-            default => $this->body[$name],
+        if (!$type instanceof \ReflectionNamedType) {
+            throw new RuntimeException('Type is union or intersection');
+        }
+        $name = $param->getName();
+        return match ($type->getName()) {
+            'int' => (int)$this->args[$name],
+            'float' => (float)$this->args[$name],
+            'string' => (string)$this->args[$name],
+            'bool' => (bool)$this->args[$name],
+            \DateTime::class => new \DateTime((string)$this->args[$name]),
+            \DateTimeImmutable::class => new \DateTimeImmutable((string)$this->args[$name]),
+            Ksuid::class => KsuidFactory::fromString((string)$this->args[$name]),
+            default => $type->isBuiltin() ? $this->args[$name] : $this->getEmbeddedObject($param, $name),
         };
+    }
+
+    private function getEmbeddedObject(\ReflectionParameter $param, string $path): mixed
+    {
+        $type = $param->getType();
+        if (!$type instanceof \ReflectionNamedType) {
+            throw new RuntimeException('Type is union or intersection');
+        }
+
+        $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '.'), ARRAY_FILTER_USE_KEY);
+        $embeddedArgs = array_combine(
+            array_map(fn ($key) => substr($key, strlen($path) + 1), array_keys($args)),
+            $args
+        );
+
+        /** @var class-string $typeName */
+        $typeName = $type->getName();
+        return (new self())->withRequestType($typeName)->withArgs($embeddedArgs)->build();
     }
 
     private function getDefaultValue(\ReflectionParameter $param): mixed
