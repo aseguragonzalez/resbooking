@@ -8,6 +8,10 @@ use Tuupola\Ksuid;
 
 final class RequestObject
 {
+    /**
+     * @param array<int> $items
+     * @param array<Ksuid> $ksuidArray
+     */
     public function __construct(
         public readonly int $id = 0,
         public readonly float $amount = 0.0,
@@ -18,6 +22,8 @@ final class RequestObject
         public readonly ?\DateTimeImmutable $dateImmutable = null,
         public readonly bool $active = false,
         public readonly ?InnerTypeObject $innerTypeObject = null,
+        public readonly array $items = [],
+        public readonly array $ksuidArray = [],
     ) {
     }
 }

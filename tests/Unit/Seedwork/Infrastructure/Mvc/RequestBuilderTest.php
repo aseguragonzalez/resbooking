@@ -55,6 +55,52 @@ final class RequestBuilderTest extends TestCase
         $this->assertSame($body['active'], $requestObject->active);
     }
 
+    public function testBuildWithBuiltInTypeArray(): void
+    {
+        $requestBuilder = new RequestBuilder();
+        $requestBuilder->withRequestType(RequestObject::class);
+        $body = [
+            'id' => $this->faker->randomNumber(),
+            'items[0]' => $this->faker->randomNumber(),
+            'items[1]' => $this->faker->randomNumber(),
+            'items[2]' => $this->faker->randomNumber(),
+            'items[3]' => $this->faker->randomNumber(),
+        ];
+        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $body));
+
+        $requestObject = $requestBuilder->build();
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertSame($body['id'], $requestObject->id);
+        $this->assertSame($body['items[0]'], $requestObject->items[0]);
+        $this->assertSame($body['items[1]'], $requestObject->items[1]);
+        $this->assertSame($body['items[2]'], $requestObject->items[2]);
+        $this->assertSame($body['items[3]'], $requestObject->items[3]);
+    }
+
+    public function testBuildWithClassTypeArray(): void
+    {
+        $requestBuilder = new RequestBuilder();
+        $requestBuilder->withRequestType(RequestObject::class);
+        $body = [
+            'id' => $this->faker->randomNumber(),
+            'ksuidArray[0]' => new \Tuupola\Ksuid(),
+            'ksuidArray[1]' => new \Tuupola\Ksuid(),
+            'ksuidArray[2]' => new \Tuupola\Ksuid(),
+            'ksuidArray[3]' => new \Tuupola\Ksuid(),
+        ];
+        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $body));
+
+        $requestObject = $requestBuilder->build();
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertSame($body['id'], $requestObject->id);
+        $this->assertEquals($body['ksuidArray[0]'], $requestObject->ksuidArray[0]);
+        $this->assertEquals($body['ksuidArray[1]'], $requestObject->ksuidArray[1]);
+        $this->assertEquals($body['ksuidArray[2]'], $requestObject->ksuidArray[2]);
+        $this->assertEquals($body['ksuidArray[3]'], $requestObject->ksuidArray[3]);
+    }
+
     public function testBuildWithEmbeddedObject(): void
     {
         $requestBuilder = new RequestBuilder();
