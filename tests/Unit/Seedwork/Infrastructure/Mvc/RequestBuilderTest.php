@@ -101,6 +101,54 @@ final class RequestBuilderTest extends TestCase
         $this->assertEquals($body['ksuidArray[3]'], $requestObject->ksuidArray[3]);
     }
 
+    public function testBuildWithCustomClassTypeArray(): void
+    {
+        $requestBuilder = new RequestBuilder();
+        $requestBuilder->withRequestType(RequestObject::class);
+        $body = [
+            'id' => $this->faker->randomNumber(),
+            'customClassType[0].id' => $this->faker->randomNumber(),
+            'customClassType[0].name' => $this->faker->name,
+            'customClassType[0].createdAt' => '2021-01-01 00:00:00',
+            'customClassType[0].active' => $this->faker->boolean(),
+            'customClassType[1].id' => $this->faker->randomNumber(),
+            'customClassType[1].name' => $this->faker->name,
+            'customClassType[1].createdAt' => '2021-01-02 01:01:00',
+            'customClassType[1].active' => $this->faker->boolean(),
+            'customClassType[2].id' => $this->faker->randomNumber(),
+            'customClassType[2].name' => $this->faker->name,
+            'customClassType[2].createdAt' => '2021-01-03 02:02:00',
+            'customClassType[2].active' => $this->faker->boolean(),
+        ];
+        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $body));
+
+        $requestObject = $requestBuilder->build();
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertSame($body['id'], $requestObject->id);
+        $this->assertEquals($body['customClassType[0].id'], $requestObject->customClassType[0]->id);
+        $this->assertEquals($body['customClassType[0].name'], $requestObject->customClassType[0]->name);
+        $this->assertEquals(
+            $body['customClassType[0].createdAt'],
+            $requestObject->customClassType[0]->createdAt->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals($body['customClassType[0].active'], $requestObject->customClassType[0]->active);
+        $this->assertEquals($body['customClassType[1].id'], $requestObject->customClassType[1]->id);
+        $this->assertEquals($body['customClassType[1].name'], $requestObject->customClassType[1]->name);
+        $this->assertEquals(
+            $body['customClassType[1].createdAt'],
+            $requestObject->customClassType[1]->createdAt->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals($body['customClassType[1].active'], $requestObject->customClassType[1]->active);
+        $this->assertEquals($body['customClassType[2].id'], $requestObject->customClassType[2]->id);
+        $this->assertEquals($body['customClassType[2].name'], $requestObject->customClassType[2]->name);
+        $this->assertEquals(
+            $body['customClassType[2].createdAt'],
+            $requestObject->customClassType[2]->createdAt->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals($body['customClassType[2].active'], $requestObject->customClassType[2]->active);
+    }
+
     public function testBuildWithEmbeddedObject(): void
     {
         $requestBuilder = new RequestBuilder();

@@ -11,6 +11,7 @@ final class RequestObject
     /**
      * @param array<int> $items
      * @param array<Ksuid> $ksuidArray
+     * @param array<InnerTypeObject> $customClassType
      */
     public function __construct(
         public readonly int $id = 0,
@@ -24,6 +25,7 @@ final class RequestObject
         public readonly ?InnerTypeObject $innerTypeObject = null,
         public readonly array $items = [],
         public readonly array $ksuidArray = [],
+        public readonly array $customClassType = [],
     ) {
     }
 }

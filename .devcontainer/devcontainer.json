@@ -1,6 +1,6 @@
 {
   "containerEnv": {
-    "XDEBUG_MODE": "coverage"
+    "XDEBUG_MODE": "coverage,debug,develop"
   },
   "customizations": {
     "vscode": {

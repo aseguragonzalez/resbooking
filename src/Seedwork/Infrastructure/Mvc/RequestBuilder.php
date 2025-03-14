@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
-use PHPUnit\Event\Runtime\Runtime;
 use RuntimeException;
 use Tuupola\Ksuid;
 use Tuupola\KsuidFactory;
@@ -87,6 +86,32 @@ final class RequestBuilder
         };
     }
 
+    private function getEmbeddedArray(\ReflectionParameter $param, string $path): mixed
+    {
+        $type = $param->getType();
+        if (!$type instanceof \ReflectionNamedType) {
+            throw new RuntimeException('Type is union or intersection');
+        }
+        $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '['), ARRAY_FILTER_USE_KEY);
+        $itemType = $this->getArrayItemTypeFromDocComment($param);
+        $builtInTypes = ['int', 'float', 'string', 'bool', \DateTime::class, \DateTimeImmutable::class, Ksuid::class];
+        if (class_exists($itemType) && !in_array($itemType, $builtInTypes, true)) {
+            return $this->getEmbeddedObjectArray($itemType, $args);
+        }
+        return array_map(function ($value) use ($itemType) {
+            return match ($itemType) {
+                'int' => (int)$value,
+                'float' => (float)$value,
+                'string' => (string)$value,
+                'bool' => (bool)$value,
+                \DateTime::class => new \DateTime((string)$value),
+                \DateTimeImmutable::class => new \DateTimeImmutable((string)$value),
+                Ksuid::class => KsuidFactory::fromString((string)$value),
+                default => $value,
+            };
+        }, array_values($args));
+    }
+
     private function getArrayItemTypeFromDocComment(\ReflectionParameter $param): string
     {
         $paramName = $param->getName();
@@ -101,32 +126,42 @@ final class RequestBuilder
 
         $pattern = sprintf('/@param\s+array<(\w+)>\s+\$%s/', preg_quote($paramName, '/'));
         if (preg_match($pattern, $docComment, $matches)) {
-            return $matches[1];
+            $itemType = $matches[1];
+            $builtInTypes = ['int', 'float', 'string', 'bool'];
+            if (in_array($itemType, $builtInTypes, true)) {
+                return $itemType;
+            }
+            if (strpos($itemType, '\\') === false) {
+                $reflectionClass = $param->getDeclaringClass();
+                if (!$reflectionClass) {
+                    throw new RuntimeException('Reflection class not found');
+                }
+                $namespace = $reflectionClass->getNamespaceName();
+                $itemType = $namespace . '\\' . $itemType;
+            }
+            return $itemType;
         }
 
         throw new RuntimeException("Array item type not found in doc comment for parameter $paramName");
     }
 
-    private function getEmbeddedArray(\ReflectionParameter $param, string $path): mixed
+    /**
+     * @param array<string, string> $args
+     */
+    private function getEmbeddedObjectArray(string $type, array $args): mixed
     {
-        $type = $param->getType();
-        if (!$type instanceof \ReflectionNamedType) {
-            throw new RuntimeException('Type is union or intersection');
-        }
-        $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '['), ARRAY_FILTER_USE_KEY);
-        $itemType = $this->getArrayItemTypeFromDocComment($param);
-        return array_map(function ($value) use ($itemType) {
-            return match ($itemType) {
-                'int' => (int)$value,
-                'float' => (float)$value,
-                'string' => (string)$value,
-                'bool' => (bool)$value,
-                \DateTime::class => new \DateTime((string)$value),
-                \DateTimeImmutable::class => new \DateTimeImmutable((string)$value),
-                Ksuid::class => KsuidFactory::fromString((string)$value),
-                default => $value,
-            };
-        }, array_values($args));
+        $groupedArgs = array_unique(array_map(fn($key) => strstr($key ? $key : '', '.', true), array_keys($args)));
+        $embeddedObjects = array_map(function ($group) use ($type, $args) {
+            $filteredArgs = array_filter($args, fn($key) => str_starts_with($key, $group . '.'), ARRAY_FILTER_USE_KEY);
+            $embeddedArgs = array_combine(
+                array_map(fn($key) => substr($key, strlen($group ? $group : '') + 1), array_keys($filteredArgs)),
+                $filteredArgs
+            );
+            /** @var class-string $typeName */
+            $typeName = $type;
+            return (new self())->withRequestType($typeName)->withArgs($embeddedArgs)->build();
+        }, $groupedArgs);
+        return array_values($embeddedObjects);
     }
 
     private function getEmbeddedObject(\ReflectionParameter $param, string $path): mixed
