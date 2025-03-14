@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Projects\RemoveOpenCloseEvent;
 
 use App\Domain\Shared\Turn;
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 final class RemoveOpenCloseEventRequest extends UseCaseRequest
 {

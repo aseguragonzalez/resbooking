@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Projects\UpdateSettings;
 
 use App\Domain\Shared\{Capacity, Email, Phone};
-use App\Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\UseCaseRequest;
 
 final class UpdateSettingsRequest extends UseCaseRequest
 {

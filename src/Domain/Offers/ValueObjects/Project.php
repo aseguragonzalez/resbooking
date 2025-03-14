@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Offers\ValueObjects;
 
-use App\Seedwork\Domain\ValueObject;
-use App\Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\ValueObject;
+use Seedwork\Domain\Exceptions\ValueException;
 
 final class Project extends ValueObject
 {

@@ -12,7 +12,7 @@ update-autoload:
 	@composer dump-autoload
 
 test:
-	@./vendor/bin/phpunit --coverage-html coverage
+	@XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage/
 
 fix:
 	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12
@@ -25,7 +25,6 @@ analyse:
 
 clean:
 	@rm -rf vendor
-	@rm -rf composer.lock
 	@rm -rf coverage
 
 clean-cache:

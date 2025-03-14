@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Seedwork\Application;
+namespace Seedwork\Application;
 
 abstract class UseCaseRequest
 {
