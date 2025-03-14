@@ -31,7 +31,7 @@
       "type": "shell"
     },
     {
-      "command": "vendor/bin/phpstan analyse . --level=max",
+      "command": "vendor/bin/phpstan analyse ./src ./tests --level=max",
       "group": {
         "isDefault": false,
         "kind": "test"
