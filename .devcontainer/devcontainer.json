@@ -1,4 +1,7 @@
 {
+  "containerEnv": {
+    "XDEBUG_MODE": "coverage"
+  },
   "customizations": {
     "vscode": {
       "extensions": [

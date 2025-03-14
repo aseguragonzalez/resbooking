@@ -45,6 +45,12 @@ the day and shift.
 
 Common tasks are automated using `Makefile`.
 
+**Environment Variables:**
+
+```sheel
+export XDEBUG_MODE=coverage
+```
+
 **Install dependencies:**
 
 ```shell
