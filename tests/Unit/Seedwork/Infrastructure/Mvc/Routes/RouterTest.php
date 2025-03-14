@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
+use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Routes\{
     DuplicatedRouteException,
+    Path,
     Route,
     RouteMethod,
     Router,
     RouteDoesNotFoundException
 };
-use PHPUnit\Framework\TestCase;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
 
 final class RouterTest extends TestCase
 {
@@ -25,7 +27,7 @@ final class RouterTest extends TestCase
 
     public function testRegister(): void
     {
-        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
         $router = new Router();
 
         $router->register($route);
@@ -35,7 +37,7 @@ final class RouterTest extends TestCase
 
     public function testRegisterFailsWhenRouteIsDuplicated(): void
     {
-        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
         $router = new Router();
         $router->register($route);
 
@@ -46,11 +48,11 @@ final class RouterTest extends TestCase
 
     public function testGet(): void
     {
-        $route = Route::create(RouteMethod::Get, '/test', 'controllerName', 'actionName', 'requestName');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
         $router = new Router(routes: [
             $route,
-            Route::create(RouteMethod::Get, '/other1', 'controllerName', 'actionName', 'requestName'),
-            Route::create(RouteMethod::Get, '/other2', 'controllerName', 'actionName', 'requestName'),
+            Route::create(RouteMethod::Get, Path::create('/other1'), ExampleController::class, 'get'),
+            Route::create(RouteMethod::Get, Path::create('/other2'), ExampleController::class, 'get'),
         ]);
 
         $this->assertEquals($route, $router->get(RouteMethod::Get, '/test'));

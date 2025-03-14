@@ -4,28 +4,44 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
-use Seedwork\Infrastructure\Mvc\Routes\{Route, RouteMethod};
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Routes\{InvalidAction, InvalidController, Path, Route, RouteMethod};
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\{ExampleController, RequestObject};
 
 final class RouteTest extends TestCase
 {
     public function testCreate(): void
     {
-        $route = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithoutArgs');
 
         $this->assertSame(RouteMethod::Get, $route->method);
-        $this->assertSame('/foo', $route->path);
-        $this->assertSame('FooController', $route->controller);
-        $this->assertSame('bar', $route->action);
-        $this->assertSame('FooRequest', $route->request);
+        $this->assertSame('/foo', $route->path->value());
+        $this->assertSame(ExampleController::class, $route->controller);
+        $this->assertSame('actionWithoutArgs', $route->action);
+    }
+
+    public function testCreateFailWhenControllerIsInvalid(): void
+    {
+        $this->expectException(InvalidController::class);
+        $this->expectExceptionMessage("Controller " . RequestObject::class . " is not a valid controller");
+        Route::create(RouteMethod::Get, Path::create('/foo'), RequestObject::class, 'invalidAction');
+    }
+
+    public function testCreateFailWhenActionIsInvalid(): void
+    {
+        $this->expectException(InvalidAction::class);
+        $this->expectExceptionMessage(
+            "Action invalidAction is not a valid action for controller " . ExampleController::class
+        );
+        Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'invalidAction');
     }
 
     public function testEquals(): void
     {
-        $route1 = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
-        $route2 = Route::create(RouteMethod::Get, '/foo', 'FooController', 'bar', 'FooRequest');
-        $route3 = Route::create(RouteMethod::Get, '/bar', 'FooController', 'bar', 'FooRequest');
+        $route1 = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithArgs');
+        $route2 = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithArgs');
+        $route3 = Route::create(RouteMethod::Get, Path::create('/bar'), ExampleController::class, 'actionWithArgs');
 
         $this->assertTrue($route1->equals($route2));
         $this->assertFalse($route1->equals($route3));
@@ -34,7 +50,7 @@ final class RouteTest extends TestCase
     #[DataProvider('routeProvider')]
     public function testMatch(string $path, string $testPath, bool $expected): void
     {
-        $route = Route::create(RouteMethod::Get, $path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, Path::create($path), ExampleController::class, 'actionWithArgs');
 
         $this->assertTrue($route->match(method: RouteMethod::Get, path: $testPath) === $expected);
     }
@@ -45,7 +61,7 @@ final class RouteTest extends TestCase
     #[DataProvider('argsProvider')]
     public function testGetArgs(string $path, string $testPath, array $args): void
     {
-        $route = Route::create(RouteMethod::Get, $path, 'FooController', 'bar', 'FooRequest');
+        $route = Route::create(RouteMethod::Get, Path::create($path), ExampleController::class, 'actionWithArgs');
 
         $this->assertSame($args, $route->getArgs($testPath));
     }
