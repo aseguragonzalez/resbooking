@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Routes;
 
+use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+
 final class Route
 {
-    private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:)?([^\}]+)\}/';
+    private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:|float:)?([^\}]+)\}/';
 
+    /**
+     * @param class-string $controller
+     */
     private function __construct(
         public readonly RouteMethod $method,
-        public readonly string $path,
+        public readonly Path $path,
         public readonly string $controller,
         public readonly string $action,
-        public readonly string $request
     ) {
     }
 
@@ -41,21 +45,22 @@ final class Route
                 'ksuid:' => '([0-9a-zA-Z]{27})',
                 default => '([^/]+)',
             };
-        }, $this->path) ?? '';
+        }, $this->path->value()) ?? '';
         return '/^' . str_replace('/', '\/', $pattern) . '$/';
     }
 
     /**
-     * @return array<string, string|int> Associative array of argument name to argument value
+     * @return array<string, string|int|float> Associative array of argument name to argument value
      */
     public function getArgs(string $path): array
     {
         $args = [];
         if (preg_match($this->getMatchPattern(), $path, $matches)) {
-            preg_match_all(Route::PARAM_PATTERN, $this->path, $paramNames);
+            preg_match_all(Route::PARAM_PATTERN, $this->path->value(), $paramNames);
             foreach ($paramNames[2] as $index => $name) {
                 $args[$name] = match ($paramNames[1][$index]) {
                     'int:' => (int)$matches[$index + 1],
+                    'float:' => (float)$matches[$index + 1],
                     default => $matches[$index + 1],
                 };
             }
@@ -66,10 +71,9 @@ final class Route
     public function equals(Route $other): bool
     {
         return $this->method === $other->method &&
-            $this->path === $other->path &&
+            $this->path->equals($other->path) &&
             $this->controller === $other->controller &&
-            $this->action === $other->action &&
-            $this->request === $other->request;
+            $this->action === $other->action;
     }
 
     public function __toString(): string
@@ -77,13 +81,21 @@ final class Route
         return "{$this->method->value} {$this->path}";
     }
 
+    /**
+     * @param class-string $controller
+     */
     public static function create(
         RouteMethod $method,
-        string $path,
+        Path $path,
         string $controller,
         string $action,
-        string $request
     ): Route {
-        return new Route($method, $path, $controller, $action, $request);
+        if (!class_exists($controller) || !is_subclass_of($controller, Controller::class)) {
+            throw new InvalidController($controller);
+        }
+        if (!method_exists($controller, $action)) {
+            throw new InvalidAction($controller, $action);
+        }
+        return new Route($method, $path, $controller, $action);
     }
 }

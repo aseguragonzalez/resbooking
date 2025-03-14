@@ -10,7 +10,7 @@ use Tuupola\KsuidFactory;
 
 final class RequestBuilder
 {
-    /** @var array<string, string> */
+    /** @var array<string, string|int|float> */
     private array $args = [];
 
     /** @var class-string */
@@ -35,7 +35,7 @@ final class RequestBuilder
     }
 
     /**
-     * @param array<string, string> $args
+     * @param array<string, string|int|float> $args
      */
     public function withArgs(array $args): RequestBuilder
     {
@@ -146,7 +146,7 @@ final class RequestBuilder
     }
 
     /**
-     * @param array<string, string> $args
+     * @param array<string, string|int|float> $args
      */
     private function getEmbeddedObjectArray(string $type, array $args): mixed
     {

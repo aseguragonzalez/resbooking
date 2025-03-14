@@ -10,6 +10,21 @@ use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
 
 final class ExampleController extends Controller
 {
+    public function get(): Response
+    {
+        return $this->view();
+    }
+
+    public function actionWithoutArgs(): Response
+    {
+        return $this->view();
+    }
+
+    public function actionWithArgs(RequestObject $requestObject): Response
+    {
+        return $this->view(model: $requestObject);
+    }
+
     public function getDefaultView(): Response
     {
         return $this->view();
