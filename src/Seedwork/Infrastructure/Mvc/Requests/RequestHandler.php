@@ -56,14 +56,19 @@ final class RequestHandler implements RequestHandlerInterface
         $action = new \ReflectionMethod($route->controller, $route->action);
         $this->actionParameterBuilder->withArgs($args);
         return array_map(
-            function (\ReflectionParameter $param): mixed {
+            function (\ReflectionParameter $param) use ($args): mixed {
                 $paramType = $param->getType();
                 if (!$paramType instanceof \ReflectionNamedType) {
                     throw new \Exception('Not implemented');
                 }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
-                return $this->actionParameterBuilder->build($requestType);
+                return match ($paramType->getName()) {
+                    'int' => (int)$args[$param->getName()],
+                    'float' => (float)$args[$param->getName()],
+                    'string' => (string)$args[$param->getName()],
+                    default => $this->actionParameterBuilder->build($requestType),
+                };
             },
             $action->getParameters()
         );

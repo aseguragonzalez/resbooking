@@ -14,6 +14,24 @@ final class TestController extends Controller
         return $this->view();
     }
 
+    public function get(int $offset, int $limit): Response
+    {
+        $model = new \stdClass();
+        $model->offset = $offset;
+        $model->limit = $limit;
+        return $this->view(model: $model);
+    }
+
+    public function search(int $offset, int $limit, SearchRequest $request): Response
+    {
+        $model = new \stdClass();
+        $model->offset = $offset;
+        $model->limit = $limit;
+        $model->name = $request->name;
+        $model->email = $request->email;
+        return $this->view(model: $model);
+    }
+
     public function find(FindRequest $request): Response
     {
         return $this->view(model: $request);
@@ -38,5 +56,10 @@ final class TestController extends Controller
         $model->offset = $query->offset;
         $model->limit = $query->limit;
         return $this->view(model: $model);
+    }
+
+    public function delete(): Response
+    {
+        return $this->view();
     }
 }

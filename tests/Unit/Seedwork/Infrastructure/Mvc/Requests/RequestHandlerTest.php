@@ -37,11 +37,14 @@ final class RequestHandlerTest extends TestCase
         $this->responseFactory = new Psr17Factory();
         $this->router = new Router(routes: [
             Route::create(RouteMethod::Get, Path::create('/test'), TestController::class, 'index'),
+            Route::create(RouteMethod::Get, Path::create('/test/get'), TestController::class, 'get'),
+            Route::create(RouteMethod::Get, Path::create('/test/search'), TestController::class, 'search'),
             Route::create(RouteMethod::Get, Path::create('/test/find'), TestController::class, 'find'),
             Route::create(RouteMethod::Get, Path::create('/test/{int:id}/list'), TestController::class, 'list'),
             Route::create(RouteMethod::Post, Path::create('/test'), TestController::class, 'edit'),
             Route::create(RouteMethod::Post, Path::create('/test/{int:id}'), TestController::class, 'edit'),
-            Route::create(RouteMethod::Post, Path::create('/test/{int:id}/save'), TestController::class, 'save')
+            Route::create(RouteMethod::Post, Path::create('/test/{int:id}/save'), TestController::class, 'save'),
+            Route::create(RouteMethod::Post, Path::create('/test/delete'), TestController::class, 'delete'),
         ]);
         $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
         $this->requestHandler = new RequestHandler(
@@ -68,6 +71,36 @@ final class RequestHandlerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
         $expectedContent = file_get_contents(__DIR__ . '/Files/expected_index.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    public function testHandleGetRequestWithArgs(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/get');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams(['offset' => 10, 'limit' => 20]);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_get.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    public function testHandleGetRequestWithArgsAndRequestObject(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/search');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams(['offset' => 1, 'limit' => 20, 'name' => 'John']);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_search.html');
         $this->assertSame($expectedContent, (string) $response->getBody());
     }
 
@@ -98,6 +131,22 @@ final class RequestHandlerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
         $expectedContent = file_get_contents(__DIR__ . '/Files/expected_list.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequest(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test/delete');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_delete.html');
         $this->assertSame($expectedContent, (string) $response->getBody());
     }
 
