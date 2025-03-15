@@ -8,7 +8,7 @@ use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\RequestObject;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\RequestObject;
 
 final class ActionParameterBuilderTest extends TestCase
 {

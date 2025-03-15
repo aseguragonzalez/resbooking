@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions;
 
 final class InnerTypeObject
 {
