@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views;
 
 final class BranchModel
 {
