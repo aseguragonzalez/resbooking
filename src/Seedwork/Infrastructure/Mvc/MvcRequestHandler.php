@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Seedwork\Infrastructure\Mvc\Requests\RequestBuilder;
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
 use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
 
@@ -23,36 +24,66 @@ final class MvcRequestHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // 1. from PATH, get controller name and action name
+        $route = $this->getRouteFromRequest($request);
+        $args = $this->getArgsFromRequest($request, $route);
+        $view = $this->executeAction($route, $args);
+        return $this->createResponseFromView($view);
+    }
+
+    private function getRouteFromRequest(ServerRequestInterface $request): Route
+    {
         $path = $request->getUri()->getPath();
         $method = RouteMethod::fromString($request->getMethod());
-        $route = $this->router->get($method, $path);
-        // 2. create controller instance
-        $controller = $this->container->get($route->controller);
-        // 3. from request, create action parameters
-        $requestObject = $this->getRequestObject($request, $route);
-        // 4. call action method with parameters
-        $view = $controller->{$route->action}($requestObject);
-        if (!$view instanceof View) {
-            throw new \Exception('Invalid response object');
+        return $this->router->get($method, $path);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getArgsFromRequest(ServerRequestInterface $request, Route $route): array
+    {
+        /** @var array<string, float|int|string> $args */
+        $args = array_merge($request->getQueryParams(), $route->getArgs($request->getUri()->getPath()));
+        if ($route->method === RouteMethod::Post) {
+            $parsedBody = $request->getParsedBody();
+            if (!is_null($parsedBody) && is_array($parsedBody)) {
+                /** @var array<string, float|int|string> $args */
+                $args = array_merge($args, (array)$parsedBody);
+            }
         }
-        // 5. create response message
-        return $this->getResponseMessage($view);
+        $action = new \ReflectionMethod($route->controller, $route->action);
+        return array_map(
+            function (\ReflectionParameter $param) use ($args): mixed {
+                $paramType = $param->getType();
+                if (!$paramType instanceof \ReflectionNamedType) {
+                    throw new \Exception('Not implemented');
+                }
+                /** @var class-string $requestType */
+                $requestType = $paramType->getName();
+                return $this->requestBuilder->withRequestType($requestType)->withArgs($args)->build();
+            },
+            $action->getParameters()
+        );
     }
 
-    private function getRequestObject(ServerRequestInterface $request, Route $route): mixed
+    /**
+     * @param array<mixed> $args
+     */
+    private function executeAction(Route $route, array $args): mixed
     {
-        $pathArgs = $route->getArgs($request->getUri()->getPath());
-        $args = ($request->getMethod() === 'POST')
-            ? array_merge($pathArgs, [])
-            : array_merge($pathArgs, []);
-        return $this->requestBuilder->withRequestType(Route::class)->withArgs($args)->build();
+        $controller = $this->container->get($route->controller);
+        if (count($args) === 0) {
+            return $controller->{$route->action}();
+        }
+        return $controller->{$route->action}(...$args);
     }
 
-    private function getResponseMessage(View $view): ResponseInterface
+    private function createResponseFromView(mixed $view): ResponseInterface
     {
+        if (!$view instanceof View) {
+            throw new \Exception('Not implemented');
+        }
         $responseBody = $this->viewEngine->render($view);
-
         throw new \Exception('Not implemented');
     }
 }
