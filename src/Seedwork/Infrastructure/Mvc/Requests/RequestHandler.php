@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Requests;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -12,11 +13,12 @@ use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
 use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
 
-final class MvcRequestHandler implements RequestHandlerInterface
+final class RequestHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private readonly ContainerInterface $container,
         private readonly ActionParameterBuilder $actionParameterBuilder,
+        private readonly ContainerInterface $container,
+        private readonly ResponseFactoryInterface $responseFactory,
         private readonly Router $router,
         private readonly ViewEngine $viewEngine,
     ) {
@@ -84,7 +86,13 @@ final class MvcRequestHandler implements RequestHandlerInterface
         if (!$view instanceof View) {
             throw new \Exception('Not implemented');
         }
+        $response = $this->responseFactory->createResponse($view->statusCode->value);
+        foreach ($view->headers as $header) {
+            $response = $response->withHeader($header->name, $header->value);
+        }
+
         $responseBody = $this->viewEngine->render($view);
-        throw new \Exception('Not implemented');
+        $response->getBody()->write($responseBody);
+        return $response;
     }
 }
