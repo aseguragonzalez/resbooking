@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Requests;
+namespace Seedwork\Infrastructure\Mvc\Actions;
 
 final class InvalidDocComment extends \Exception
 {

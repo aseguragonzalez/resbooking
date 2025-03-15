@@ -2,49 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Requests;
+namespace Seedwork\Infrastructure\Mvc\Actions;
 
-use Seedwork\Infrastructure\Mvc\Requests\{InvalidDocComment, InvalidObjectType, InvalidRequestType};
+use Seedwork\Infrastructure\Mvc\Actions\{InvalidDocComment, InvalidObjectType};
 
-final class MvcRequestBuilder implements RequestBuilder
+final class ActionParameterBuilder
 {
     /** @var array<string, string|int|float> */
     private array $args = [];
-
-    /** @var class-string */
-    private string $requestType;
 
     public function __construct()
     {
     }
 
     /**
-     * @param class-string $requestType
-     */
-    public function withRequestType(string $requestType): RequestBuilder
-    {
-        if (!class_exists($requestType)) {
-            throw new InvalidRequestType("Class $requestType does not exist.");
-        }
-
-        $this->requestType = $requestType;
-
-        return $this;
-    }
-
-    /**
      * @param array<string, string|int|float> $args
      */
-    public function withArgs(array $args): RequestBuilder
+    public function withArgs(array $args): ActionParameterBuilder
     {
         $this->args = $args;
 
         return $this;
     }
 
-    public function build(): object
+    /**
+     * @param class-string $requestType
+     */
+    public function build(string $requestType): object
     {
-        $reflectionClass = new \ReflectionClass($this->requestType);
+        $reflectionClass = new \ReflectionClass($requestType);
         $constructor = $reflectionClass->getConstructor();
         $constructorParameters = $constructor ? $constructor->getParameters() : [];
         $arguments = array_map(
@@ -157,7 +143,7 @@ final class MvcRequestBuilder implements RequestBuilder
             );
             /** @var class-string $typeName */
             $typeName = $type;
-            return (new self())->withRequestType($typeName)->withArgs($embeddedArgs)->build();
+            return (new self())->withArgs($embeddedArgs)->build($typeName);
         }, $groupedArgs);
         return array_values($embeddedObjects);
     }
@@ -173,7 +159,7 @@ final class MvcRequestBuilder implements RequestBuilder
         $objectArgs = array_combine(array_map(fn ($key) => substr($key, strlen($path) + 1), array_keys($args)), $args);
         /** @var class-string $typeName */
         $typeName = $type->getName();
-        return (new self())->withRequestType($typeName)->withArgs($objectArgs)->build();
+        return (new self())->withArgs($objectArgs)->build($typeName);
     }
 
     private function getDefaultValue(\ReflectionParameter $param): mixed

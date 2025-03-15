@@ -31,7 +31,7 @@ final class Router
 
     public function get(RouteMethod $method, string $path): Route
     {
-        $matches = array_filter($this->routes, fn (Route $route) => $route->match($method, $path));
+        $matches = array_values(array_filter($this->routes, fn (Route $route) => $route->match($method, $path)));
         if (empty($matches)) {
             throw new RouteDoesNotFoundException($method, $path);
         }
