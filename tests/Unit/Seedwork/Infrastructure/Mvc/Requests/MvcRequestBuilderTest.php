@@ -7,10 +7,10 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\RequestBuilder;
+use Seedwork\Infrastructure\Mvc\Requests\MvcRequestBuilder;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\RequestObject;
 
-final class RequestBuilderTest extends TestCase
+final class MvcRequestBuilderTest extends TestCase
 {
     private Faker $faker;
 
@@ -25,7 +25,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuild(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $body = [
             'id' => $this->faker->randomNumber(),
@@ -46,7 +46,7 @@ final class RequestBuilderTest extends TestCase
         $this->assertEqualsWithDelta($body['amount'], $requestObject->amount, 0.1);
         $this->assertSame($body['name'], $requestObject->name);
         $this->assertSame($body['uuid'], $requestObject->uuid);
-        $this->assertEquals($body['ksuid'], $requestObject->ksuid);
+        $this->assertEquals($body['ksuid'], $requestObject->getKsuid());
         $this->assertSame($body['date'], $requestObject->date ? $requestObject->date->format('Y-m-d H:i:s') : null);
         $this->assertSame(
             $body['dateImmutable'],
@@ -57,7 +57,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuildWithBuiltInTypeArray(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $body = [
             'id' => $this->faker->randomNumber(),
@@ -80,7 +80,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuildWithClassTypeArray(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $body = [
             'id' => $this->faker->randomNumber(),
@@ -103,7 +103,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuildWithCustomClassTypeArray(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $body = [
             'id' => $this->faker->randomNumber(),
@@ -151,7 +151,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuildWithEmbeddedObject(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $body = [
             'id' => $this->faker->randomNumber(),
@@ -178,7 +178,7 @@ final class RequestBuilderTest extends TestCase
 
     public function testBuildWithDefaultValues(): void
     {
-        $requestBuilder = new RequestBuilder();
+        $requestBuilder = new MvcRequestBuilder();
         $requestBuilder->withRequestType(RequestObject::class);
         $requestBuilder->withArgs([]);
 
@@ -189,7 +189,7 @@ final class RequestBuilderTest extends TestCase
         $this->assertSame(0.0, $requestObject->amount);
         $this->assertSame('', $requestObject->name);
         $this->assertSame('', $requestObject->uuid);
-        $this->assertNull($requestObject->ksuid);
+        $this->assertNull($requestObject->getKsuid());
         $this->assertNull($requestObject->date);
         $this->assertNull($requestObject->dateImmutable);
         $this->assertFalse($requestObject->active);

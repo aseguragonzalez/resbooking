@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Requests;
 
-use RuntimeException;
-use Tuupola\Ksuid;
-use Tuupola\KsuidFactory;
+use Seedwork\Infrastructure\Mvc\Requests\{InvalidDocComment, InvalidObjectType, InvalidRequestType};
 
-final class RequestBuilder
+final class MvcRequestBuilder implements RequestBuilder
 {
     /** @var array<string, string|int|float> */
     private array $args = [];
@@ -26,7 +24,7 @@ final class RequestBuilder
     public function withRequestType(string $requestType): RequestBuilder
     {
         if (!class_exists($requestType)) {
-            throw new \InvalidArgumentException("Class $requestType does not exist.");
+            throw new InvalidRequestType("Class $requestType does not exist.");
         }
 
         $this->requestType = $requestType;
@@ -69,9 +67,10 @@ final class RequestBuilder
     private function getArgumentValue(\ReflectionParameter $param): mixed
     {
         $type = $param->getType();
-        if (!$type instanceof \ReflectionNamedType) {
-            throw new RuntimeException('Type is union or intersection');
+        if (!($type instanceof \ReflectionNamedType)) {
+            throw new InvalidObjectType(objectType: (string)$type);
         }
+
         $name = $param->getName();
         return match ($type->getName()) {
             'int' => (int)$this->args[$name],
@@ -80,7 +79,6 @@ final class RequestBuilder
             'bool' => (bool)$this->args[$name],
             \DateTime::class => new \DateTime((string)$this->args[$name]),
             \DateTimeImmutable::class => new \DateTimeImmutable((string)$this->args[$name]),
-            Ksuid::class => KsuidFactory::fromString((string)$this->args[$name]),
             'array' => $this->getEmbeddedArray($param, $name),
             default => $type->isBuiltin() ? $this->args[$name] : $this->getEmbeddedObject($param, $name),
         };
@@ -90,14 +88,16 @@ final class RequestBuilder
     {
         $type = $param->getType();
         if (!$type instanceof \ReflectionNamedType) {
-            throw new RuntimeException('Type is union or intersection');
+            throw new InvalidObjectType(objectType: (string)$type);
         }
+
         $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '['), ARRAY_FILTER_USE_KEY);
         $itemType = $this->getArrayItemTypeFromDocComment($param);
-        $builtInTypes = ['int', 'float', 'string', 'bool', \DateTime::class, \DateTimeImmutable::class, Ksuid::class];
+        $builtInTypes = ['int', 'float', 'string', 'bool', \DateTime::class, \DateTimeImmutable::class];
         if (class_exists($itemType) && !in_array($itemType, $builtInTypes, true)) {
             return $this->getEmbeddedObjectArray($itemType, $args);
         }
+
         return array_map(function ($value) use ($itemType) {
             return match ($itemType) {
                 'int' => (int)$value,
@@ -106,7 +106,6 @@ final class RequestBuilder
                 'bool' => (bool)$value,
                 \DateTime::class => new \DateTime((string)$value),
                 \DateTimeImmutable::class => new \DateTimeImmutable((string)$value),
-                Ksuid::class => KsuidFactory::fromString((string)$value),
                 default => $value,
             };
         }, array_values($args));
@@ -116,25 +115,24 @@ final class RequestBuilder
     {
         $paramName = $param->getName();
         if (!$paramName) {
-            throw new RuntimeException('Parameter name not found');
+            throw new InvalidParamName((string)$param);
         }
 
         $docComment = $param->getDeclaringFunction()->getDocComment();
         if (!$docComment) {
-            throw new RuntimeException("Doc comment not found for parameter $paramName");
+            throw new InvalidDocComment($paramName);
         }
 
         $pattern = sprintf('/@param\s+array<(\w+)>\s+\$%s/', preg_quote($paramName, '/'));
         if (preg_match($pattern, $docComment, $matches)) {
             $itemType = $matches[1];
-            $builtInTypes = ['int', 'float', 'string', 'bool'];
-            if (in_array($itemType, $builtInTypes, true)) {
+            if (in_array($itemType, ['int', 'float', 'string', 'bool'], true)) {
                 return $itemType;
             }
             if (strpos($itemType, '\\') === false) {
                 $reflectionClass = $param->getDeclaringClass();
-                if (!$reflectionClass) {
-                    throw new RuntimeException('Reflection class not found');
+                if (is_null($reflectionClass)) {
+                    throw new InvalidObjectType($itemType);
                 }
                 $namespace = $reflectionClass->getNamespaceName();
                 $itemType = $namespace . '\\' . $itemType;
@@ -142,7 +140,7 @@ final class RequestBuilder
             return $itemType;
         }
 
-        throw new RuntimeException("Array item type not found in doc comment for parameter $paramName");
+        throw new InvalidDocComment($paramName);
     }
 
     /**
@@ -167,19 +165,15 @@ final class RequestBuilder
     private function getEmbeddedObject(\ReflectionParameter $param, string $path): mixed
     {
         $type = $param->getType();
-        if (!$type instanceof \ReflectionNamedType) {
-            throw new RuntimeException('Type is union or intersection');
+        if (!($type instanceof \ReflectionNamedType)) {
+            throw new InvalidObjectType((string)$param);
         }
 
         $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '.'), ARRAY_FILTER_USE_KEY);
-        $embeddedArgs = array_combine(
-            array_map(fn ($key) => substr($key, strlen($path) + 1), array_keys($args)),
-            $args
-        );
-
+        $objectArgs = array_combine(array_map(fn ($key) => substr($key, strlen($path) + 1), array_keys($args)), $args);
         /** @var class-string $typeName */
         $typeName = $type->getName();
-        return (new self())->withRequestType($typeName)->withArgs($embeddedArgs)->build();
+        return (new self())->withRequestType($typeName)->withArgs($objectArgs)->build();
     }
 
     private function getDefaultValue(\ReflectionParameter $param): mixed
