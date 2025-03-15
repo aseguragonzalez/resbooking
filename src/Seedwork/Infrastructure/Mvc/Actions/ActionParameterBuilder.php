@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Requests;
+namespace Seedwork\Infrastructure\Mvc\Actions;
 
-use Seedwork\Infrastructure\Mvc\Requests\{InvalidDocComment, InvalidObjectType, InvalidRequestType};
+use Seedwork\Infrastructure\Mvc\Actions\{InvalidDocComment, InvalidObjectType};
 
-final class MvcRequestBuilder implements RequestBuilder
+final class ActionParameterBuilder
 {
     /** @var array<string, string|int|float> */
     private array $args = [];
@@ -18,7 +18,7 @@ final class MvcRequestBuilder implements RequestBuilder
     /**
      * @param array<string, string|int|float> $args
      */
-    public function withArgs(array $args): RequestBuilder
+    public function withArgs(array $args): ActionParameterBuilder
     {
         $this->args = $args;
 

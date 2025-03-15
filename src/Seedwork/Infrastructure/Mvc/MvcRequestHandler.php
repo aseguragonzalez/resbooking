@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Seedwork\Infrastructure\Mvc\Requests\RequestBuilder;
+use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
 use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
 
@@ -16,7 +16,7 @@ final class MvcRequestHandler implements RequestHandlerInterface
 {
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly RequestBuilder $requestBuilder,
+        private readonly ActionParameterBuilder $actionParameterBuilder,
         private readonly Router $router,
         private readonly ViewEngine $viewEngine,
     ) {
@@ -52,7 +52,7 @@ final class MvcRequestHandler implements RequestHandlerInterface
             }
         }
         $action = new \ReflectionMethod($route->controller, $route->action);
-        $this->requestBuilder->withArgs($args);
+        $this->actionParameterBuilder->withArgs($args);
         return array_map(
             function (\ReflectionParameter $param): mixed {
                 $paramType = $param->getType();
@@ -61,7 +61,7 @@ final class MvcRequestHandler implements RequestHandlerInterface
                 }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
-                return $this->requestBuilder->build($requestType);
+                return $this->actionParameterBuilder->build($requestType);
             },
             $action->getParameters()
         );

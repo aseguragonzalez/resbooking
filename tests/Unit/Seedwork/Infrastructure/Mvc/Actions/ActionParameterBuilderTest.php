@@ -7,10 +7,10 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Requests\MvcRequestBuilder;
+use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\RequestObject;
 
-final class MvcRequestBuilderTest extends TestCase
+final class ActionParameterBuilderTest extends TestCase
 {
     private Faker $faker;
 
@@ -25,7 +25,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuild(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $args = [
             'id' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(),
@@ -56,7 +56,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuildWithBuiltInTypeArray(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $args = [
             'id' => $this->faker->randomNumber(),
             'items[0]' => $this->faker->randomNumber(),
@@ -78,7 +78,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuildWithClassTypeArray(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $args = [
             'id' => $this->faker->randomNumber(),
             'ksuidArray[0]' => new \Tuupola\Ksuid(),
@@ -100,7 +100,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuildWithCustomClassTypeArray(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $args = [
             'id' => $this->faker->randomNumber(),
             'customClassType[0].id' => $this->faker->randomNumber(),
@@ -147,7 +147,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuildWithEmbeddedObject(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $args = [
             'id' => $this->faker->randomNumber(),
             'innerTypeObject.id' => $this->faker->randomNumber(),
@@ -173,7 +173,7 @@ final class MvcRequestBuilderTest extends TestCase
 
     public function testBuildWithDefaultValues(): void
     {
-        $requestBuilder = new MvcRequestBuilder();
+        $requestBuilder = new ActionParameterBuilder();
         $requestBuilder->withArgs([]);
 
         $requestObject = $requestBuilder->build(RequestObject::class);
