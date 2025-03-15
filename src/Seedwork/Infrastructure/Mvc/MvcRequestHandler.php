@@ -52,15 +52,16 @@ final class MvcRequestHandler implements RequestHandlerInterface
             }
         }
         $action = new \ReflectionMethod($route->controller, $route->action);
+        $this->requestBuilder->withArgs($args);
         return array_map(
-            function (\ReflectionParameter $param) use ($args): mixed {
+            function (\ReflectionParameter $param): mixed {
                 $paramType = $param->getType();
                 if (!$paramType instanceof \ReflectionNamedType) {
                     throw new \Exception('Not implemented');
                 }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
-                return $this->requestBuilder->withRequestType($requestType)->withArgs($args)->build();
+                return $this->requestBuilder->build($requestType);
             },
             $action->getParameters()
         );
