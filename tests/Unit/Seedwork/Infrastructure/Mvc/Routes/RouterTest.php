@@ -13,7 +13,7 @@ use Seedwork\Infrastructure\Mvc\Routes\{
     Router,
     RouteDoesNotFoundException
 };
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Router\RouterController;
 
 final class RouterTest extends TestCase
 {
@@ -27,7 +27,7 @@ final class RouterTest extends TestCase
 
     public function testRegister(): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), RouterController::class, 'get');
         $router = new Router();
 
         $router->register($route);
@@ -37,7 +37,7 @@ final class RouterTest extends TestCase
 
     public function testRegisterFailsWhenRouteIsDuplicated(): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), RouterController::class, 'get');
         $router = new Router();
         $router->register($route);
 
@@ -48,11 +48,11 @@ final class RouterTest extends TestCase
 
     public function testGet(): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create('/test'), ExampleController::class, 'get');
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), RouterController::class, 'get');
         $router = new Router(routes: [
             $route,
-            Route::create(RouteMethod::Get, Path::create('/other1'), ExampleController::class, 'get'),
-            Route::create(RouteMethod::Get, Path::create('/other2'), ExampleController::class, 'get'),
+            Route::create(RouteMethod::Get, Path::create('/other1'), RouterController::class, 'get'),
+            Route::create(RouteMethod::Get, Path::create('/other2'), RouterController::class, 'get'),
         ]);
 
         $this->assertEquals($route, $router->get(RouteMethod::Get, '/test'));

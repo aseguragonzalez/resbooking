@@ -7,41 +7,41 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Routes\{InvalidAction, InvalidController, Path, Route, RouteMethod};
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\{ExampleController, RequestObject};
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Route\RouteController;
 
 final class RouteTest extends TestCase
 {
     public function testCreate(): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithoutArgs');
+        $route = Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'get');
 
         $this->assertSame(RouteMethod::Get, $route->method);
         $this->assertSame('/foo', $route->path->value());
-        $this->assertSame(ExampleController::class, $route->controller);
-        $this->assertSame('actionWithoutArgs', $route->action);
+        $this->assertSame(RouteController::class, $route->controller);
+        $this->assertSame('get', $route->action);
     }
 
     public function testCreateFailWhenControllerIsInvalid(): void
     {
         $this->expectException(InvalidController::class);
-        $this->expectExceptionMessage("Controller " . RequestObject::class . " is not a valid controller");
-        Route::create(RouteMethod::Get, Path::create('/foo'), RequestObject::class, 'invalidAction');
+        $this->expectExceptionMessage("Controller " . RouteTest::class . " is not a valid controller");
+        Route::create(RouteMethod::Get, Path::create('/foo'), RouteTest::class, 'invalidAction');
     }
 
     public function testCreateFailWhenActionIsInvalid(): void
     {
         $this->expectException(InvalidAction::class);
         $this->expectExceptionMessage(
-            "Action invalidAction is not a valid action for controller " . ExampleController::class
+            "Action 'invalidAction' is not a valid action for controller " . RouteController::class
         );
-        Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'invalidAction');
+        Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'invalidAction');
     }
 
     public function testEquals(): void
     {
-        $route1 = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithArgs');
-        $route2 = Route::create(RouteMethod::Get, Path::create('/foo'), ExampleController::class, 'actionWithArgs');
-        $route3 = Route::create(RouteMethod::Get, Path::create('/bar'), ExampleController::class, 'actionWithArgs');
+        $route1 = Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'get');
+        $route2 = Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'get');
+        $route3 = Route::create(RouteMethod::Get, Path::create('/bar'), RouteController::class, 'get');
 
         $this->assertTrue($route1->equals($route2));
         $this->assertFalse($route1->equals($route3));
@@ -50,7 +50,7 @@ final class RouteTest extends TestCase
     #[DataProvider('routeProvider')]
     public function testMatch(string $path, string $testPath, bool $expected): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create($path), ExampleController::class, 'actionWithArgs');
+        $route = Route::create(RouteMethod::Get, Path::create($path), RouteController::class, 'get');
 
         $this->assertTrue($route->match(method: RouteMethod::Get, path: $testPath) === $expected);
     }
@@ -61,7 +61,7 @@ final class RouteTest extends TestCase
     #[DataProvider('argsProvider')]
     public function testGetArgs(string $path, string $testPath, array $args): void
     {
-        $route = Route::create(RouteMethod::Get, Path::create($path), ExampleController::class, 'actionWithArgs');
+        $route = Route::create(RouteMethod::Get, Path::create($path), RouteController::class, 'get');
 
         $this->assertSame($args, $route->getArgs($testPath));
     }

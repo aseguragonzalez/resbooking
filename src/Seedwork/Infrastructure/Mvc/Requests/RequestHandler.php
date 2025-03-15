@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc;
+namespace Seedwork\Infrastructure\Mvc\Requests;
 
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Seedwork\Infrastructure\Mvc\Requests\RequestBuilder;
+use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
 use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
 
-final class MvcRequestHandler implements RequestHandlerInterface
+final class RequestHandler implements RequestHandlerInterface
 {
     public function __construct(
+        private readonly ActionParameterBuilder $actionParameterBuilder,
         private readonly ContainerInterface $container,
-        private readonly RequestBuilder $requestBuilder,
+        private readonly ResponseFactoryInterface $responseFactory,
         private readonly Router $router,
         private readonly ViewEngine $viewEngine,
     ) {
@@ -52,6 +54,7 @@ final class MvcRequestHandler implements RequestHandlerInterface
             }
         }
         $action = new \ReflectionMethod($route->controller, $route->action);
+        $this->actionParameterBuilder->withArgs($args);
         return array_map(
             function (\ReflectionParameter $param) use ($args): mixed {
                 $paramType = $param->getType();
@@ -60,7 +63,12 @@ final class MvcRequestHandler implements RequestHandlerInterface
                 }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
-                return $this->requestBuilder->withRequestType($requestType)->withArgs($args)->build();
+                return match ($paramType->getName()) {
+                    'int' => (int)$args[$param->getName()],
+                    'float' => (float)$args[$param->getName()],
+                    'string' => (string)$args[$param->getName()],
+                    default => $this->actionParameterBuilder->build($requestType),
+                };
             },
             $action->getParameters()
         );
@@ -83,7 +91,13 @@ final class MvcRequestHandler implements RequestHandlerInterface
         if (!$view instanceof View) {
             throw new \Exception('Not implemented');
         }
+        $response = $this->responseFactory->createResponse($view->statusCode->value);
+        foreach ($view->headers as $header) {
+            $response = $response->withHeader($header->name, $header->value);
+        }
+
         $responseBody = $this->viewEngine->render($view);
-        throw new \Exception('Not implemented');
+        $response->getBody()->write($responseBody);
+        return $response;
     }
 }

@@ -7,7 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, View};
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\BranchModel;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
