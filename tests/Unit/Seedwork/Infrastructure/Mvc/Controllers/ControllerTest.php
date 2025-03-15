@@ -9,15 +9,15 @@ use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Views\View;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\ExampleController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
 
 final class ControllerTest extends TestCase
 {
-    private ExampleController $controller;
+    private TestController $controller;
 
     protected function setUp(): void
     {
-        $this->controller = new ExampleController();
+        $this->controller = new TestController();
     }
 
     protected function tearDown(): void
@@ -32,7 +32,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals([ContentType::html()], $view->headers);
         $this->assertInstanceOf(\stdClass::class, $view->data);
         if ($view instanceof View) {
-            $this->assertSame('Example/getDefaultView', $view->viewPath);
+            $this->assertSame('Test/getDefaultView', $view->viewPath);
         }
     }
 
@@ -43,7 +43,7 @@ final class ControllerTest extends TestCase
         $view = $this->controller->getCustomView($viewName);
 
         if ($view instanceof View) {
-            $this->assertSame("Example/{$viewName}", $view->viewPath);
+            $this->assertSame("Test/{$viewName}", $view->viewPath);
         }
     }
 
@@ -81,7 +81,7 @@ final class ControllerTest extends TestCase
         $this->assertSame($args, $response->data);
 
         if ($response instanceof LocalRedirectTo) {
-            $this->assertSame('ExampleController', $response->controller);
+            $this->assertSame('TestController', $response->controller);
             $this->assertSame($action, $response->action);
         }
     }
@@ -129,12 +129,11 @@ final class ControllerTest extends TestCase
 
     public function testRedirectToUrlWithInvalidUrl(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-
         $url = '/home';
         $args = new \stdClass();
         $args->offset = 1;
         $args->limit = 10;
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->controller->customRedirectToUrl($url, $args);
     }
