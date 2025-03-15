@@ -24,8 +24,19 @@ final class TestController extends Controller
         return $this->view(model: $request);
     }
 
-    public function save(): Response
+    public function edit(EditRequest $request): Response
     {
-        return $this->view();
+        return $this->view(model: $request);
+    }
+
+    public function save(EditRequest $request, FindRequest $query): Response
+    {
+        $model = new \stdClass();
+        $model->name = $request->name;
+        $model->email = $request->email;
+        $model->id = $request->id;
+        $model->offset = $query->offset;
+        $model->limit = $query->limit;
+        return $this->view(model: $model);
     }
 }

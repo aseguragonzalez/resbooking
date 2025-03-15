@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Requests;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -37,7 +38,10 @@ final class RequestHandlerTest extends TestCase
         $this->router = new Router(routes: [
             Route::create(RouteMethod::Get, Path::create('/test'), TestController::class, 'index'),
             Route::create(RouteMethod::Get, Path::create('/test/find'), TestController::class, 'find'),
-            Route::create(RouteMethod::Get, Path::create('/test/{int:id}/list'), TestController::class, 'list')
+            Route::create(RouteMethod::Get, Path::create('/test/{int:id}/list'), TestController::class, 'list'),
+            Route::create(RouteMethod::Post, Path::create('/test'), TestController::class, 'edit'),
+            Route::create(RouteMethod::Post, Path::create('/test/{int:id}'), TestController::class, 'edit'),
+            Route::create(RouteMethod::Post, Path::create('/test/{int:id}/save'), TestController::class, 'save')
         ]);
         $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
         $this->requestHandler = new RequestHandler(
@@ -95,5 +99,69 @@ final class RequestHandlerTest extends TestCase
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
         $expectedContent = file_get_contents(__DIR__ . '/Files/expected_list.html');
         $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequestWithBodyParams(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType)
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'id' => 10]);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_edit.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequestWithPathAndBodyParams(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test/10');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType)
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com']);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_edit.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequestWithPathQueryAndBodyParams(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test/10/save');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType)
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com']);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_save.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    /**
+     * @return array<array{string}>
+     */
+    public static function postProvider(): array
+    {
+        return [
+            ['application/x-www-form-urlencoded'],
+            ['application/json'],
+            ['multipart/form-data']
+        ];
     }
 }
