@@ -41,7 +41,10 @@ final class TestController extends Controller
         return $this->redirectToAction(action: $action, controller: $controller, args: $args);
     }
 
-    public function customRedirectToUrl(string $url, object $args): ActionResponse
+    /**
+     * @param array<string, mixed> $args
+     */
+    public function customRedirectToUrl(string $url, array $args): ActionResponse
     {
         return $this->redirectTo(url: $url, args: $args);
     }

@@ -113,28 +113,15 @@ final class ControllerTest extends TestCase
     public function testRedirectToUrl(): void
     {
         $url = 'https://example.com';
-        $args = new \stdClass();
-        $args->offset = 1;
-        $args->limit = 10;
+        $args = ['offset' => 1, 'limit' => 10,];
 
         $response = $this->controller->customRedirectToUrl($url, $args);
 
         $this->assertSame(StatusCode::Found, $response->statusCode);
         $this->assertEquals(
-            [Location::new("{$url}?offset={$args->offset}&limit={$args->limit}"), ContentType::html()],
+            [Location::new("$url?offset=1&limit=10"), ContentType::html()],
             $response->headers
         );
-    }
-
-    public function testRedirectToUrlWithInvalidUrl(): void
-    {
-        $url = '/home';
-        $args = new \stdClass();
-        $args->offset = 1;
-        $args->limit = 10;
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->controller->customRedirectToUrl($url, $args);
     }
 
     public function testAddHeaders(): void

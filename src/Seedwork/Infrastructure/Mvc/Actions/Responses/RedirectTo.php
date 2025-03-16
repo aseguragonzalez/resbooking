@@ -12,24 +12,30 @@ final class RedirectTo extends ActionResponse
     /**
      * @param array<Header> $headers
      */
-    public function __construct(
-        public readonly string $url,
-        public readonly ?object $args = null,
-        array $headers = [],
-    ) {
-        $data = $args ?? new \stdClass();
-        // normalize url
-        $normalizedUrl = strtolower(filter_var($url, FILTER_SANITIZE_URL) ? $url : '');
-        if (!preg_match('/^https?:\/\//', $normalizedUrl) && !str_starts_with($normalizedUrl, '/')) {
-            $normalizedUrl = '/' . $normalizedUrl;
-        }
-        // create queryString from arguments
-        $queryString = http_build_query(get_object_vars($data));
-        $customHeaders = [Location::new(url: empty($queryString) ? $normalizedUrl : "{$normalizedUrl}?{$queryString}")];
-        if (empty(array_filter($headers, fn (Header $header) => $header instanceof ContentType === true))) {
-            $customHeaders[] = ContentType::html();
-        }
+    private function __construct(public readonly string $url, array $headers = [])
+    {
+        parent::__construct(data: new \stdClass(), headers: $headers, statusCode: StatusCode::Found);
+    }
 
-        parent::__construct($data, headers: array_merge($headers, $customHeaders), statusCode: StatusCode::Found);
+    /**
+     * @param string $url The URL to redirect to ({scheme}//{host}/{path})
+     * @param array<string, mixed>|null $args
+     * @param array<Header> $headers
+     */
+    public static function create(string $url, ?array $args = [], array $headers = []): self
+    {
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            throw new \InvalidArgumentException("Invalid URL: $url");
+        }
+        $urlBlocks = [strtolower($url)];
+        if (!empty($args)) {
+            $urlBlocks[] = http_build_query($args);
+        }
+        $urlWithQueryParams = implode('?', $urlBlocks);
+        $newHeaders = [Location::new($urlWithQueryParams)];
+        if (empty(array_filter($headers, fn (Header $header) => $header instanceof ContentType === true))) {
+            $newHeaders[] = ContentType::html();
+        }
+        return new self($urlWithQueryParams, array_merge($headers, $newHeaders));
     }
 }

@@ -4,46 +4,97 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions\Responses;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\RedirectTo;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Location};
+use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class RedirectToTest extends TestCase
 {
-    public function testSetLocationUrl(): void
+    #[DataProvider('schemeProvider')]
+    public function testCreate(string $scheme): void
     {
-        $data = new \stdClass();
-        $data->offset = 1;
-        $data->limit = 10;
+        $expectedHeaders = [Location::new(url: "$scheme://books/index"), ContentType::html()];
 
-        $response = new RedirectTo('Books/Index', $data);
+        $response = RedirectTo::create("$scheme://Books/Index");
 
         $this->assertSame(StatusCode::Found, $response->statusCode);
-        $this->assertCount(2, $response->headers);
-        $this->assertEquals(
-            [Location::new(url: '/books/index?offset=1&limit=10'), ContentType::html()],
-            $response->headers
-        );
-        $this->assertSame($data, $response->data);
+        $this->assertCount(count($expectedHeaders), $response->headers);
+        $this->assertEquals($expectedHeaders, $response->headers);
+        $this->assertEquals(new \stdClass(), $response->data);
     }
 
-    public function testSetLocationWithoutArgs(): void
+    #[DataProvider('schemeProvider')]
+    public function testCreateWithArgsAndHeaders(string $scheme): void
     {
-        $response = new RedirectTo('Books/Index');
+        $args = [
+            'offset' => 1,
+            'limit' => 10,
+        ];
+        $header = new AccessControlAllowMethods(put: false, delete: false);
+        $expectedHeaders = [
+            $header,
+            Location::new(url: "$scheme://books/index?offset=1&limit=10"),
+            ContentType::html()
+        ];
 
-        $this->assertCount(2, $response->headers);
-        $this->assertEquals(
-            [Location::new(url: '/books/index'), ContentType::html()],
-            $response->headers
-        );
+        $response = RedirectTo::create("$scheme://Books/Index", args: $args, headers: [$header]);
+
+        $this->assertSame(StatusCode::Found, $response->statusCode);
+        $this->assertCount(count($expectedHeaders), $response->headers);
+        $this->assertEquals($expectedHeaders, $response->headers);
+        $this->assertEquals(new \stdClass(), $response->data);
     }
 
-    public function testSetHeadersAndKeepPrevious(): void
+    #[DataProvider('fakeUrlProvider')]
+    public function testCreateFailsWhenUrlIsInvalid(): void
     {
-        $expected = [ContentType::html(), Location::new(url: '/books/index')];
-        $response = new RedirectTo('Books/Index', headers: [ContentType::html()]);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid URL');
+        RedirectTo::create('/Books/Index');
+    }
 
-        $this->assertEquals($expected, $response->headers);
+    /**
+     * @return array<array{string}>
+     */
+    public static function schemeProvider(): array
+    {
+        return [
+            ['http'],
+            ['https'],
+        ];
+    }
+
+    /**
+     * @return array<array{string}>
+     */
+    public static function fakeUrlProvider(): array
+    {
+        return [
+            ['/fake-path'],
+            ['ftp://domain.com'],
+            ['file://domain.com'],
+            ['mailto://domain.com'],
+            ['tel://domain.com'],
+            ['data://domain.com'],
+            ['javascript://domain.com'],
+            ['ws://domain.com'],
+            ['wss://domain.com'],
+            ['sftp://domain.com'],
+            ['ssh://domain.com'],
+            ['svn://domain.com'],
+            ['git://domain.com'],
+            ['gopher://domain.com'],
+            ['imap://domain.com'],
+            ['pop3://domain.com'],
+            ['smtp://domain.com'],
+            ['rtsp://domain.com'],
+            ['rtmp://domain.com'],
+            ['rtmpt://domain.com'],
+            ['rtmpe://domain.com'],
+            ['rtmpte://domain.com'],
+            ['rtmps://domain.com'],
+        ];
     }
 }

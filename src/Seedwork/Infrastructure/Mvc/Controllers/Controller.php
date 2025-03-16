@@ -40,12 +40,12 @@ abstract class Controller
         );
     }
 
-    protected function redirectTo(string $url, ?object $args = null): ActionResponse
+    /**
+     * @param array<string, mixed>|null $args
+     */
+    protected function redirectTo(string $url, ?array $args = []): ActionResponse
     {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException('Invalid URL provided');
-        }
-        return new RedirectTo($url, $args ?? new \stdClass(), headers: array_merge($this->headers, []));
+        return RedirectTo::create(url: $url, args: $args, headers: array_merge($this->headers, []));
     }
 
     protected function redirectToAction(
