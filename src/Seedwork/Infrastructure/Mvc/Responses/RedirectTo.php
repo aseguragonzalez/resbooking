@@ -24,8 +24,7 @@ final class RedirectTo extends Response
         }
         // create queryString from arguments
         $queryString = http_build_query(get_object_vars($data));
-
-        $customHeaders = [Location::new(url: "{$normalizedUrl}?{$queryString}")];
+        $customHeaders = [Location::new(url: empty($queryString) ? $normalizedUrl : "{$normalizedUrl}?{$queryString}")];
         if (empty(array_filter($headers, fn (Header $header) => $header instanceof ContentType === true))) {
             $customHeaders[] = ContentType::html();
         }

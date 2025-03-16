@@ -33,14 +33,14 @@ final class RedirectToTest extends TestCase
 
         $this->assertCount(2, $response->headers);
         $this->assertEquals(
-            [Location::new(url: '/books/index?'), ContentType::html()],
+            [Location::new(url: '/books/index'), ContentType::html()],
             $response->headers
         );
     }
 
     public function testSetHeadersAndKeepPrevious(): void
     {
-        $expected = [ContentType::html(), Location::new(url: '/books/index?')];
+        $expected = [ContentType::html(), Location::new(url: '/books/index')];
         $response = new RedirectTo('Books/Index', headers: [ContentType::html()]);
 
         $this->assertEquals($expected, $response->headers);
