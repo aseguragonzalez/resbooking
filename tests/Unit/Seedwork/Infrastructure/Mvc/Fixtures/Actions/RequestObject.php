@@ -10,7 +10,7 @@ use Tuupola\KsuidFactory;
 final class RequestObject
 {
     /**
-     * @param array<int> $items
+     * @param array<mixed> $items
      * @param array<Ksuid> $ksuidArray
      * @param array<InnerTypeObject> $customClassType
      */

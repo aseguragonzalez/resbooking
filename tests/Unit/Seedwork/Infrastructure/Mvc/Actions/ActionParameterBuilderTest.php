@@ -6,6 +6,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions;
 
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\RequestObject;
@@ -54,22 +55,36 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertSame($args['active'], $requestObject->active);
     }
 
-    public function testBuildWithBuiltInTypeArray(): void
+    /**
+     * @param array<string, float|int> $args
+     */
+    #[DataProvider('buildInNumbersArrayProvider')]
+    public function testBuildWithBuiltInNumbersArray(array $args): void
     {
         $requestBuilder = new ActionParameterBuilder();
-        $args = [
-            'id' => $this->faker->randomNumber(),
-            'items[0]' => $this->faker->randomNumber(),
-            'items[1]' => $this->faker->randomNumber(),
-            'items[2]' => $this->faker->randomNumber(),
-            'items[3]' => $this->faker->randomNumber(),
-        ];
-        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $args));
+        $requestBuilder->withArgs($args);
 
         $requestObject = $requestBuilder->build(RequestObject::class);
 
         $this->assertInstanceOf(RequestObject::class, $requestObject);
-        $this->assertSame($args['id'], $requestObject->id);
+        $this->assertEqualsWithDelta($args['items[0]'], $requestObject->items[0], 1);
+        $this->assertEqualsWithDelta($args['items[1]'], $requestObject->items[1], 1);
+        $this->assertEqualsWithDelta($args['items[2]'], $requestObject->items[2], 1);
+        $this->assertEqualsWithDelta($args['items[3]'], $requestObject->items[3], 1);
+    }
+
+    /**
+     * @param array<string, string> $args
+     */
+    #[DataProvider('buildInNotNumbersArrayProvider')]
+    public function testBuildWithBuiltInNotNumberArray(array $args): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $requestBuilder->withArgs($args);
+
+        $requestObject = $requestBuilder->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
         $this->assertSame($args['items[0]'], $requestObject->items[0]);
         $this->assertSame($args['items[1]'], $requestObject->items[1]);
         $this->assertSame($args['items[2]'], $requestObject->items[2]);
@@ -187,5 +202,67 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertNull($requestObject->date);
         $this->assertNull($requestObject->dateImmutable);
         $this->assertFalse($requestObject->active);
+    }
+
+    /**
+     * @return array<array{array<string, float|int>}>
+     */
+    public static function buildInNumbersArrayProvider(): array
+    {
+        $faker = FakerFactory::create();
+        $intArgs = [
+            'items[0]' => $faker->randomNumber(),
+            'items[1]' => $faker->randomNumber(),
+            'items[2]' => $faker->randomNumber(),
+            'items[3]' => $faker->randomNumber(),
+        ];
+        $floatArgs = [
+            'items[0]' => $faker->randomFloat(),
+            'items[1]' => $faker->randomFloat(),
+            'items[2]' => $faker->randomFloat(),
+            'items[3]' => $faker->randomFloat(),
+        ];
+        return [
+            [$intArgs],
+            [$floatArgs],
+        ];
+    }
+
+    /**
+     * @return array<array{array<string, string>}>
+     */
+    public static function buildInNotNumbersArrayProvider(): array
+    {
+        $faker = FakerFactory::create();
+        $stringArgs = [
+            'items[0]' => $faker->name,
+            'items[1]' => $faker->name,
+            'items[2]' => $faker->name,
+            'items[3]' => $faker->name,
+        ];
+        $boolArgs = [
+            'items[0]' => $faker->boolean() ? 'true' : 'false',
+            'items[1]' => $faker->boolean() ? 'true' : 'false',
+            'items[2]' => $faker->boolean() ? 'true' : 'false',
+            'items[3]' => $faker->boolean() ? 'true' : 'false',
+        ];
+        $dateTime = [
+            'items[0]' => $faker->dateTime->format('Y-m-d H:i:s'),
+            'items[1]' => $faker->dateTime->format('Y-m-d H:i:s'),
+            'items[2]' => $faker->dateTime->format('Y-m-d H:i:s'),
+            'items[3]' => $faker->dateTime->format('Y-m-d H:i:s'),
+        ];
+        $dateTimeImmutable = [
+            'items[0]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'items[1]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'items[2]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'items[3]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+        ];
+        return [
+            [$stringArgs],
+            [$boolArgs],
+            [$dateTime],
+            [$dateTimeImmutable],
+        ];
     }
 }
