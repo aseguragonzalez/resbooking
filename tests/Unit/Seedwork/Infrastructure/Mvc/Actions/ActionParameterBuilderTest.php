@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions;
 
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

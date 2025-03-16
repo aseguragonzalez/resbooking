@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
