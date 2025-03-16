@@ -11,6 +11,11 @@ use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class TestController extends Controller
 {
+    public function index(): ActionResponse
+    {
+        return $this->view();
+    }
+
     public function getDefaultView(): ActionResponse
     {
         return $this->view();
@@ -36,9 +41,12 @@ final class TestController extends Controller
         return $this->redirectToAction($action, args: $args);
     }
 
-    public function customRedirectToControllerAction(string $controller, string $action, object $args): ActionResponse
+    /**
+     * @param class-string $controller
+     */
+    public function redirectToControllerAction(string $controller, string $action, object $args): ActionResponse
     {
-        return $this->redirectToAction(action: $action, controller: $controller, args: $args);
+        return $this->redirectToAction($action, $controller, $args);
     }
 
     /**

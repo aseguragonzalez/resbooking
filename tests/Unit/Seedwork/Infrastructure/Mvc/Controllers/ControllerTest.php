@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\{LocalRedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\{HomeController, TestController};
 
 final class ControllerTest extends TestCase
 {
@@ -74,39 +74,30 @@ final class ControllerTest extends TestCase
 
         $response = $this->controller->customRedirectToAction($action, $args);
 
-        $this->assertSame(StatusCode::Found, $response->statusCode);
-        $this->assertSame([], $response->headers);
-        $this->assertInstanceOf(\stdClass::class, $response->data);
-        $this->assertSame($args, $response->data);
-
         if ($response instanceof LocalRedirectTo) {
-            $this->assertSame('TestController', $response->controller);
+            $this->assertSame(TestController::class, $response->controller);
             $this->assertSame($action, $response->action);
+            $this->assertSame($args, $response->args);
         }
     }
 
     public function testRedirectToActionWithController(): void
     {
-        $controller = 'HomeController';
         $action = 'index';
         $args = new \stdClass();
         $args->offset = 1;
         $args->limit = 10;
 
-        $response = $this->controller->customRedirectToControllerAction(
-            controller: $controller,
+        $response = $this->controller->redirectToControllerAction(
+            controller: HomeController::class,
             action: $action,
             args: $args
         );
 
-        $this->assertSame(StatusCode::Found, $response->statusCode);
-        $this->assertSame([], $response->headers);
-        $this->assertInstanceOf(\stdClass::class, $response->data);
-        $this->assertSame($args, $response->data);
-
         if ($response instanceof LocalRedirectTo) {
-            $this->assertSame($controller, $response->controller);
+            $this->assertSame(HomeController::class, $response->controller);
             $this->assertSame($action, $response->action);
+            $this->assertSame($args, $response->args);
         }
     }
 

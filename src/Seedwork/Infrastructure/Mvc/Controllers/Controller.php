@@ -48,6 +48,9 @@ abstract class Controller
         return RedirectTo::create(url: $url, args: $args, headers: array_merge($this->headers, []));
     }
 
+    /**
+     * @param class-string $controller
+     */
     protected function redirectToAction(
         string $action,
         ?string $controller = null,
@@ -58,11 +61,15 @@ abstract class Controller
             throw new \Exception('Class not found in backtrace');
         }
 
-        return new LocalRedirectTo(
+        // $controller = $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class']));
+
+        $requestedController = $controller ?? $backtrace[1]['class'];
+
+        return LocalRedirectTo::create(
             action: $action,
-            args: $args ?? new \stdClass(),
-            headers: array_merge($this->headers, []),
-            controller: $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class'])),
+            controller: $requestedController,
+            args: $args,
+            headers: $this->headers,
         );
     }
 }
