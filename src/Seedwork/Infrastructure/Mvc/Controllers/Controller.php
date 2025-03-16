@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Controllers;
 
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, LocalRedirectTo, RedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
-use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, Response, StatusCode};
-use Seedwork\Infrastructure\Mvc\Views\View;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 abstract class Controller
 {
@@ -24,7 +24,7 @@ abstract class Controller
         ?string $name = null,
         ?object $model = null,
         StatusCode $statusCode = StatusCode::Ok,
-    ): Response {
+    ): ActionResponse {
         $backtrace = debug_backtrace();
         if (!isset($backtrace[1]['class'])) {
             throw new \Exception('Class not found in backtrace');
@@ -40,7 +40,7 @@ abstract class Controller
         );
     }
 
-    protected function redirectTo(string $url, ?object $args = null): Response
+    protected function redirectTo(string $url, ?object $args = null): ActionResponse
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('Invalid URL provided');
@@ -52,7 +52,7 @@ abstract class Controller
         string $action,
         ?string $controller = null,
         ?object $args = null,
-    ): Response {
+    ): ActionResponse {
         $backtrace = debug_backtrace();
         if (!isset($backtrace[1]['class'])) {
             throw new \Exception('Class not found in backtrace');

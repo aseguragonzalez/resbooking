@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Controllers;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Controllers\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{LocalRedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Views\View;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
 
 final class ControllerTest extends TestCase

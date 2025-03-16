@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Views;
 
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+
 final class HtmlViewEngine implements ViewEngine
 {
     public function __construct(private readonly string $basePath)

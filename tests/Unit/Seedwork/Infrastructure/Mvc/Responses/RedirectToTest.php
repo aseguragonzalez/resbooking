@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Responses;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions\Responses;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\RedirectTo;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Location};
-use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, StatusCode};
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class RedirectToTest extends TestCase
 {

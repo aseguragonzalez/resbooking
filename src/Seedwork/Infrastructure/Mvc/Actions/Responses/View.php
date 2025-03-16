@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Views;
+namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{Header, ContentType};
-use Seedwork\Infrastructure\Mvc\Responses\{Response, StatusCode};
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
-final class View extends Response
+final class View extends ActionResponse
 {
     /**
      * @param array<Header> $headers

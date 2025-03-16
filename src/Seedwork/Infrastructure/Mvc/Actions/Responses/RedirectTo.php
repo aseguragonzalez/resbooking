@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Responses;
+namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Header, Location};
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
-final class RedirectTo extends Response
+final class RedirectTo extends ActionResponse
 {
     /**
      * @param array<Header> $headers

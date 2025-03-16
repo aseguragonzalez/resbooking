@@ -10,9 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Seedwork\Infrastructure\Mvc\Responses\Response;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, View};
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
-use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
+use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 final class RequestHandler implements RequestHandlerInterface
 {
@@ -78,20 +78,20 @@ final class RequestHandler implements RequestHandlerInterface
     /**
      * @param array<mixed> $args
      */
-    private function executeAction(Route $route, array $args): Response
+    private function executeAction(Route $route, array $args): ActionResponse
     {
         $controller = $this->container->get($route->controller);
         $actionResponse = (count($args) === 0)
             ? $controller->{$route->action}()
             : $controller->{$route->action}(...$args);
 
-        if ($actionResponse instanceof Response) {
+        if ($actionResponse instanceof ActionResponse) {
             return $actionResponse;
         }
         throw new \RuntimeException('Invalid Response object returned from controller');
     }
 
-    private function createResponseFromActionResponse(Response $actionResponse): ResponseInterface
+    private function createResponseFromActionResponse(ActionResponse $actionResponse): ResponseInterface
     {
         $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
         foreach ($actionResponse->headers as $header) {
