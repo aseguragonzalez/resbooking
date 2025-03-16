@@ -37,6 +37,7 @@ final class RequestHandlerTest extends TestCase
         $this->responseFactory = new Psr17Factory();
         $this->router = new Router(routes: [
             Route::create(RouteMethod::Get, Path::create('/test'), TestController::class, 'index'),
+            Route::create(RouteMethod::Get, Path::create('/test/redirect'), TestController::class, 'redirect'),
             Route::create(RouteMethod::Get, Path::create('/test/get'), TestController::class, 'get'),
             Route::create(RouteMethod::Get, Path::create('/test/search'), TestController::class, 'search'),
             Route::create(RouteMethod::Get, Path::create('/test/find'), TestController::class, 'find'),
@@ -58,6 +59,20 @@ final class RequestHandlerTest extends TestCase
 
     protected function tearDown(): void
     {
+    }
+
+    public function testHandleRequestWithRedirectTo(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/redirect');
+        $request = $this->requestFactory->createServerRequest('GET', $uri);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $this->assertSame('http://test.com', $response->getHeaderLine('Location'));
+        $this->assertEmpty((string) $response->getBody());
     }
 
     public function testHandleGetRequest(): void

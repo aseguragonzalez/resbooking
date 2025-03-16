@@ -14,6 +14,11 @@ final class TestController extends Controller
         return $this->view();
     }
 
+    public function redirect(): Response
+    {
+        return $this->redirectTo('http://test.com');
+    }
+
     public function get(int $offset, int $limit): Response
     {
         $model = new \stdClass();
