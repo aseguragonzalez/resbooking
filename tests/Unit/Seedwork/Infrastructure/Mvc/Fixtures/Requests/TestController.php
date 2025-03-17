@@ -6,12 +6,27 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Requests;
 
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use stdClass;
 
 final class TestController extends Controller
 {
     public function index(): ActionResponse
     {
         return $this->view();
+    }
+
+    public function custom(int $id, float $amount, string $name): ActionResponse
+    {
+        $model = new \stdClass();
+        $model->id = $id;
+        $model->amount = $amount;
+        $model->name = $name;
+        return $this->view(model: $model);
+    }
+
+    public function failed(): stdClass
+    {
+        return new \stdClass();
     }
 
     public function redirect(): ActionResponse

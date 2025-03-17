@@ -58,10 +58,8 @@ final class RequestHandler implements RequestHandlerInterface
         $this->actionParameterBuilder->withArgs($args);
         return array_map(
             function (\ReflectionParameter $param) use ($args): mixed {
+                /** @var \ReflectionNamedType $paramType */
                 $paramType = $param->getType();
-                if (!$paramType instanceof \ReflectionNamedType) {
-                    throw new \Exception('Not implemented');
-                }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
                 return match ($paramType->getName()) {
