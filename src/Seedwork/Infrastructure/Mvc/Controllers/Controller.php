@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Controllers;
 
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, LocalRedirectTo, RedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
-use Seedwork\Infrastructure\Mvc\Responses\{RedirectTo, Response, StatusCode};
-use Seedwork\Infrastructure\Mvc\Views\View;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 abstract class Controller
 {
@@ -24,45 +24,33 @@ abstract class Controller
         ?string $name = null,
         ?object $model = null,
         StatusCode $statusCode = StatusCode::Ok,
-    ): Response {
+    ): ActionResponse {
         $backtrace = debug_backtrace();
-        if (!isset($backtrace[1]['class'])) {
-            throw new \Exception('Class not found in backtrace');
-        }
-
         $viewName = $name ? $name : $backtrace[1]['function'];
+        // @phpstan-ignore-next-line
         $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
-        return new View(
-            data: $model,
-            headers: array_merge($this->headers, []),
-            statusCode: $statusCode,
-            viewPath: "{$viewPath}/{$viewName}"
-        );
+        return new View("{$viewPath}/{$viewName}", $model, array_merge($this->headers, []), $statusCode);
     }
 
-    protected function redirectTo(string $url, ?object $args = null): Response
+    /**
+     * @param array<string, mixed>|null $args
+     */
+    protected function redirectTo(string $url, ?array $args = []): ActionResponse
     {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException('Invalid URL provided');
-        }
-        return new RedirectTo($url, $args ?? new \stdClass(), headers: array_merge($this->headers, []));
+        return RedirectTo::create(url: $url, args: $args, headers: array_merge($this->headers, []));
     }
 
+    /**
+     * @param class-string $controller
+     */
     protected function redirectToAction(
         string $action,
         ?string $controller = null,
         ?object $args = null,
-    ): Response {
+    ): ActionResponse {
         $backtrace = debug_backtrace();
-        if (!isset($backtrace[1]['class'])) {
-            throw new \Exception('Class not found in backtrace');
-        }
-
-        return new LocalRedirectTo(
-            action: $action,
-            args: $args ?? new \stdClass(),
-            headers: array_merge($this->headers, []),
-            controller: $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class'])),
-        );
+        // @phpstan-ignore-next-line
+        $requestedController = $controller ?? $backtrace[1]['class'];
+        return LocalRedirectTo::create($action, $requestedController, $args, array_merge($this->headers, []));
     }
 }

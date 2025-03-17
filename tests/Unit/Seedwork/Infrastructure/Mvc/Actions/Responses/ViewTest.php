@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions\Responses\Views;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Views\View;
 
 final class ViewTest extends TestCase
 {

@@ -41,4 +41,11 @@ final class AccessControlAllowOriginTest extends TestCase
         $this->assertSame('Access-Control-Allow-Origin', $header->name);
         $this->assertSame($origin, $header->value);
     }
+
+    public function testToStringReturnsFormattedHeader(): void
+    {
+        $header = new AccessControlAllowOrigin('https://example.com');
+
+        $this->assertSame('Access-Control-Allow-Origin: https://example.com', (string) $header);
+    }
 }

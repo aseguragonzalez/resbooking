@@ -56,7 +56,7 @@ final class RouteTest extends TestCase
     }
 
     /**
-     * @param array<string, string|int> $args
+     * @param array<string, string|float|int> $args
      */
     #[DataProvider('argsProvider')]
     public function testGetArgs(string $path, string $testPath, array $args): void
@@ -97,13 +97,14 @@ final class RouteTest extends TestCase
     }
 
     /**
-     * @return array<array{string, string, array<string, string|int>}>
+     * @return array<array{string, string, array<string, string|float|int>}>
      */
     public static function argsProvider(): array
     {
         return [
             ['/foo/{id}', '/foo/1', ['id' => '1']],
             ['/foo/{id}/bar', '/foo/1/bar', ['id' => '1']],
+            ['/foo/{id}/bar/{float:amount}', '/foo/1/bar/10.01', ['id' => '1', 'amount' => 10.01]],
             ['/foo/{id}/bar/{name}', '/foo/1/bar/peter', ['id' => '1', 'name' => 'peter']],
             ['/foo/{int:id}/bar/{name}', '/foo/1/bar/peter', ['id' => 1, 'name' => 'peter']],
             [

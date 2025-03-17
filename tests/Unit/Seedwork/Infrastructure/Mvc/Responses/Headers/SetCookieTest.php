@@ -74,4 +74,15 @@ final class SetCookieTest extends TestCase
 
         $this->assertStringNotContainsString('SameSite=', $setCookie->value);
     }
+
+    public function testSetCookieToString(): void
+    {
+        $expires = time() + 3600;
+        $setCookie = new SetCookie('test', 'value', $expires, '/path', 'example.com', true, true, 'Strict');
+        $expectedString = 'Set-Cookie: test=value; Expires='
+            . gmdate('D, d-M-Y H:i:s T', $expires)
+            . '; Path=/path; Domain=example.com; Secure; HttpOnly; SameSite=Strict';
+
+        $this->assertSame($expectedString, (string) $setCookie);
+    }
 }
