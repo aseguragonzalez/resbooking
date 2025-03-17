@@ -35,4 +35,12 @@ class LocationTest extends TestCase
         $this->assertSame('Location', $location->name);
         $this->assertSame($url, $location->value);
     }
+
+    public function testLocationHeaderToString(): void
+    {
+        $url = 'https://example.com';
+        $location = Location::new(url: $url);
+
+        $this->assertSame('Location: https://example.com', (string) $location);
+    }
 }

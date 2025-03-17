@@ -62,4 +62,11 @@ final class ContentEncodingTest extends TestCase
         $this->assertSame('Content-Encoding', $header->name);
         $this->assertSame('x-gzip', $header->value);
     }
+
+    public function testToString(): void
+    {
+        $header = ContentEncoding::gzip();
+
+        $this->assertSame('Content-Encoding: gzip', (string) $header);
+    }
 }

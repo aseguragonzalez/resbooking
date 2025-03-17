@@ -35,4 +35,12 @@ class LastModifiedTest extends TestCase
         $this->assertSame('Last-Modified', $lastModified->name);
         $this->assertSame('Sun, 01 Oct 2023 16:00:00 GMT', $lastModified->value);
     }
+
+    public function testLastModifiedHeaderToString(): void
+    {
+        $dateTime = new \DateTimeImmutable('2023-10-01 12:00:00');
+        $lastModified = new LastModified($dateTime);
+
+        $this->assertSame('Last-Modified: Sun, 01 Oct 2023 12:00:00 GMT', (string) $lastModified);
+    }
 }

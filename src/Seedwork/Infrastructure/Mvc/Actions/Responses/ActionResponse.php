@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Mvc\Responses;
+namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
-abstract class Response
+abstract class ActionResponse
 {
     /**
      * @param array<Header> $headers

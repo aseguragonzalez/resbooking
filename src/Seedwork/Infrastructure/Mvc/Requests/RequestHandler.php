@@ -10,8 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, View};
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
-use Seedwork\Infrastructure\Mvc\Views\{View, ViewEngine};
+use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 final class RequestHandler implements RequestHandlerInterface
 {
@@ -28,8 +29,8 @@ final class RequestHandler implements RequestHandlerInterface
     {
         $route = $this->getRouteFromRequest($request);
         $args = $this->getArgsFromRequest($request, $route);
-        $view = $this->executeAction($route, $args);
-        return $this->createResponseFromView($view);
+        $actionResponse = $this->executeAction($route, $args);
+        return $this->createResponseFromActionResponse($actionResponse);
     }
 
     private function getRouteFromRequest(ServerRequestInterface $request): Route
@@ -57,10 +58,8 @@ final class RequestHandler implements RequestHandlerInterface
         $this->actionParameterBuilder->withArgs($args);
         return array_map(
             function (\ReflectionParameter $param) use ($args): mixed {
+                /** @var \ReflectionNamedType $paramType */
                 $paramType = $param->getType();
-                if (!$paramType instanceof \ReflectionNamedType) {
-                    throw new \Exception('Not implemented');
-                }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
                 return match ($paramType->getName()) {
@@ -77,27 +76,29 @@ final class RequestHandler implements RequestHandlerInterface
     /**
      * @param array<mixed> $args
      */
-    private function executeAction(Route $route, array $args): mixed
+    private function executeAction(Route $route, array $args): ActionResponse
     {
         $controller = $this->container->get($route->controller);
-        if (count($args) === 0) {
-            return $controller->{$route->action}();
+        $actionResponse = (count($args) === 0)
+            ? $controller->{$route->action}()
+            : $controller->{$route->action}(...$args);
+
+        if ($actionResponse instanceof ActionResponse) {
+            return $actionResponse;
         }
-        return $controller->{$route->action}(...$args);
+        throw new \RuntimeException('Invalid Response object returned from controller');
     }
 
-    private function createResponseFromView(mixed $view): ResponseInterface
+    private function createResponseFromActionResponse(ActionResponse $actionResponse): ResponseInterface
     {
-        if (!$view instanceof View) {
-            throw new \Exception('Not implemented');
-        }
-        $response = $this->responseFactory->createResponse($view->statusCode->value);
-        foreach ($view->headers as $header) {
+        $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
+        foreach ($actionResponse->headers as $header) {
             $response = $response->withHeader($header->name, $header->value);
         }
-
-        $responseBody = $this->viewEngine->render($view);
-        $response->getBody()->write($responseBody);
+        if ($actionResponse instanceof View) {
+            $responseBody = $this->viewEngine->render($actionResponse);
+            $response->getBody()->write($responseBody);
+        }
         return $response;
     }
 }

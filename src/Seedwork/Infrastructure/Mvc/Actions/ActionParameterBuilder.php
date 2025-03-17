@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Actions;
 
-use Seedwork\Infrastructure\Mvc\Actions\{InvalidDocComment, InvalidObjectType};
-
 final class ActionParameterBuilder
 {
     /** @var array<string, string|int|float> */
@@ -52,11 +50,8 @@ final class ActionParameterBuilder
 
     private function getArgumentValue(\ReflectionParameter $param): mixed
     {
+        /** @var \ReflectionNamedType $type */
         $type = $param->getType();
-        if (!($type instanceof \ReflectionNamedType)) {
-            throw new InvalidObjectType(objectType: (string)$type);
-        }
-
         $name = $param->getName();
         return match ($type->getName()) {
             'int' => (int)$this->args[$name],
@@ -72,11 +67,6 @@ final class ActionParameterBuilder
 
     private function getEmbeddedArray(\ReflectionParameter $param, string $path): mixed
     {
-        $type = $param->getType();
-        if (!$type instanceof \ReflectionNamedType) {
-            throw new InvalidObjectType(objectType: (string)$type);
-        }
-
         $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '['), ARRAY_FILTER_USE_KEY);
         $itemType = $this->getArrayItemTypeFromDocComment($param);
         $builtInTypes = ['int', 'float', 'string', 'bool', \DateTime::class, \DateTimeImmutable::class];
@@ -100,36 +90,29 @@ final class ActionParameterBuilder
     private function getArrayItemTypeFromDocComment(\ReflectionParameter $param): string
     {
         $paramName = $param->getName();
-        if (!$paramName) {
-            throw new InvalidParamName((string)$param);
-        }
-
-        $docComment = $param->getDeclaringFunction()->getDocComment();
-        if (!$docComment) {
-            throw new InvalidDocComment($paramName);
-        }
-
-        $pattern = sprintf('/@param\s+array<(\w+)>\s+\$%s/', preg_quote($paramName, '/'));
+        $docComment = (string)$param->getDeclaringFunction()->getDocComment();
+        $pattern = sprintf('/@param\s+array<([^>]+)>\s+\$%s/', $paramName);
         if (preg_match($pattern, $docComment, $matches)) {
             $itemType = $matches[1];
             if (in_array($itemType, ['int', 'float', 'string', 'bool'], true)) {
                 return $itemType;
             }
+            if (in_array($itemType, ['\DateTime', '\DateTimeImmutable'], true)) {
+                return str_replace('\\', '', $itemType);
+            }
             if (strpos($itemType, '\\') === false) {
-                $reflectionClass = $param->getDeclaringClass();
-                if (is_null($reflectionClass)) {
-                    throw new InvalidObjectType($itemType);
-                }
-                $namespace = $reflectionClass->getNamespaceName();
+                // @phpstan-ignore-next-line
+                $namespace = $param->getDeclaringClass()->getNamespaceName();
                 $itemType = $namespace . '\\' . $itemType;
             }
             return $itemType;
         }
 
-        throw new InvalidDocComment($paramName);
+        throw new \RuntimeException("Doc comment not found for parameter $paramName");
     }
 
     /**
+     * @param class-string $type
      * @param array<string, string|int|float> $args
      */
     private function getEmbeddedObjectArray(string $type, array $args): mixed
@@ -141,22 +124,17 @@ final class ActionParameterBuilder
                 array_map(fn($key) => substr($key, strlen($group ? $group : '') + 1), array_keys($filteredArgs)),
                 $filteredArgs
             );
-            /** @var class-string $typeName */
-            $typeName = $type;
-            return (new self())->withArgs($embeddedArgs)->build($typeName);
+            return (new self())->withArgs($embeddedArgs)->build($type);
         }, $groupedArgs);
         return array_values($embeddedObjects);
     }
 
     private function getEmbeddedObject(\ReflectionParameter $param, string $path): mixed
     {
-        $type = $param->getType();
-        if (!($type instanceof \ReflectionNamedType)) {
-            throw new InvalidObjectType((string)$param);
-        }
-
         $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '.'), ARRAY_FILTER_USE_KEY);
         $objectArgs = array_combine(array_map(fn ($key) => substr($key, strlen($path) + 1), array_keys($args)), $args);
+        /** @var \ReflectionNamedType $type */
+        $type = $param->getType();
         /** @var class-string $typeName */
         $typeName = $type->getName();
         return (new self())->withArgs($objectArgs)->build($typeName);

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions;
 
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\RequestObject;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\{WithInvalidDocsObject, WithoutDocsObject, RequestObject};
 
 final class ActionParameterBuilderTest extends TestCase
 {
@@ -31,7 +31,6 @@ final class ActionParameterBuilderTest extends TestCase
             'amount' => $this->faker->randomFloat(),
             'name' => $this->faker->name,
             'uuid' => $this->faker->uuid,
-            'ksuid' => new \Tuupola\Ksuid(),
             'date' => '2021-01-01 00:00:00',
             'dateImmutable' => '2021-01-01 00:00:00',
             'active' => $this->faker->boolean()
@@ -45,7 +44,6 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertEqualsWithDelta($args['amount'], $requestObject->amount, 0.1);
         $this->assertSame($args['name'], $requestObject->name);
         $this->assertSame($args['uuid'], $requestObject->uuid);
-        $this->assertEquals($args['ksuid'], $requestObject->getKsuid());
         $this->assertSame($args['date'], $requestObject->date ? $requestObject->date->format('Y-m-d H:i:s') : null);
         $this->assertSame(
             $args['dateImmutable'],
@@ -54,55 +52,136 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertSame($args['active'], $requestObject->active);
     }
 
-    public function testBuildWithBuiltInTypeArray(): void
+    public function testBuildIntArray(): void
     {
         $requestBuilder = new ActionParameterBuilder();
         $args = [
-            'id' => $this->faker->randomNumber(),
-            'items[0]' => $this->faker->randomNumber(),
-            'items[1]' => $this->faker->randomNumber(),
-            'items[2]' => $this->faker->randomNumber(),
-            'items[3]' => $this->faker->randomNumber(),
+            'intItems[0]' => $this->faker->randomNumber(),
+            'intItems[1]' => $this->faker->randomNumber(),
+            'intItems[2]' => $this->faker->randomNumber(),
+            'intItems[3]' => $this->faker->randomNumber(),
         ];
-        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $args));
 
-        $requestObject = $requestBuilder->build(RequestObject::class);
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
 
         $this->assertInstanceOf(RequestObject::class, $requestObject);
-        $this->assertSame($args['id'], $requestObject->id);
-        $this->assertSame($args['items[0]'], $requestObject->items[0]);
-        $this->assertSame($args['items[1]'], $requestObject->items[1]);
-        $this->assertSame($args['items[2]'], $requestObject->items[2]);
-        $this->assertSame($args['items[3]'], $requestObject->items[3]);
+        $this->assertEquals($args['intItems[0]'], $requestObject->intItems[0]);
+        $this->assertEquals($args['intItems[1]'], $requestObject->intItems[1]);
+        $this->assertEquals($args['intItems[2]'], $requestObject->intItems[2]);
+        $this->assertEquals($args['intItems[3]'], $requestObject->intItems[3]);
     }
 
-    public function testBuildWithClassTypeArray(): void
+    public function testBuildFloatArray(): void
     {
         $requestBuilder = new ActionParameterBuilder();
         $args = [
-            'id' => $this->faker->randomNumber(),
-            'ksuidArray[0]' => new \Tuupola\Ksuid(),
-            'ksuidArray[1]' => new \Tuupola\Ksuid(),
-            'ksuidArray[2]' => new \Tuupola\Ksuid(),
-            'ksuidArray[3]' => new \Tuupola\Ksuid(),
+            'floatItems[0]' => $this->faker->randomFloat(),
+            'floatItems[1]' => $this->faker->randomFloat(),
+            'floatItems[2]' => $this->faker->randomFloat(),
+            'floatItems[3]' => $this->faker->randomFloat(),
         ];
-        $requestBuilder->withArgs(array_map(fn ($item) => (string)$item, $args));
 
-        $requestObject = $requestBuilder->build(RequestObject::class);
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
 
         $this->assertInstanceOf(RequestObject::class, $requestObject);
-        $this->assertSame($args['id'], $requestObject->id);
-        $this->assertEquals($args['ksuidArray[0]'], $requestObject->ksuidArray[0]);
-        $this->assertEquals($args['ksuidArray[1]'], $requestObject->ksuidArray[1]);
-        $this->assertEquals($args['ksuidArray[2]'], $requestObject->ksuidArray[2]);
-        $this->assertEquals($args['ksuidArray[3]'], $requestObject->ksuidArray[3]);
+        $this->assertEquals($args['floatItems[0]'], $requestObject->floatItems[0]);
+        $this->assertEquals($args['floatItems[1]'], $requestObject->floatItems[1]);
+        $this->assertEquals($args['floatItems[2]'], $requestObject->floatItems[2]);
+        $this->assertEquals($args['floatItems[3]'], $requestObject->floatItems[3]);
     }
 
-    public function testBuildWithCustomClassTypeArray(): void
+    public function testBuildStringArray(): void
     {
         $requestBuilder = new ActionParameterBuilder();
         $args = [
-            'id' => $this->faker->randomNumber(),
+            'stringItems[0]' => $this->faker->name,
+            'stringItems[1]' => $this->faker->name,
+            'stringItems[2]' => $this->faker->name,
+            'stringItems[3]' => $this->faker->name,
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertEquals($args['stringItems[0]'], $requestObject->stringItems[0]);
+        $this->assertEquals($args['stringItems[1]'], $requestObject->stringItems[1]);
+        $this->assertEquals($args['stringItems[2]'], $requestObject->stringItems[2]);
+        $this->assertEquals($args['stringItems[3]'], $requestObject->stringItems[3]);
+    }
+
+    public function testBuildBoolArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'boolItems[0]' => $this->faker->boolean() ? 'true' : 'false',
+            'boolItems[1]' => $this->faker->boolean() ? 'true' : 'false',
+            'boolItems[2]' => $this->faker->boolean() ? 'true' : 'false',
+            'boolItems[3]' => $this->faker->boolean() ? 'true' : 'false',
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertEquals($args['boolItems[0]'], $requestObject->boolItems[0]);
+        $this->assertEquals($args['boolItems[1]'], $requestObject->boolItems[1]);
+        $this->assertEquals($args['boolItems[2]'], $requestObject->boolItems[2]);
+        $this->assertEquals($args['boolItems[3]'], $requestObject->boolItems[3]);
+    }
+
+    public function testBuildDateTimeArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'dateTimeItems[0]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'dateTimeItems[1]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'dateTimeItems[2]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'dateTimeItems[3]' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertEquals($args['dateTimeItems[0]'], $requestObject->dateTimeItems[0]->format('Y-m-d H:i:s'));
+        $this->assertEquals($args['dateTimeItems[1]'], $requestObject->dateTimeItems[1]->format('Y-m-d H:i:s'));
+        $this->assertEquals($args['dateTimeItems[2]'], $requestObject->dateTimeItems[2]->format('Y-m-d H:i:s'));
+        $this->assertEquals($args['dateTimeItems[3]'], $requestObject->dateTimeItems[3]->format('Y-m-d H:i:s'));
+    }
+
+    public function testBuildDateTimeImmutableArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'dateTimeImmutableItems[0]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'dateTimeImmutableItems[1]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'dateTimeImmutableItems[2]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'dateTimeImmutableItems[3]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertEquals(
+            $args['dateTimeImmutableItems[0]'],
+            $requestObject->dateTimeImmutableItems[0]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['dateTimeImmutableItems[1]'],
+            $requestObject->dateTimeImmutableItems[1]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['dateTimeImmutableItems[2]'],
+            $requestObject->dateTimeImmutableItems[2]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['dateTimeImmutableItems[3]'],
+            $requestObject->dateTimeImmutableItems[3]->format('Y-m-d H:i:s')
+        );
+    }
+
+    public function testBuildClassTypeArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
             'customClassType[0].id' => $this->faker->randomNumber(),
             'customClassType[0].name' => $this->faker->name,
             'customClassType[0].createdAt' => '2021-01-01 00:00:00',
@@ -121,7 +200,6 @@ final class ActionParameterBuilderTest extends TestCase
         $requestObject = $requestBuilder->build(RequestObject::class);
 
         $this->assertInstanceOf(RequestObject::class, $requestObject);
-        $this->assertSame($args['id'], $requestObject->id);
         $this->assertEquals($args['customClassType[0].id'], $requestObject->customClassType[0]->id);
         $this->assertEquals($args['customClassType[0].name'], $requestObject->customClassType[0]->name);
         $this->assertEquals(
@@ -145,7 +223,7 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertEquals($args['customClassType[2].active'], $requestObject->customClassType[2]->active);
     }
 
-    public function testBuildWithEmbeddedObject(): void
+    public function testBuildEmbeddedObject(): void
     {
         $requestBuilder = new ActionParameterBuilder();
         $args = [
@@ -171,7 +249,151 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertSame($args['innerTypeObject.active'], $requestObject->innerTypeObject->active);
     }
 
-    public function testBuildWithDefaultValues(): void
+    public function testBuildEmbeddedObjectWithIntArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.intItems[0]' => $this->faker->randomNumber(),
+            'embeddedObject.intItems[1]' => $this->faker->randomNumber(),
+            'embeddedObject.intItems[2]' => $this->faker->randomNumber(),
+            'embeddedObject.intItems[3]' => $this->faker->randomNumber(),
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertNotNull($requestObject->embeddedObject);
+        $this->assertEquals($args['embeddedObject.intItems[0]'], $requestObject->embeddedObject->intItems[0]);
+        $this->assertEquals($args['embeddedObject.intItems[1]'], $requestObject->embeddedObject->intItems[1]);
+        $this->assertEquals($args['embeddedObject.intItems[2]'], $requestObject->embeddedObject->intItems[2]);
+        $this->assertEquals($args['embeddedObject.intItems[3]'], $requestObject->embeddedObject->intItems[3]);
+    }
+
+    public function testBuildEmbeddedObjectWithFloatArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.floatItems[0]' => $this->faker->randomFloat(),
+            'embeddedObject.floatItems[1]' => $this->faker->randomFloat(),
+            'embeddedObject.floatItems[2]' => $this->faker->randomFloat(),
+            'embeddedObject.floatItems[3]' => $this->faker->randomFloat(),
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertNotNull($requestObject->embeddedObject);
+        $this->assertEquals($args['embeddedObject.floatItems[0]'], $requestObject->embeddedObject->floatItems[0]);
+        $this->assertEquals($args['embeddedObject.floatItems[1]'], $requestObject->embeddedObject->floatItems[1]);
+        $this->assertEquals($args['embeddedObject.floatItems[2]'], $requestObject->embeddedObject->floatItems[2]);
+        $this->assertEquals($args['embeddedObject.floatItems[3]'], $requestObject->embeddedObject->floatItems[3]);
+    }
+
+    public function testBuildEmbeddedObjectWithStringArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.stringItems[0]' => $this->faker->name,
+            'embeddedObject.stringItems[1]' => $this->faker->name,
+            'embeddedObject.stringItems[2]' => $this->faker->name,
+            'embeddedObject.stringItems[3]' => $this->faker->name,
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertNotNull($requestObject->embeddedObject);
+        $this->assertEquals($args['embeddedObject.stringItems[0]'], $requestObject->embeddedObject->stringItems[0]);
+        $this->assertEquals($args['embeddedObject.stringItems[1]'], $requestObject->embeddedObject->stringItems[1]);
+        $this->assertEquals($args['embeddedObject.stringItems[2]'], $requestObject->embeddedObject->stringItems[2]);
+        $this->assertEquals($args['embeddedObject.stringItems[3]'], $requestObject->embeddedObject->stringItems[3]);
+    }
+
+    public function testBuildEmbeddedObjectWithBoolArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.boolItems[0]' => $this->faker->boolean() ? 'true' : 'false',
+            'embeddedObject.boolItems[1]' => $this->faker->boolean() ? 'true' : 'false',
+            'embeddedObject.boolItems[2]' => $this->faker->boolean() ? 'true' : 'false',
+            'embeddedObject.boolItems[3]' => $this->faker->boolean() ? 'true' : 'false',
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertNotNull($requestObject->embeddedObject);
+        $this->assertEquals($args['embeddedObject.boolItems[0]'], $requestObject->embeddedObject->boolItems[0]);
+        $this->assertEquals($args['embeddedObject.boolItems[1]'], $requestObject->embeddedObject->boolItems[1]);
+        $this->assertEquals($args['embeddedObject.boolItems[2]'], $requestObject->embeddedObject->boolItems[2]);
+        $this->assertEquals($args['embeddedObject.boolItems[3]'], $requestObject->embeddedObject->boolItems[3]);
+    }
+
+    public function testBuildEmbeddedObjectWithDateTimeArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.dateTimeItems[0]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeItems[1]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeItems[2]' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeItems[3]' => (new \DateTime())->format('Y-m-d H:i:s'),
+        ];
+
+        $requestObject = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $requestObject);
+        $this->assertNotNull($requestObject->embeddedObject);
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeItems[0]'],
+            $requestObject->embeddedObject->dateTimeItems[0]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeItems[1]'],
+            $requestObject->embeddedObject->dateTimeItems[1]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeItems[2]'],
+            $requestObject->embeddedObject->dateTimeItems[2]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeItems[3]'],
+            $requestObject->embeddedObject->dateTimeItems[3]->format('Y-m-d H:i:s')
+        );
+    }
+
+    public function testBuildEmbeddedObjectWithDateTimeImmutableArray(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'embeddedObject.dateTimeImmutableItems[0]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeImmutableItems[1]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeImmutableItems[2]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'embeddedObject.dateTimeImmutableItems[3]' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+        ];
+
+        $request = $requestBuilder->withArgs($args)->build(RequestObject::class);
+
+        $this->assertInstanceOf(RequestObject::class, $request);
+        $this->assertNotNull($request->embeddedObject);
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeImmutableItems[0]'],
+            $request->embeddedObject->dateTimeImmutableItems[0]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeImmutableItems[1]'],
+            $request->embeddedObject->dateTimeImmutableItems[1]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeImmutableItems[2]'],
+            $request->embeddedObject->dateTimeImmutableItems[2]->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $args['embeddedObject.dateTimeImmutableItems[3]'],
+            $request->embeddedObject->dateTimeImmutableItems[3]->format('Y-m-d H:i:s')
+        );
+    }
+
+    public function testBuildDefaultValues(): void
     {
         $requestBuilder = new ActionParameterBuilder();
         $requestBuilder->withArgs([]);
@@ -183,9 +405,23 @@ final class ActionParameterBuilderTest extends TestCase
         $this->assertSame(0.0, $requestObject->amount);
         $this->assertSame('', $requestObject->name);
         $this->assertSame('', $requestObject->uuid);
-        $this->assertNull($requestObject->getKsuid());
         $this->assertNull($requestObject->date);
         $this->assertNull($requestObject->dateImmutable);
         $this->assertFalse($requestObject->active);
+    }
+
+    public function testBuildFailWhenNoArrayDocComment(): void
+    {
+        $requestBuilder = new ActionParameterBuilder();
+        $args = [
+            'items[0]' => (new \DateTime())->format('Y-m-d'),
+            'items[1]' => (new \DateTime())->format('Y-m-d'),
+            'items[2]' => (new \DateTime())->format('Y-m-d'),
+            'items[3]' => (new \DateTime())->format('Y-m-d'),
+        ];
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Doc comment not found for parameter items");
+
+        $requestBuilder->withArgs($args)->build(WithoutDocsObject::class);
     }
 }

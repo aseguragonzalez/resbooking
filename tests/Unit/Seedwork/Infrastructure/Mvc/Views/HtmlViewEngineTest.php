@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, View};
+use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine};
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
@@ -22,6 +23,20 @@ final class HtmlViewEngineTest extends TestCase
 
     protected function tearDown(): void
     {
+    }
+
+    public function testRenderFailWhenViewDoesNotExist(): void
+    {
+        $view = new View(
+            viewPath: "fake_view",
+            data: null,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/^Template\s+not\s+found:\s+.*\/fake_view\.html$/');
+
+        $this->viewEngine->render($view);
     }
 
     public function testRenderWithPrimitiveProperties(): void
@@ -205,5 +220,20 @@ final class HtmlViewEngineTest extends TestCase
         $body = $this->viewEngine->render($view);
 
         $this->assertSame($expected, $body);
+    }
+
+    public function testRenderFailWhenLayoutDoesNotExist(): void
+    {
+        $model = new \stdClass();
+        $view = new View(
+            viewPath: "view_without_layout",
+            data: $model,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Layout not found: fakelayout");
+
+        $this->viewEngine->render($view);
     }
 }

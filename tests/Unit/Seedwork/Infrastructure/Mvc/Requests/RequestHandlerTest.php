@@ -37,6 +37,7 @@ final class RequestHandlerTest extends TestCase
         $this->responseFactory = new Psr17Factory();
         $this->router = new Router(routes: [
             Route::create(RouteMethod::Get, Path::create('/test'), TestController::class, 'index'),
+            Route::create(RouteMethod::Get, Path::create('/test/redirect'), TestController::class, 'redirect'),
             Route::create(RouteMethod::Get, Path::create('/test/get'), TestController::class, 'get'),
             Route::create(RouteMethod::Get, Path::create('/test/search'), TestController::class, 'search'),
             Route::create(RouteMethod::Get, Path::create('/test/find'), TestController::class, 'find'),
@@ -45,6 +46,8 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Post, Path::create('/test/{int:id}'), TestController::class, 'edit'),
             Route::create(RouteMethod::Post, Path::create('/test/{int:id}/save'), TestController::class, 'save'),
             Route::create(RouteMethod::Post, Path::create('/test/delete'), TestController::class, 'delete'),
+            Route::create(RouteMethod::Post, Path::create('/test/custom'), TestController::class, 'custom'),
+            Route::create(RouteMethod::Post, Path::create('/test/failed'), TestController::class, 'failed'),
         ]);
         $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
         $this->requestHandler = new RequestHandler(
@@ -58,6 +61,20 @@ final class RequestHandlerTest extends TestCase
 
     protected function tearDown(): void
     {
+    }
+
+    public function testHandleRequestWithRedirectTo(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/redirect');
+        $request = $this->requestFactory->createServerRequest('GET', $uri);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $this->assertSame('http://test.com', $response->getHeaderLine('Location'));
+        $this->assertEmpty((string) $response->getBody());
     }
 
     public function testHandleGetRequest(): void
@@ -200,6 +217,35 @@ final class RequestHandlerTest extends TestCase
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
         $expectedContent = file_get_contents(__DIR__ . '/Files/expected_save.html');
         $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequestWithActionArguments(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test/custom');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType)
+            ->withParsedBody(['id' => 10, 'amount' => 100.01, 'name' => 'John Doe']);
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_custom.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    #[DataProvider('postProvider')]
+    public function testHandlePostRequestFailWhenReturnsNoActionResponse(string $contentType): void
+    {
+        $uri = $this->requestFactory->createUri('/test/failed');
+        $request = $this->requestFactory->createServerRequest('POST', $uri)
+            ->withHeader('Content-Type', $contentType);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid Response object returned from controller');
+        $this->requestHandler->handle($request);
     }
 
     /**

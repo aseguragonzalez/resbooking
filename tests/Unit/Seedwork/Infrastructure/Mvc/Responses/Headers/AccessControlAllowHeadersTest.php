@@ -70,4 +70,22 @@ final class AccessControlAllowHeadersTest extends TestCase
         $this->assertSame('Access-Control-Allow-Headers', $header->name);
         $this->assertSame('Origin', $header->value);
     }
+
+    public function testToString(): void
+    {
+        $header = new AccessControlAllowHeaders(
+            contentTypes: true,
+            authorization: true,
+            accept: false,
+            xRequestedWith: false,
+            origin: true,
+            cacheControl: false,
+            contentLength: false,
+            acceptEncoding: false,
+            acceptLanguage: false,
+            userAgent: false
+        );
+
+        $this->assertSame('Access-Control-Allow-Headers: Content-Type, Authorization, Origin', (string) $header);
+    }
 }

@@ -223,4 +223,11 @@ final class ContentTypeTest extends TestCase
         $this->assertSame('Content-Type', $header->name);
         $this->assertSame('video/webm', $header->value);
     }
+
+    public function testToString(): void
+    {
+        $header = ContentType::json();
+
+        $this->assertSame('Content-Type: application/json', (string) $header);
+    }
 }

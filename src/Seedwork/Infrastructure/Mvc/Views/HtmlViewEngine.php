@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Views;
 
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+
 final class HtmlViewEngine implements ViewEngine
 {
     public function __construct(private readonly string $basePath)
@@ -13,11 +15,11 @@ final class HtmlViewEngine implements ViewEngine
     public function render(View $view): string
     {
         $viewPath = "{$this->basePath}/{$view->viewPath}.html";
-        $templateFile = file_get_contents($viewPath);
-        if (!$templateFile) {
+        if (!file_exists($viewPath)) {
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
-        // use layout if defined
+        $templateFile = file_get_contents($viewPath);
+        // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
         // get direct properties
         $tagsToReplace = $view->data == null
@@ -36,10 +38,12 @@ final class HtmlViewEngine implements ViewEngine
         preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
         if ($matches) {
             $layoutFilename = $matches[1];
-            $layout = file_get_contents("{$this->basePath}/{$layoutFilename}.html");
-            if (!$layout) {
+            $layoutPath = "{$this->basePath}/{$layoutFilename}.html";
+            if (!file_exists($layoutPath)) {
                 throw new \RuntimeException("Layout not found: {$layoutFilename}");
             }
+            /** @var string */
+            $layout = file_get_contents($layoutPath);
             $indentation = '';
             if (preg_match('/^(\s*)\{\{content\}\}/m', $layout, $indentMatches)) {
                 $indentation = $indentMatches[1];
