@@ -135,4 +135,11 @@ final class CacheControlTest extends TestCase
         $this->assertStringContainsString('stale-while-revalidate=3600', $cacheControl->value);
         $this->assertStringContainsString('stale-if-error=7200', $cacheControl->value);
     }
+
+    public function testToString(): void
+    {
+        $cacheControl = new CacheControl();
+
+        $this->assertSame('Cache-Control: public', (string) $cacheControl);
+    }
 }

@@ -83,4 +83,21 @@ final class AccessControlAllowMethodsTest extends TestCase
         $this->assertStringContainsString('PATCH', $header->value);
         $this->assertStringContainsString('CONNECT', $header->value);
     }
+
+    public function testToString(): void
+    {
+        $header = new AccessControlAllowMethods(
+            get: true,
+            post: true,
+            put: false,
+            delete: false,
+            options: true,
+            head: false,
+            patch: false,
+            connect: false,
+            trace: false
+        );
+
+        $this->assertSame('Access-Control-Allow-Methods: GET, POST, OPTIONS', (string) $header);
+    }
 }

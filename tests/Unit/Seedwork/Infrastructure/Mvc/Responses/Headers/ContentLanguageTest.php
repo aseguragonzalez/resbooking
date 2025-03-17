@@ -49,4 +49,11 @@ final class ContentLanguageTest extends TestCase
         $this->assertSame('Content-Language', $header->name);
         $this->assertSame('en, fr, es, pt, de, it, nl, ru', $header->value);
     }
+
+    public function testToStringReturnsFormattedHeader(): void
+    {
+        $header = new ContentLanguage(english: true);
+
+        $this->assertSame('Content-Language: en', (string) $header);
+    }
 }
