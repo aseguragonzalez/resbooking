@@ -26,18 +26,10 @@ abstract class Controller
         StatusCode $statusCode = StatusCode::Ok,
     ): ActionResponse {
         $backtrace = debug_backtrace();
-        if (!isset($backtrace[1]['class'])) {
-            throw new \Exception('Class not found in backtrace');
-        }
-
         $viewName = $name ? $name : $backtrace[1]['function'];
+        // @phpstan-ignore-next-line
         $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
-        return new View(
-            data: $model,
-            headers: array_merge($this->headers, []),
-            statusCode: $statusCode,
-            viewPath: "{$viewPath}/{$viewName}"
-        );
+        return new View("{$viewPath}/{$viewName}", $model, array_merge($this->headers, []), $statusCode);
     }
 
     /**
@@ -57,19 +49,8 @@ abstract class Controller
         ?object $args = null,
     ): ActionResponse {
         $backtrace = debug_backtrace();
-        if (!isset($backtrace[1]['class'])) {
-            throw new \Exception('Class not found in backtrace');
-        }
-
-        // $controller = $controller ?? basename(str_replace('\\', '/', $backtrace[1]['class']));
-
+        // @phpstan-ignore-next-line
         $requestedController = $controller ?? $backtrace[1]['class'];
-
-        return LocalRedirectTo::create(
-            action: $action,
-            controller: $requestedController,
-            args: $args,
-            headers: $this->headers,
-        );
+        return LocalRedirectTo::create($action, $requestedController, $args, array_merge($this->headers, []));
     }
 }

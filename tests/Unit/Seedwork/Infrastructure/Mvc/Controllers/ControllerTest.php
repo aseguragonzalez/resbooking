@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\{LocalRedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\{HomeController, TestController};
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\{HomeController, SubTestController, TestController};
 
 final class ControllerTest extends TestCase
 {
@@ -133,5 +133,19 @@ final class ControllerTest extends TestCase
 
         $this->assertSame(StatusCode::Ok, $response->statusCode);
         $this->assertEquals([$header, ContentType::html()], $response->headers);
+    }
+
+    public function testResolveSubClassViews(): void
+    {
+        $controller = new SubTestController();
+
+        $view = $controller->index();
+
+        $this->assertSame(StatusCode::Ok, $view->statusCode);
+        $this->assertEquals([ContentType::html()], $view->headers);
+        $this->assertInstanceOf(\stdClass::class, $view->data);
+        if ($view instanceof View) {
+            $this->assertSame('SubTest/index', $view->viewPath);
+        }
     }
 }

@@ -9,7 +9,7 @@ use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
-final class TestController extends Controller
+class TestController extends Controller
 {
     public function index(): ActionResponse
     {
