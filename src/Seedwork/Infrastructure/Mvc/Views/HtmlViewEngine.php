@@ -112,11 +112,8 @@ final class HtmlViewEngine implements ViewEngine
             $loopVariable = $match[1];
             $blockContent = $match[2];
             $content = '';
+            /** @var object $item */
             foreach ($model as $item) {
-                if (!is_object($item)) {
-                    continue;
-                }
-
                 $propertiesToReplace = $this->replaceObjectProperty(
                     propertyName: $loopVariable,
                     model: $item,
@@ -156,14 +153,16 @@ final class HtmlViewEngine implements ViewEngine
     private function checkExpression(string $expression, object $model): bool
     {
         $parts = explode('->', trim(str_replace(['!', '()'], ['', ''], $expression)));
-        $value = $model;
-        foreach ($parts as $part) {
-            $value = match (true) {
-                is_object($value) && method_exists($value, $part) => $value->$part(),
-                is_object($value) && property_exists($value, $part) => $value->$part,
-                default => false,
-            };
+        $path = $model;
+        foreach ($parts as $next) {
+            // @phpstan-ignore-next-line
+            if (method_exists($path, $next)) {
+                $path = $path->$next();
+            // @phpstan-ignore-next-line
+            } elseif (property_exists($path, $next)) {
+                $path = $path->$next;
+            }
         }
-        return str_starts_with($expression, '!') ? !(bool)$value : (bool)$value;
+        return str_starts_with($expression, '!') ? !(bool)$path : (bool)$path;
     }
 }
