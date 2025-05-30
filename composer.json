@@ -24,7 +24,7 @@
     "friendsofphp/php-cs-fixer": "^3.68",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^11.5",
-    "squizlabs/php_codesniffer": "^3.11"
+    "squizlabs/php_codesniffer": "^3.12"
   },
   "type": "project"
 }
