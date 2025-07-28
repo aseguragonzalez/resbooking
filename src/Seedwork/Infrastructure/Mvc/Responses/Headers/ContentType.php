@@ -136,7 +136,7 @@ final class ContentType extends Header
         return new ContentType('video/mp4');
     }
 
-    public static function videOgg(): Header
+    public static function videoOgg(): Header
     {
         return new ContentType('video/ogg');
     }

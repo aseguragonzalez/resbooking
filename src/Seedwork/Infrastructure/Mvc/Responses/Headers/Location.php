@@ -8,7 +8,7 @@ final class Location extends Header
 {
     public function __construct(string $value)
     {
-        parent::__construct('Location', strtolower($value));
+        parent::__construct('Location', $value);
     }
 
     public static function new(string $url): Location

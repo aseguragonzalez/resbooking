@@ -210,7 +210,7 @@ final class ContentTypeTest extends TestCase
 
     public function testVideoOggContentType(): void
     {
-        $header = ContentType::videOgg();
+        $header = ContentType::videoOgg();
 
         $this->assertSame('Content-Type', $header->name);
         $this->assertSame('video/ogg', $header->value);
