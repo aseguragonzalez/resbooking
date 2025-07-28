@@ -58,10 +58,10 @@ final class ProjectBuilder
         return Project::build(
             id: $this->faker->uuid,
             settings: $this->settings ?? $settings,
-            places: $this->places ?? [],
-            users: $this->users ?? [],
-            turns: $this->turns ?? [],
-            openCloseEvents: $this->openCloseEvents ?? [],
+            places: $this->places,
+            users: $this->users,
+            turns: $this->turns,
+            openCloseEvents: $this->openCloseEvents,
         );
     }
 
