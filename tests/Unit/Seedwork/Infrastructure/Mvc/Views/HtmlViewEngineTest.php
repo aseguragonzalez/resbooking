@@ -186,6 +186,9 @@ final class HtmlViewEngineTest extends TestCase
         );
         $data = new \stdClass();
         $data->model = $model;
+        $data->isProperty = true;
+        $data->hasItems = true;
+        $data->items = ["option 1", "option 2", "option 3"];
         $view = new View(
             viewPath: "branch_view",
             data: $data,

@@ -20,4 +20,19 @@
         Use a boolean property
     </p>
     {{#endif:}}
+    {{#if isProperty:}}
+    <p>
+        Use direct property
+    </p>
+    {{#endif:}}
+    {{#if hasItems:}}
+    <div>
+        <p>Show if items</p>
+        <ul>
+            {{#for item in items:}}
+            <li>{{item}}</li>
+            {{#endfor items:}}
+        </ul>
+    </div>
+    {{#endif:}}
 </div>

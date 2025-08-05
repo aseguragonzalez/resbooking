@@ -27,8 +27,14 @@ final class HtmlViewEngine implements ViewEngine
         // get branches
         $branchesToReplace = $view->data == null
             ? [] : $this->replaceBranches(model: $view->data, template: $template);
-        $replacements = array_merge($tagsToReplace, $branchesToReplace);
-        $body = str_replace(array_keys($replacements), array_values($replacements), $template);
+
+        // Replace branches first:
+        $templateWithBranches = str_replace(
+            array_keys($branchesToReplace),
+            array_values($branchesToReplace),
+            $template
+        );
+        $body = str_replace(array_keys($tagsToReplace), array_values($tagsToReplace), $templateWithBranches);
         // clean empty lines
         return preg_replace("/^\s*\n/m", "", $body) ?? "";
     }
@@ -112,8 +118,12 @@ final class HtmlViewEngine implements ViewEngine
             $loopVariable = $match[1];
             $blockContent = $match[2];
             $content = '';
-            /** @var object $item */
+            /** @var object|string $item */
             foreach ($model as $item) {
+                if (is_string($item)) {
+                    $content .= str_replace("{{{$loopVariable}}}", (string)$item, $blockContent);
+                    continue;
+                }
                 $propertiesToReplace = $this->replaceObjectProperty(
                     propertyName: $loopVariable,
                     model: $item,
