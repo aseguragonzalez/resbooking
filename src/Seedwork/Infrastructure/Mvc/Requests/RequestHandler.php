@@ -63,10 +63,11 @@ final class RequestHandler implements RequestHandlerInterface
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
                 $name = $param->getName();
+                $value = $this->getValueOrDefault($name, $args, $param);
                 return match ($paramType->getName()) {
-                    'int' => $this->getValueOrDefault($name, $args, $param),
-                    'float' => $this->getValueOrDefault($name, $args, $param),
-                    'string' => $this->getValueOrDefault($name, $args, $param),
+                    'int' => filter_var($value, FILTER_VALIDATE_INT),
+                    'float' => filter_var($value, FILTER_VALIDATE_FLOAT),
+                    'string' => is_string($value) ? (string)$value : null,
                     default => $this->actionParameterBuilder->build($requestType),
                 };
             },
