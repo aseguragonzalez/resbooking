@@ -62,15 +62,29 @@ final class RequestHandler implements RequestHandlerInterface
                 $paramType = $param->getType();
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
+                $name = $param->getName();
                 return match ($paramType->getName()) {
-                    'int' => (int)$args[$param->getName()],
-                    'float' => (float)$args[$param->getName()],
-                    'string' => (string)$args[$param->getName()],
+                    'int' => $this->getValueOrDefault($name, $args, $param),
+                    'float' => $this->getValueOrDefault($name, $args, $param),
+                    'string' => $this->getValueOrDefault($name, $args, $param),
                     default => $this->actionParameterBuilder->build($requestType),
                 };
             },
             $action->getParameters()
         );
+    }
+
+    /**
+     * @param array<string, float|int|string> $args
+     */
+    private function getValueOrDefault(
+        string $name,
+        array $args,
+        \ReflectionParameter $param
+    ): mixed {
+        return !array_key_exists($name, $args)
+            ? ($param->isDefaultValueAvailable() ? $param->getDefaultValue() : null)
+            : $args[$name];
     }
 
     /**
