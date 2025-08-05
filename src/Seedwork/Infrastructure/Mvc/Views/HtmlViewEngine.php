@@ -145,9 +145,10 @@ final class HtmlViewEngine implements ViewEngine
      */
     private function replaceBranches(object $model, string $template): array
     {
+        // TODO: allow nested if statements
         $expressionsToReplace = [];
         preg_match_all(
-            "/\{\{#if (.*?):\}\}(.*?)\{\{#endif:\}\}/s",
+            "/\{\{#if (.*?):\}\}(.*?)\{\{#endif \\1:\}\}/s",
             $template,
             $matches,
             PREG_SET_ORDER

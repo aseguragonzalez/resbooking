@@ -9,22 +9,22 @@
     <p>
         Use a method expression
     </p>
-    {{#endif:}}
+    {{#endif model->isBranch():}}
     {{#if !model->invertBranch():}}
     <p>
         Invert method expression
     </p>
-    {{#endif:}}
+    {{#endif !model->invertBranch():}}
     {{#if model->isBooleanProperty:}}
     <p>
         Use a boolean property
     </p>
-    {{#endif:}}
+    {{#endif model->isBooleanProperty:}}
     {{#if isProperty:}}
     <p>
         Use direct property
     </p>
-    {{#endif:}}
+    {{#endif isProperty:}}
     {{#if hasItems:}}
     <div>
         <p>Show if items</p>
@@ -34,5 +34,5 @@
             {{#endfor items:}}
         </ul>
     </div>
-    {{#endif:}}
+    {{#endif hasItems:}}
 </div>
