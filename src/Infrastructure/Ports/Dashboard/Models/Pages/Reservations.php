@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models;
+namespace Infrastructure\Ports\Dashboard\Models\Pages;
 
 use DateTimeImmutable;
+use Infrastructure\Ports\Dashboard\Models\PageModel;
+use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
 
-final class ReservationsModel extends PageModel
+final class Reservations extends PageModel
 {
     public readonly bool $hasReservations;
+    public readonly bool $prevDisabled;
 
     /**
      * @param array<Reservation> $reservations
@@ -22,6 +25,7 @@ final class ReservationsModel extends PageModel
     ) {
         parent::__construct('Reservations');
         $this->hasReservations = !empty($reservations);
+        $this->prevDisabled = $prev === 0;
     }
 
     /**
@@ -31,8 +35,8 @@ final class ReservationsModel extends PageModel
         string $from = 'now',
         int $current = 0,
         array $reservations = []
-    ): ReservationsModel {
-        return new ReservationsModel(
+    ): Reservations {
+        return new Reservations(
             date: self::tryDateTimeParse($from)->format('Y-m-d'),
             prev: $current > 0 ? $current - 1 : 0,
             next: $current + 1,

@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Infrastructure\Ports\Dashboard\Models\Reservation;
-use Infrastructure\Ports\Dashboard\Models\ReservationsModel;
+use Infrastructure\Ports\Dashboard\Models\Pages\Reservations;
+use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 
-class ReservationsController extends Controller
+final class ReservationsController extends Controller
 {
     public function index(int $offset = 0, string $from = 'now'): ActionResponse
     {
-        $model = ReservationsModel::create(
+        $reservations = [
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+        ];
+        $model = Reservations::create(
             from: $from,
             current: $offset,
-            reservations: [
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-                new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            ]
+            reservations: $reservations
         );
 
-        return $this->view(name: $model->hasReservations ? "index" : "empty", model: $model);
+        return $this->view(model: $model);
     }
 
     public function edit(string $id): ActionResponse

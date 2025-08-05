@@ -17,6 +17,8 @@
             {{NewReservation}}
         </a>
     </nav>
+
+    {{#if hasReservations:}}
     <table class="table">
         <thead>
             <tr>
@@ -54,4 +56,16 @@
             {{NEXT}}
         </button>
     </nav>
+    {{#endif:}}
+    {{#if !hasReservations:}}
+    <article class="card">
+        <header>
+            <h3>{{NO_RESERVATIONS_FOUND}}</h3>
+        </header>
+        <p>
+            {{NO_RESERVATIONS_FOUND_DESCRIPTION}}
+        </p>
+    </article>
+    {{#endif:}}
+
 </section>
