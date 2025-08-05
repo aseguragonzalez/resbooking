@@ -1,0 +1,109 @@
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <form action="/" method="get" id="filter-form">
+            <div class="inline-form-control">
+                <label for="from">{{From}}</label>
+                <input
+                    type="date"
+                    id="from"
+                    name="from"
+                    value="2005-10-09"
+                    onchange="this.form.submit()"
+                />
+            </div>
+        </form>
+        <a href="/#new-reservation" class="primary-button">
+            {{NewReservation}}
+        </a>
+    </nav>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+            <tr>
+                <td>10:00 AM</td>
+                <td>Juan Pérez</td>
+                <td>123456789</td>
+                <td>juan@email.com</td>
+                <td><a href="#">Detalles</a></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">Total de Reservas: 10</td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav class="table-pagination">
+        <button form="filter-form" type="submit" name="offset" value="0">
+            &lt;&lt;
+        </button>
+        <button form="filter-form" type="submit" name="offset" value="1">
+            &gt;&gt;
+        </button>
+    </nav>
+</section>

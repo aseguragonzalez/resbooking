@@ -1,0 +1,29 @@
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <form action="/reservations" method="get" id="filter-form">
+            <div class="inline-form-control">
+                <label for="from">{{From}}</label>
+                <input
+                    type="date"
+                    id="from"
+                    name="from"
+                    value="{{date}}"
+                    onchange="this.form.submit()"
+                />
+            </div>
+        </form>
+        <a href="/#new-reservation" class="primary-button">
+            {{NewReservation}}
+        </a>
+    </nav>
+    <article class="card">
+        <header>
+            <h3>{{NO_RESERVATIONS_FOUND}}</h3>
+        </header>
+        <p>
+            {{NO_RESERVATIONS_FOUND_DESCRIPTION}}
+        </p>
+    </article>
+
+</section>

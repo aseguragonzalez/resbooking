@@ -1,0 +1,57 @@
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <form action="/reservations" method="get" id="filter-form">
+            <div class="inline-form-control">
+                <label for="from">{{From}}</label>
+                <input
+                    type="date"
+                    id="from"
+                    name="from"
+                    value="{{date}}"
+                    onchange="this.form.submit()"
+                />
+            </div>
+        </form>
+        <a href="/#new-reservation" class="primary-button">
+            {{NewReservation}}
+        </a>
+    </nav>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#for reservation in reservations:}}
+            <tr>
+                <td>{{reservation->turn}}</td>
+                <td>{{reservation->name}}</td>
+                <td>{{reservation->phone}}</td>
+                <td>{{reservation->email}}</td>
+                <td>
+                    <a href="/reservations/{{reservation->id}}">Detalles</a>
+                </td>
+            </tr>
+            {{#endfor reservations:}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav class="table-pagination">
+        <button form="filter-form" type="submit" name="offset" value="{{prev}}">
+            {{PREV}}
+        </button>
+        <button form="filter-form" type="submit" name="offset" value="{{next}}">
+            {{NEXT}}
+        </button>
+    </nav>
+</section>

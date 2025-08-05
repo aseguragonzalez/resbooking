@@ -1,0 +1,84 @@
+/*** CONTROLS ****/
+
+.inline-form-control {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
+
+    label {
+        color: var(--color-text);
+    }
+
+    input {
+        border: var(--border-width) solid var(--color-secondary);
+        border-radius: var(--border-radius-sm);
+        padding: var(--spacing-sm);
+    }
+}
+
+.primary-button {
+    background-color: var(--color-primary);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text-inverse);
+    cursor: pointer;
+    padding: var(--spacing-base);
+    text-decoration: none;
+}
+
+.primary-button:focus {
+    background-color: var(--color-accent);
+}
+
+.primary-button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.primary-button:focus-visible {
+    outline: none;
+    outline-offset: none;
+}
+
+/* Table Styles */
+
+.table-nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.table {
+    border-collapse: collapse;
+}
+.table th{
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    padding: var(--spacing-sm);
+}
+.table th,
+.table td {
+    border: var(--border-width) solid var(--color-muted);
+    padding: var(--spacing-sm);
+    text-align: left;
+}
+
+.table-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 8px;
+}
+
+.table-pagination button {
+    background-color: var(--color-secondary);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text-inverse);
+    cursor: pointer;
+    padding: var(--spacing-base);
+}
+
+.table-pagination button:hover {
+    background-color: var(--color-accent);
+}

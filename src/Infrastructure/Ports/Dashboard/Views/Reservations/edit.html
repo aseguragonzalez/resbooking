@@ -1,0 +1,38 @@
+{{#layout layout:}}
+<form action="/reservations/{{id}}" method="post">
+    <header>
+        <h3>{{EDIT}} | {{name}}</h3>
+    </header>
+
+    <input type="hidden" name="id" value="{{id}}" />
+
+    <div class="form-control">
+        <label>{{NAME}}</label>
+        <input type="text" name="name" value="{{name}}" required />
+        <p>
+            <small>{{NAME_HELP}}</small>
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label>{{EMAIL}}</label>
+        <input type="email" name="email" value="{{email}}" required />
+        <p>
+            <small>{{EMAIL_HELP}}</small>
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label>{{PHONE}}</label>
+        <input type="tel" name="phone" value="{{phone}}" required />
+        <p>
+            <small>{{PHONE_HELP}}</small>
+        </p>
+    </div>
+
+    <footer>
+        <button type="submit">{{SAVE}}</button>
+        <button type="reset">{{CANCEL}}</button>
+        <a href="/reservations">{{BACK}}</a>
+    </footer>
+</form>
