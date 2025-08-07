@@ -6,6 +6,8 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Infrastructure\Ports\Dashboard\Models\Pages\Reservations;
 use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
+use Infrastructure\Ports\Dashboard\Models\UpdateStatusRequest;
+use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 
@@ -33,15 +35,36 @@ final class ReservationsController extends Controller
         return $this->view(model: $model);
     }
 
-    public function edit(string $id): ActionResponse
+    public function updateStatus(UpdateStatusRequest $request): ActionResponse
     {
-        $model = new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com");
+        $args = (object)[
+            'offset' => $request->offset,
+            'from' => $request->from
+        ];
+        return $this->redirectToAction(action: 'index', args: $args);
+    }
+
+    public function edit(string $id, ServerRequestInterface $request): ActionResponse
+    {
+        $backUrl = $request->getHeaderLine('Referer') ?: '/reservations';
+        $model = (object)[
+            "reservation" => new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            "backUrl" => $backUrl,
+            "errors" => (object)[
+                "name" => false,
+                "email" => "Email is invalid",
+                "phone" => "Phone number is required",
+            ],
+        ];
         return $this->view(model: $model);
     }
 
-    public function update(string $id): ActionResponse
+    public function update(string $id, ?string $backUrl): ActionResponse
     {
-        $model = new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com");
+        $model = (object)[
+            "reservation" => new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            "backUrl" => $backUrl ?? '/reservations',
+        ];
         return $this->view(name: 'edit', model: $model);
     }
 }

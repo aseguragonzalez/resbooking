@@ -1,38 +1,66 @@
 {{#layout layout:}}
-<form action="/reservations/{{id}}" method="post">
+<form action="/reservations/{{reservation->id}}" method="post" class="form" validate>
     <header>
-        <h3>{{EDIT}} | {{name}}</h3>
+        <h2>{{EDIT}} | {{reservation->name}}</h2>
     </header>
 
-    <input type="hidden" name="id" value="{{id}}" />
+    <input type="hidden" name="id" value="{{reservation->id}}" />
+    <input type="hidden" name="backUrl" value="{{backUrl}}" />
 
     <div class="form-control">
-        <label>{{NAME}}</label>
-        <input type="text" name="name" value="{{name}}" required />
+        <label for="name">{{NAME}}</label>
+        <input
+            autocomplete="off"
+            id="name"
+            name="name"
+            placeholder="{{NAME_PLACEHOLDER}}"
+            required
+            type="text"
+            value="{{reservation->name}}"
+            {{#if !errors->name:}}aria-describedby="name-help"{{#endif !errors->name:}}
+            {{#if errors->name:}}aria-describedby="name-help name-error"{{#endif errors->name:}}
+            {{#if errors->name:}}aria-invalid="true"{{#endif errors->name:}}
+        />
         <p>
-            <small>{{NAME_HELP}}</small>
+            <small id="name-help">{{NAME_HELP}}</small>
+            {{#if errors->name:}}
+            <small class="error" id="name-error">{{errors->name}}</small>
+            {{#endif errors->name:}}
         </p>
+
     </div>
 
     <div class="form-control">
-        <label>{{EMAIL}}</label>
-        <input type="email" name="email" value="{{email}}" required />
-        <p>
-            <small>{{EMAIL_HELP}}</small>
-        </p>
+        <label for="email">{{EMAIL}}</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            value="{{reservation->email}}"
+            autocomplete="off"
+            required
+            aria-describedby="email-help"
+        />
+        <small id="email-help">{{EMAIL_HELP}}</small>
     </div>
 
     <div class="form-control">
-        <label>{{PHONE}}</label>
-        <input type="tel" name="phone" value="{{phone}}" required />
-        <p>
-            <small>{{PHONE_HELP}}</small>
-        </p>
+        <label for="phone">{{PHONE}}</label>
+        <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value="{{reservation->phone}}"
+            autocomplete="off"
+            required
+            aria-describedby="phone-help"
+        />
+        <small id="phone-help">{{PHONE_HELP}}</small>
     </div>
 
     <footer>
         <button type="submit">{{SAVE}}</button>
         <button type="reset">{{CANCEL}}</button>
-        <a href="/reservations">{{BACK}}</a>
+        <a href="{{backUrl}}" >{{BACK}}</a>
     </footer>
 </form>

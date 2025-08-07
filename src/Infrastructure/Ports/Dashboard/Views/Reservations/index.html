@@ -19,6 +19,10 @@
     </nav>
 
     {{#if hasReservations:}}
+    <form id="update-status" method="post">
+        <input type="hidden" name="offset" value="{{offset}}">
+        <input type="hidden" name="from" value="{{date}}">
+    </form>
     <table class="table">
         <thead>
             <tr>
@@ -37,7 +41,12 @@
                 <td>{{reservation->phone}}</td>
                 <td>{{reservation->email}}</td>
                 <td>
-                    <a href="/reservations/{{reservation->id}}">Detalles</a>
+                    <a href="/reservations/{{reservation->id}}">
+                        Detalles
+                    </a>
+                    <button type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
+                        {{UPDATE_STATUS}}
+                    </button>
                 </td>
             </tr>
             {{#endfor reservations:}}
