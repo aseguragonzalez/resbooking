@@ -10,7 +10,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, View};
+use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, LocalRedirectTo, RedirectTo, View};
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Routes\{Router, Route, RouteMethod};
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
@@ -30,7 +31,7 @@ final class RequestHandler implements RequestHandlerInterface
         $route = $this->getRouteFromRequest($request);
         $args = $this->getArgsFromRequest($request, $route);
         $actionResponse = $this->executeAction($route, $args);
-        return $this->createResponseFromActionResponse($actionResponse);
+        return $this->createResponseFromActionResponse($request, $actionResponse);
     }
 
     private function getRouteFromRequest(ServerRequestInterface $request): Route
@@ -57,11 +58,15 @@ final class RequestHandler implements RequestHandlerInterface
         $action = new \ReflectionMethod($route->controller, $route->action);
         $this->actionParameterBuilder->withArgs($args);
         return array_map(
-            function (\ReflectionParameter $param) use ($args): mixed {
+            function (\ReflectionParameter $param) use ($args, $request): mixed {
                 /** @var \ReflectionNamedType $paramType */
                 $paramType = $param->getType();
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
+                // If the parameter type is ServerRequestInterface, return the request object
+                if ($requestType === ServerRequestInterface::class) {
+                    return $request;
+                }
                 $name = $param->getName();
                 $value = $this->getValueOrDefault($name, $args, $param);
                 return match ($paramType->getName()) {
@@ -104,16 +109,45 @@ final class RequestHandler implements RequestHandlerInterface
         throw new \RuntimeException('Invalid Response object returned from controller');
     }
 
-    private function createResponseFromActionResponse(ActionResponse $actionResponse): ResponseInterface
-    {
-        $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
-        foreach ($actionResponse->headers as $header) {
-            $response = $response->withHeader($header->name, $header->value);
+    private function createResponseFromActionResponse(
+        ServerRequestInterface $request,
+        ActionResponse $actionResponse
+    ): ResponseInterface {
+        if ($actionResponse instanceof LocalRedirectTo) {
+            $host = empty($request->getHeaderLine("origin"))
+                ? 'http://localhost:8080' // TODO: get default host from environment
+                : $request->getHeaderLine("origin");
+            $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
+            if (is_null($newRoute)) {
+                throw new \RuntimeException(
+                    "Route not found for controller: {$actionResponse->controller}, action: {$actionResponse->action}"
+                );
+            }
+            $queryString = empty($actionResponse->args) ? '' :  "?" . http_build_query($actionResponse->args);
+            $newLocationUrl = "{$host}{$newRoute->path}{$queryString}";
+            return $this->responseFactory
+                ->createResponse(code: StatusCode::SeeOther->value)
+                ->withHeader('Location', $newLocationUrl);
         }
+
+        if ($actionResponse instanceof RedirectTo) {
+            $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
+            foreach ($actionResponse->headers as $header) {
+                $response = $response->withHeader($header->name, $header->value);
+            }
+            return $response;
+        }
+
         if ($actionResponse instanceof View) {
+            $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
+            foreach ($actionResponse->headers as $header) {
+                $response = $response->withHeader($header->name, $header->value);
+            }
             $responseBody = $this->viewEngine->render($actionResponse);
             $response->getBody()->write($responseBody);
+            return $response;
         }
-        return $response;
+
+        throw new \RuntimeException('Invalid ActionResponse type');
     }
 }

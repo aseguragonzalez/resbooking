@@ -12,6 +12,7 @@ enum StatusCode: int
     case NoContent = 204;
     case MovedPermanently = 301;
     case Found = 302;
+    case SeeOther = 303;
     case BadRequest = 400;
     case Unauthorized = 401;
     case Forbidden = 403;
