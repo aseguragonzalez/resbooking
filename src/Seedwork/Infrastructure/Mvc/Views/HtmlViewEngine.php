@@ -167,11 +167,27 @@ final class HtmlViewEngine implements ViewEngine
         $path = $model;
         foreach ($parts as $next) {
             // @phpstan-ignore-next-line
-            if (method_exists($path, $next)) {
-                $path = $path->$next();
-            // @phpstan-ignore-next-line
-            } elseif (property_exists($path, $next)) {
+            if (property_exists($path, $next)) {
                 $path = $path->$next;
+            // @phpstan-ignore-next-line
+            } elseif (method_exists($path, $next)) {
+                $path = $path->$next();
+            } elseif (preg_match('/^(\w+)\[(.*?)\]$/', $next, $arrayMatches)) {
+                // NOTE: check if next is an key-value dict (array)
+                $property = $arrayMatches[1];
+                $key = $arrayMatches[2];
+                $cleanKey = str_replace(['"', "'"], '', $key);
+                if (
+                    // @phpstan-ignore-next-line
+                    property_exists($path, $property)
+                    && is_array($path->$property)
+                    && array_key_exists($cleanKey, $path->$property)
+                ) {
+                    $path = $path->$property[$cleanKey];
+                }
+            } else {
+                $path = null;
+                break;
             }
         }
         return str_starts_with($expression, '!') ? !(bool)$path : (bool)$path;

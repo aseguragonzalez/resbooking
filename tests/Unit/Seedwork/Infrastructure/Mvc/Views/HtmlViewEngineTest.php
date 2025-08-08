@@ -189,6 +189,12 @@ final class HtmlViewEngineTest extends TestCase
         $data->isProperty = true;
         $data->hasItems = true;
         $data->items = ["option 1", "option 2", "option 3"];
+        $data->arrayProperty = [
+            'my-key' => (object)[
+                'name' => 'My Value'
+            ]
+        ];
+
         $view = new View(
             viewPath: "branch_view",
             data: $data,

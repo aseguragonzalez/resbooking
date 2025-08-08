@@ -35,4 +35,22 @@
         </ul>
     </div>
     {{#endif hasItems:}}
+
+    {{#if model->nullProperty:}}
+    <p>
+        Use null property
+    </p>
+    {{#endif model->nullProperty:}}
+    {{#if !model->nullProperty:}}
+    <p>
+        Use not null property
+    </p>
+    {{#endif !model->nullProperty:}}
+
+    {{#if arrayProperty['my-key']->name:}}
+    <p>
+        Use of array property (key-value): My Value
+    </p>
+    {{#endif arrayProperty['my-key']->name:}}
+
 </div>
