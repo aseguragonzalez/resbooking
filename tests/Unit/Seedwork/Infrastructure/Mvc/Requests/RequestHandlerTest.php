@@ -13,8 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\{Path, Route, RouteMethod, Router};
-use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
-use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, HtmlViewEngine, ModelReplacer, ViewEngine};
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Requests\TestController;
 
 final class RequestHandlerTest extends TestCase
@@ -50,7 +49,9 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Post, Path::create('/test/custom'), TestController::class, 'custom'),
             Route::create(RouteMethod::Post, Path::create('/test/failed'), TestController::class, 'failed'),
         ]);
-        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
+        $branchesReplacer = new BranchesReplacer();
+        $branchesReplacer->setNext(new ModelReplacer());
+        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views', contentReplacer: $branchesReplacer);
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,

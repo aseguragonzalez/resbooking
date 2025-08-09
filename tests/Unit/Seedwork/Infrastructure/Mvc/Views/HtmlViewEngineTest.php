@@ -7,7 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine};
+use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, BranchesReplacer, ModelReplacer};
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
@@ -18,7 +18,9 @@ final class HtmlViewEngineTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . "/Files");
+        $branchesReplacer = new BranchesReplacer();
+        $branchesReplacer->setNext(new ModelReplacer());
+        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . "/Files", contentReplacer: $branchesReplacer);
     }
 
     protected function tearDown(): void

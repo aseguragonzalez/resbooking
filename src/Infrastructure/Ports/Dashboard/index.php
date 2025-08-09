@@ -15,7 +15,7 @@ use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, ModelReplacer, HtmlViewEngine};
 
 // Create the DI container and register services
 $container = new Container();
@@ -34,7 +34,9 @@ $router = new Router(routes:[
         'updateStatus'
     )
 ]);
-$viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
+$branchesReplacer = new BranchesReplacer();
+$branchesReplacer->setNext(new ModelReplacer());
+$viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views', contentReplacer: $branchesReplacer);
 $requestHandler = new RequestHandler(
     $actionParameterBuilder,
     $container,
