@@ -113,6 +113,7 @@ final class RequestHandler implements RequestHandlerInterface
         ServerRequestInterface $request,
         ActionResponse $actionResponse
     ): ResponseInterface {
+        // TODO: create an strategy for handling different ActionResponse types
         if ($actionResponse instanceof LocalRedirectTo) {
             $host = empty($request->getHeaderLine("origin"))
                 ? 'http://localhost:8080' // TODO: get default host from environment
@@ -123,11 +124,14 @@ final class RequestHandler implements RequestHandlerInterface
                     "Route not found for controller: {$actionResponse->controller}, action: {$actionResponse->action}"
                 );
             }
-            $queryString = empty($actionResponse->args) ? '' :  "?" . http_build_query($actionResponse->args);
-            $newLocationUrl = "{$host}{$newRoute->path}{$queryString}";
+            $args = array_map(
+                fn($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
+                is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
+            );
+            $path = $newRoute->getPathFromArgs($args);
             return $this->responseFactory
                 ->createResponse(code: StatusCode::SeeOther->value)
-                ->withHeader('Location', $newLocationUrl);
+                ->withHeader('Location', "{$host}{$path}");
         }
 
         if ($actionResponse instanceof RedirectTo) {
