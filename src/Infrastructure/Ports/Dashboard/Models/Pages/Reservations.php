@@ -23,7 +23,7 @@ final class Reservations extends PageModel
         public readonly int $offset,
         public readonly array $reservations
     ) {
-        parent::__construct('Reservations');
+        parent::__construct('{{reservations.title}}');
         $this->hasReservations = !empty($reservations);
         $this->prevDisabled = $prev === 0;
     }

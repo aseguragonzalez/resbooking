@@ -6,26 +6,32 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Infrastructure\Ports\Dashboard\Models\Pages\Reservations;
 use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
-use Infrastructure\Ports\Dashboard\Models\UpdateStatusRequest;
+use Infrastructure\Ports\Dashboard\Models\{UpdateReservationRequest, UpdateStatusRequest};
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Faker\Factory as FakerFactory;
 
 final class ReservationsController extends Controller
 {
+    /**
+     * @return Reservation[]
+     */
+    private function getFakeReservations(int $count): array
+    {
+        $faker = FakerFactory::create();
+        return array_map(fn() => new Reservation(
+            id: $faker->uuid(),
+            turn: $faker->time(),
+            name: $faker->name(),
+            phone: $faker->phoneNumber(),
+            email: $faker->email()
+        ), range(1, $count));
+    }
+
     public function index(int $offset = 0, string $from = 'now'): ActionResponse
     {
-        $reservations = [
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            new Reservation("id", "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-        ];
+        $reservations = $this->getFakeReservations(10);
         $model = Reservations::create(
             from: $from,
             current: $offset,
@@ -44,27 +50,48 @@ final class ReservationsController extends Controller
         return $this->redirectToAction(action: 'index', args: $args);
     }
 
-    public function edit(string $id, ServerRequestInterface $request): ActionResponse
+    public function create(ServerRequestInterface $request): ActionResponse
     {
         $backUrl = $request->getHeaderLine('Referer') ?: '/reservations';
         $model = (object)[
-            "reservation" => new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
+            "pageTitle" => "{{reservation.create.title}}",
+            "reservation" => new Reservation("", "", "", "", ""),
             "backUrl" => $backUrl,
-            "errors" => (object)[
-                "name" => false,
-                "email" => "Email is invalid",
-                "phone" => "Phone number is required",
-            ],
+        ];
+        return $this->view("edit", model: $model);
+    }
+
+    public function edit(string $id, ServerRequestInterface $request): ActionResponse
+    {
+        $reservation = $this->getFakeReservations(1)[0];
+        $backUrl = $request->getHeaderLine('Referer') ?: '/reservations';
+        $model = (object)[
+            "pageTitle" => "{{reservation.edit.title}} | {$reservation->name}",
+            "reservation" => $reservation,
+            "backUrl" => $backUrl,
         ];
         return $this->view(model: $model);
     }
 
-    public function update(string $id, ?string $backUrl): ActionResponse
+    public function update(string $id, UpdateReservationRequest $request): ActionResponse
     {
+        $reservation = $this->getFakeReservations(1)[0];
         $model = (object)[
-            "reservation" => new Reservation($id, "10:00", "John Doe", "555-555-555", "john.doe@gmail.com"),
-            "backUrl" => $backUrl ?? '/reservations',
+            "pageTitle" => "{{reservation.edit.title}} | {$reservation->name}",
+            "reservation" => new Reservation(
+                id: $id,
+                turn: $reservation->turn,
+                name: $request->name,
+                phone: $request->phone,
+                email: $request->email
+            ),
+            "backUrl" => $request->backUrl,
+            "errors" => (object)[
+                "name" => "{{reservation.form.name.error.required}}",
+                "email" => "{{reservation.form.email.error.invalid}}",
+                "phone" => "{{reservation.form.phone.error.required}}",
+            ],
         ];
-        return $this->view(name: 'edit', model: $model);
+        return $this->view('edit', model: $model);
     }
 }
