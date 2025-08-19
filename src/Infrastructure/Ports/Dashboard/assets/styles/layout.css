@@ -34,6 +34,14 @@ body {
     justify-content: space-between;
 }
 
+.header h1 {
+    padding: 0 var(--spacing-base);
+}
+
+.header h1 a {
+    color: var(--color-text-inverse);
+}
+
 .nav {
     display: flex;
     flex-direction: row;

@@ -3,7 +3,7 @@
     <nav class="table-nav">
         <form action="/reservations" method="get" id="filter-form">
             <div class="inline-form-control">
-                <label for="from">{{From}}</label>
+                <label for="from">{{reservations.from}}</label>
                 <input
                     type="date"
                     id="from"
@@ -13,8 +13,8 @@
                 />
             </div>
         </form>
-        <a href="/#new-reservation" class="primary-button">
-            {{NewReservation}}
+        <a href="/reservations/create" class="primary-button">
+            {{reservations.new}}
         </a>
     </nav>
 
@@ -26,11 +26,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Hora</th>
-                <th>Nombre</th>
-                <th>Teléfono</th>
-                <th>Email</th>
-                <th>Detalles</th>
+                <th>{{reservations.header.time}}</th>
+                <th>{{reservations.header.name}}</th>
+                <th>{{reservations.header.phone}}</th>
+                <th>{{reservations.header.email}}</th>
+                <th>{{reservations.header.details}}</th>
             </tr>
         </thead>
         <tbody>
@@ -40,13 +40,14 @@
                 <td>{{reservation->name}}</td>
                 <td>{{reservation->phone}}</td>
                 <td>{{reservation->email}}</td>
-                <td>
-                    <a href="/reservations/{{reservation->id}}">
-                        Detalles
-                    </a>
-                    <button type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
-                        {{UPDATE_STATUS}}
+                <td class="control-group">
+                    <button type="submit" form="update-status" name="status" value="ACCEPTED" formaction="/reservations/{{reservation->id}}/status">
+                        {{reservations.accept}}
                     </button>
+                    <button type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
+                        {{reservations.cancel}}
+                    </button>
+                    <a href="/reservations/{{reservation->id}}">{{reservations.details}}</a>
                 </td>
             </tr>
             {{#endfor reservations:}}
@@ -59,20 +60,20 @@
     </table>
     <nav class="table-pagination">
         <button form="filter-form" type="submit" name="offset" value="{{prev}}">
-            {{PREV}}
+            {{reservations.prev}}
         </button>
         <button form="filter-form" type="submit" name="offset" value="{{next}}">
-            {{NEXT}}
+            {{reservations.next}}
         </button>
     </nav>
     {{#endif hasReservations:}}
     {{#if !hasReservations:}}
     <article class="card">
         <header>
-            <h3>{{NO_RESERVATIONS_FOUND}}</h3>
+            <h3>{{reservations.no_found}}</h3>
         </header>
         <p>
-            {{NO_RESERVATIONS_FOUND_DESCRIPTION}}
+            {{reservations.no_found_description}}
         </p>
     </article>
     {{#endif !hasReservations:}}

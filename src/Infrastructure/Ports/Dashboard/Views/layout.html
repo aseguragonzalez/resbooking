@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{layout.header.lang}}">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +10,22 @@
     </head>
     <body>
         <header class="header">
-            <h1>AppName</h1>
+            <h1>
+                <a href="/">{{layout.app}}</a>
+            </h1>
             <nav class="nav">
-                <a href="/reservations">Reservas</a>
-                <a href="#clientes">Clientes</a>
-                <a href="#ajustes">Ajustes</a>
-                <a href="#usuario">Usuario</a>
+                <a href="/reservations">{{layout.reservations}}</a>
+                <a href="#customers">{{layout.customers}}</a>
+                <a href="#settings">{{layout.settings}}</a>
+                <a href="#account">{{layout.account}}</a>
             </nav>
         </header>
         <main class="main">
             {{content}}
         </main>
         <footer class="footer">
-            <p>
-                &copy; 2023 Reservas. Todos los derechos reservados.
-            </p>
+            <p>{{layout.footer}}</p>
         </footer>
         <script src="/assets/scripts/main.js"></script>
     </body>
-
 </html>

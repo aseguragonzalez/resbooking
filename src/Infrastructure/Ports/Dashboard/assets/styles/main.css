@@ -24,7 +24,7 @@
         padding: var(--spacing-sm);
     }
 
-    small {
+    p {
         color: var(--color-text-muted);
     }
 
@@ -42,6 +42,10 @@
     }
 
     .error {
+        color: var(--color-error);
+    }
+
+    p:has(small.error) {
         color: var(--color-error);
     }
 }
@@ -107,6 +111,12 @@
     border: var(--border-width) solid var(--color-muted);
     padding: var(--spacing-sm);
     text-align: left;
+}
+
+.table td.control-group {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
 }
 
 .table-pagination {
