@@ -34,8 +34,9 @@ open-coverage:
 test:
 	@XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage/
 
+# Start the PHP built-in server but redirect output to a log file
 serve:
-	@php -S 0.0.0.0:8080 src/Infrastructure/Ports/Dashboard/local.php
+	@php -S 0.0.0.0:8080 src/Infrastructure/Ports/Dashboard/local.php 2> php-server.log
 
 update-autoload:
 	@composer dump-autoload
