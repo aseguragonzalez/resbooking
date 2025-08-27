@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Mvc\Views;
 
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Settings;
 
 final class HtmlViewEngine implements ViewEngine
 {
-    public function __construct(private readonly string $basePath, private readonly ContentReplacer $contentReplacer)
+    public function __construct(private readonly Settings $settings, private readonly ContentReplacer $contentReplacer)
     {
     }
 
-    public function render(View $view): string
+    public function render(View $view, RequestContext $context): string
     {
-        $viewPath = "{$this->basePath}/{$view->viewPath}.html";
+        $viewPath = "{$this->settings->viewPath}/{$view->viewPath}.html";
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
@@ -22,7 +24,7 @@ final class HtmlViewEngine implements ViewEngine
         // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
 
-        $body = $this->contentReplacer->replace($view->data, $template);
+        $body = $this->contentReplacer->replace($view->data, $template, $context);
         // clean empty lines
         return preg_replace("/^\s*\n/m", "", $body) ?? "";
     }
@@ -32,7 +34,7 @@ final class HtmlViewEngine implements ViewEngine
         preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
         if ($matches) {
             $layoutFilename = $matches[1];
-            $layoutPath = "{$this->basePath}/{$layoutFilename}.html";
+            $layoutPath = "{$this->settings->viewPath}/{$layoutFilename}.html";
             if (!file_exists($layoutPath)) {
                 throw new \RuntimeException("Layout not found: {$layoutFilename}");
             }

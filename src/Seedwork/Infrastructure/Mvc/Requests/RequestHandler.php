@@ -143,11 +143,15 @@ final class RequestHandler implements RequestHandlerInterface
         }
 
         if ($actionResponse instanceof View) {
+            $context = $request->getAttribute(RequestContext::class);
+            if (!$context instanceof RequestContext) {
+                throw new \RuntimeException('RequestContext not found in request attributes');
+            }
+            $responseBody = $this->viewEngine->render($actionResponse, $context);
             $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
             foreach ($actionResponse->headers as $header) {
                 $response = $response->withHeader($header->name, $header->value);
             }
-            $responseBody = $this->viewEngine->render($actionResponse);
             $response->getBody()->write($responseBody);
             return $response;
         }

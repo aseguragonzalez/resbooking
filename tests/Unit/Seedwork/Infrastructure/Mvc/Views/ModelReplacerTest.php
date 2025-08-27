@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 
 final class ModelReplacerTest extends TestCase
@@ -22,7 +23,7 @@ final class ModelReplacerTest extends TestCase
         $template = 'Name: {{name}}, Age: {{age}}, Height: {{height}},' .
              ' Student: {{isStudent}}, Employed: {{isEmployed}}, Created: {{createdAt}}';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertStringContainsString('Peter Parker', $result);
         $this->assertStringContainsString('25', $result);
         $this->assertStringContainsString('1.75', $result);
@@ -44,7 +45,7 @@ final class ModelReplacerTest extends TestCase
         ];
         $template = 'Name: {{name}}, Street: {{address->street}}, City: {{address->city}}';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertStringContainsString('Freddy Krueger', $result);
         $this->assertStringContainsString('Elm Street', $result);
         $this->assertStringContainsString('Springwood', $result);
@@ -57,7 +58,7 @@ final class ModelReplacerTest extends TestCase
         ];
         $template = '{{#for item in items:}}Item: {{item}}; {{#endfor items:}}';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertStringContainsString('Item: foo;', $result);
         $this->assertStringContainsString('Item: bar;', $result);
         $this->assertStringContainsString('Item: baz;', $result);
@@ -72,7 +73,7 @@ final class ModelReplacerTest extends TestCase
         ];
         $template = '{{#for user in users:}}User: {{user->name}}; {{#endfor users:}}';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertStringContainsString('User: Peter;', $result);
         $this->assertStringContainsString('User: Freddy;', $result);
     }
@@ -82,7 +83,7 @@ final class ModelReplacerTest extends TestCase
         $model = (object)[];
         $template = 'Nothing to replace here.';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertSame('Nothing to replace here.', $result);
     }
 
@@ -91,7 +92,7 @@ final class ModelReplacerTest extends TestCase
         $model = (object)['name' => 'Peter'];
         $template = 'Name: {{name}}, Age: {{age}}';
         $replacer = new ModelReplacer();
-        $result = $replacer->replace($model, $template);
+        $result = $replacer->replace($model, $template, new RequestContext());
         $this->assertStringContainsString('Peter', $result);
         $this->assertStringContainsString('Age: ', $result);
     }

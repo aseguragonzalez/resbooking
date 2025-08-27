@@ -6,21 +6,19 @@ namespace Seedwork\Infrastructure\Mvc\Views;
 
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
+use Seedwork\Infrastructure\Mvc\Settings;
 
 final class I18nReplacer extends ContentReplacerBase
 {
-    public function __construct(
-        private readonly RequestContext $requestContext,
-        private readonly string $basePath,
-        ?ContentReplacer $nextReplacer = null
-    ) {
+    public function __construct(private readonly Settings $settings, ?ContentReplacer $nextReplacer = null)
+    {
         parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(object $model, string $template): string
+    protected function customReplace(object $model, string $template, RequestContext $context): string
     {
-        $language = $this->requestContext->get(RequestContextKeys::LANGUAGE->value);
-        $file = "{$this->basePath}/{$language}.json";
+        $language = $context->get(RequestContextKeys::LANGUAGE->value);
+        $file = "{$this->settings->i18nPath}/{$language}.json";
         if (!file_exists($file)) {
             throw new \RuntimeException("Language file not found: {$file}");
         }

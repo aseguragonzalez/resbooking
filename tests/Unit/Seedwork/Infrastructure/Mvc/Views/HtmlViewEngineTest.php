@@ -6,7 +6,9 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
+use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, BranchesReplacer, ModelReplacer};
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
@@ -20,7 +22,8 @@ final class HtmlViewEngineTest extends TestCase
     {
         $branchesReplacer = new BranchesReplacer();
         $branchesReplacer->setNext(new ModelReplacer());
-        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . "/Files", contentReplacer: $branchesReplacer);
+        $settings = new Settings(basePath: __DIR__, i18nPath: __DIR__ . "/Files/i18n", viewPath: __DIR__ . "/Files");
+        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $branchesReplacer);
     }
 
     protected function tearDown(): void
@@ -38,7 +41,7 @@ final class HtmlViewEngineTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/^Template\s+not\s+found:\s+.*\/fake_view\.html$/');
 
-        $this->viewEngine->render($view);
+        $this->viewEngine->render($view, new RequestContext());
     }
 
     public function testRenderWithPrimitiveProperties(): void
@@ -60,7 +63,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/primitive_properties_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -89,7 +92,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/object_properties_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -116,7 +119,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/array_of_objects_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -174,7 +177,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/complex_view_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -205,7 +208,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/branch_view_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -228,7 +231,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/view_with_layout_expected.html");
 
-        $body = $this->viewEngine->render($view);
+        $body = $this->viewEngine->render($view, new RequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -245,6 +248,6 @@ final class HtmlViewEngineTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Layout not found: fakelayout");
 
-        $this->viewEngine->render($view);
+        $this->viewEngine->render($view, new RequestContext());
     }
 }

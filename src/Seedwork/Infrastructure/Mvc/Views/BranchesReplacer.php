@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Views;
 
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+
 final class BranchesReplacer extends ContentReplacerBase
 {
     public function __construct(?ContentReplacer $nextReplacer = null)
@@ -11,7 +13,7 @@ final class BranchesReplacer extends ContentReplacerBase
         parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(object $model, string $template): string
+    protected function customReplace(object $model, string $template, RequestContext $context): string
     {
         $branchesToReplace = $model == null ? [] : $this->replaceBranches(model: $model, template: $template);
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Views;
 
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+
 abstract class ContentReplacerBase implements ContentReplacer
 {
     protected function __construct(private ?ContentReplacer $nextReplacer = null)
@@ -15,14 +17,14 @@ abstract class ContentReplacerBase implements ContentReplacer
         $this->nextReplacer = $replacer;
     }
 
-    public function replace(object $model, string $template): string
+    public function replace(object $model, string $template, RequestContext $context): string
     {
         if ($this->nextReplacer === null) {
-            return $this->customReplace($model, $template);
+            return $this->customReplace($model, $template, $context);
         }
-        $replacedTemplate = $this->nextReplacer->replace($model, $template);
-        return $this->customReplace($model, $replacedTemplate);
+        $replacedTemplate = $this->nextReplacer->replace($model, $template, $context);
+        return $this->customReplace($model, $replacedTemplate, $context);
     }
 
-    abstract protected function customReplace(object $model, string $template): string;
+    abstract protected function customReplace(object $model, string $template, RequestContext $context): string;
 }
