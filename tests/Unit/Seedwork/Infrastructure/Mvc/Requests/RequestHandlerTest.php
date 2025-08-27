@@ -52,11 +52,7 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Post, Path::create('/test/custom'), TestController::class, 'custom'),
             Route::create(RouteMethod::Post, Path::create('/test/failed'), TestController::class, 'failed'),
         ]);
-        $this->settings = new Settings(
-            basePath: __DIR__ . '/Files',
-            i18nPath: __DIR__ . '/i18n',
-            viewPath: __DIR__ . '/Views'
-        );
+        $this->settings = new Settings(basePath: __DIR__);
         $branchesReplacer = new BranchesReplacer();
         $branchesReplacer->setNext(new ModelReplacer());
         $this->viewEngine = new HtmlViewEngine($this->settings, $branchesReplacer);

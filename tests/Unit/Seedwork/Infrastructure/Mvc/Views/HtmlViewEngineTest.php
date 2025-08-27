@@ -22,7 +22,7 @@ final class HtmlViewEngineTest extends TestCase
     {
         $branchesReplacer = new BranchesReplacer();
         $branchesReplacer->setNext(new ModelReplacer());
-        $settings = new Settings(basePath: __DIR__, i18nPath: __DIR__ . "/Files/i18n", viewPath: __DIR__ . "/Files");
+        $settings = new Settings(basePath: __DIR__, viewPath: "/Files");
         $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $branchesReplacer);
     }
 

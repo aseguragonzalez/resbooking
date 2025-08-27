@@ -6,14 +6,9 @@ require_once '/workspaces/resbooking/vendor/autoload.php';
 
 use DI\Container;
 use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\WebApp;
+use Infrastructure\Ports\Dashboard\App;
 
-$container = new Container();
-$settings = new Settings(
-    basePath: __DIR__,
-    i18nPath: __DIR__ . '/assets/i18n',
-    viewPath: __DIR__ . '/Views',
-);
+$settings = new Settings(basePath: __DIR__);
+$app = new App(new Container(), $settings);
 
-$app = new WebApp($container, $settings);
 $app->onRequest();
