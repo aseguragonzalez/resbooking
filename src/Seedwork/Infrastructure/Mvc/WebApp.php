@@ -10,17 +10,27 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
+use Seedwork\Infrastructure\Mvc\Middlewares\{
+    Authentication,
+    Authorization,
+    ErrorHandling,
+    Localization,
+    Middleware,
+    RequestHandling
+};
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
-use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, I18nReplacer, ModelReplacer, HtmlViewEngine, ViewEngine};
 
 abstract class WebApp
 {
+    /**
+     * @param Settings $settings
+     * @param Container $container
+     */
     protected function __construct(
         protected readonly Settings $settings,
-        protected readonly Container $container = new Container()
+        protected readonly Container $container = new Container(),
     ) {
     }
 
@@ -45,28 +55,44 @@ abstract class WebApp
 
         $i18nReplacer = new I18nReplacer($this->settings, new BranchesReplacer(new ModelReplacer()));
         $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
+
+        /** @var RequestHandling $requestHandlingMiddleware */
+        $requestHandlingMiddleware = $this->container->get(RequestHandling::class);
+        /** @var Authorization $authorizationMiddleware */
+        $authorizationMiddleware = $this->container->get(Authorization::class);
+        $authorizationMiddleware->setNext($requestHandlingMiddleware);
+        /** @var Authentication $authenticationMiddleware */
+        $authenticationMiddleware = $this->container->get(Authentication::class);
+        $authenticationMiddleware->setNext($authorizationMiddleware);
+        /** @var Localization $localizationMiddleware */
+        $localizationMiddleware = $this->container->get(Localization::class);
+        $localizationMiddleware->setNext($authenticationMiddleware);
+        /** @var ErrorHandling $errorMiddleware */
+        $errorMiddleware = $this->container->get(ErrorHandling::class);
+        $errorMiddleware->setNext($localizationMiddleware);
+        $this->container->set(Middleware::class, $errorMiddleware);
     }
 
     public function onRequest(): void
     {
-        $this->configureMvc();
         $this->configure();
+        $this->configureMvc();
 
         $requestCreator = $this->container->get(ServerRequestCreator::class);
         if (!$requestCreator instanceof ServerRequestCreator) {
             throw new \RuntimeException('ServerRequestCreator not found in container');
         }
 
-        $request = $requestCreator->fromGlobals();
-        $requestContext = new RequestContext();
-        $requestContext->set(RequestContextKeys::LANGUAGE->value, 'en-en');
-
-        $requestHandler = $this->container->get(RequestHandler::class);
-        if (!$requestHandler instanceof RequestHandler) {
-            throw new \RuntimeException('RequestHandler not found in container');
+        $middlewareChain = $this->container->get(Middleware::class);
+        if (!$middlewareChain instanceof Middleware) {
+            throw new \RuntimeException('Middleware not found in container');
         }
 
-        $response = $requestHandler->handle($request->withAttribute(RequestContext::class, $requestContext));
+        $request = $requestCreator->fromGlobals();
+        $response = $middlewareChain->handleRequest(
+            $request->withAttribute(RequestContext::class, new RequestContext())
+        );
+
         http_response_code($response->getStatusCode());
         foreach ($response->getHeaders() as $name => $values) {
             foreach ($values as $value) {
