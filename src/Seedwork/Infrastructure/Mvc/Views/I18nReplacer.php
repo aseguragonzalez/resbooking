@@ -15,7 +15,7 @@ final class I18nReplacer extends ContentReplacerBase
         parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(object $model, string $template, RequestContext $context): string
+    protected function customReplace(?object $model, string $template, RequestContext $context): string
     {
         $language = $context->get(RequestContextKeys::LANGUAGE->value);
         $file = "{$this->settings->i18nPath}/{$language}.json";

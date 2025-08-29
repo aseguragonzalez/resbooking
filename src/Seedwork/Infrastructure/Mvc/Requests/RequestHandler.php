@@ -116,7 +116,7 @@ final class RequestHandler implements RequestHandlerInterface
         // TODO: create an strategy for handling different ActionResponse types
         if ($actionResponse instanceof LocalRedirectTo) {
             $host = empty($request->getHeaderLine("origin"))
-                ? 'http://localhost:8080' // TODO: get default host from environment
+                ? (getenv('DEFAULT_HOST') ?: 'http://localhost:8080')
                 : $request->getHeaderLine("origin");
             $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
             if (is_null($newRoute)) {

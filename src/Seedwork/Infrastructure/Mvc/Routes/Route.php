@@ -79,7 +79,7 @@ final class Route
         $usedNames = $paramNames[2];
 
         $pathArgs = array_filter($args, fn($key) => in_array($key, $usedNames, true), ARRAY_FILTER_USE_KEY);
-        // TODO: improve this to avoid using forach loop
+        // TODO: improve this to avoid using foreach loop
         foreach ($pathArgs as $name => $value) {
             $pattern = str_replace('([^\}]+)', $name, Route::PARAM_PATTERN);
             $path = preg_replace($pattern, (string)$value, $path, 1) ?? $path;

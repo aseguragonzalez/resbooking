@@ -13,9 +13,9 @@ final class BranchesReplacer extends ContentReplacerBase
         parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(object $model, string $template, RequestContext $context): string
+    protected function customReplace(?object $model, string $template, RequestContext $context): string
     {
-        $branchesToReplace = $model == null ? [] : $this->replaceBranches(model: $model, template: $template);
+        $branchesToReplace = $model === null ? [] : $this->replaceBranches(model: $model, template: $template);
 
         return str_replace(array_keys($branchesToReplace), array_values($branchesToReplace), $template);
     }

@@ -17,7 +17,7 @@ abstract class ContentReplacerBase implements ContentReplacer
         $this->nextReplacer = $replacer;
     }
 
-    public function replace(object $model, string $template, RequestContext $context): string
+    public function replace(?object $model, string $template, RequestContext $context): string
     {
         if ($this->nextReplacer === null) {
             return $this->customReplace($model, $template, $context);
@@ -26,5 +26,5 @@ abstract class ContentReplacerBase implements ContentReplacer
         return $this->customReplace($model, $replacedTemplate, $context);
     }
 
-    abstract protected function customReplace(object $model, string $template, RequestContext $context): string;
+    abstract protected function customReplace(?object $model, string $template, RequestContext $context): string;
 }

@@ -8,5 +8,5 @@ use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 
 interface ContentReplacer
 {
-    public function replace(object $model, string $template, RequestContext $context): string;
+    public function replace(?object $model, string $template, RequestContext $context): string;
 }

@@ -13,9 +13,9 @@ final class ModelReplacer extends ContentReplacerBase
         parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(object $model, string $template, RequestContext $context): string
+    protected function customReplace(?object $model, string $template, RequestContext $context): string
     {
-        $tagsToReplace = $model == null ? [] : $this->replaceObjectProperty("", $model, $template);
+        $tagsToReplace = $model === null ? [] : $this->replaceObjectProperty("", $model, $template);
 
         return str_replace(array_keys($tagsToReplace), array_values($tagsToReplace), $template);
     }
@@ -25,7 +25,7 @@ final class ModelReplacer extends ContentReplacerBase
      */
     private function replaceObjectProperty(string $propertyName, object $model, string $template): array
     {
-        $prefix = $propertyName == "" ? "" : "{$propertyName}->";
+        $prefix = $propertyName === "" ? "" : "{$propertyName}->";
         $tagsToReplace = [];
         $values = get_object_vars($model);
         foreach ($values as $property => $value) {
