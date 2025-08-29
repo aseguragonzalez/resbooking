@@ -36,7 +36,7 @@ final class ErrorHandling extends Middleware
 
         try {
             return $this->next->handleRequest($request);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $errorMapping = $this->settings->errorsMapping[get_class($exception)] ?? null;
             return $errorMapping === null
                 ? $this->handleException($this->settings->errorsMappingDefaultValue, $request, $exception)
@@ -47,7 +47,7 @@ final class ErrorHandling extends Middleware
     private function handleException(
         ErrorMapping $errorMapping,
         ServerRequestInterface $request,
-        \Exception $exception
+        \Throwable $exception
     ): ResponseInterface {
         $this->logger->error('Error handling middleware: ' . $errorMapping->templateName, $exception);
         /** @var RequestContext $context */
