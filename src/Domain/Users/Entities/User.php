@@ -48,7 +48,7 @@ final class User extends AggregateRoot
     /**
      * @param array<Role> $roles An array representing the roles assigned to the user.
      */
-    public static function new(Email $username, Password $password = null, array $roles = []): self
+    public static function new(Email $username, ?Password $password, array $roles = []): self
     {
         $password = $password ?? Password::new();
         return new self(

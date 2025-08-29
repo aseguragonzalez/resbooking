@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once '/workspaces/resbooking/vendor/autoload.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
 use Seedwork\Infrastructure\Mvc\Settings;
