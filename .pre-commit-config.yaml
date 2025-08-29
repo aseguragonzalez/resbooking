@@ -41,7 +41,7 @@ repos:
   - id: static-analysis
     name: Static analysis
     language: system
-    entry: vendor/bin/phpstan analyse ./src ./tests --level=max
+    entry: vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
     pass_filenames: false
 
   - id: php-unit

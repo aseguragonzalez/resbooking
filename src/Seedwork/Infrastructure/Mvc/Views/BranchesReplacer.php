@@ -49,7 +49,7 @@ final class BranchesReplacer extends ContentReplacerBase
             // @phpstan-ignore-next-line
             if (property_exists($path, $next)) {
                 $path = $path->$next;
-            // @phpstan-ignore-next-line
+                // @phpstan-ignore-next-line
             } elseif (method_exists($path, $next)) {
                 $path = $path->$next();
             } elseif (preg_match('/^(\w+)\[(.*?)\]$/', $next, $arrayMatches)) {

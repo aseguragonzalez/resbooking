@@ -12,7 +12,7 @@ restaurants manage their reservations efficiently.
 
 Although the startup didn't take off, this project remained important to me.
 Looking back, I saw an opportunity to improve it—upgrading it from `PHP 5.5` to
-`PHP 8.2`, applying modern best practices, and making it cleaner and easier
+`PHP 8.4`, applying modern best practices, and making it cleaner and easier
 to maintain.
 
 Now, I want to give it a second life by sharing it as an open-source project.
@@ -31,7 +31,7 @@ the day and shift.
 
 ### Tech Stack
 
-- **Backend:** PHP 8.2 (upgraded from PHP 5.5)
+- **Backend:** PHP 8.4 (upgraded from PHP 5.5)
 - **Database:** MySQL
 - **Frontend:** Javascript, HTML, CSS
 

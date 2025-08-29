@@ -20,7 +20,7 @@ final class ReservationsController extends Controller
     private function getFakeReservations(int $count): array
     {
         $faker = FakerFactory::create();
-        return array_map(fn() => new Reservation(
+        return array_map(fn () => new Reservation(
             id: $faker->uuid(),
             turn: $faker->time(),
             name: $faker->name(),

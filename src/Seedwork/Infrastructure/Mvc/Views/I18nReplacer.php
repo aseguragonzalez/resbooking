@@ -36,7 +36,7 @@ final class I18nReplacer extends ContentReplacerBase
             throw new \RuntimeException("Failed to decode language file: " . json_last_error_msg());
         }
 
-        $keys = array_map(fn($key) => "{{{$key}}}", array_keys($dictionary));
+        $keys = array_map(fn ($key) => "{{{$key}}}", array_keys($dictionary));
         return str_replace($keys, array_values($dictionary), $template);
     }
 }

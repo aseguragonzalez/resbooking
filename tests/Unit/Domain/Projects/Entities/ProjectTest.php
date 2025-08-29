@@ -365,7 +365,7 @@ final class ProjectTest extends TestCase
         ];
         $project = $this->projectBuilder->withSettings($this->settings())->withUsers($users)->build();
 
-        $project->removeUsers(fn(User $user) => $user->username === $email);
+        $project->removeUsers(fn (User $user) => $user->username === $email);
 
         $this->assertNotContains($users[1], $project->getUsers());
         $this->assertCount(1, $project->getEvents());
@@ -381,7 +381,7 @@ final class ProjectTest extends TestCase
         ];
         $project = $this->projectBuilder->withSettings($this->settings())->withPlaces($places)->build();
 
-        $project->removePlaces(fn(Place $place) => $place->name === $name);
+        $project->removePlaces(fn (Place $place) => $place->name === $name);
 
         $this->assertNotContains($places[1], $project->getPlaces());
         $this->assertCount(1, $project->getEvents());
@@ -408,7 +408,7 @@ final class ProjectTest extends TestCase
         ];
         $project = $this->projectBuilder->withSettings($this->settings())->withTurns($turns)->build();
 
-        $project->removeTurns(fn(TurnAvailability $turn) => $turn->turn === Turn::H1230);
+        $project->removeTurns(fn (TurnAvailability $turn) => $turn->turn === Turn::H1230);
 
         $this->assertNotContains($turns[1], $project->getTurns());
         $this->assertCount(1, $project->getEvents());
@@ -438,7 +438,7 @@ final class ProjectTest extends TestCase
             ->withOpenCloseEvents($openCloseEvents)
             ->build();
 
-        $project->removeOpenCloseEvents(fn(OpenCloseEvent $openCloseEvent) => $openCloseEvent->turn === Turn::H1230);
+        $project->removeOpenCloseEvents(fn (OpenCloseEvent $openCloseEvent) => $openCloseEvent->turn === Turn::H1230);
 
         $this->assertNotContains($openCloseEvents[1], $project->getOpenCloseEvents());
         $this->assertCount(1, $project->getEvents());
