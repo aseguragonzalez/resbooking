@@ -7,8 +7,24 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 use DI\Container;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Infrastructure\Ports\Dashboard\App;
+use Seedwork\Infrastructure\Mvc\ErrorMapping;
+use Seedwork\Infrastructure\Mvc\Routes\RouteDoesNotFoundException;
 
-$settings = new Settings(basePath: __DIR__);
+$errors = [
+    RouteDoesNotFoundException::class => new ErrorMapping(
+        statusCode: 404,
+        templateName: 'Shared/404',
+        pageTitle: '{{notFound.title}}'
+    )
+];
+
+$defaultErrorMapping = new ErrorMapping(
+    statusCode: 500,
+    templateName: 'Shared/500',
+    pageTitle: '{{internalServerError.title}}'
+);
+
+$settings = new Settings(basePath: __DIR__, errorsMapping: $errors, errorsMappingDefaultValue: $defaultErrorMapping);
 $app = new App(new Container(), $settings);
 
 $app->onRequest();

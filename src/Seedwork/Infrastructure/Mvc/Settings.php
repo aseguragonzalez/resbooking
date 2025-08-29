@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
+use Seedwork\Infrastructure\Mvc\ErrorMapping;
+
 final class Settings
 {
     public readonly string $i18nPath;
@@ -11,9 +13,15 @@ final class Settings
 
     /**
      * @param array<string> $languages
+     * @param array<class-string<\Throwable>, ErrorMapping> $errorsMapping
      */
     public function __construct(
         public readonly string $basePath,
+        public readonly ErrorMapping $errorsMappingDefaultValue = new ErrorMapping(
+            statusCode: 500,
+            templateName: 'Shared/500',
+            pageTitle: '{{internalServerError.title}}'
+        ),
         public readonly string $environment = 'local',
         string $i18nPath = '/assets/i18n',
         public readonly array $languages = ['en'],
@@ -23,6 +31,7 @@ final class Settings
         public readonly string $serviceName = 'my-app',
         public readonly string $serviceVersion = '1.0.0',
         string $viewPath = '/Views',
+        public readonly array $errorsMapping = [],
     ) {
         $this->i18nPath = $this->basePath . $i18nPath;
         $this->viewPath = $this->basePath . $viewPath;
