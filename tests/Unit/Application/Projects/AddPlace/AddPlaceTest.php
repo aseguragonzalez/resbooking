@@ -35,7 +35,7 @@ final class AddPlaceTest extends TestCase
         $this->projectRepository
             ->expects($this->once())
             ->method('getById')
-            ->with($this->isType('string'))
+            ->with($this->isString())
             ->willReturn($project);
         $this->projectRepository
             ->expects($this->once())

@@ -48,11 +48,11 @@ final class RedirectToTest extends TestCase
     }
 
     #[DataProvider('fakeUrlProvider')]
-    public function testCreateFailsWhenUrlIsInvalid(): void
+    public function testCreateFailsWhenUrlIsInvalid(string $url): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid URL');
-        RedirectTo::create('/Books/Index');
+        RedirectTo::create($url);
     }
 
     /**
