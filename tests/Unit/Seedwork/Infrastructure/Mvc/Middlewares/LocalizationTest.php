@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares\Tests;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Middlewares\Localization;

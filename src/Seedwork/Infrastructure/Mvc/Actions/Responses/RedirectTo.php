@@ -27,6 +27,10 @@ final class RedirectTo extends ActionResponse
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             throw new \InvalidArgumentException("Invalid URL: $url");
         }
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            throw new \InvalidArgumentException("Invalid URL: $url");
+        }
         $urlBlocks = [strtolower($url)];
         if (!empty($args)) {
             $urlBlocks[] = http_build_query($args);
