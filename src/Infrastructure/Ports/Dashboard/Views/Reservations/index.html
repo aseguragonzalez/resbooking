@@ -1,0 +1,81 @@
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <form action="/reservations" method="get" id="filter-form">
+            <div class="inline-form-control">
+                <label for="from">{{reservations.from}}</label>
+                <input
+                    type="date"
+                    id="from"
+                    name="from"
+                    value="{{date}}"
+                    onchange="this.form.submit()"
+                />
+            </div>
+        </form>
+        <a href="/reservations/create" class="primary-button">
+            {{reservations.new}}
+        </a>
+    </nav>
+
+    {{#if hasReservations:}}
+    <form id="update-status" method="post">
+        <input type="hidden" name="offset" value="{{offset}}">
+        <input type="hidden" name="from" value="{{date}}">
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{reservations.header.time}}</th>
+                <th>{{reservations.header.name}}</th>
+                <th>{{reservations.header.phone}}</th>
+                <th>{{reservations.header.email}}</th>
+                <th>{{reservations.header.details}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#for reservation in reservations:}}
+            <tr>
+                <td>{{reservation->turn}}</td>
+                <td>{{reservation->name}}</td>
+                <td>{{reservation->phone}}</td>
+                <td>{{reservation->email}}</td>
+                <td class="control-group">
+                    <button type="submit" form="update-status" name="status" value="ACCEPTED" formaction="/reservations/{{reservation->id}}/status">
+                        {{reservations.accept}}
+                    </button>
+                    <button type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
+                        {{reservations.cancel}}
+                    </button>
+                    <a href="/reservations/{{reservation->id}}">{{reservations.details}}</a>
+                </td>
+            </tr>
+            {{#endfor reservations:}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav class="table-pagination">
+        <button form="filter-form" type="submit" name="offset" value="{{prev}}">
+            {{reservations.prev}}
+        </button>
+        <button form="filter-form" type="submit" name="offset" value="{{next}}">
+            {{reservations.next}}
+        </button>
+    </nav>
+    {{#endif hasReservations:}}
+    {{#if !hasReservations:}}
+    <article class="card">
+        <header>
+            <h3>{{reservations.no_found}}</h3>
+        </header>
+        <p>
+            {{reservations.no_found_description}}
+        </p>
+    </article>
+    {{#endif !hasReservations:}}
+
+</section>

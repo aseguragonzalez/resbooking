@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Header};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
@@ -61,13 +62,16 @@ final class LocalRedirectTo extends ActionResponse
 
     private static function checkActionArgs(\ReflectionMethod $actionMethod, object $args): bool
     {
-        $actionParameters = $actionMethod->getParameters();
         $argsProperties = get_object_vars($args);
-        if (count($actionParameters) !== count($argsProperties)) {
-            return false;
-        }
+        $requiredActionParameters = array_filter(
+            $actionMethod->getParameters(),
+            fn(\ReflectionParameter $param) => $param->isOptional() === false
+                && $param->allowsNull() === false
+                && ($type = $param->getType()) instanceof \ReflectionNamedType
+                && $type->getName() !== ServerRequestInterface::class
+        );
 
-        foreach ($actionParameters as $parameter) {
+        foreach ($requiredActionParameters as $parameter) {
             if (!array_key_exists($parameter->getName(), $argsProperties)) {
                 return false;
             }

@@ -37,4 +37,19 @@ final class Router
         }
         return $matches[0];
     }
+
+    public function getFromControllerAndAction(string $controller, string $action): Route | null
+    {
+        $matches = array_values(
+            array_filter(
+                $this->routes,
+                fn (Route $route) => $route->controller === $controller && $route->action === $action
+            )
+        );
+
+        if (empty($matches)) {
+            return null;
+        }
+        return $matches[0];
+    }
 }

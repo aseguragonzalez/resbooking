@@ -18,7 +18,7 @@
   "features": {
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
-  "image": "mcr.microsoft.com/devcontainers/php:1-8.2-bullseye",
-  "name": "PHP 8.2",
+  "image": "mcr.microsoft.com/devcontainers/php:8.4-bookworm",
+  "name": "PHP 8.4",
   "remoteUser": "vscode"
 }

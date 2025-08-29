@@ -42,6 +42,14 @@ final class TestController extends Controller
         return $this->view(model: $model);
     }
 
+    public function getWithOptionals(int $offset = 10, int $limit = 20): ActionResponse
+    {
+        $model = new \stdClass();
+        $model->offset = $offset;
+        $model->limit = $limit;
+        return $this->view(name: 'get', model: $model);
+    }
+
     public function search(int $offset, int $limit, SearchRequest $request): ActionResponse
     {
         $model = new \stdClass();

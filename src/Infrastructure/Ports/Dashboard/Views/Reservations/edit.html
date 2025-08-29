@@ -1,0 +1,90 @@
+{{#layout layout:}}
+<form action="/reservations/{{reservation->id}}" method="post" class="form">
+    <header>
+        <h2>{{reservation.edit.form.title}} | {{reservation->name}}</h2>
+    </header>
+
+    <input type="hidden" name="id" value="{{reservation->id}}" />
+    <input type="hidden" name="backUrl" value="{{backUrl}}" />
+
+    <div class="form-control">
+        <label for="name">
+            {{reservation.form.name.label}}
+        </label>
+        <input
+            aria-describedby="name-help {{#if errors->name:}}name-error{{#endif errors->name:}}"
+            autocomplete="off"
+            id="name"
+            name="name"
+            placeholder="{{reservation.form.name.placeholder}}"
+            required
+            type="text"
+            value="{{reservation->name}}"
+            {{#if errors->name:}}aria-invalid="true"{{#endif errors->name:}}
+        />
+        <p>
+            <small id="name-help">{{reservation.form.name.help}}</small>
+            {{#if errors->name:}}
+            <small id="name-error" class="error" role="alert">
+                {{errors->name}}
+            </small>
+            {{#endif errors->name:}}
+        </p>
+    </div>
+    <div class="form-control">
+        <label for="email">
+            {{reservation.form.email.label}}
+        </label>
+        <input
+            aria-describedby="email-help {{#if errors->email:}}email-error{{#endif errors->email:}}"
+            autocomplete="off"
+            id="email"
+            name="email"
+            placeholder="{{reservation.form.email.placeholder}}"
+            required
+            type="email"
+            value="{{reservation->email}}"
+            {{#if errors->email:}}aria-invalid="true"{{#endif errors->email:}}
+        />
+        <p>
+            <small id="email-help">{{reservation.form.email.help}}</small>
+            {{#if errors->email:}}
+            <small id="email-error" class="error" role="alert">
+                {{errors->email}}
+            </small>
+            {{#endif errors->email:}}
+        </p>
+
+    </div>
+    <div class="form-control">
+        <label for="phone">
+            {{reservation.form.phone.label}}
+        </label>
+        <input
+            aria-describedby="phone-help {{#if errors->phone:}}phone-error{{#endif errors->phone:}}"
+            autocomplete="off"
+            id="phone"
+            name="phone"
+            placeholder="{{reservation.form.phone.placeholder}}"
+            required
+            type="tel"
+            value="{{reservation->phone}}"
+            {{#if errors->phone:}}aria-invalid="true"{{#endif errors->phone:}}
+        />
+        <p>
+            <small id="phone-help">
+                {{reservation.form.phone.help}}
+            </small>
+            {{#if errors->phone:}}
+            <small id="phone-error" class="error" role="alert">
+                {{errors->phone}}
+            </small>
+            {{#endif errors->phone:}}
+        </p>
+    </div>
+    <footer>
+        <button type="submit">{{form.save}}</button>
+        <button type="reset">{{form.cancel}}</button>
+        <a href="{{backUrl}}" >{{form.back}}</a>
+    </footer>
+</form>

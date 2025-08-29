@@ -10,11 +10,12 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\{Path, Route, RouteMethod, Router};
-use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
-use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, HtmlViewEngine, ModelReplacer, ViewEngine};
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Requests\TestController;
 
 final class RequestHandlerTest extends TestCase
@@ -24,6 +25,7 @@ final class RequestHandlerTest extends TestCase
     private Psr17Factory $requestFactory;
     private ResponseFactoryInterface $responseFactory;
     private Router $router;
+    private Settings $settings;
     private ViewEngine $viewEngine;
     private RequestHandler $requestHandler;
 
@@ -39,6 +41,7 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Get, Path::create('/test'), TestController::class, 'index'),
             Route::create(RouteMethod::Get, Path::create('/test/redirect'), TestController::class, 'redirect'),
             Route::create(RouteMethod::Get, Path::create('/test/get'), TestController::class, 'get'),
+            Route::create(RouteMethod::Get, Path::create('/test/get2'), TestController::class, 'getWithOptionals'),
             Route::create(RouteMethod::Get, Path::create('/test/search'), TestController::class, 'search'),
             Route::create(RouteMethod::Get, Path::create('/test/find'), TestController::class, 'find'),
             Route::create(RouteMethod::Get, Path::create('/test/{int:id}/list'), TestController::class, 'list'),
@@ -49,7 +52,10 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Post, Path::create('/test/custom'), TestController::class, 'custom'),
             Route::create(RouteMethod::Post, Path::create('/test/failed'), TestController::class, 'failed'),
         ]);
-        $this->viewEngine = new HtmlViewEngine(basePath: __DIR__ . '/Views');
+        $this->settings = new Settings(basePath: __DIR__);
+        $branchesReplacer = new BranchesReplacer();
+        $branchesReplacer->setNext(new ModelReplacer());
+        $this->viewEngine = new HtmlViewEngine($this->settings, $branchesReplacer);
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,
@@ -80,7 +86,9 @@ final class RequestHandlerTest extends TestCase
     public function testHandleGetRequest(): void
     {
         $uri = $this->requestFactory->createUri('/test');
-        $request = $this->requestFactory->createServerRequest('GET', $uri);
+        $request = $this->requestFactory
+            ->createServerRequest('GET', $uri)
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -95,7 +103,24 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/get');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
-            ->withQueryParams(['offset' => 10, 'limit' => 20]);
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withAttribute(RequestContext::class, new RequestContext());
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $expectedContent = file_get_contents(__DIR__ . '/Files/expected_get.html');
+        $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    public function testHandleGetRequestWithOptionalArgs(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/get2');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams([])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -110,7 +135,8 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/search');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
-            ->withQueryParams(['offset' => 1, 'limit' => 20, 'name' => 'John']);
+            ->withQueryParams(['offset' => 1, 'limit' => 20, 'name' => 'John'])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -125,7 +151,8 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/find');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
-            ->withQueryParams(['offset' => 10, 'limit' => 20]);
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -140,7 +167,8 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/10/list');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
-            ->withQueryParams(['offset' => 10, 'limit' => 20]);
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -156,7 +184,8 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/delete');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
-            ->withHeader('Content-Type', $contentType);
+            ->withHeader('Content-Type', $contentType)
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -173,7 +202,8 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
-            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'id' => 10]);
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'id' => 10])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -190,7 +220,8 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/10');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
-            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com']);
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com'])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -208,7 +239,8 @@ final class RequestHandlerTest extends TestCase
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
             ->withQueryParams(['offset' => 10, 'limit' => 20])
-            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com']);
+            ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com'])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -225,7 +257,8 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/custom');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
-            ->withParsedBody(['id' => 10, 'amount' => 100.01, 'name' => 'John Doe']);
+            ->withParsedBody(['id' => 10, 'amount' => 100.01, 'name' => 'John Doe'])
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -241,7 +274,8 @@ final class RequestHandlerTest extends TestCase
     {
         $uri = $this->requestFactory->createUri('/test/failed');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
-            ->withHeader('Content-Type', $contentType);
+            ->withHeader('Content-Type', $contentType)
+            ->withAttribute(RequestContext::class, new RequestContext());
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid Response object returned from controller');
