@@ -24,7 +24,7 @@ final class RemovePlace extends UseCase
     public function execute($request): void
     {
         $project = $this->projectRepository->getById($request->projectId);
-        $project->removePlaces(fn(Place $place) => $place->getId() === $request->placeId);
+        $project->removePlaces(fn (Place $place) => $place->getId() === $request->placeId);
         $this->projectRepository->save($project);
     }
 }

@@ -78,7 +78,7 @@ final class Route
         preg_match_all(self::PARAM_PATTERN, $path, $paramNames);
         $usedNames = $paramNames[2];
 
-        $pathArgs = array_filter($args, fn($key) => in_array($key, $usedNames, true), ARRAY_FILTER_USE_KEY);
+        $pathArgs = array_filter($args, fn ($key) => in_array($key, $usedNames, true), ARRAY_FILTER_USE_KEY);
         // TODO: improve this to avoid using foreach loop
         foreach ($pathArgs as $name => $value) {
             $pattern = str_replace('([^\}]+)', $name, Route::PARAM_PATTERN);
@@ -87,11 +87,11 @@ final class Route
 
         $queryArgs = array_filter(
             $args,
-            fn($key) => !in_array($key, $usedNames, true) && $args[$key] !== null,
+            fn ($key) => !in_array($key, $usedNames, true) && $args[$key] !== null,
             ARRAY_FILTER_USE_KEY
         );
         if (!empty($queryArgs)) {
-            $query = array_map(fn($value) => is_scalar($value) ? (string)$value : '', $queryArgs);
+            $query = array_map(fn ($value) => is_scalar($value) ? (string)$value : '', $queryArgs);
             $path .= '?' . http_build_query($query);
         }
 

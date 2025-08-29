@@ -65,7 +65,7 @@ final class LocalRedirectTo extends ActionResponse
         $argsProperties = get_object_vars($args);
         $requiredActionParameters = array_filter(
             $actionMethod->getParameters(),
-            fn(\ReflectionParameter $param) => $param->isOptional() === false
+            fn (\ReflectionParameter $param) => $param->isOptional() === false
                 && $param->allowsNull() === false
                 && ($type = $param->getType()) instanceof \ReflectionNamedType
                 && $type->getName() !== ServerRequestInterface::class

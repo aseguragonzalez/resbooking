@@ -25,7 +25,7 @@ final class RemoveOpenCloseEvent extends UseCase
     {
         $project = $this->projectRepository->getById($request->projectId);
         $project->removeOpenCloseEvents(
-            fn(OpenCloseEvent $openCloseEvent) =>
+            fn (OpenCloseEvent $openCloseEvent) =>
                 $openCloseEvent->date->format('Y-m-d') === $request->date->format('Y-m-d')
                     && $openCloseEvent->turn === $request->turn,
         );

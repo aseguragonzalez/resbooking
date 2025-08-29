@@ -117,11 +117,11 @@ final class ActionParameterBuilder
      */
     private function getEmbeddedObjectArray(string $type, array $args): mixed
     {
-        $groupedArgs = array_unique(array_map(fn($key) => strstr($key ? $key : '', '.', true), array_keys($args)));
+        $groupedArgs = array_unique(array_map(fn ($key) => strstr($key ? $key : '', '.', true), array_keys($args)));
         $embeddedObjects = array_map(function ($group) use ($type, $args) {
-            $filteredArgs = array_filter($args, fn($key) => str_starts_with($key, $group . '.'), ARRAY_FILTER_USE_KEY);
+            $filteredArgs = array_filter($args, fn ($key) => str_starts_with($key, $group . '.'), ARRAY_FILTER_USE_KEY);
             $embeddedArgs = array_combine(
-                array_map(fn($key) => substr($key, strlen($group ? $group : '') + 1), array_keys($filteredArgs)),
+                array_map(fn ($key) => substr($key, strlen($group ? $group : '') + 1), array_keys($filteredArgs)),
                 $filteredArgs
             );
             return (new self())->withArgs($embeddedArgs)->build($type);

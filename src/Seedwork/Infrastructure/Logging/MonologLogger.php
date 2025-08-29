@@ -16,7 +16,7 @@ final class MonologLogger implements Logger
     {
     }
 
-    public function critical(string $message, \Exception $exception): void
+    public function critical(string $message, \Exception|\Throwable $exception): void
     {
         $this->logger->critical($message, array_merge($this->context, ['exception' => $exception]));
     }
@@ -26,7 +26,7 @@ final class MonologLogger implements Logger
         $this->logger->debug($message, $this->context);
     }
 
-    public function error(string $message, \Exception $exception): void
+    public function error(string $message, \Exception|\Throwable $exception): void
     {
         $this->logger->error($message, array_merge($this->context, ['exception' => $exception]));
     }
@@ -36,7 +36,7 @@ final class MonologLogger implements Logger
         $this->logger->info($message, $this->context);
     }
 
-    public function warning(string $message, \Exception $exception): void
+    public function warning(string $message, \Exception|\Throwable $exception): void
     {
         $this->logger->warning($message, array_merge($this->context, ['exception' => $exception]));
     }

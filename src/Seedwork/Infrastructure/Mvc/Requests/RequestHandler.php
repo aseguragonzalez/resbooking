@@ -125,7 +125,7 @@ final class RequestHandler implements RequestHandlerInterface
                 );
             }
             $args = array_map(
-                fn($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
+                fn ($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
                 is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
             );
             $path = $newRoute->getPathFromArgs($args);

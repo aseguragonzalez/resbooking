@@ -145,7 +145,7 @@ final class Project extends AggregateRoot
         foreach ($usersToBeRemoved as $user) {
             $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
         }
-        $this->users = array_filter($this->users, fn(User $user) => !$filter($user));
+        $this->users = array_filter($this->users, fn (User $user) => !$filter($user));
     }
 
     /**
@@ -189,7 +189,7 @@ final class Project extends AggregateRoot
         foreach ($placesToBeRemoved as $place) {
             $this->addEvent(PlaceRemoved::new(projectId: $this->getId(), place: $place));
         }
-        $this->places = array_filter($this->places, fn(Place $place) => !$filter($place));
+        $this->places = array_filter($this->places, fn (Place $place) => !$filter($place));
     }
 
     /**
@@ -232,7 +232,7 @@ final class Project extends AggregateRoot
         foreach ($turnsToBeRemoved as $turn) {
             $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
         }
-        $this->turns = array_filter($this->turns, fn(TurnAvailability $turn) => !$filter($turn));
+        $this->turns = array_filter($this->turns, fn (TurnAvailability $turn) => !$filter($turn));
     }
 
     /**
@@ -287,7 +287,7 @@ final class Project extends AggregateRoot
                 OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
             );
         }
-        $this->openCloseEvents = array_filter($this->openCloseEvents, fn(OpenCloseEvent $event) => !$filter($event));
+        $this->openCloseEvents = array_filter($this->openCloseEvents, fn (OpenCloseEvent $event) => !$filter($event));
     }
 
     public function getSettings(): Settings

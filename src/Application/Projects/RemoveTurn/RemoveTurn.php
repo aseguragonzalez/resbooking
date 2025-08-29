@@ -25,7 +25,7 @@ final class RemoveTurn extends UseCase
     {
         $project = $this->projectRepository->getById($request->projectId);
         $project->removeTurns(
-            fn(TurnAvailability $turn) => $turn->dayOfWeek === $request->dayOfWeek && $turn->turn === $request->turn
+            fn (TurnAvailability $turn) => $turn->dayOfWeek === $request->dayOfWeek && $turn->turn === $request->turn
         );
         $this->projectRepository->save($project);
     }

@@ -9,7 +9,7 @@ install:
 	@export XDEBUG_MODE=coverage
 
 analyse:
-	@./vendor/bin/phpstan analyse ./src ./tests --level=max
+	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
 
 clean:
 	@rm -rf vendor
