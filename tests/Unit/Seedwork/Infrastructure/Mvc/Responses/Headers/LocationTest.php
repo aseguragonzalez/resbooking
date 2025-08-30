@@ -20,11 +20,8 @@ class LocationTest extends TestCase
 
     public function testLocationHeaderWithEmptyUrl(): void
     {
-        $url = '';
-        $location = Location::new(url: $url);
-
-        $this->assertSame('Location', $location->name);
-        $this->assertSame($url, $location->value);
+        $this->expectException(\InvalidArgumentException::class);
+        Location::new('');
     }
 
     public function testLocationHeaderWithSpecialCharacters(): void
@@ -42,5 +39,11 @@ class LocationTest extends TestCase
         $location = Location::new(url: $url);
 
         $this->assertSame('Location: https://example.com', (string) $location);
+    }
+
+    public function testLocationHeaderThrowsExceptionForInvalidUrl(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Location::new('ftp://invalid-url.com');
     }
 }
