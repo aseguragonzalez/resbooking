@@ -47,6 +47,8 @@ final class RouteTest extends TestCase
             [ '/foo/{int:id}', ['id' => 7], '/foo/7' ],
             // Path param with float type
             [ '/foo/{float:amount}', ['amount' => 3.14], '/foo/3.14' ],
+            // No matching arg for placeholder, should keep original
+            [ '/foo/{id}/bar/{missing}', ['id' => 5], '/foo/5/bar/{missing}' ],
         ];
     }
 
