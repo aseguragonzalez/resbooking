@@ -11,6 +11,47 @@ use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Route\RouteController
 
 final class RouteTest extends TestCase
 {
+    /**
+     * @param array<string, bool|string|int|float|null> $args
+     * @param string $expectedPath
+     */
+    #[DataProvider('getPathFromArgsProvider')]
+    public function testGetPathFromArgs(string $routePath, array $args, string $expectedPath): void
+    {
+        $route = Route::create(RouteMethod::Get, Path::create($routePath), RouteController::class, 'get');
+        $result = $route->getPathFromArgs($args);
+        $this->assertSame($expectedPath, $result->value());
+    }
+
+    /**
+     * @return array<array{string, array<string, bool|string|int|float|null>, string}>
+     */
+    public static function getPathFromArgsProvider(): array
+    {
+        return [
+            // Simple path param
+            [ '/foo/{id}', ['id' => 123], '/foo/123' ],
+            // Multiple path params
+            [ '/foo/{id}/bar/{name}', ['id' => 1, 'name' => 'alice'], '/foo/1/bar/alice' ],
+            // Path param + query param
+            [ '/foo/{id}', ['id' => 42, 'extra' => 'test'], '/foo/42?extra=test' ],
+            // Multiple query params
+            [ '/foo/{id}', ['id' => 42, 'a' => 'x', 'b' => 2], '/foo/42?a=x&b=2' ],
+            // Null query param is skipped
+            [ '/foo/{id}', ['id' => 42, 'a' => null, 'b' => 'ok'], '/foo/42?b=ok' ],
+            // Scalar conversion
+            [ '/foo/{id}', ['id' => true, 'q' => false], '/foo/1?q=' ],
+            // No params
+            [ '/foo', [], '/foo' ],
+            // Path param with type
+            [ '/foo/{int:id}', ['id' => 7], '/foo/7' ],
+            // Path param with float type
+            [ '/foo/{float:amount}', ['amount' => 3.14], '/foo/3.14' ],
+            // No matching arg for placeholder, should keep original
+            [ '/foo/{id}/bar/{missing}', ['id' => 5], '/foo/5/bar/{missing}' ],
+        ];
+    }
+
     public function testCreate(): void
     {
         $route = Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'get');

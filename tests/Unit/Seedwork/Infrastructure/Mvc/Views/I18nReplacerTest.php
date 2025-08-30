@@ -35,6 +35,16 @@ final class I18nReplacerTest extends TestCase
         rmdir($this->i18nDir);
     }
 
+    public function testRaisesRuntimeExceptionWhenLanguageFileDoesNotExist(): void
+    {
+        $context = new RequestContext([RequestContextKeys::LANGUAGE->value => 'nonexistent']);
+        $template = '{{greeting}}';
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/Language file not found/');
+        $this->i18nReplacer->replace((object)[], $template, $context);
+    }
+
     /**
      * @param array<string, string> $dict
      */

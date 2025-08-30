@@ -66,4 +66,26 @@ final class RouterTest extends TestCase
         $this->expectExceptionMessage('Route not found: GET /test');
         $router->get(RouteMethod::Get, '/test');
     }
+
+    public function testGetFromControllerAndActionReturnsRoute(): void
+    {
+        $route = Route::create(RouteMethod::Get, Path::create('/test'), RouterController::class, 'get');
+        $router = new Router(routes: [
+            $route,
+            Route::create(RouteMethod::Get, Path::create('/other1'), RouterController::class, 'get'),
+        ]);
+
+        $result = $router->getFromControllerAndAction(RouterController::class, 'get');
+        $this->assertEquals($route, $result);
+    }
+
+    public function testGetFromControllerAndActionReturnsNullWhenNotFound(): void
+    {
+        $router = new Router(routes: [
+            Route::create(RouteMethod::Get, Path::create('/other1'), RouterController::class, 'get'),
+        ]);
+
+        $result = $router->getFromControllerAndAction(RouterController::class, 'nonexistent');
+        $this->assertNull($result);
+    }
 }

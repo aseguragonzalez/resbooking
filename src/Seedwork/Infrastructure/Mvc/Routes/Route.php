@@ -73,23 +73,31 @@ final class Route
      */
     public function getPathFromArgs(array $args): Path
     {
-        $path = $this->path->value();
-        $query = [];
-        preg_match_all(self::PARAM_PATTERN, $path, $paramNames);
+        $rawPath = $this->path->value();
+        preg_match_all(self::PARAM_PATTERN, $rawPath, $paramNames);
         $usedNames = $paramNames[2];
 
-        $pathArgs = array_filter($args, fn ($key) => in_array($key, $usedNames, true), ARRAY_FILTER_USE_KEY);
-        // TODO: improve this to avoid using foreach loop
-        foreach ($pathArgs as $name => $value) {
-            $pattern = str_replace('([^\}]+)', $name, Route::PARAM_PATTERN);
-            $path = preg_replace($pattern, (string)$value, $path, 1) ?? $path;
-        }
+        // Replace path parameters using preg_replace_callback
+        /** @var string $path */
+        $path = preg_replace_callback(
+            self::PARAM_PATTERN,
+            function ($matches) use ($args) {
+                $name = $matches[2];
+                if (array_key_exists($name, $args)) {
+                    return (string)$args[$name];
+                }
+                return $matches[0];
+            },
+            $rawPath
+        );
 
+        // Build query string for unused args
         $queryArgs = array_filter(
             $args,
             fn ($key) => !in_array($key, $usedNames, true) && $args[$key] !== null,
             ARRAY_FILTER_USE_KEY
         );
+
         if (!empty($queryArgs)) {
             $query = array_map(fn ($value) => is_scalar($value) ? (string)$value : '', $queryArgs);
             $path .= '?' . http_build_query($query);
