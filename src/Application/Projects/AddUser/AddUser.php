@@ -7,7 +7,6 @@ namespace App\Application\Projects\AddUser;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Projects\ValueObjects\User;
 use App\Domain\Shared\Email;
-use App\Domain\Users\{UserFactory, UserRepository};
 use Seedwork\Application\UseCase;
 
 /**
@@ -16,11 +15,8 @@ use Seedwork\Application\UseCase;
  */
 final class AddUser extends UseCase
 {
-    public function __construct(
-        private readonly ProjectRepository $projectRepository,
-        private readonly UserFactory $userFactory,
-        private readonly UserRepository $userRepository
-    ) {
+    public function __construct(private readonly ProjectRepository $projectRepository)
+    {
     }
 
     /**
@@ -30,11 +26,7 @@ final class AddUser extends UseCase
     {
         $project = $this->projectRepository->getById($request->projectId);
         $email = new Email($request->username);
-        $user = $request->isAdmin
-            ? $this->userFactory->createNewAdmin($email)
-            : $this->userFactory->createNewUser($email);
         $project->addUser(new User($email));
-        $this->userRepository->save($user);
         $this->projectRepository->save($project);
     }
 }
