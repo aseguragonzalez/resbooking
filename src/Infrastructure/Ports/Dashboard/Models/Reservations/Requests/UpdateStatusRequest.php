@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models;
+namespace Infrastructure\Ports\Dashboard\Models\Reservations\Requests;
 
 final class UpdateStatusRequest
 {

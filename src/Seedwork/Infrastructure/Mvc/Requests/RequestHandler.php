@@ -113,10 +113,10 @@ final class RequestHandler implements RequestHandlerInterface
         ServerRequestInterface $request,
         ActionResponse $actionResponse
     ): ResponseInterface {
-        // TODO: create an strategy for handling different ActionResponse types
+        // TODO: create a strategy to handle different ActionResponse types
         if ($actionResponse instanceof LocalRedirectTo) {
             $host = empty($request->getHeaderLine("origin"))
-                ? (getenv('DEFAULT_HOST') ?: 'http://localhost:8080')
+                ? (getenv('DEFAULT_HOST') ?: 'http://localhost:8080/')
                 : $request->getHeaderLine("origin");
             $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
             if (is_null($newRoute)) {
@@ -129,9 +129,13 @@ final class RequestHandler implements RequestHandlerInterface
                 is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
             );
             $path = $newRoute->getPathFromArgs($args);
-            return $this->responseFactory
+            $response = $this->responseFactory
                 ->createResponse(code: StatusCode::SeeOther->value)
                 ->withHeader('Location', "{$host}{$path}");
+            foreach ($actionResponse->headers as $header) {
+                $response = $response->withHeader($header->name, $header->value);
+            }
+            return $response;
         }
 
         if ($actionResponse instanceof RedirectTo) {

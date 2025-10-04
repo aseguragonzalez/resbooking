@@ -63,7 +63,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/primitive_properties_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -92,7 +92,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/object_properties_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -119,7 +119,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/array_of_objects_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -177,7 +177,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/complex_view_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -208,7 +208,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/branch_view_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -231,7 +231,7 @@ final class HtmlViewEngineTest extends TestCase
         );
         $expected = file_get_contents("{$this->basePath}/view_with_layout_expected.html");
 
-        $body = $this->viewEngine->render($view, new RequestContext());
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
 
         $this->assertSame($expected, $body);
     }
@@ -248,6 +248,19 @@ final class HtmlViewEngineTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Layout not found: fakelayout");
 
-        $this->viewEngine->render($view, new RequestContext());
+        $this->viewEngine->render($view, $this->getRequestContext());
+    }
+
+
+
+    private function getRequestContext(): RequestContext
+    {
+        $requestContext = new RequestContext();
+        $identity = $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Identity::class);
+        $identity->method('isAuthenticated')->willReturn(false);
+        $identity->method('hasRole')->willReturn(false);
+        $identity->method('username')->willReturn('anonymous');
+        $requestContext->setIdentity($identity);
+        return $requestContext;
     }
 }

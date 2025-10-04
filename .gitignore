@@ -4,3 +4,4 @@ vendor/
 .php-cs-fixer.cache
 coverage/
 *.log
+inmemory_identity_manager.json

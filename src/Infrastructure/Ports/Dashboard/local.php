@@ -4,7 +4,7 @@ $path = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI'])
     ? $_SERVER['REQUEST_URI']
     : '';
 
-if (preg_match('/\.(css|jpe?g|png|gif|webp|svg|ico|js)$/i', $path)) {
+if (preg_match('/\.(css|jpe?g|png|gif|webp|svg|ico|js|json)$/i', $path)) {
     $fullPath = __DIR__ . $path;
     if (file_exists($fullPath) && is_file($fullPath)) {
         $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
@@ -18,12 +18,14 @@ if (preg_match('/\.(css|jpe?g|png|gif|webp|svg|ico|js)$/i', $path)) {
             'webp' => 'image/webp',
             'svg'  => 'image/svg+xml',
             'ico'  => 'image/x-icon',
+            'json' => 'application/json',
         ];
         $contentType = $mimeTypes[$ext] ?? 'application/octet-stream';
         header('Content-Type: ' . $contentType);
         readfile($fullPath);
         exit;
     }
+    // TODO: return not found response
     return false;
 }
 

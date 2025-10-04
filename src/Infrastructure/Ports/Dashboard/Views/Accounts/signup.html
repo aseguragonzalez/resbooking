@@ -1,0 +1,99 @@
+{{#layout layout:}}
+<form action="/accounts/sign-up" method="post" class="form">
+    <header>
+        <h2>{{accounts.signup.form.title}}</h2>
+    </header>
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{accounts.signup.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <div class="form-control">
+        <label for="username">
+            {{accounts.signup.form.username.label}}
+        </label>
+        <input
+            aria-describedby="username-help"
+            autocomplete="off"
+            id="username"
+            name="username"
+            placeholder="{{accounts.signup.form.username.placeholder}}"
+            required
+            type="email"
+            {{#if errors->username:}}aria-invalid="true"{{#endif errors->username:}}
+        />
+        <p>
+            <small id="username-help">{{accounts.signup.form.username.help}}</small>
+        </p>
+    </div>
+    <div class="form-control">
+        <label for="password">
+            {{accounts.signup.form.password.label}}
+        </label>
+        <input
+            aria-describedby="password-help"
+            autocomplete="off"
+            id="password"
+            name="password"
+            minlength="8"
+            pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).+$"
+            placeholder="{{accounts.signup.form.password.placeholder}}"
+            required
+            type="password"
+            {{#if errors->password:}}aria-invalid="true"{{#endif errors->password:}}
+        />
+        <p>
+            <small id="password-help">{{accounts.signup.form.password.help}}</small>
+        </p>
+    </div>
+    <div class="form-control">
+        <label for="password-confirm">
+            {{accounts.signup.form.password-confirm.label}}
+        </label>
+        <input
+            aria-describedby="password-confirm-help"
+            autocomplete="off"
+            id="password-confirm"
+            name="passwordConfirm"
+            minlength="8"
+            placeholder="{{accounts.signup.form.password-confirm.placeholder}}"
+            required
+            type="password"
+            {{#if errors->passwordConfirm:}}aria-invalid="true"{{#endif errors->passwordConfirm:}}
+        />
+        <p>
+            <small id="password-confirm-help">{{accounts.signup.form.password-confirm.help}}</small>
+        </p>
+    </div>
+
+    <div class="form-control">
+        <div class="checkbox-control">
+            <label for="agree">{{accounts.signup.form.agree.label}}</label>
+            <input
+                id="agree"
+                name="agree"
+                type="checkbox"
+                {{#if errors->agree:}}aria-invalid="true"{{#endif errors->agree:}}
+            />
+        </div>
+    </div>
+
+    <div class="form-control">
+        <button class="primary-button" type="submit">{{accounts.signup.form.submit}}</button>
+    </div>
+
+    <footer>
+        <p>
+            {{accounts.signup.form.have-account}} <a href="/accounts/sign-in">{{accounts.signup.form.sign-in}}</a>
+        </p>
+    </footer>
+</form>

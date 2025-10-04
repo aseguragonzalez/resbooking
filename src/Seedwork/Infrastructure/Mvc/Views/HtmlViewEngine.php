@@ -21,10 +21,20 @@ final class HtmlViewEngine implements ViewEngine
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
         $templateFile = file_get_contents($viewPath);
+
+        // add current identity to the model
+        $currentIdentity = $context->getIdentity();
+        $contextModel = [
+            'user' => (object)[
+                'username' => $currentIdentity->username(),
+                'isAuthenticated' => $currentIdentity->isAuthenticated(),
+            ]
+        ];
+        $model = $view->data == null ? (object)$contextModel : (object)array_merge((array)$view->data, $contextModel);
+
         // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
-
-        $body = $this->contentReplacer->replace($view->data, $template, $context);
+        $body = $this->contentReplacer->replace($model, $template, $context);
         // clean empty lines
         return preg_replace("/^\s*\n/m", "", $body) ?? "";
     }

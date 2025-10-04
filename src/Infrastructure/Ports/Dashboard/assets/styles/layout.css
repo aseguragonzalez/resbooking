@@ -45,10 +45,12 @@ body {
 .nav {
     display: flex;
     flex-direction: row;
+    position: relative;
 
     a {
         color: var(--color-text-inverse);
         padding: var(--spacing-lg) var(--spacing-base);
+        cursor: pointer;
     }
 
     a:focus {
