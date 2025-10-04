@@ -251,8 +251,6 @@ final class HtmlViewEngineTest extends TestCase
         $this->viewEngine->render($view, $this->getRequestContext());
     }
 
-
-
     private function getRequestContext(): RequestContext
     {
         $requestContext = new RequestContext();

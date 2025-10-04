@@ -34,6 +34,7 @@ final class HtmlViewEngine implements ViewEngine
 
         // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
+
         $body = $this->contentReplacer->replace($model, $template, $context);
         // clean empty lines
         return preg_replace("/^\s*\n/m", "", $body) ?? "";
