@@ -13,12 +13,18 @@
             <h1>
                 <a href="/">{{layout.app}}</a>
             </h1>
+            {{#if user->isAuthenticated:}}
             <nav class="nav">
                 <a href="/reservations">{{layout.reservations}}</a>
-                <a href="#customers">{{layout.customers}}</a>
-                <a href="#settings">{{layout.settings}}</a>
-                <a href="#account">{{layout.account}}</a>
+                <a href="/accounts/sign-out">{{layout.signout}}</a>
             </nav>
+            {{#endif user->isAuthenticated:}}
+            {{#if !user->isAuthenticated:}}
+            <nav class="nav">
+                <a href="/accounts/sign-in">{{layout.signin}}</a>
+                <a href="/accounts/sign-up">{{layout.signup}}</a>
+            </nav>
+            {{#endif !user->isAuthenticated:}}
         </header>
         <main class="main">
             {{content}}

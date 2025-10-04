@@ -88,7 +88,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test');
         $request = $this->requestFactory
             ->createServerRequest('GET', $uri)
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -104,7 +104,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/get');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
             ->withQueryParams(['offset' => 10, 'limit' => 20])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -120,7 +120,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/get2');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
             ->withQueryParams([])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -136,7 +136,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/search');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
             ->withQueryParams(['offset' => 1, 'limit' => 20, 'name' => 'John'])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -152,7 +152,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/find');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
             ->withQueryParams(['offset' => 10, 'limit' => 20])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -168,7 +168,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/10/list');
         $request = $this->requestFactory->createServerRequest('GET', $uri)
             ->withQueryParams(['offset' => 10, 'limit' => 20])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -185,7 +185,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/delete');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -203,7 +203,7 @@ final class RequestHandlerTest extends TestCase
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
             ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'id' => 10])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -221,7 +221,7 @@ final class RequestHandlerTest extends TestCase
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
             ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com'])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -240,7 +240,7 @@ final class RequestHandlerTest extends TestCase
             ->withHeader('Content-Type', $contentType)
             ->withQueryParams(['offset' => 10, 'limit' => 20])
             ->withParsedBody(['name' => 'John Doe', 'email' => 'john.doe@gmail.com'])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -258,7 +258,7 @@ final class RequestHandlerTest extends TestCase
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
             ->withParsedBody(['id' => 10, 'amount' => 100.01, 'name' => 'John Doe'])
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $response = $this->requestHandler->handle($request);
 
@@ -275,7 +275,7 @@ final class RequestHandlerTest extends TestCase
         $uri = $this->requestFactory->createUri('/test/failed');
         $request = $this->requestFactory->createServerRequest('POST', $uri)
             ->withHeader('Content-Type', $contentType)
-            ->withAttribute(RequestContext::class, new RequestContext());
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid Response object returned from controller');
@@ -292,5 +292,16 @@ final class RequestHandlerTest extends TestCase
             ['application/json'],
             ['multipart/form-data']
         ];
+    }
+
+    private function getRequestContext(): RequestContext
+    {
+        $requestContext = new RequestContext();
+        $identity = $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Identity::class);
+        $identity->method('isAuthenticated')->willReturn(false);
+        $identity->method('hasRole')->willReturn(false);
+        $identity->method('username')->willReturn('anonymous');
+        $requestContext->setIdentity($identity);
+        return $requestContext;
     }
 }

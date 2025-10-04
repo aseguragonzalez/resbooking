@@ -23,7 +23,7 @@ final class LocalRedirectToTest extends TestCase
         $this->assertSame(TestController::class, $response->controller);
         $this->assertEquals(new \stdClass(), $response->data);
         $this->assertEquals($expectedHeaders, $response->headers);
-        $this->assertSame(302, $response->statusCode->value);
+        $this->assertSame(303, $response->statusCode->value);
     }
 
     public function testCreateFailWhenActionDoesNotExists(): void
@@ -68,7 +68,7 @@ final class LocalRedirectToTest extends TestCase
         $this->assertSame(TestController::class, $response->controller);
         $this->assertEquals(new \stdClass(), $response->data);
         $this->assertEquals($expectedHeaders, $response->headers);
-        $this->assertSame(302, $response->statusCode->value);
+        $this->assertSame(303, $response->statusCode->value);
         $this->assertEquals($args, $response->args);
     }
 

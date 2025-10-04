@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Infrastructure\Ports\Dashboard\Models\Pages\Reservations;
-use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
-use Infrastructure\Ports\Dashboard\Models\{UpdateReservationRequest, UpdateStatusRequest};
+use Infrastructure\Ports\Dashboard\Models\Reservations\Pages\Reservations;
+use Infrastructure\Ports\Dashboard\Models\Reservations\Requests\UpdateReservationRequest;
+use Infrastructure\Ports\Dashboard\Models\Reservations\Requests\UpdateStatusRequest;
+use Infrastructure\Ports\Dashboard\Models\Reservations\Reservation;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;

@@ -1,0 +1,52 @@
+{
+  "resetPasswordChallenges": [],
+  "signInChallenges": [],
+  "signInSessions": {
+    "9fa49e58dc14629264e060f58e69f134": {
+      "identity": {
+        "isAuthenticated": true,
+        "roles": "admin",
+        "username": "peter+1@parker.com"
+      },
+      "signInChallenge": {
+        "expiresAt": "2025-09-28T14:59:15Z",
+        "token": "9fa49e58dc14629264e060f58e69f134"
+      }
+    }
+  },
+  "signUpChallenges": {
+    "55e90ef175c91985dcd87d25f814e69a": {
+      "expiresAt": "2025-09-29T12:41:48Z",
+      "token": "55e90ef175c91985dcd87d25f814e69a",
+      "userIdentity": {
+        "hash1": "b4a141f6ef3285eb315d2483fae85782ac514b24ac0c285ff5bf45043930a53b",
+        "hash2": "dd21700c455ed3036db0a181ab4274167f16b12402c6550b7caf8cfe0e27971f8f52f1d2300d853e082c6925e85c8decf0768c093fd5d6bf07d207cea96f29f9",
+        "isActive": false,
+        "isBlocked": false,
+        "roles": "admin",
+        "seed": "29c7581fcb6b781c4332bf4289a0c019",
+        "username": "peter@parker.com"
+      }
+    }
+  },
+  "userIdentities": {
+    "peter+1@parker.com": {
+      "hash1": "2c86c8c16ea8abba17983b8767cfc89d49cd416c7be6e7541e797fd6a76103e2",
+      "hash2": "49c74e4e734af415dbde56ef1d01dada7b3854a1263d91d1683d1fc4ba519d4933c24a840972279a7cb78aa48ac4f441f0876178a016a831bb795ec77d7862af",
+      "isActive": true,
+      "isBlocked": false,
+      "roles": "admin",
+      "seed": "a0b0e97c506ae557394a81cea2e03203",
+      "username": "peter+1@parker.com"
+    },
+    "peter@parker.com": {
+      "hash1": "b4a141f6ef3285eb315d2483fae85782ac514b24ac0c285ff5bf45043930a53b",
+      "hash2": "dd21700c455ed3036db0a181ab4274167f16b12402c6550b7caf8cfe0e27971f8f52f1d2300d853e082c6925e85c8decf0768c093fd5d6bf07d207cea96f29f9",
+      "isActive": false,
+      "isBlocked": false,
+      "roles": "admin",
+      "seed": "29c7581fcb6b781c4332bf4289a0c019",
+      "username": "peter@parker.com"
+    }
+  }
+}

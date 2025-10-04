@@ -1,0 +1,84 @@
+{{#layout layout:}}
+<form action="/accounts/sign-in" method="post" class="form">
+    <header>
+        <h2>{{accounts.signin.form.title}}</h2>
+    </header>
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{accounts.signin.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <div class="form-control">
+        <label for="username">
+            {{accounts.signin.form.username.label}}
+        </label>
+        <input
+            aria-describedby="username-help"
+            autocomplete="off"
+            id="username"
+            name="username"
+            placeholder="{{accounts.signin.form.username.placeholder}}"
+            required
+            type="email"
+            {{#if errors->username:}}aria-invalid="true"{{#endif errors->username:}}
+        />
+        <p>
+            <small id="username-help">{{accounts.signin.form.username.help}}</small>
+        </p>
+    </div>
+    <div class="form-control">
+        <label for="password">
+            {{accounts.signin.form.password.label}}
+        </label>
+        <input
+            aria-describedby="password-help"
+            autocomplete="off"
+            id="password"
+            name="password"
+            placeholder="{{accounts.signin.form.password.placeholder}}"
+            required
+            type="password"
+            {{#if errors->password:}}aria-invalid="true"{{#endif errors->password:}}
+        />
+        <p>
+            <small id="password-help">{{accounts.signin.form.password.help}}</small>
+        </p>
+    </div>
+    <div class="form-control">
+        <div class="checkbox-control">
+            <label for="remember">
+                {{accounts.signin.form.remember.label}}
+            </label>
+            <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                checked
+            />
+        </div>
+    </div>
+    <div class="form-control">
+        <button type="submit" class="primary-button">
+            {{accounts.signin.form.submit}}
+        </button>
+    </div>
+    <footer>
+        <p>
+            {{accounts.signin.form.forgot-password}}
+            <a href="/accounts/reset-password">{{accounts.signin.form.reset}}</a>
+        </p>
+        <p>
+            {{accounts.signin.form.no-account}}
+            <a href="/accounts/sign-up">{{accounts.signin.form.sign-up}}</a>
+        </p>
+    </footer>
+</form>

@@ -32,6 +32,9 @@ final class Settings
         public readonly string $serviceVersion = '1.0.0',
         string $viewPath = '/Views',
         public readonly array $errorsMapping = [],
+        public readonly string $authCookieName = 'auth',
+        public readonly string $authLoginUrl = '/accounts/sign-in',
+        public readonly string $authLogoutUrl = '/accounts/sign-out',
     ) {
         $this->i18nPath = $this->basePath . $i18nPath;
         $this->viewPath = $this->basePath . $viewPath;

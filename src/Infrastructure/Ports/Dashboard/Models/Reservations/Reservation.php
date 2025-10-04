@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models\Shared;
+namespace Infrastructure\Ports\Dashboard\Models\Reservations;
 
 final class Reservation
 {

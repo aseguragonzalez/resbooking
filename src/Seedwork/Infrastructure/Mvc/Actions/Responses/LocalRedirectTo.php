@@ -21,7 +21,7 @@ final class LocalRedirectTo extends ActionResponse
         public readonly ?object $args = null,
         array $headers = [],
     ) {
-        parent::__construct(data: new \stdClass(), headers: $headers, statusCode: StatusCode::Found);
+        parent::__construct(data: new \stdClass(), headers: $headers, statusCode: StatusCode::SeeOther);
     }
 
     /**

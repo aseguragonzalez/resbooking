@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models\Pages;
+namespace Infrastructure\Ports\Dashboard\Models\Reservations\Pages;
 
-use DateTimeImmutable;
 use Infrastructure\Ports\Dashboard\Models\PageModel;
-use Infrastructure\Ports\Dashboard\Models\Shared\Reservation;
+use Infrastructure\Ports\Dashboard\Models\Reservations\Reservation;
 
 final class Reservations extends PageModel
 {
@@ -45,12 +44,12 @@ final class Reservations extends PageModel
         );
     }
 
-    private static function tryDateTimeParse(string $date): DateTimeImmutable
+    private static function tryDateTimeParse(string $date): \DateTimeImmutable
     {
         try {
-            return new DateTimeImmutable($date);
+            return new \DateTimeImmutable($date);
         } catch (\Exception) {
-            return new DateTimeImmutable('now');
+            return new \DateTimeImmutable('now');
         }
     }
 }
