@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Security\Models;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Security\Domain\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;

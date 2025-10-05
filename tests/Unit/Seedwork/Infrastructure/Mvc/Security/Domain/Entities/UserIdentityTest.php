@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Security\Models;
+namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Security\Domain\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserBlockedException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UsernameIsNotEmailException;
 
 class UserIdentityTest extends TestCase
 {
@@ -161,5 +164,69 @@ class UserIdentityTest extends TestCase
         $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password');
         $deactivatedAgain = $identity->deactivate();
         $this->assertFalse($deactivatedAgain->isActive);
+    }
+
+    public function testAuthenticateThrowsIfInactive(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password');
+        $this->expectException(UserIsNotActiveException::class);
+        $identity->authenticate('password');
+    }
+
+    public function testAuthenticateThrowsIfBlocked(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate()->block();
+        $this->expectException(UserBlockedException::class);
+        $identity->authenticate('password');
+    }
+
+    public function testAuthenticate(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate();
+
+        $authenticatedUser = $identity->authenticate('password');
+
+        $this->assertTrue($authenticatedUser->isAuthenticated());
+    }
+
+    public function testAuthenticateDoNothingIfAlreadyAuthenticated(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate();
+        $authenticatedUser = $identity->authenticate('password');
+
+        $updatedUser = $authenticatedUser->authenticate('password');
+
+        $this->assertTrue($updatedUser->isAuthenticated());
+    }
+
+    public function testUpdatePasswordThrowsIfInactive(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password');
+        $this->expectException(UserIsNotActiveException::class);
+        $identity->updatePassword('newpass');
+    }
+
+    public function testUpdatePasswordThrowsIfBlocked(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate()->block();
+        $this->expectException(UserBlockedException::class);
+        $identity->updatePassword('newpass');
+    }
+
+    public function testGetCurrentIdentityReturnsCurrentIdentity(): void
+    {
+        $identity = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')
+            ->activate()
+            ->authenticate('password');
+        $current = $identity->getCurrentIdentity();
+        $this->assertEquals($identity->username(), $current->username());
+        $this->assertEquals($identity->getRoles(), $current->getRoles());
+        $this->assertTrue($current->isAuthenticated());
+    }
+
+    public function testThrowsExceptionIfUsernameIsNotEmail(): void
+    {
+        $this->expectException(UsernameIsNotEmailException::class);
+        UserIdentity::new('not-an-email', ['ROLE_USER'], 'password');
     }
 }
