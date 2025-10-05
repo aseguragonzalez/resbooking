@@ -58,6 +58,26 @@ class LocalizationTest extends TestCase
         $this->assertEquals('es_ES', $response->getHeaderLine('Content-Language'));
     }
 
+    public function testHandleRequestSetsDefaultLanguageFromBodyOnPost(): void
+    {
+        $request = $this->requestFactory
+            ->createServerRequest('POST', '/set-language')
+            ->withParsedBody([])
+            ->withAddedHeader('Content-Type', 'application/x-www-form-urlencoded')
+            ->withAddedHeader('Accept-Language', 'fr_FR')
+            ->withAttribute(RequestContext::class, new RequestContext());
+
+        $response = $this->middleware->handleRequest($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals(
+            "{$this->languageCookieName}={$this->languageDefaultValue}",
+            $response->getHeaderLine('Set-Cookie')
+        );
+        $this->assertEquals($this->languageDefaultValue, $response->getHeaderLine('Content-Language'));
+    }
+
     public function testHandleRequestSetsDefaultLanguageOnInvalidPost(): void
     {
         $request = $this->requestFactory
@@ -117,5 +137,34 @@ class LocalizationTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals($this->languageDefaultValue, $response->getHeaderLine('Content-Language'));
+    }
+
+    public function testLocalizationMiddlewareFailsIfNoRequestContext(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('RequestContext not found in request attributes');
+        $request = $this->requestFactory->createServerRequest('GET', '/any-uri');
+        $this->middleware->handleRequest($request);
+    }
+
+    public function testLocalizationMiddlewareFailsIfNoNextMiddleware(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No middleware to handle the request');
+        $middleware = new Localization(
+            settings: new Settings(
+                basePath: __DIR__,
+                languages: ['en_US', 'es_ES', 'fr_FR'],
+                languageCookieName: $this->languageCookieName,
+                languageDefaultValue: $this->languageDefaultValue,
+                languageSetUrl: '/set-language',
+            ),
+            responseFactory: new Psr17Factory(),
+            next: null,
+        );
+        $request = $this->requestFactory
+            ->createServerRequest('GET', '/any-uri')
+            ->withAttribute(RequestContext::class, new RequestContext());
+        $middleware->handleRequest($request);
     }
 }

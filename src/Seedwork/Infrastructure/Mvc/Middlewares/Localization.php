@@ -26,15 +26,20 @@ final class Localization extends Middleware
             throw new \RuntimeException('No middleware to handle the request');
         }
 
+        $context = $request->getAttribute(RequestContext::class);
+        if (!$context instanceof RequestContext) {
+            throw new \RuntimeException('RequestContext not found in request attributes');
+        }
+
         if ($this->isSetLanguageCookieRequest($request)) {
             return $this->createSetLanguageResponse($request);
         }
 
         if ($this->hasValidLanguageCookie($request)) {
-            return $this->handleRequestWithCurrentLanguage($request);
+            return $this->handleRequestWithCurrentLanguage($this->next, $context, $request);
         }
 
-        return $this->handleRequestWithAcceptedOrDefaultLanguage($request);
+        return $this->handleRequestWithAcceptedOrDefaultLanguage($this->next, $context, $request);
     }
 
     private function isSetLanguageCookieRequest(ServerRequestInterface $request): bool
@@ -83,38 +88,26 @@ final class Localization extends Middleware
         return $this->isValidLanguage($cookieValue);
     }
 
-    private function handleRequestWithCurrentLanguage(ServerRequestInterface $request): ResponseInterface
-    {
-        if ($this->next === null) {
-            throw new \RuntimeException('No middleware to handle the request');
-        }
-
-        $context = $request->getAttribute(RequestContext::class);
-        if (!$context instanceof RequestContext) {
-            throw new \RuntimeException('RequestContext not found in request attributes');
-        }
-
+    private function handleRequestWithCurrentLanguage(
+        Middleware $next,
+        RequestContext $context,
+        ServerRequestInterface $request
+    ): ResponseInterface {
         $cookieParams = $request->getCookieParams();
         /** @var string $language */
         $language = $cookieParams[$this->settings->languageCookieName];
         $context->set(RequestContextKeys::LANGUAGE->value, $language);
-        return $this->next->handleRequest($request)->withAddedHeader('Content-Language', $language);
+        return $next->handleRequest($request)->withAddedHeader('Content-Language', $language);
     }
 
-    private function handleRequestWithAcceptedOrDefaultLanguage(ServerRequestInterface $request): ResponseInterface
-    {
-        if ($this->next === null) {
-            throw new \RuntimeException('No middleware to handle the request');
-        }
-
-        $context = $request->getAttribute(RequestContext::class);
-        if (!$context instanceof RequestContext) {
-            throw new \RuntimeException('RequestContext not found in request attributes');
-        }
-
+    private function handleRequestWithAcceptedOrDefaultLanguage(
+        Middleware $next,
+        RequestContext $context,
+        ServerRequestInterface $request
+    ): ResponseInterface {
         $language = $this->getLanguageFromRequestOrDefault($request);
         $context->set(RequestContextKeys::LANGUAGE->value, $language);
-        return $this->next->handleRequest($request)
+        return $next->handleRequest($request)
             ->withAddedHeader('Content-Language', $language)
             ->withAddedHeader('Set-Cookie', "{$this->settings->languageCookieName}={$language}");
     }

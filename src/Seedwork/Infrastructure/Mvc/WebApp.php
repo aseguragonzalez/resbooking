@@ -7,20 +7,24 @@ namespace Seedwork\Infrastructure\Mvc;
 use DI\Container;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Seedwork\Infrastructure\Mvc\Middlewares\{
-    Authentication,
-    Authorization,
-    ErrorHandling,
-    Localization,
-    Middleware,
-    RequestHandling
-};
+use Seedwork\Infrastructure\Mvc\Middlewares\Authentication;
+use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
+use Seedwork\Infrastructure\Mvc\Middlewares\ErrorHandling;
+use Seedwork\Infrastructure\Mvc\Middlewares\Localization;
+use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
+use Seedwork\Infrastructure\Mvc\Middlewares\RequestHandling;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, I18nReplacer, ModelReplacer, HtmlViewEngine, ViewEngine};
+use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
+use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
+use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
+use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 abstract class WebApp
 {
@@ -56,6 +60,9 @@ abstract class WebApp
         $i18nReplacer = new I18nReplacer($this->settings, new BranchesReplacer(new ModelReplacer()));
         $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
 
+        /** @var RequestHandler $requestHandler */
+        $requestHandler = $this->container->get(RequestHandler::class);
+        $this->container->set(RequestHandlerInterface::class, $requestHandler);
         /** @var RequestHandling $requestHandlingMiddleware */
         $requestHandlingMiddleware = $this->container->get(RequestHandling::class);
         /** @var Authorization $authorizationMiddleware */

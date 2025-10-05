@@ -18,7 +18,9 @@ final class Authentication extends Middleware
         private readonly IdentityManager $identityManager,
         private readonly Settings $settings,
         private readonly ResponseFactoryInterface $responseFactory,
+        ?Middleware $next = null
     ) {
+        parent::__construct($next);
     }
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
