@@ -9,6 +9,8 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Seedwork\Infrastructure\Files\DefaultFileManager;
+use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authentication;
@@ -57,7 +59,9 @@ abstract class WebApp
         $this->container->set(Settings::class, $this->settings);
         $this->container->set(Router::class, $this->router());
 
-        $i18nReplacer = new I18nReplacer($this->settings, new BranchesReplacer(new ModelReplacer()));
+        $fileManager = new DefaultFileManager();
+        $this->container->set(FileManager::class, $fileManager);
+        $i18nReplacer = new I18nReplacer($this->settings, $fileManager, new BranchesReplacer(new ModelReplacer()));
         $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
 
         /** @var RequestHandler $requestHandler */
