@@ -7,11 +7,7 @@ namespace Seedwork\Domain;
 abstract class DomainEvent
 {
     /**
-     * @param string $id
-     * @param string $type
-     * @param string $version
      * @param array<string, mixed> $payload
-     * @param \DateTimeImmutable $createdAt
      */
     protected function __construct(
         private readonly string $id,
