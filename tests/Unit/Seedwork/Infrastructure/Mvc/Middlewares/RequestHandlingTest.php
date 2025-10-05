@@ -41,7 +41,6 @@ class RequestHandlingTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-
     public function testHandleRequestPassesRequestToHandler(): void
     {
         $request = $this->requestFactory->createServerRequest('POST', '/submit');
@@ -55,7 +54,6 @@ class RequestHandlingTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(201, $response->getStatusCode());
     }
-
 
     public function testHandleRequestWithDifferentResponse(): void
     {

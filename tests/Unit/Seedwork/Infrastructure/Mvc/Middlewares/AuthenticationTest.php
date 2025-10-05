@@ -61,9 +61,7 @@ class AuthenticationTest extends TestCase
             $store
         );
         $middleware = new Authentication($identityManager, $this->settings, $this->psrFactory);
-        $reflection = new \ReflectionProperty($middleware, 'next');
-        $reflection->setAccessible(true);
-        $reflection->setValue($middleware, $this->next);
+        $middleware->setNext($this->next);
 
         $request = (new ServerRequest('GET', '/'))
             ->withCookieParams(['auth_token' => $token])
@@ -85,9 +83,7 @@ class AuthenticationTest extends TestCase
             $store
         );
         $middleware = new Authentication($identityManager, $this->settings, $this->psrFactory);
-        $reflection = new \ReflectionProperty($middleware, 'next');
-        $reflection->setAccessible(true);
-        $reflection->setValue($middleware, $this->next);
+        $middleware->setNext($this->next);
 
         $request = (new ServerRequest('GET', '/'))
             ->withCookieParams(['auth_token' => 'expired_token'])
