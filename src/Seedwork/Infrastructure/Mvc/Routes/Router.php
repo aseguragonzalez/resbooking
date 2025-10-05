@@ -38,7 +38,7 @@ final class Router
         return $matches[0];
     }
 
-    public function getFromControllerAndAction(string $controller, string $action): Route | null
+    public function getFromControllerAndAction(string $controller, string $action): ?Route
     {
         $matches = array_values(
             array_filter(

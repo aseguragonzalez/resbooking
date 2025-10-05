@@ -16,7 +16,7 @@ use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\{Path, Route, RouteMethod, Router};
 use Seedwork\Infrastructure\Mvc\Views\{BranchesReplacer, HtmlViewEngine, ModelReplacer, ViewEngine};
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Requests\TestController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
 
 final class RequestHandlerTest extends TestCase
 {
@@ -51,6 +51,24 @@ final class RequestHandlerTest extends TestCase
             Route::create(RouteMethod::Post, Path::create('/test/delete'), TestController::class, 'delete'),
             Route::create(RouteMethod::Post, Path::create('/test/custom'), TestController::class, 'custom'),
             Route::create(RouteMethod::Post, Path::create('/test/failed'), TestController::class, 'failed'),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/test/local-redirect'),
+                TestController::class,
+                'localRedirect'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/test/failed-local-redirect'),
+                TestController::class,
+                'failedLocalRedirect'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/test/use-request'),
+                TestController::class,
+                'getFromRequest'
+            ),
         ]);
         $this->settings = new Settings(basePath: __DIR__);
         $branchesReplacer = new BranchesReplacer();
@@ -177,6 +195,67 @@ final class RequestHandlerTest extends TestCase
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
         $expectedContent = file_get_contents(__DIR__ . '/Files/expected_list.html');
         $this->assertSame($expectedContent, (string) $response->getBody());
+    }
+
+    public function testHandleLocalRedirectToControllerAction(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/local-redirect');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $this->assertSame('http://localhost:8080/test/get?offset=10&limit=20', $response->getHeaderLine('Location'));
+        $this->assertEmpty((string) $response->getBody());
+    }
+
+    public function testHandleLocalRedirectToControllerActionWithSourceOrigin(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/local-redirect');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams(['offset' => 10, 'limit' => 20])
+            ->withAttribute(RequestContext::class, $this->getRequestContext())
+            ->withHeader('Origin', 'http://example.com');
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
+        $this->assertSame('http://example.com/test/get?offset=10&limit=20', $response->getHeaderLine('Location'));
+        $this->assertEmpty((string) $response->getBody());
+    }
+
+    public function testHandleLocalRedirectToControllerActionFailIfRouteNotFound(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/failed-local-redirect');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Route not found for controller: ' .
+            TestController::class .
+            ', action: failedLocalRedirectTarget'
+        );
+        $this->requestHandler->handle($request);
+    }
+
+    public function testHandleGetRequestUsingRequestObject(): void
+    {
+        $uri = $this->requestFactory->createUri('/test/use-request');
+        $request = $this->requestFactory->createServerRequest('GET', $uri)
+            ->withQueryParams(['param1' => 'value1', 'param2' => 'value2'])
+            ->withAttribute(RequestContext::class, $this->getRequestContext());
+
+        $response = $this->requestHandler->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     #[DataProvider('postProvider')]

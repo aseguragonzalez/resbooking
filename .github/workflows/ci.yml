@@ -29,6 +29,16 @@ jobs:
     - name: Install dependencies with Composer
       uses: ramsey/composer-install@v2
 
+    - name: export environment variables
+      run: |
+        if [ -f .env ]; then
+          while IFS='=' read -r key value; do
+            if [[ ! "$key" =~ ^# && -n "$key" ]]; then
+              echo "$key=$value" >> $GITHUB_ENV
+            fi
+          done < .env
+        fi
+
     - name: Run pre-commit checks
       run: |
         if [ -f .pre-commit-config.yaml ]; then
