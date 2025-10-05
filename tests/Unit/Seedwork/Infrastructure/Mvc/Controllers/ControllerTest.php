@@ -8,7 +8,9 @@ use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\{LocalRedirectTo, View};
 use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\{HomeController, SubTestController, TestController};
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\HomeController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\SubTestController;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
 
 final class ControllerTest extends TestCase
 {

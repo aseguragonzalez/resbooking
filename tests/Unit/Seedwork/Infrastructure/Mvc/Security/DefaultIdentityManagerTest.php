@@ -7,18 +7,21 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Security;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
-use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
+use Seedwork\Infrastructure\Mvc\Security\Challenge;
 use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
 use Seedwork\Infrastructure\Mvc\Security\ChallengesExpirationTime;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
+use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignInSession;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Identity;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SessionExpiredException;
-use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotFoundException;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
+use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
 
 class DefaultIdentityManagerTest extends TestCase
 {
@@ -107,6 +110,27 @@ class DefaultIdentityManagerTest extends TestCase
         $this->manager->activateUserIdentity('token');
     }
 
+    public function testActivateUserIdentityDoesNothingIfChallengeNotFound(): void
+    {
+        $this->store->method('getSignUpChallengeByToken')->willReturn(null);
+        $this->store->expects($this->never())->method('saveUserIdentity');
+
+        $this->expectException(SignUpChallengeException::class);
+        $this->manager->activateUserIdentity('token');
+    }
+
+    public function testActivateUserIdentityDoesNothingIfChallengeExpired(): void
+    {
+        $user = UserIdentity::new('user@domain.com', ['role'], 'pass');
+        $challenge = SignUpChallenge::build('token', (new \DateTimeImmutable())->modify('-1 day'), $user);
+        $this->store->method('getSignUpChallengeByToken')->willReturn($challenge);
+        $this->store->expects($this->once())->method('deleteSignUpChallengeByToken')->with('token');
+        $this->store->expects($this->never())->method('saveUserIdentity');
+
+        $this->expectException(SignUpChallengeException::class);
+        $this->manager->activateUserIdentity('token');
+    }
+
     public function testSignInThrowsIfUserNotFound(): void
     {
         $this->store->method('getUserIdentityByUsername')->willReturn(null);
@@ -134,9 +158,36 @@ class DefaultIdentityManagerTest extends TestCase
         $this->assertNotEmpty($result->getToken());
     }
 
-    public function testRefreshSignInSessionThrowsIfSessionExpired(): void
+    public function testSignInWithRememberMeCreatesSessionAndReturnsChallenge(): void
+    {
+        $user = UserIdentity::new('user@domain.com', ['role'], 'pass');
+        $activatedUser = $user->activate();
+        $this->store->method('getUserIdentityByUsername')->willReturn($activatedUser);
+        $this->store->expects($this->once())->method('saveSignInSession');
+        $result = $this->manager->signIn('user@domain.com', 'pass', true);
+
+        $this->assertInstanceOf(\Seedwork\Infrastructure\Mvc\Security\Challenge::class, $result);
+        $this->assertNotEmpty($result->getToken());
+        $this->assertGreaterThan(
+            (new \DateTimeImmutable())->modify("+{$this->expirationTime->signIn} minutes"),
+            $result->getExpiresAt()
+        );
+    }
+
+    public function testRefreshSignInSessionThrowsSessionExpiredIfSessionNotFound(): void
     {
         $this->store->method('getSignInSessionByToken')->willReturn(null);
+        $this->expectException(SessionExpiredException::class);
+        $this->manager->refreshSignInSession('token');
+    }
+
+    public function testRefreshSignInSessionThrowsSessionExpiredIfChallengeExpired(): void
+    {
+        $user = UserIdentity::new('user@domain.com', ['role'], 'pass');
+        $challenge = $this->createMock(Challenge::class);
+        $challenge->method('isExpired')->willReturn(true);
+        $session = SignInSession::build($challenge, $user);
+        $this->store->method('getSignInSessionByToken')->willReturn($session);
         $this->expectException(SessionExpiredException::class);
         $this->manager->refreshSignInSession('token');
     }
@@ -159,24 +210,24 @@ class DefaultIdentityManagerTest extends TestCase
         $this->assertInstanceOf(Challenge::class, $result);
     }
 
-    public function testModifyUserIdentityPasswordThrowsIfSessionExpired(): void
-    {
-        $this->store->method('getSignInSessionByToken')->willReturn(null);
-        $this->expectException(SessionExpiredException::class);
-        $this->manager->modifyUserIdentityPassword('token', 'old', 'new');
-    }
-
     public function testModifyUserIdentityPasswordUpdatesPassword(): void
     {
         $user = UserIdentity::new('user@domain.com', ['role'], 'old');
         $activatedUser = $user->activate();
-        $session = SignInSession::build(
-            $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Challenge::class),
-            $user
-        );
+        $session = SignInSession::build($this->createMock(Challenge::class), $user);
         $this->store->method('getSignInSessionByToken')->willReturn($session);
         $this->store->method('getUserIdentityByUsername')->willReturn($activatedUser);
         $this->store->expects($this->once())->method('saveUserIdentity');
+        $this->manager->modifyUserIdentityPassword('token', 'old', 'new');
+    }
+
+    public function testModifyUserIdentityPasswordThrowsIfUserNotFound(): void
+    {
+        $user = UserIdentity::new('user@domain.com', ['role'], 'old');
+        $session = SignInSession::build($this->createMock(Challenge::class), $user);
+        $this->store->method('getSignInSessionByToken')->willReturn($session);
+        $this->store->method('getUserIdentityByUsername')->willReturn(null);
+        $this->expectException(UserIsNotFoundException::class);
         $this->manager->modifyUserIdentityPassword('token', 'old', 'new');
     }
 
@@ -220,6 +271,23 @@ class DefaultIdentityManagerTest extends TestCase
         $this->store->method('getResetPasswordChallengeByToken')->willReturn($challenge);
         $this->store->method('getUserIdentityByUsername')->willReturn($activatedUser);
         $this->store->expects($this->once())->method('saveUserIdentity');
+        $this->manager->resetPasswordFromToken('token', 'newpass');
+    }
+
+    public function testResetPasswordFromTokenDoNothingIfChallengeNotFound(): void
+    {
+        $this->store->method('getResetPasswordChallengeByToken')->willReturn(null);
+        $this->store->expects($this->never())->method('saveUserIdentity');
+        $this->manager->resetPasswordFromToken('token', 'newpass');
+    }
+
+    public function testResetPasswordFromTokenThrowsIfChallengeExpired(): void
+    {
+        $user = UserIdentity::new('user@domain.com', ['role'], 'pass');
+        $challenge = ResetPasswordChallenge::build('token', (new \DateTimeImmutable())->modify('-1 hour'), $user);
+        $this->store->method('getResetPasswordChallengeByToken')->willReturn($challenge);
+        $this->store->expects($this->once())->method('deleteResetPasswordChallengeByToken')->with('token');
+        $this->expectException(ResetPasswordChallengeException::class);
         $this->manager->resetPasswordFromToken('token', 'newpass');
     }
 }

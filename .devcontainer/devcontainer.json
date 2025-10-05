@@ -1,5 +1,6 @@
 {
   "containerEnv": {
+    "DEFAULT_HOST": "http://localhost:8080",
     "XDEBUG_MODE": "coverage,debug,develop"
   },
   "customizations": {

@@ -113,53 +113,58 @@ final class RequestHandler implements RequestHandlerInterface
         ServerRequestInterface $request,
         ActionResponse $actionResponse
     ): ResponseInterface {
-        // TODO: create a strategy to handle different ActionResponse types
-        if ($actionResponse instanceof LocalRedirectTo) {
-            $host = empty($request->getHeaderLine("origin"))
-                ? (getenv('DEFAULT_HOST') ?: 'http://localhost:8080/')
-                : $request->getHeaderLine("origin");
-            $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
-            if (is_null($newRoute)) {
-                throw new \RuntimeException(
-                    "Route not found for controller: {$actionResponse->controller}, action: {$actionResponse->action}"
-                );
-            }
-            $args = array_map(
-                fn ($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
-                is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
+        return match (true) {
+            $actionResponse instanceof LocalRedirectTo => $this->handleLocalRedirectTo($request, $actionResponse),
+            $actionResponse instanceof RedirectTo => $this->handleRedirectTo($request, $actionResponse),
+            $actionResponse instanceof View => $this->handleView($request, $actionResponse),
+            default => throw new \RuntimeException('Invalid ActionResponse type'),
+        };
+    }
+
+    private function handleLocalRedirectTo(
+        ServerRequestInterface $request,
+        LocalRedirectTo $actionResponse
+    ): ResponseInterface {
+        $host = empty($request->getHeaderLine("origin")) ? getenv('DEFAULT_HOST') : $request->getHeaderLine("origin");
+        $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
+        if (is_null($newRoute)) {
+            throw new \RuntimeException(
+                "Route not found for controller: {$actionResponse->controller}, action: {$actionResponse->action}"
             );
-            $path = $newRoute->getPathFromArgs($args);
-            $response = $this->responseFactory
-                ->createResponse(code: StatusCode::SeeOther->value)
-                ->withHeader('Location', "{$host}{$path}");
-            foreach ($actionResponse->headers as $header) {
-                $response = $response->withHeader($header->name, $header->value);
-            }
-            return $response;
         }
-
-        if ($actionResponse instanceof RedirectTo) {
-            $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
-            foreach ($actionResponse->headers as $header) {
-                $response = $response->withHeader($header->name, $header->value);
-            }
-            return $response;
+        $args = array_map(
+            fn ($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
+            is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
+        );
+        $path = $newRoute->getPathFromArgs($args);
+        $response = $this->responseFactory
+            ->createResponse(code: StatusCode::SeeOther->value)
+            ->withHeader('Location', "{$host}{$path}");
+        foreach ($actionResponse->headers as $header) {
+            $response = $response->withHeader($header->name, $header->value);
         }
+        return $response;
+    }
 
-        if ($actionResponse instanceof View) {
-            $context = $request->getAttribute(RequestContext::class);
-            if (!$context instanceof RequestContext) {
-                throw new \RuntimeException('RequestContext not found in request attributes');
-            }
-            $responseBody = $this->viewEngine->render($actionResponse, $context);
-            $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
-            foreach ($actionResponse->headers as $header) {
-                $response = $response->withHeader($header->name, $header->value);
-            }
-            $response->getBody()->write($responseBody);
-            return $response;
+    private function handleRedirectTo(ServerRequestInterface $request, RedirectTo $actionResponse): ResponseInterface
+    {
+        $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
+        foreach ($actionResponse->headers as $header) {
+            $response = $response->withHeader($header->name, $header->value);
         }
+        return $response;
+    }
 
-        throw new \RuntimeException('Invalid ActionResponse type');
+    private function handleView(ServerRequestInterface $request, View $actionResponse): ResponseInterface
+    {
+        /** @var RequestContext $context */
+        $context = $request->getAttribute(RequestContext::class);
+        $responseBody = $this->viewEngine->render($actionResponse, $context);
+        $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
+        foreach ($actionResponse->headers as $header) {
+            $response = $response->withHeader($header->name, $header->value);
+        }
+        $response->getBody()->write($responseBody);
+        return $response;
     }
 }

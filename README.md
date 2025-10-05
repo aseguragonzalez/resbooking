@@ -47,8 +47,9 @@ Common tasks are automated using `Makefile`.
 
 **Environment Variables:**
 
-```sheel
+```shell
 export XDEBUG_MODE=coverage
+export DEFAULT_HOST=http://localhost:8080
 ```
 
 **Install dependencies:**
@@ -59,23 +60,23 @@ make install
 
 **Run tests:**
 
-```sh
+```shell
 make test
 ```
 
 **Check for linting issues:**
 
-```sh
+```shell
 make lint
 ```
 
 **Run static analysis:**
 
-```sh
+```shell
 make analyze
 ```
 
-## Build With
+## Built With
 
 - [Composer][composer]
 - [PHP][php]
