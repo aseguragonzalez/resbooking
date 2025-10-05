@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class Middleware
 {
-    protected function __construct(protected ?Middleware $next)
+    protected function __construct(public ?Middleware $next)
     {
     }
 
