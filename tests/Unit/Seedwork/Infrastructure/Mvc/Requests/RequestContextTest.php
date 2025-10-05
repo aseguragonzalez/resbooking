@@ -23,6 +23,14 @@ final class RequestContextTest extends TestCase
         $context->get('baz');
     }
 
+    public function testGetThrowsExceptionIfValueNotString(): void
+    {
+        $context = new RequestContext(['foo' => 123]);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Value for key 'foo' is not a string");
+        $context->get('foo');
+    }
+
     public function testGetAsReturnsTypedValue(): void
     {
         $object = new \stdClass();
@@ -56,5 +64,47 @@ final class RequestContextTest extends TestCase
 
         $context->set('new', 'value');
         $this->assertSame('value', $context->get('new'));
+    }
+
+    public function testSetIdentityAndGetIdentity(): void
+    {
+        $identity = $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Identity::class);
+        $context = new RequestContext();
+        $context->setIdentity($identity);
+        $this->assertSame($identity, $context->getIdentity());
+    }
+
+    public function testGetIdentityThrowsExceptionIfNotSet(): void
+    {
+        $context = new RequestContext();
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Key 'identity' not found");
+        $context->getIdentity();
+    }
+
+    public function testSetIdentityTokenAndGetIdentityToken(): void
+    {
+        $context = new RequestContext();
+        $context->setIdentityToken('token123');
+        $this->assertSame('token123', $context->getIdentityToken());
+    }
+
+    public function testGetIdentityTokenThrowsExceptionIfNotSet(): void
+    {
+        $context = new RequestContext();
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Key 'identity_token' not found");
+        $context->getIdentityToken();
+    }
+
+    public function testGetIdentityTokenThrowsExceptionIfNotString(): void
+    {
+        $context = new RequestContext();
+        $context->setIdentityToken('token123');
+        // Overwrite with non-string value
+        $context->set('identity_token', 123);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Value for key 'identity_token' is not of type 'string'");
+        $context->getIdentityToken();
     }
 }
