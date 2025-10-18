@@ -30,6 +30,7 @@
   "require-dev": {
     "fakerphp/faker": "^1.24",
     "friendsofphp/php-cs-fixer": "^3.88.2",
+    "mikey179/vfsstream": "^1.6",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.3",
     "squizlabs/php_codesniffer": "^4.0"
