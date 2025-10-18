@@ -7,7 +7,7 @@ namespace Seedwork\Infrastructure\Logging;
 use Monolog\Logger as MonoLogger;
 use Seedwork\Application\Logging\Logger;
 
-final class MonologLogger implements Logger
+final class MonoLoggerAdapter implements Logger
 {
     /**
      * @param array<string, mixed> $context

@@ -25,7 +25,7 @@ use Seedwork\Infrastructure\Mvc\Security\ChallengesExpirationTime;
 use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
-use Seedwork\Infrastructure\Logging\MonologLogger;
+use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
 
 final class App extends WebApp
 {
@@ -48,7 +48,7 @@ final class App extends WebApp
         $handler = new StreamHandler('php://stdout', Level::Debug);
         $handler->setFormatter(new JsonFormatter());
         $logger->pushHandler($handler);
-        $logger = new MonologLogger($logger, $context);
+        $logger = new MonoLoggerAdapter($logger, $context);
         $this->container->set(Logger::class, $logger);
 
         $challengeNotificator = new ConsoleChallengeNotificator($logger);
