@@ -48,10 +48,10 @@ final class App extends WebApp
         $handler = new StreamHandler('php://stdout', Level::Debug);
         $handler->setFormatter(new JsonFormatter());
         $logger->pushHandler($handler);
-        $logger = new MonoLoggerAdapter($logger, $context);
-        $this->container->set(Logger::class, $logger);
+        $loggerAdapter = new MonoLoggerAdapter($logger, $context);
+        $this->container->set(Logger::class, $loggerAdapter);
 
-        $challengeNotificator = new ConsoleChallengeNotificator($logger);
+        $challengeNotificator = new ConsoleChallengeNotificator($loggerAdapter);
         $this->container->set(ChallengeNotificator::class, $challengeNotificator);
         /** @var InFileIdentityStore $inFileIdentityStore */
         $inFileIdentityStore = $this->container->get(InFileIdentityStore::class);
