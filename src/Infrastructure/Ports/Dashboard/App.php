@@ -16,9 +16,6 @@ use Seedwork\Application\Logging\Logger;
 use Monolog\Formatter\JsonFormatter;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\WebApp;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Routes\Route;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
 use Seedwork\Infrastructure\Mvc\Security\ChallengesExpirationTime;
@@ -71,113 +68,13 @@ final class App extends WebApp
 
     protected function router(): Router
     {
+        $accountsRoutes = AccountsController::getRoutes();
+        $reservationsRoutes = ReservationsController::getRoutes();
+        $dashboardRoutes = DashboardController::getRoutes();
         return new Router(routes:[
-            Route::create(
-                method: RouteMethod::Get,
-                path: Path::create('/'),
-                controller: DashboardController::class,
-                action: 'index',
-                authRequired: true
-            ),
-            Route::create(
-                method: RouteMethod::Get,
-                path: Path::create('/reservations'),
-                controller: ReservationsController::class,
-                action: 'index',
-                authRequired: true
-            ),
-            Route::create(
-                method: RouteMethod::Get,
-                path: Path::create('/reservations/create'),
-                controller: ReservationsController::class,
-                action: 'create',
-                authRequired: true,
-                roles: ['admin']
-            ),
-            Route::create(
-                method: RouteMethod::Get,
-                path: Path::create('/reservations/{id}'),
-                controller: ReservationsController::class,
-                action: 'edit',
-                authRequired: true,
-            ),
-            Route::create(
-                method: RouteMethod::Post,
-                path: Path::create('/reservations/{id}'),
-                controller: ReservationsController::class,
-                action: 'update',
-                authRequired: true,
-                roles: ['admin']
-            ),
-            Route::create(
-                method: RouteMethod::Post,
-                path: Path::create('/reservations/{id}/status'),
-                controller: ReservationsController::class,
-                action: 'updateStatus',
-                authRequired: true,
-                roles: ['admin']
-            ),
-            Route::create(
-                method: RouteMethod::Get,
-                path: Path::create('/accounts/sign-in'),
-                controller: AccountsController::class,
-                action: 'signIn'
-            ),
-            Route::create(
-                RouteMethod::Post,
-                Path::create('/accounts/sign-in'),
-                AccountsController::class,
-                'signInUser'
-            ),
-            Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/sign-up'),
-                AccountsController::class,
-                'signUp'
-            ),
-            Route::create(
-                RouteMethod::Post,
-                Path::create('/accounts/sign-up'),
-                AccountsController::class,
-                'signUpUser'
-            ),
-            Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/activate'),
-                AccountsController::class,
-                'activateUser'
-            ),
-            Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/sign-out'),
-                AccountsController::class,
-                'signOut',
-                authRequired: true
-            ),
-            Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/reset-password'),
-                AccountsController::class,
-                'resetPassword'
-            ),
-            Route::create(
-                RouteMethod::Post,
-                Path::create('/accounts/reset-password'),
-                AccountsController::class,
-                'sendResetPasswordEmail'
-            ),
-            Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/reset-password-challenge'),
-                AccountsController::class,
-                'resetPasswordChallenge'
-            ),
-            Route::create(
-                RouteMethod::Post,
-                Path::create('/accounts/reset-password-challenge'),
-                AccountsController::class,
-                'confirmResetPassword',
-            ),
+            ...$accountsRoutes,
+            ...$reservationsRoutes,
+            ...$dashboardRoutes
         ]);
     }
 }
