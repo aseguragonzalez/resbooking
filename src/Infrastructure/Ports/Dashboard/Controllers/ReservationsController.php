@@ -11,6 +11,9 @@ use Infrastructure\Ports\Dashboard\Models\Reservations\Reservation;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
+use Seedwork\Infrastructure\Mvc\Routes\Route;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Faker\Factory as FakerFactory;
 
 final class ReservationsController extends Controller
@@ -94,5 +97,52 @@ final class ReservationsController extends Controller
             ],
         ];
         return $this->view('edit', model: $model);
+    }
+
+    /**
+     * @return array<Route>
+     */
+    public static function getRoutes(): array
+    {
+        return [
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/reservations'),
+                controller: ReservationsController::class,
+                action: 'index',
+                authRequired: true
+            ),
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/reservations/create'),
+                controller: ReservationsController::class,
+                action: 'create',
+                authRequired: true,
+                roles: ['admin']
+            ),
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/reservations/{id}'),
+                controller: ReservationsController::class,
+                action: 'edit',
+                authRequired: true,
+            ),
+            Route::create(
+                method: RouteMethod::Post,
+                path: Path::create('/reservations/{id}'),
+                controller: ReservationsController::class,
+                action: 'update',
+                authRequired: true,
+                roles: ['admin']
+            ),
+            Route::create(
+                method: RouteMethod::Post,
+                path: Path::create('/reservations/{id}/status'),
+                controller: ReservationsController::class,
+                action: 'updateStatus',
+                authRequired: true,
+                roles: ['admin']
+            ),
+        ];
     }
 }

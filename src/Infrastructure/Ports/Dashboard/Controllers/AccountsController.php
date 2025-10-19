@@ -16,6 +16,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
+use Seedwork\Infrastructure\Mvc\Routes\Route;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
@@ -168,5 +171,75 @@ final class AccountsController extends Controller
         }
 
         return $this->redirectToAction("signIn");
+    }
+
+    /**
+     * @return array<Route>
+     */
+    public static function getRoutes(): array
+    {
+        return [
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/accounts/sign-in'),
+                controller: AccountsController::class,
+                action: 'signIn'
+            ),
+            Route::create(
+                RouteMethod::Post,
+                Path::create('/accounts/sign-in'),
+                AccountsController::class,
+                'signInUser'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/accounts/sign-up'),
+                AccountsController::class,
+                'signUp'
+            ),
+            Route::create(
+                RouteMethod::Post,
+                Path::create('/accounts/sign-up'),
+                AccountsController::class,
+                'signUpUser'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/accounts/activate'),
+                AccountsController::class,
+                'activateUser'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/accounts/sign-out'),
+                AccountsController::class,
+                'signOut',
+                authRequired: true
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/accounts/reset-password'),
+                AccountsController::class,
+                'resetPassword'
+            ),
+            Route::create(
+                RouteMethod::Post,
+                Path::create('/accounts/reset-password'),
+                AccountsController::class,
+                'sendResetPasswordEmail'
+            ),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/accounts/reset-password-challenge'),
+                AccountsController::class,
+                'resetPasswordChallenge'
+            ),
+            Route::create(
+                RouteMethod::Post,
+                Path::create('/accounts/reset-password-challenge'),
+                AccountsController::class,
+                'confirmResetPassword',
+            ),
+        ];
     }
 }
