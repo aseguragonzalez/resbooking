@@ -6,11 +6,126 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Routes\{InvalidAction, InvalidController, Path, Route, RouteMethod};
+use Seedwork\Infrastructure\Mvc\Routes\AccessDeniedException;
+use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
+use Seedwork\Infrastructure\Mvc\Routes\InvalidAction;
+use Seedwork\Infrastructure\Mvc\Routes\InvalidController;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
+use Seedwork\Infrastructure\Mvc\Routes\Route;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Route\RouteController;
 
 final class RouteTest extends TestCase
 {
+    public function testEnsureAuthenticatedIsNotRequired(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->expects($this->never())->method('isAuthenticated')->willReturn(false);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            false,
+            []
+        );
+        $route->ensureAuthenticated($identity);
+    }
+
+    public function testEnsureAuthenticated(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->expects($this->once())->method('isAuthenticated')->willReturn(true);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            []
+        );
+        $route->ensureAuthenticated($identity);
+    }
+
+    public function testEnsureAuthenticatedFailsWhenNotAuthenticated(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->expects($this->once())->method('isAuthenticated')->willReturn(false);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            []
+        );
+        $this->expectException(AuthenticationRequiredException::class);
+        $route->ensureAuthenticated($identity);
+    }
+
+    public function testEnsureAuthorizedDoesNotRequireRoles(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->expects($this->never())->method('getRoles')->willReturn([]);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            []
+        );
+        $route->ensureAuthorized($identity);
+    }
+
+    public function testEnsureAuthorizedFailsWhenIdentityHasNoRoles(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->method('getRoles')->willReturn([]);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            ['admin', 'user']
+        );
+        $this->expectException(AccessDeniedException::class);
+        $route->ensureAuthorized($identity);
+    }
+
+    public function testEnsureAuthorizedFailsWhenRolesMismatch(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->method('getRoles')->willReturn(['guest']);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            ['admin', 'user']
+        );
+        $this->expectException(AccessDeniedException::class);
+        $route->ensureAuthorized($identity);
+    }
+
+    public function testEnsureAuthorizedWhenRolesMatchPartially(): void
+    {
+        $identity = $this->createMock(Identity::class);
+        $identity->expects($this->once())->method('getRoles')->willReturn(['user']);
+        $route = Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteController::class,
+            'get',
+            true,
+            ['admin', 'user']
+        );
+        $route->ensureAuthorized($identity);
+    }
+
     /**
      * @param array<string, bool|string|int|float|null> $args
      * @param string $expectedPath
