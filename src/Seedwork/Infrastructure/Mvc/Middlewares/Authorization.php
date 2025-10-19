@@ -6,12 +6,15 @@ namespace Seedwork\Infrastructure\Mvc\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Application\Logging\Logger;
+use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 
 final class Authorization extends Middleware
 {
-    public function __construct(private readonly Logger $logger)
+    public function __construct(private readonly Router $router, ?Middleware $next = null)
     {
+        parent::__construct($next);
     }
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
@@ -19,7 +22,15 @@ final class Authorization extends Middleware
         if ($this->next === null) {
             throw new \RuntimeException('No middleware to handle the request');
         }
-        $this->logger->debug('Authorization middleware: request authorized');
+
+        $path = $request->getUri()->getPath();
+        $method = RouteMethod::fromString($request->getMethod());
+        $route = $this->router->get($method, $path);
+        /** @var RequestContext $context */
+        $context = $request->getAttribute(RequestContext::class);
+        $identity = $context->getIdentity();
+        $route->ensureAuthenticated($identity);
+        $route->ensureAuthorized($identity);
         return $this->next->handleRequest($request);
     }
 }

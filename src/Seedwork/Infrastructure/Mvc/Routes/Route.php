@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Mvc\Routes;
 
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
 
 final class Route
 {
@@ -12,12 +13,15 @@ final class Route
 
     /**
      * @param class-string $controller
+     * @param array<string> $roles
      */
     private function __construct(
         public readonly RouteMethod $method,
         public readonly Path $path,
         public readonly string $controller,
         public readonly string $action,
+        private readonly bool $authRequired,
+        private readonly array $roles,
     ) {
     }
 
@@ -114,6 +118,23 @@ final class Route
             $this->action === $other->action;
     }
 
+    public function ensureAuthenticated(Identity $identity): void
+    {
+        if ($this->authRequired && !$identity->isAuthenticated()) {
+            throw new AuthenticationRequiredException($this);
+        }
+    }
+
+    public function ensureAuthorized(Identity $identity): void
+    {
+        if (empty($this->roles)) {
+            return;
+        }
+        if (!array_intersect($this->roles, $identity->getRoles())) {
+            throw new AccessDeniedException($this);
+        }
+    }
+
     public function __toString(): string
     {
         return "{$this->method->value} {$this->path}";
@@ -121,12 +142,15 @@ final class Route
 
     /**
      * @param class-string $controller
+     * @param array<string> $roles
      */
     public static function create(
         RouteMethod $method,
         Path $path,
         string $controller,
         string $action,
+        bool $authRequired = false,
+        array $roles = [],
     ): Route {
         if (!class_exists($controller) || !is_subclass_of($controller, Controller::class)) {
             throw new InvalidController($controller);
@@ -134,6 +158,6 @@ final class Route
         if (!method_exists($controller, $action)) {
             throw new InvalidAction($controller, $action);
         }
-        return new Route($method, $path, $controller, $action);
+        return new Route($method, $path, $controller, $action, $authRequired, $roles);
     }
 }

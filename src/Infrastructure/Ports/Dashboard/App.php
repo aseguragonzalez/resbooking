@@ -72,32 +72,56 @@ final class App extends WebApp
     protected function router(): Router
     {
         return new Router(routes:[
-            Route::create(RouteMethod::Get, Path::create('/'), DashboardController::class, 'index'),
-            Route::create(RouteMethod::Get, Path::create('/reservations'), ReservationsController::class, 'index'),
             Route::create(
-                RouteMethod::Get,
-                Path::create('/reservations/create'),
-                ReservationsController::class,
-                'create'
-            ),
-            Route::create(RouteMethod::Get, Path::create('/reservations/{id}'), ReservationsController::class, 'edit'),
-            Route::create(
-                RouteMethod::Post,
-                Path::create('/reservations/{id}'),
-                ReservationsController::class,
-                'update'
+                method: RouteMethod::Get,
+                path: Path::create('/'),
+                controller: DashboardController::class,
+                action: 'index',
+                authRequired: true
             ),
             Route::create(
-                RouteMethod::Post,
-                Path::create('/reservations/{id}/status'),
-                ReservationsController::class,
-                'updateStatus'
+                method: RouteMethod::Get,
+                path: Path::create('/reservations'),
+                controller: ReservationsController::class,
+                action: 'index',
+                authRequired: true
             ),
             Route::create(
-                RouteMethod::Get,
-                Path::create('/accounts/sign-in'),
-                AccountsController::class,
-                'signIn'
+                method: RouteMethod::Get,
+                path: Path::create('/reservations/create'),
+                controller: ReservationsController::class,
+                action: 'create',
+                authRequired: true,
+                roles: ['admin']
+            ),
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/reservations/{id}'),
+                controller: ReservationsController::class,
+                action: 'edit',
+                authRequired: true,
+            ),
+            Route::create(
+                method: RouteMethod::Post,
+                path: Path::create('/reservations/{id}'),
+                controller: ReservationsController::class,
+                action: 'update',
+                authRequired: true,
+                roles: ['admin']
+            ),
+            Route::create(
+                method: RouteMethod::Post,
+                path: Path::create('/reservations/{id}/status'),
+                controller: ReservationsController::class,
+                action: 'updateStatus',
+                authRequired: true,
+                roles: ['admin']
+            ),
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/accounts/sign-in'),
+                controller: AccountsController::class,
+                action: 'signIn'
             ),
             Route::create(
                 RouteMethod::Post,
@@ -127,7 +151,8 @@ final class App extends WebApp
                 RouteMethod::Get,
                 Path::create('/accounts/sign-out'),
                 AccountsController::class,
-                'signOut'
+                'signOut',
+                authRequired: true
             ),
             Route::create(
                 RouteMethod::Get,
@@ -151,7 +176,7 @@ final class App extends WebApp
                 RouteMethod::Post,
                 Path::create('/accounts/reset-password-challenge'),
                 AccountsController::class,
-                'confirmResetPassword'
+                'confirmResetPassword',
             ),
         ]);
     }
