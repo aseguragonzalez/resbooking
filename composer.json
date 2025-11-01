@@ -32,7 +32,7 @@
     "friendsofphp/php-cs-fixer": "^3.88.2",
     "mikey179/vfsstream": "^1.6",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^12.3",
+    "phpunit/phpunit": "^12.4",
     "squizlabs/php_codesniffer": "^4.0"
   },
   "type": "project"
