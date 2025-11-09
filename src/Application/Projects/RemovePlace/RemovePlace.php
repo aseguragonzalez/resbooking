@@ -6,25 +6,25 @@ namespace App\Application\Projects\RemovePlace;
 
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\ProjectRepository;
-use Seedwork\Application\UseCase;
+use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends UseCase<RemovePlaceRequest>
- * @extends UseCase<RemovePlaceRequest>
+ * @template-extends ApplicationService<RemovePlaceCommand>
+ * @extends ApplicationService<RemovePlaceCommand>
  */
-final class RemovePlace extends UseCase
+final class RemovePlace extends ApplicationService
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
     /**
-     * @param RemovePlaceRequest $request
+     * @param RemovePlaceCommand $command
      */
-    public function execute($request): void
+    public function execute($command): void
     {
-        $project = $this->projectRepository->getById($request->projectId);
-        $project->removePlaces(fn (Place $place) => $place->getId() === $request->placeId);
+        $project = $this->projectRepository->getById($command->projectId);
+        $project->removePlaces(fn (Place $place) => $place->getId() === $command->placeId);
         $this->projectRepository->save($project);
     }
 }

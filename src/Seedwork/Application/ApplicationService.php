@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Seedwork\Application;
 
-use Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\Command;
 
 /**
- * @phpstan-template T of UseCaseRequest
- * @template T of UseCaseRequest
+ * @phpstan-template T of Command
+ * @template T of Command
  */
-abstract class UseCase
+abstract class ApplicationService
 {
     /**
      * @param T $request

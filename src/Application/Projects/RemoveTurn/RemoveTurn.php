@@ -6,26 +6,26 @@ namespace App\Application\Projects\RemoveTurn;
 
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\TurnAvailability;
-use Seedwork\Application\UseCase;
+use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends UseCase<RemoveTurnRequest>
- * @extends UseCase<RemoveTurnRequest>
+ * @template-extends ApplicationService<RemoveTurnCommand>
+ * @extends ApplicationService<RemoveTurnCommand>
  */
-final class RemoveTurn extends UseCase
+final class RemoveTurn extends ApplicationService
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
     /**
-     * @param RemoveTurnRequest $request
+     * @param RemoveTurnCommand $command
      */
-    public function execute($request): void
+    public function execute($command): void
     {
-        $project = $this->projectRepository->getById($request->projectId);
+        $project = $this->projectRepository->getById($command->projectId);
         $project->removeTurns(
-            fn (TurnAvailability $turn) => $turn->dayOfWeek === $request->dayOfWeek && $turn->turn === $request->turn
+            fn (TurnAvailability $turn) => $turn->dayOfWeek === $command->dayOfWeek && $turn->turn === $command->turn
         );
         $this->projectRepository->save($project);
     }

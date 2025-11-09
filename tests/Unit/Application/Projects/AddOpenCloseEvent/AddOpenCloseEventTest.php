@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddOpenCloseEvent;
 
-use App\Application\Projects\AddOpenCloseEvent\{AddOpenCloseEvent, AddOpenCloseEventRequest};
+use App\Application\Projects\AddOpenCloseEvent\{AddOpenCloseEvent, AddOpencloseEventCommand};
 use App\Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -41,15 +41,15 @@ final class AddOpenCloseEventTest extends TestCase
             ->method('save')
             ->with($project);
         $nowPlusOneHour = (new \DateTimeImmutable())->modify('+1 hour');
-        $request = new AddOpenCloseEventRequest(
+        $request = new AddOpencloseEventCommand(
             projectId: $this->faker->uuid,
             date: $nowPlusOneHour,
             isAvailable: $this->faker->boolean,
             startTime: '13:00'
         );
-        $useCase = new AddOpenCloseEvent($this->projectRepository);
+        $ApplicationService = new AddOpenCloseEvent($this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(1, count($project->getOpenCloseEvents()));
     }

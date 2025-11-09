@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddPlace;
 
-use App\Application\Projects\AddPlace\{AddPlace, AddPlaceRequest};
+use App\Application\Projects\AddPlace\{AddPlace, AddPlaceCommand};
 use App\Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -41,14 +41,14 @@ final class AddPlaceTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $useCase = new AddPlace($this->projectRepository);
-        $request = new AddPlaceRequest(
+        $ApplicationService = new AddPlace($this->projectRepository);
+        $request = new AddPlaceCommand(
             projectId: $this->faker->uuid,
             name: $this->faker->name,
             capacity: $this->faker->randomNumber(2)
         );
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(1, count($project->getPlaces()));
     }

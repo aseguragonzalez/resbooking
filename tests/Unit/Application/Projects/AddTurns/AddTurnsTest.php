@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddTurns;
 
-use App\Application\Projects\AddTurns\{AddTurns, AddTurnsRequest, TurnItem};
+use App\Application\Projects\AddTurns\{AddTurns, AddTurnsCommand, TurnItem};
 use App\Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -44,7 +44,7 @@ final class AddTurnsTest extends TestCase
         $day1 = $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]);
         /** @var int $day2 */
         $day2 = $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7]);
-        $request = new AddTurnsRequest(
+        $request = new AddTurnsCommand(
             projectId: $this->faker->uuid,
             turns: [
                 new TurnItem(
@@ -59,9 +59,9 @@ final class AddTurnsTest extends TestCase
                 ),
             ]
         );
-        $useCase = new AddTurns($this->projectRepository);
+        $ApplicationService = new AddTurns($this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(count($request->turns), count($project->getTurns()));
     }

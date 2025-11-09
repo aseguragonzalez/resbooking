@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemovePlace;
 
-use App\Application\Projects\RemovePlace\{RemovePlace, RemovePlaceRequest};
+use App\Application\Projects\RemovePlace\{RemovePlace, RemovePlaceCommand};
 use App\Domain\Projects\Entities\Place;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\Capacity;
@@ -47,10 +47,10 @@ final class RemovePlaceTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $request = new RemovePlaceRequest(projectId: $this->faker->uuid, placeId: $place->getId());
-        $useCase = new RemovePlace(projectRepository: $this->projectRepository);
+        $request = new RemovePlaceCommand(projectId: $this->faker->uuid, placeId: $place->getId());
+        $ApplicationService = new RemovePlace(projectRepository: $this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(1, count($project->getPlaces()));
     }
