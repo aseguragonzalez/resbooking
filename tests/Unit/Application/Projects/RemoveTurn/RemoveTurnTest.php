@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemoveTurn;
 
-use App\Application\Projects\RemoveTurn\{RemoveTurn, RemoveTurnRequest};
+use App\Application\Projects\RemoveTurn\{RemoveTurn, RemoveTurnCommand};
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\TurnAvailability;
 use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
@@ -47,14 +47,14 @@ final class RemoveTurnTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $request = new RemoveTurnRequest(
+        $request = new RemoveTurnCommand(
             projectId: $this->faker->uuid,
             turn: Turn::H1200,
             dayOfWeek: DayOfWeek::Monday
         );
-        $useCase = new RemoveTurn(projectRepository: $this->projectRepository);
+        $ApplicationService = new RemoveTurn(projectRepository: $this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(1, count($project->getTurns()));
     }

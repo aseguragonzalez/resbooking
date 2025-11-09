@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemoveOpenCloseEvent;
 
-use App\Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventRequest};
+use App\Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventCommand};
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\Turn;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
@@ -48,10 +48,10 @@ final class RemoveOpenCloseEventTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $request = new RemoveOpenCloseEventRequest(projectId: $this->faker->uuid, turn: Turn::H1200, date: $today);
-        $useCase = new RemoveOpenCloseEvent(projectRepository: $this->projectRepository);
+        $request = new RemoveOpenCloseEventCommand(projectId: $this->faker->uuid, turn: Turn::H1200, date: $today);
+        $ApplicationService = new RemoveOpenCloseEvent(projectRepository: $this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $this->assertSame(1, count($project->getOpenCloseEvents()));
     }

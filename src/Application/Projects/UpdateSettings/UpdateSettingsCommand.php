@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Application\Projects\UpdateSettings;
 
 use App\Domain\Shared\{Capacity, Email, Phone};
-use Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\Command;
 
-final class UpdateSettingsRequest extends UseCaseRequest
+final class UpdateSettingsCommand extends Command
 {
     public function __construct(
         public readonly string $projectId,

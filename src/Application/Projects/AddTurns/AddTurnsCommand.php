@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Application\Projects\AddTurns;
 
 use App\Application\Projects\AddTurns\TurnItem;
-use Seedwork\Application\UseCaseRequest;
+use Seedwork\Application\Command;
 
-final class AddTurnsRequest extends UseCaseRequest
+final class AddTurnsCommand extends Command
 {
     /**
      * @param string $projectId

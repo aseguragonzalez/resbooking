@@ -6,28 +6,28 @@ namespace App\Application\Projects\RemoveOpenCloseEvent;
 
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\OpenCloseEvent;
-use Seedwork\Application\UseCase;
+use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends UseCase<RemoveOpenCloseEventRequest>
- * @extends UseCase<RemoveOpenCloseEventRequest>
+ * @template-extends ApplicationService<RemoveOpenCloseEventCommand>
+ * @extends ApplicationService<RemoveOpenCloseEventCommand>
  */
-final class RemoveOpenCloseEvent extends UseCase
+final class RemoveOpenCloseEvent extends ApplicationService
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
     /**
-     * @param RemoveOpenCloseEventRequest $request
+     * @param RemoveOpenCloseEventCommand $command
      */
-    public function execute($request): void
+    public function execute($command): void
     {
-        $project = $this->projectRepository->getById($request->projectId);
+        $project = $this->projectRepository->getById($command->projectId);
         $project->removeOpenCloseEvents(
             fn (OpenCloseEvent $openCloseEvent) =>
-                $openCloseEvent->date->format('Y-m-d') === $request->date->format('Y-m-d')
-                    && $openCloseEvent->turn === $request->turn,
+                $openCloseEvent->date->format('Y-m-d') === $command->date->format('Y-m-d')
+                    && $openCloseEvent->turn === $command->turn,
         );
         $this->projectRepository->save($project);
     }

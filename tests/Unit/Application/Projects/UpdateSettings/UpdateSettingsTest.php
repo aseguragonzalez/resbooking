@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\UpdateSettings;
 
-use App\Application\Projects\UpdateSettings\{UpdateSettings, UpdateSettingsRequest};
+use App\Application\Projects\UpdateSettings\{UpdateSettings, UpdateSettingsCommand};
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Projects\ValueObjects\Settings;
 use App\Domain\Shared\{Capacity, Email, Phone};
@@ -51,7 +51,7 @@ final class UpdateSettingsTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($project);
-        $request = new UpdateSettingsRequest(
+        $request = new UpdateSettingsCommand(
             projectId: $this->faker->uuid,
             email: new Email($this->faker->email),
             hasRemainders: $this->faker->boolean,
@@ -61,9 +61,9 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: new Capacity(10),
             phone: new Phone($this->faker->phoneNumber)
         );
-        $useCase = new UpdateSettings(projectRepository: $this->projectRepository);
+        $ApplicationService = new UpdateSettings(projectRepository: $this->projectRepository);
 
-        $useCase->execute($request);
+        $ApplicationService->execute($request);
 
         $currentSettings = $project->getSettings();
         $this->assertSame($request->email, $currentSettings->email);

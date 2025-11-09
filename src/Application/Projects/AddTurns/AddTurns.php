@@ -7,24 +7,24 @@ namespace App\Application\Projects\AddTurns;
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Shared\ValueObjects\TurnAvailability;
 use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
-use Seedwork\Application\UseCase;
+use Seedwork\Application\ApplicationService;
 
 /**
- * @extends UseCase<AddTurnsRequest>
+ * @extends ApplicationService<AddTurnsCommand>
  */
-final class AddTurns extends UseCase
+final class AddTurns extends ApplicationService
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
     /**
-     * @param AddTurnsRequest $request
+     * @param AddTurnsCommand $command
      */
-    public function execute($request): void
+    public function execute($command): void
     {
-        $project = $this->projectRepository->getById($request->projectId);
-        foreach ($request->turns as $turn) {
+        $project = $this->projectRepository->getById($command->projectId);
+        foreach ($command->turns as $turn) {
             $turnAvailability = new TurnAvailability(
                 dayOfWeek: DayOfWeek::getById($turn->dayOfWeek),
                 capacity: new Capacity($turn->capacity),

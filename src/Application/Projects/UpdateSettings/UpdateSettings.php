@@ -6,32 +6,32 @@ namespace App\Application\Projects\UpdateSettings;
 
 use App\Domain\Projects\ProjectRepository;
 use App\Domain\Projects\ValueObjects\Settings;
-use Seedwork\Application\UseCase;
+use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends UseCase<UpdateSettingsRequest>
- * @extends UseCase<UpdateSettingsRequest>
+ * @template-extends ApplicationService<UpdateSettingsCommand>
+ * @extends ApplicationService<UpdateSettingsCommand>
  */
-final class UpdateSettings extends UseCase
+final class UpdateSettings extends ApplicationService
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
     /**
-     * @param UpdateSettingsRequest $request
+     * @param UpdateSettingsCommand $command
      */
-    public function execute($request): void
+    public function execute($command): void
     {
-        $project = $this->projectRepository->getById($request->projectId);
+        $project = $this->projectRepository->getById($command->projectId);
         $project->updateSettings(new Settings(
-            email: $request->email,
-            hasRemainders: $request->hasRemainders,
-            name: $request->name,
-            maxNumberOfDiners: $request->maxNumberOfDiners,
-            minNumberOfDiners: $request->minNumberOfDiners,
-            numberOfTables: $request->numberOfTables,
-            phone: $request->phone
+            email: $command->email,
+            hasRemainders: $command->hasRemainders,
+            name: $command->name,
+            maxNumberOfDiners: $command->maxNumberOfDiners,
+            minNumberOfDiners: $command->minNumberOfDiners,
+            numberOfTables: $command->numberOfTables,
+            phone: $command->phone
         ));
         $this->projectRepository->save($project);
     }
