@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Controllers;
+namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
+use Application\Projects\CreateNewProject\CreateNewProject;
 use PHPUnit\Framework\TestCase;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -28,6 +29,7 @@ use Faker\Generator;
 
 final class AccountsControllerTest extends TestCase
 {
+    private CreateNewProject&MockObject $createNewProject;
     private IdentityManager&MockObject $identityManager;
     private Settings $settings;
     private AccountsController $controller;
@@ -35,9 +37,10 @@ final class AccountsControllerTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->createNewProject = $this->createMock(CreateNewProject::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
         $this->settings = new Settings(basePath: '/');
-        $this->controller = new AccountsController($this->identityManager, $this->settings);
+        $this->controller = new AccountsController($this->createNewProject, $this->identityManager, $this->settings);
         $this->faker = Factory::create();
     }
 
@@ -180,6 +183,7 @@ final class AccountsControllerTest extends TestCase
             agree: 'on'
         );
         $this->identityManager->expects($this->once())->method('signUp');
+        $this->createNewProject->expects($this->once())->method('execute');
 
         $response = $this->controller->signUpUser($request);
 
@@ -301,6 +305,137 @@ final class AccountsControllerTest extends TestCase
         /** @var ResetPasswordChallenge $data */
         $data = $response->data;
         $this->assertTrue(count($data->errorSummary) > 0);
+        $this->assertEquals(200, $response->statusCode->value);
+        /** @var View $view */
+        $view = $response;
+        $this->assertInstanceOf(View::class, $view);
+        $this->assertEquals('Accounts/resetPasswordChallenge', $view->viewPath);
+    }
+
+    public function testGetRoutesConfiguration(): void
+    {
+        $routes = AccountsController::getRoutes();
+
+        $this->assertIsArray($routes);
+        $this->assertCount(10, $routes);
+
+        $expected = [
+            ['Get', '/accounts/sign-in', 'signIn', false],
+            ['Post', '/accounts/sign-in', 'signInUser', false],
+            ['Get', '/accounts/sign-up', 'signUp', false],
+            ['Post', '/accounts/sign-up', 'signUpUser', false],
+            ['Get', '/accounts/activate', 'activateUser', false],
+            ['Get', '/accounts/sign-out', 'signOut', true],
+            ['Get', '/accounts/reset-password', 'resetPassword', false],
+            ['Post', '/accounts/reset-password', 'sendResetPasswordEmail', false],
+            ['Get', '/accounts/reset-password-challenge', 'resetPasswordChallenge', false],
+            ['Post', '/accounts/reset-password-challenge', 'confirmResetPassword', false],
+        ];
+
+        foreach ($expected as $index => [$method, $path, $action, $authRequired]) {
+            $route = $routes[$index];
+            $this->assertEquals($method, $route->method->name);
+            $this->assertEquals($path, $route->path->value());
+            $this->assertEquals(AccountsController::class, $route->controller);
+            $this->assertEquals($action, $route->action);
+        }
+    }
+
+    public function testSignOutWithNoTokenRedirectsToSignIn(): void
+    {
+        $request = $this->createMock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->method('getCookieParams')->willReturn([]);
+        $response = $this->controller->signOut($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $data */
+        $data = $response;
+        $this->assertEquals('signIn', $data->action);
+        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\AccountsController', $data->controller);
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testSignOutWithValidTokenSignsOutAndRedirects(): void
+    {
+        $token = $this->faker->uuid();
+        $request = $this->createMock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->method('getCookieParams')->willReturn(['auth' => $token]);
+        $this->identityManager->expects($this->once())->method('signOut')->with($token);
+
+        $response = $this->controller->signOut($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $data */
+        $data = $response;
+        $this->assertEquals('signIn', $data->action);
+        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\AccountsController', $data->controller);
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testSignInUserThrowsInvalidCredentialsException(): void
+    {
+        $request = new SignInRequest(
+            username: $this->faker->email(),
+            password: '@WrongPassword',
+            rememberMe: 'off'
+        );
+        $this->identityManager->method('signIn')->willThrowException(new InvalidCredentialsException());
+
+        $response = $this->controller->signInUser($request);
+
+        $this->assertInstanceOf(SignIn::class, $response->data);
+        /** @var SignIn $data */
+        $data = $response->data;
+        $this->assertEquals('username', $data->errorSummary[0]->field);
+        $this->assertEquals('{{accounts.signin.form.invalid-credentials}}', $data->errorSummary[0]->message);
+        $this->assertEquals(200, $response->statusCode->value);
+        /** @var View $view */
+        $view = $response;
+        $this->assertInstanceOf(View::class, $view);
+        $this->assertEquals('Accounts/signIn', $view->viewPath);
+    }
+
+    public function testSignInUserThrowsUserIsNotActiveException(): void
+    {
+        $request = new SignInRequest(
+            username: $this->faker->email(),
+            password: '@Home1234',
+            rememberMe: 'off'
+        );
+        $this->identityManager->method('signIn')->willThrowException(new \Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException());
+
+        $response = $this->controller->signInUser($request);
+
+        $this->assertInstanceOf(SignIn::class, $response->data);
+        /** @var SignIn $data */
+        $data = $response->data;
+        $this->assertEquals('username-inactive', $data->errorSummary[0]->field);
+        $this->assertEquals('{{accounts.signin.form.inactive-user}}', $data->errorSummary[0]->message);
+        $this->assertEquals(200, $response->statusCode->value);
+        /** @var View $view */
+        $view = $response;
+        $this->assertInstanceOf(View::class, $view);
+        $this->assertEquals('Accounts/signIn', $view->viewPath);
+    }
+
+    public function testConfirmResetPasswordWithUserIsNotActiveException(): void
+    {
+        $request = new ConfirmResetPasswordRequest(
+            token: $this->faker->uuid(),
+            newPassword: '@Home1234'
+        );
+        $this->identityManager
+            ->method('resetPasswordFromToken')
+            ->willThrowException(new \Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException());
+
+        $response = $this->controller->confirmResetPassword($request);
+
+        $this->assertInstanceOf(ResetPasswordChallenge::class, $response->data);
+        /** @var ResetPasswordChallenge $data */
+        $data = $response->data;
+        $this->assertTrue(count($data->errorSummary) > 0);
+        $this->assertEquals('token', $data->errorSummary[0]->field);
+        $this->assertEquals('{{accounts.reset-password-challenge.form.token.error.invalid}}', $data->errorSummary[0]->message);
         $this->assertEquals(200, $response->statusCode->value);
         /** @var View $view */
         $view = $response;

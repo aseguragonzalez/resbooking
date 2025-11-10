@@ -6,12 +6,13 @@ namespace Tests\Unit\Application\Projects;
 
 use Application\Projects\CreateNewProject\CreateNewProject;
 use Application\Projects\CreateNewProject\CreateNewProjectCommand;
+use Application\Projects\CreateNewProject\CreateNewProjectService;
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\Entities\Project;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class CreateNewProjectTest extends TestCase
+final class CreateNewProjectServiceTest extends TestCase
 {
     private MockObject&ProjectRepository $projectRepository;
     private CreateNewProject $service;
@@ -19,7 +20,7 @@ final class CreateNewProjectTest extends TestCase
     protected function setUp(): void
     {
         $this->projectRepository = $this->createMock(ProjectRepository::class);
-        $this->service = new CreateNewProject($this->projectRepository);
+        $this->service = new CreateNewProjectService($this->projectRepository);
     }
 
     public function testExecuteCreatesAndSavesProject(): void
