@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
+use Application\Projects\CreateNewProject\CreateNewProject;
+use Application\Projects\CreateNewProject\CreateNewProjectService;
+use Domain\Projects\ProjectRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
+use Infrastructure\Adapters\Repositories\Projects\InFileProjectRepository;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
@@ -64,6 +68,12 @@ final class App extends WebApp
             store: $identityStore
         );
         $this->container->set(IdentityManager::class, $defaultIdentityManager);
+
+        /** @var InFileProjectRepository $inFileProjectRepository */
+        $inFileProjectRepository = $this->container->get(InFileProjectRepository::class);
+        $this->container->set(ProjectRepository::class, $inFileProjectRepository);
+        $createNewProjectService = $this->container->get(CreateNewProjectService::class);
+        $this->container->set(CreateNewProject::class, $createNewProjectService);
     }
 
     protected function router(): Router
