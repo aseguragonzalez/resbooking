@@ -32,6 +32,7 @@ use App\Domain\Shared\Exceptions\{
     TurnDoesNotExist,
 };
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
 use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 
@@ -54,27 +55,42 @@ final class Project extends AggregateRoot
         parent::__construct($id);
     }
 
-    /**
-     * @param array<User> $users
-     * @param array<Place> $places
-     * @param array<TurnAvailability> $turns
-     * @param array<OpenCloseEvent> $openCloseEvents
-     */
-    public static function new(
-        Settings $settings,
-        ?string $id = null,
-        array $users = [],
-        array $places = [],
-        array $turns = [],
-        array $openCloseEvents = []
-    ): self {
+    public static function new(string $email, ?string $id = null): self
+    {
+        $projectEmail = new Email($email);
+        $settings = new Settings(
+            email: $projectEmail,
+            hasRemainders: true,
+            name: 'New Project',
+            maxNumberOfDiners: new Capacity(8),
+            minNumberOfDiners: new Capacity(1),
+            numberOfTables: new Capacity(20),
+            phone: new Phone('000-000-0000')
+        );
+        $user = new User(username: $projectEmail);
+
+        /** @var array<TurnAvailability> */
+        $turns = [];
+        foreach (DayOfWeek::all() as $dayOfWeek) {
+            foreach (Turn::all() as $turn) {
+                $turns[] = new TurnAvailability(
+                    dayOfWeek: $dayOfWeek,
+                    capacity: new Capacity(20),
+                    turn: $turn
+                );
+            }
+        }
+
         $project = new self(
             id: $id ?? (string) new Ksuid(),
             settings: $settings,
-            users: $users,
-            places: $places,
+            users: [$user],
+            places: [Place::new(
+                capacity: new Capacity(20),
+                name: 'Default Place'
+            )],
             turns: $turns,
-            openCloseEvents: $openCloseEvents,
+            openCloseEvents: [],
         );
         $project->addEvent(ProjectCreated::new(projectId: $project->getId(), project: $project));
         return $project;

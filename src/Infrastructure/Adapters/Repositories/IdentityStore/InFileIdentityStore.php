@@ -102,23 +102,23 @@ final class InFileIdentityStore implements IdentityStore
     {
         $data = [
             'resetPasswordChallenges' => array_map(
-                fn($challenge) => $this->identityStoreMapper->mapFromResetPasswordChallenge($challenge),
+                fn ($challenge) => $this->identityStoreMapper->mapFromResetPasswordChallenge($challenge),
                 $this->resetPasswordChallenges
             ),
             'signInChallenges' => array_map(
-                fn($challenge) => $this->identityStoreMapper->mapFromSignInChallenge($challenge),
+                fn ($challenge) => $this->identityStoreMapper->mapFromSignInChallenge($challenge),
                 $this->signInChallenges
             ),
             'signInSessions' => array_map(
-                fn($session) => $this->identityStoreMapper->mapFromSignInSession($session),
+                fn ($session) => $this->identityStoreMapper->mapFromSignInSession($session),
                 $this->signInSessions
             ),
             'signUpChallenges' => array_map(
-                fn($challenge) => $this->identityStoreMapper->mapFromSignUpChallenge($challenge),
+                fn ($challenge) => $this->identityStoreMapper->mapFromSignUpChallenge($challenge),
                 $this->signUpChallenges
             ),
             'userIdentities' => array_map(
-                fn($user) => $this->identityStoreMapper->mapFromUserIdentity($user),
+                fn ($user) => $this->identityStoreMapper->mapFromUserIdentity($user),
                 $this->userIdentities
             ),
         ];

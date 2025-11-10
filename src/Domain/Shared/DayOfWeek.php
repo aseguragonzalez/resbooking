@@ -41,4 +41,12 @@ enum DayOfWeek: int
             default => throw new \InvalidArgumentException("Invalid day of week name: $name"),
         };
     }
+
+    /**
+     * @return array<DayOfWeek>
+     */
+    public static function all(): array
+    {
+        return self::cases();
+    }
 }

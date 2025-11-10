@@ -57,28 +57,36 @@ final class ProjectTest extends TestCase
     {
         return new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
-            name: $this->faker->name,
+            hasRemainders: true,
+            name: 'New Project',
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),
-            numberOfTables: new Capacity(25),
-            phone: new Phone($this->faker->phoneNumber)
+            numberOfTables: new Capacity(20),
+            phone: new Phone('000-000-0000')
         );
     }
 
-    public function testCreateInstance(): void
+    public function testCreateDefaultProject(): void
     {
         $id = $this->faker->uuid;
         $settings = $this->settings();
 
-        $project = Project::new(id: $id, settings: $settings);
+        $project = Project::new(id: $id, email: $settings->email->getValue());
 
         $this->assertInstanceOf(Project::class, $project);
         $this->assertSame($id, $project->getId());
-        $this->assertSame($settings, $project->getSettings());
-        $this->assertEmpty($project->getUsers());
-        $this->assertEmpty($project->getPlaces());
-        $this->assertEmpty($project->getTurns());
+        $projectSettings = $project->getSettings();
+        $this->assertSame($settings->email->getValue(), $projectSettings->email->getValue());
+        $this->assertSame($settings->hasRemainders, $projectSettings->hasRemainders);
+        $this->assertSame($settings->name, $projectSettings->name);
+        $this->assertSame($settings->maxNumberOfDiners->value, $projectSettings->maxNumberOfDiners->value);
+        $this->assertSame($settings->minNumberOfDiners->value, $projectSettings->minNumberOfDiners->value);
+        $this->assertSame($settings->numberOfTables->value, $projectSettings->numberOfTables->value);
+        $this->assertSame($settings->phone->getValue(), $projectSettings->phone->getValue());
+        $this->assertSame(1, count($project->getUsers()));
+        $this->assertSame(1, count($project->getPlaces()));
+        $numberOfTurns = count(DayOfWeek::all()) * count(Turn::all());
+        $this->assertSame($numberOfTurns, count($project->getTurns()));
         $this->assertEmpty($project->getOpenCloseEvents());
         $events = $project->getEvents();
         $this->assertSame(1, count($events));
