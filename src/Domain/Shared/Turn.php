@@ -122,4 +122,12 @@ enum Turn: int
             24 => '23:30:00',
         };
     }
+
+    /**
+     * @return array<Turn>
+     */
+    public static function all(): array
+    {
+        return self::cases();
+    }
 }

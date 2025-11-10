@@ -32,11 +32,19 @@ use App\Domain\Shared\Exceptions\{
     TurnDoesNotExist,
 };
 use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
 use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot
 {
+    public const string DEFAULT_PHONE_NUMBER = '+34-555-0100';
+    public const int DEFAULT_NUMBER_OF_TABLES = 20;
+    public const int DEFAULT_MAX_NUMBER_OF_DINERS = 8;
+    public const int DEFAULT_MIN_NUMBER_OF_DINERS = 1;
+    public const string DEFAULT_PROJECT_NAME = 'New Project';
+    public const string DEFAULT_PLACE_NAME = 'Default Place';
+
     /**
      * @param array<User> $users
      * @param array<Place> $places
@@ -54,27 +62,42 @@ final class Project extends AggregateRoot
         parent::__construct($id);
     }
 
-    /**
-     * @param array<User> $users
-     * @param array<Place> $places
-     * @param array<TurnAvailability> $turns
-     * @param array<OpenCloseEvent> $openCloseEvents
-     */
-    public static function new(
-        Settings $settings,
-        ?string $id = null,
-        array $users = [],
-        array $places = [],
-        array $turns = [],
-        array $openCloseEvents = []
-    ): self {
+    public static function new(string $email, ?string $id = null): self
+    {
+        $projectEmail = new Email($email);
+        $settings = new Settings(
+            email: $projectEmail,
+            hasRemainders: true,
+            name: self::DEFAULT_PROJECT_NAME,
+            maxNumberOfDiners: new Capacity(self::DEFAULT_MAX_NUMBER_OF_DINERS),
+            minNumberOfDiners: new Capacity(self::DEFAULT_MIN_NUMBER_OF_DINERS),
+            numberOfTables: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+            phone: new Phone(self::DEFAULT_PHONE_NUMBER),
+        );
+        $user = new User(username: $projectEmail);
+
+        /** @var array<TurnAvailability> */
+        $turns = [];
+        foreach (DayOfWeek::all() as $dayOfWeek) {
+            foreach (Turn::all() as $turn) {
+                $turns[] = new TurnAvailability(
+                    dayOfWeek: $dayOfWeek,
+                    capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+                    turn: $turn
+                );
+            }
+        }
+
         $project = new self(
             id: $id ?? (string) new Ksuid(),
             settings: $settings,
-            users: $users,
-            places: $places,
+            users: [$user],
+            places: [Place::new(
+                capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+                name: self::DEFAULT_PLACE_NAME
+            )],
             turns: $turns,
-            openCloseEvents: $openCloseEvents,
+            openCloseEvents: [],
         );
         $project->addEvent(ProjectCreated::new(projectId: $project->getId(), project: $project));
         return $project;
