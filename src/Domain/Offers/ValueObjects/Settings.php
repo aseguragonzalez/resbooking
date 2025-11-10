@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Offers\ValueObjects;
+namespace Domain\Offers\ValueObjects;
 
 use Seedwork\Domain\ValueObject;
 use Seedwork\Domain\Exceptions\ValueException;
-use App\Domain\Offers\Exceptions\InvalidDateRange;
+use Domain\Offers\Exceptions\InvalidDateRange;
 
 final class Settings extends ValueObject
 {

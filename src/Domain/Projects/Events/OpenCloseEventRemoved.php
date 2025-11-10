@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\Events;
+namespace Domain\Projects\Events;
 
-use App\Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 

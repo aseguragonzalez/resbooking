@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Application\Projects\CreateNewProject;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Projects\Entities\Project;
+use Domain\Projects\ProjectRepository;
+use Domain\Projects\Entities\Project;
 use Seedwork\Application\ApplicationService;
 
 /**

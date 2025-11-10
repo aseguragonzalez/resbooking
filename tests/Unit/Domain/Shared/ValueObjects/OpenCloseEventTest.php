@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared\ValueObjects;
 
-use App\Domain\Shared\Turn;
-use App\Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\Turn;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

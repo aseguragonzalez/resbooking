@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemoveTurn;
 
-use App\Application\Projects\RemoveTurn\{RemoveTurn, RemoveTurnCommand};
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\ValueObjects\TurnAvailability;
-use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
+use Application\Projects\RemoveTurn\{RemoveTurn, RemoveTurnCommand};
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\{DayOfWeek, Capacity, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

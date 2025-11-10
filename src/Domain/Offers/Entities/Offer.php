@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Offers\Entities;
+namespace Domain\Offers\Entities;
 
-use App\Domain\Offers\Exceptions\{
+use Domain\Offers\Exceptions\{
     InvalidDateRange,
     OfferAlreadyDisabled,
     OfferAlreadyEnabled
 };
-use App\Domain\Offers\Events\{
+use Domain\Offers\Events\{
     OfferCreated,
     OfferUpdated,
     OfferDisabled,
@@ -19,15 +19,15 @@ use App\Domain\Offers\Events\{
     TurnAssigned,
     TurnUnassigned
 };
-use App\Domain\Offers\ValueObjects\{Project, Settings};
-use App\Domain\Shared\Exceptions\{
+use Domain\Offers\ValueObjects\{Project, Settings};
+use Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
 use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 

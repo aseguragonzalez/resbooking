@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\Entities\Project;
-use App\Domain\Projects\ValueObjects\{Settings, User};
-use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Domain\Shared\{Capacity, Email, Phone};
+use Domain\Projects\Entities\Place;
+use Domain\Projects\Entities\Project;
+use Domain\Projects\ValueObjects\{Settings, User};
+use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Shared\{Capacity, Email, Phone};
 use Faker\Generator as Faker;
 
 final class ProjectBuilder

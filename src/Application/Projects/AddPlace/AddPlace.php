@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddPlace;
+namespace Application\Projects\AddPlace;
 
-use App\Application\Projects\AddPlace\AddPlaceCommand;
-use App\Domain\Projects\Entities\{Project, Place};
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Capacity;
+use Application\Projects\AddPlace\AddPlaceCommand;
+use Domain\Projects\Entities\{Project, Place};
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\Capacity;
 use Seedwork\Application\{ApplicationService, Command};
 
 /**

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddTurns;
+namespace Application\Projects\AddTurns;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\ValueObjects\TurnAvailability;
-use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\{Capacity, DayOfWeek, Turn};
 use Seedwork\Application\ApplicationService;
 
 /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\ValueObjects;
+namespace Domain\Projects\ValueObjects;
 
-use App\Domain\Shared\Email;
+use Domain\Shared\Email;
 use Seedwork\Domain\ValueObject;
 
 final class User extends ValueObject

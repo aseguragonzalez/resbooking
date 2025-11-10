@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddOpenCloseEvent;
+namespace Application\Projects\AddOpenCloseEvent;
 
 use Seedwork\Application\Command;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects;
+namespace Domain\Projects;
 
-use App\Domain\Projects\Entities\Project;
+use Domain\Projects\Entities\Project;
 use Seedwork\Domain\Repository;
 
 /**

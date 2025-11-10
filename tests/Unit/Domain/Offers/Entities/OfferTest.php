@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\Entities;
 
-use App\Domain\Offers\Entities\Offer;
-use App\Domain\Offers\Events\{
+use Domain\Offers\Entities\Offer;
+use Domain\Offers\Events\{
     OfferCreated,
     OfferUpdated,
     OfferDisabled,
@@ -15,20 +15,20 @@ use App\Domain\Offers\Events\{
     TurnAssigned,
     TurnUnassigned
 };
-use App\Domain\Offers\Exceptions\{
+use Domain\Offers\Exceptions\{
     OfferAlreadyDisabled,
     OfferAlreadyEnabled,
 };
-use App\Domain\Offers\ValueObjects\{Project, Settings};
-use App\Domain\Shared\Exceptions\{
+use Domain\Offers\ValueObjects\{Project, Settings};
+use Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Shared\{Capacity, DayOfWeek, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

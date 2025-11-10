@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Offers\ValueObjects;
+namespace Domain\Offers\ValueObjects;
 
 use Seedwork\Domain\ValueObject;
 use Seedwork\Domain\Exceptions\ValueException;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Shared\ValueObjects;
+namespace Domain\Shared\ValueObjects;
 
-use App\Domain\Shared\Turn;
+use Domain\Shared\Turn;
 use Seedwork\Domain\ValueObject;
 
 final class OpenCloseEvent extends ValueObject

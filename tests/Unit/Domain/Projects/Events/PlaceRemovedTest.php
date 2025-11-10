@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Events;
 
-use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\Events\PlaceRemoved;
-use App\Domain\Shared\Capacity;
+use Domain\Projects\Entities\Place;
+use Domain\Projects\Events\PlaceRemoved;
+use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models\Projects;
+namespace Infrastructure\Adapters\Models\Projects;
 
 final readonly class ProjectUser
 {

@@ -6,8 +6,8 @@ namespace Tests\Unit\Application\Projects;
 
 use Application\Projects\CreateNewProject\CreateNewProject;
 use Application\Projects\CreateNewProject\CreateNewProjectCommand;
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Projects\Entities\Project;
+use Domain\Projects\ProjectRepository;
+use Domain\Projects\Entities\Project;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

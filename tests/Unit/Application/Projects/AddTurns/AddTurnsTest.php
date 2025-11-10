@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddTurns;
 
-use App\Application\Projects\AddTurns\{AddTurns, AddTurnsCommand, TurnItem};
-use App\Domain\Projects\ProjectRepository;
+use Application\Projects\AddTurns\{AddTurns, AddTurnsCommand, TurnItem};
+use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
