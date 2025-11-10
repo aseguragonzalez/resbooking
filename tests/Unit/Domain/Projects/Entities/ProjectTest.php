@@ -61,8 +61,8 @@ final class ProjectTest extends TestCase
             name: 'New Project',
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),
-            numberOfTables: new Capacity(20),
-            phone: new Phone('000-000-0000')
+            numberOfTables: new Capacity(Project::DEFAULT_NUMBER_OF_TABLES),
+            phone: new Phone(Project::DEFAULT_PHONE_NUMBER)
         );
     }
 
@@ -83,13 +83,13 @@ final class ProjectTest extends TestCase
         $this->assertSame($settings->minNumberOfDiners->value, $projectSettings->minNumberOfDiners->value);
         $this->assertSame($settings->numberOfTables->value, $projectSettings->numberOfTables->value);
         $this->assertSame($settings->phone->getValue(), $projectSettings->phone->getValue());
-        $this->assertSame(1, count($project->getUsers()));
-        $this->assertSame(1, count($project->getPlaces()));
+        $this->assertCount(1, $project->getUsers());
+        $this->assertCount(1, $project->getPlaces());
         $numberOfTurns = count(DayOfWeek::all()) * count(Turn::all());
-        $this->assertSame($numberOfTurns, count($project->getTurns()));
+        $this->assertCount($numberOfTurns, $project->getTurns());
         $this->assertEmpty($project->getOpenCloseEvents());
         $events = $project->getEvents();
-        $this->assertSame(1, count($events));
+        $this->assertCount(1, $events);
         $this->assertInstanceOf(ProjectCreated::class, $events[0]);
         $event = $events[0];
         $this->assertSame($project, $event->getPayload()['project']);

@@ -38,6 +38,13 @@ use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot
 {
+    public const string DEFAULT_PHONE_NUMBER = '+34-555-0100';
+    public const int DEFAULT_NUMBER_OF_TABLES = 20;
+    public const int DEFAULT_MAX_NUMBER_OF_DINERS = 8;
+    public const int DEFAULT_MIN_NUMBER_OF_DINERS = 1;
+    public const string DEFAULT_PROJECT_NAME = 'New Project';
+    public const string DEFAULT_PLACE_NAME = 'Default Place';
+
     /**
      * @param array<User> $users
      * @param array<Place> $places
@@ -61,11 +68,11 @@ final class Project extends AggregateRoot
         $settings = new Settings(
             email: $projectEmail,
             hasRemainders: true,
-            name: 'New Project',
-            maxNumberOfDiners: new Capacity(8),
-            minNumberOfDiners: new Capacity(1),
-            numberOfTables: new Capacity(20),
-            phone: new Phone('000-000-0000')
+            name: self::DEFAULT_PROJECT_NAME,
+            maxNumberOfDiners: new Capacity(self::DEFAULT_MAX_NUMBER_OF_DINERS),
+            minNumberOfDiners: new Capacity(self::DEFAULT_MIN_NUMBER_OF_DINERS),
+            numberOfTables: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+            phone: new Phone(self::DEFAULT_PHONE_NUMBER),
         );
         $user = new User(username: $projectEmail);
 
@@ -75,7 +82,7 @@ final class Project extends AggregateRoot
             foreach (Turn::all() as $turn) {
                 $turns[] = new TurnAvailability(
                     dayOfWeek: $dayOfWeek,
-                    capacity: new Capacity(20),
+                    capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
                     turn: $turn
                 );
             }
@@ -86,8 +93,8 @@ final class Project extends AggregateRoot
             settings: $settings,
             users: [$user],
             places: [Place::new(
-                capacity: new Capacity(20),
-                name: 'Default Place'
+                capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+                name: self::DEFAULT_PLACE_NAME
             )],
             turns: $turns,
             openCloseEvents: [],
