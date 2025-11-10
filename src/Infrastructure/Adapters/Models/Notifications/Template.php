@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models\Notifications;
+namespace Infrastructure\Adapters\Models\Notifications;
 
 final readonly class Template
 {

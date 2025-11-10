@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\UpdateSettings;
+namespace Application\Projects\UpdateSettings;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Projects\ValueObjects\Settings;
+use Domain\Projects\ProjectRepository;
+use Domain\Projects\ValueObjects\Settings;
 use Seedwork\Application\ApplicationService;
 
 /**

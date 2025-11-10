@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddPlace;
 
-use App\Application\Projects\AddPlace\{AddPlace, AddPlaceCommand};
-use App\Domain\Projects\ProjectRepository;
+use Application\Projects\AddPlace\{AddPlace, AddPlaceCommand};
+use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models\Reservations;
+namespace Infrastructure\Adapters\Models\Reservations;
 
 final readonly class Source
 {

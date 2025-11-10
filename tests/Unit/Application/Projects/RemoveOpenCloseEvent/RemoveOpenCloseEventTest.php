@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemoveOpenCloseEvent;
 
-use App\Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventCommand};
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Turn;
-use App\Domain\Shared\ValueObjects\OpenCloseEvent;
+use Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventCommand};
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\Turn;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

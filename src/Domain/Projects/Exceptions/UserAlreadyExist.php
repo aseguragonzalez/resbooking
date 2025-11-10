@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\Exceptions;
+namespace Domain\Projects\Exceptions;
 
 use Seedwork\Domain\Exceptions\DomainException;
 

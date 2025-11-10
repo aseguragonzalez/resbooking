@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddPlace;
+namespace Application\Projects\AddPlace;
 
 use Seedwork\Application\Command;
 

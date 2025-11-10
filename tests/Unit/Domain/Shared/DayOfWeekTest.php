@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
-use App\Domain\Shared\DayOfWeek;
+use Domain\Shared\DayOfWeek;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\ValueObjects;
+namespace Domain\Projects\ValueObjects;
 
 use Seedwork\Domain\ValueObject;
 use Seedwork\Domain\Exceptions\ValueException;
-use App\Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\{Capacity, Email, Phone};
 
 final class Settings extends ValueObject
 {

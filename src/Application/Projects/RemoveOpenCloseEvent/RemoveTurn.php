@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemoveOpenCloseEvent;
+namespace Application\Projects\RemoveOpenCloseEvent;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Application\ApplicationService;
 
 /**

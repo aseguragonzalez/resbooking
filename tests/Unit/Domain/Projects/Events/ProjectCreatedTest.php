@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Events;
 
-use App\Domain\Projects\Entities\Project;
-use App\Domain\Projects\Events\ProjectCreated;
-use App\Domain\Projects\ValueObjects\Settings;
-use App\Domain\Shared\{Capacity, Email, Phone};
+use Domain\Projects\Entities\Project;
+use Domain\Projects\Events\ProjectCreated;
+use Domain\Projects\ValueObjects\Settings;
+use Domain\Shared\{Capacity, Email, Phone};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

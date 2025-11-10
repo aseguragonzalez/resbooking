@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Entities;
 
-use App\Domain\Projects\Entities\{Project, Place};
-use App\Domain\Projects\Events\{
+use Domain\Projects\Entities\{Project, Place};
+use Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
     PlaceCreated,
@@ -17,22 +17,22 @@ use App\Domain\Projects\Events\{
     UserCreated,
     UserRemoved
 };
-use App\Domain\Projects\Exceptions\{
+use Domain\Projects\Exceptions\{
     UserAlreadyExist,
     UserDoesNotExist,
     PlaceAlreadyExist,
     PlaceDoesNotExist
 };
-use App\Domain\Projects\ValueObjects\{Settings, User};
-use App\Domain\Shared\Exceptions\{
+use Domain\Projects\ValueObjects\{Settings, User};
+use Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
     TurnAlreadyExist,
     TurnDoesNotExist
 };
-use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
+use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

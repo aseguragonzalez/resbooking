@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\Entities;
+namespace Domain\Projects\Entities;
 
-use App\Domain\Shared\Capacity;
+use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
 use Seedwork\Domain\Exceptions\ValueException;
 use Tuupola\Ksuid;

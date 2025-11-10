@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemovePlace;
+namespace Application\Projects\RemovePlace;
 
-use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\ProjectRepository;
+use Domain\Projects\Entities\Place;
+use Domain\Projects\ProjectRepository;
 use Seedwork\Application\ApplicationService;
 
 /**

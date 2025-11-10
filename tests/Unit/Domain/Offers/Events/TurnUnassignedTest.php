@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\Events;
 
-use App\Domain\Offers\Events\TurnUnassigned;
-use App\Domain\Shared\ValueObjects\TurnAvailability;
-use App\Domain\Shared\{DayOfWeek, Capacity, Turn};
+use Domain\Offers\Events\TurnUnassigned;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\{DayOfWeek, Capacity, Turn};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

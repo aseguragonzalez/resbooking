@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Projects\Entities;
+namespace Domain\Projects\Entities;
 
-use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\Events\{
+use Domain\Projects\Entities\Place;
+use Domain\Projects\Events\{
     OpenCloseEventCreated,
     OpenCloseEventRemoved,
     PlaceCreated,
@@ -17,22 +17,22 @@ use App\Domain\Projects\Events\{
     UserCreated,
     UserRemoved,
 };
-use App\Domain\Projects\Exceptions\{
+use Domain\Projects\Exceptions\{
     PlaceAlreadyExist,
     PlaceDoesNotExist,
     UserAlreadyExist,
     UserDoesNotExist,
 };
-use App\Domain\Projects\ValueObjects\{Settings, User};
-use App\Domain\Shared\Exceptions\{
+use Domain\Projects\ValueObjects\{Settings, User};
+use Domain\Shared\Exceptions\{
     OpenCloseEventAlreadyExist,
     OpenCloseEventDoesNotExist,
     OpenCloseEventOutOfRange,
     TurnAlreadyExist,
     TurnDoesNotExist,
 };
-use App\Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use App\Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
+use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
 use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 

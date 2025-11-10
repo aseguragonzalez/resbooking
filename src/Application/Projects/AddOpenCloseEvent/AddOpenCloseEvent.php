@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddOpenCloseEvent;
+namespace Application\Projects\AddOpenCloseEvent;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Turn;
-use App\Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\Turn;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Application\ApplicationService;
 
 /**

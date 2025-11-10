@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemoveTurn;
+namespace Application\Projects\RemoveTurn;
 
-use App\Domain\Shared\{DayOfWeek, Turn};
+use Domain\Shared\{DayOfWeek, Turn};
 use Seedwork\Application\Command;
 
 final class RemoveTurnCommand extends Command

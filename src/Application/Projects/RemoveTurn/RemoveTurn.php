@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemoveTurn;
+namespace Application\Projects\RemoveTurn;
 
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Application\ApplicationService;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemovePlace;
+namespace Application\Projects\RemovePlace;
 
 use Seedwork\Application\Command;
 

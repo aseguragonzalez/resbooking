@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Offers\Events;
+namespace Domain\Offers\Events;
 
-use App\Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
 use Tuupola\Ksuid;
 

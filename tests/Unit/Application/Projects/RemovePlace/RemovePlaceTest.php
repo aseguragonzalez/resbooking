@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemovePlace;
 
-use App\Application\Projects\RemovePlace\{RemovePlace, RemovePlaceCommand};
-use App\Domain\Projects\Entities\Place;
-use App\Domain\Projects\ProjectRepository;
-use App\Domain\Shared\Capacity;
+use Application\Projects\RemovePlace\{RemovePlace, RemovePlaceCommand};
+use Domain\Projects\Entities\Place;
+use Domain\Projects\ProjectRepository;
+use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

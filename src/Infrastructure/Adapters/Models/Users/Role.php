@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Adapters\Models\Users;
+namespace Infrastructure\Adapters\Models\Users;
 
 final readonly class Role
 {

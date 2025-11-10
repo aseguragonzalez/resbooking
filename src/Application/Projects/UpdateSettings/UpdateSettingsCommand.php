@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\UpdateSettings;
+namespace Application\Projects\UpdateSettings;
 
-use App\Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\{Capacity, Email, Phone};
 use Seedwork\Application\Command;
 
 final class UpdateSettingsCommand extends Command

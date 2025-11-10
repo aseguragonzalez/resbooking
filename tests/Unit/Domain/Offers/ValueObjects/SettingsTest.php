@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\ValueObjects;
 
-use App\Domain\Offers\Exceptions\InvalidDateRange;
-use App\Domain\Offers\ValueObjects\Settings;
-use App\Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Domain\Offers\Exceptions\InvalidDateRange;
+use Domain\Offers\ValueObjects\Settings;
+use Domain\Shared\{Capacity, DayOfWeek, Turn};
 use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

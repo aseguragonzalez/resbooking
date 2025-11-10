@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Events;
 
-use App\Domain\Projects\Events\UserCreated;
-use App\Domain\Projects\ValueObjects\User;
-use App\Domain\Shared\Email;
+use Domain\Projects\Events\UserCreated;
+use Domain\Projects\ValueObjects\User;
+use Domain\Shared\Email;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

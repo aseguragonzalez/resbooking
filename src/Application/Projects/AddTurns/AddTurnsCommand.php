@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\AddTurns;
+namespace Application\Projects\AddTurns;
 
-use App\Application\Projects\AddTurns\TurnItem;
+use Application\Projects\AddTurns\TurnItem;
 use Seedwork\Application\Command;
 
 final class AddTurnsCommand extends Command

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Offers\Events;
 
-use App\Domain\Offers\Entities\Offer;
-use App\Domain\Offers\Events\OfferDisabled;
-use App\Domain\Offers\ValueObjects\{Project, Settings};
+use Domain\Offers\Entities\Offer;
+use Domain\Offers\Events\OfferDisabled;
+use Domain\Offers\ValueObjects\{Project, Settings};
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

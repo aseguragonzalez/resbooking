@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Projects\RemoveOpenCloseEvent;
+namespace Application\Projects\RemoveOpenCloseEvent;
 
-use App\Domain\Shared\Turn;
+use Domain\Shared\Turn;
 use Seedwork\Application\Command;
 
 final class RemoveOpenCloseEventCommand extends Command

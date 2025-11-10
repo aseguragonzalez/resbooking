@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
-use App\Domain\Shared\Email;
+use Domain\Shared\Email;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
