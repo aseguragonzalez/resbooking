@@ -4,30 +4,25 @@ declare(strict_types=1);
 
 namespace Domain\Offers\Entities;
 
-use Domain\Offers\Exceptions\{
-    InvalidDateRange,
-    OfferAlreadyDisabled,
-    OfferAlreadyEnabled
-};
-use Domain\Offers\Events\{
-    OfferCreated,
-    OfferUpdated,
-    OfferDisabled,
-    OfferEnabled,
-    OpenCloseEventCreated,
-    OpenCloseEventRemoved,
-    TurnAssigned,
-    TurnUnassigned
-};
-use Domain\Offers\ValueObjects\{Project, Settings};
-use Domain\Shared\Exceptions\{
-    OpenCloseEventAlreadyExist,
-    OpenCloseEventDoesNotExist,
-    OpenCloseEventOutOfRange,
-    TurnAlreadyExist,
-    TurnDoesNotExist,
-};
-use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
+use Domain\Offers\Exceptions\OfferAlreadyDisabled;
+use Domain\Offers\Exceptions\OfferAlreadyEnabled;
+use Domain\Offers\Events\OfferCreated;
+use Domain\Offers\Events\OfferUpdated;
+use Domain\Offers\Events\OfferDisabled;
+use Domain\Offers\Events\OfferEnabled;
+use Domain\Offers\Events\OpenCloseEventCreated;
+use Domain\Offers\Events\OpenCloseEventRemoved;
+use Domain\Offers\Events\TurnAssigned;
+use Domain\Offers\Events\TurnUnassigned;
+use Domain\Offers\ValueObjects\Project;
+use Domain\Offers\ValueObjects\Settings;
+use Domain\Shared\Exceptions\OpenCloseEventAlreadyExist;
+use Domain\Shared\Exceptions\OpenCloseEventDoesNotExist;
+use Domain\Shared\Exceptions\OpenCloseEventOutOfRange;
+use Domain\Shared\Exceptions\TurnAlreadyExist;
+use Domain\Shared\Exceptions\TurnDoesNotExist;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Domain\AggregateRoot;
 use Tuupola\Ksuid;
 

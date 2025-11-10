@@ -9,7 +9,10 @@ use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\Views\{HtmlViewEngine, ViewEngine, BranchesReplacer, ModelReplacer};
+use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
+use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase

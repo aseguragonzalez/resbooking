@@ -6,7 +6,9 @@ namespace Domain\Projects\ValueObjects;
 
 use Seedwork\Domain\ValueObject;
 use Seedwork\Domain\Exceptions\ValueException;
-use Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\Capacity;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
 
 final class Settings extends ValueObject
 {

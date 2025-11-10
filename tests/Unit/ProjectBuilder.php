@@ -6,9 +6,13 @@ namespace Tests\Unit;
 
 use Domain\Projects\Entities\Place;
 use Domain\Projects\Entities\Project;
-use Domain\Projects\ValueObjects\{Settings, User};
-use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use Domain\Shared\{Capacity, Email, Phone};
+use Domain\Projects\ValueObjects\Settings;
+use Domain\Projects\ValueObjects\User;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\Capacity;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
 use Faker\Generator as Faker;
 
 final class ProjectBuilder

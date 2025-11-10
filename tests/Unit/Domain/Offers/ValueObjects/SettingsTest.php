@@ -6,7 +6,6 @@ namespace Tests\Unit\Domain\Offers\ValueObjects;
 
 use Domain\Offers\Exceptions\InvalidDateRange;
 use Domain\Offers\ValueObjects\Settings;
-use Domain\Shared\{Capacity, DayOfWeek, Turn};
 use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

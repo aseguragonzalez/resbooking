@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddPlace;
 
-use Application\Projects\AddPlace\{AddPlace, AddPlaceCommand};
+use Application\Projects\AddPlace\AddPlace;
+use Application\Projects\AddPlace\AddPlaceCommand;
 use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

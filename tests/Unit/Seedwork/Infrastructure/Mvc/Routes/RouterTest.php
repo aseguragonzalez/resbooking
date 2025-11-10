@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Routes;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Routes\{
-    DuplicatedRouteException,
-    Path,
-    Route,
-    RouteMethod,
-    Router,
-    RouteDoesNotFoundException
-};
+use Seedwork\Infrastructure\Mvc\Routes\DuplicatedRouteException;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
+use Seedwork\Infrastructure\Mvc\Routes\Route;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Routes\RouteDoesNotFoundException;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Router\RouterController;
 
 final class RouterTest extends TestCase

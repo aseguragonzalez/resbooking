@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Controllers;
 
-use Seedwork\Infrastructure\Mvc\Actions\Responses\{ActionResponse, LocalRedirectTo, RedirectTo, View};
+use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\RedirectTo;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 

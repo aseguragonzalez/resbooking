@@ -6,7 +6,9 @@ namespace Application\Projects\AddTurns;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\ValueObjects\TurnAvailability;
-use Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Domain\Shared\Capacity;
+use Domain\Shared\DayOfWeek;
+use Domain\Shared\Turn;
 use Seedwork\Application\ApplicationService;
 
 /**

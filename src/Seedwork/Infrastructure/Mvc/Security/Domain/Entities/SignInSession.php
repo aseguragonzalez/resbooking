@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Security\Domain\Entities;
 
-use Seedwork\Infrastructure\Mvc\Security\{Challenge, Identity};
+use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
 
 final class SignInSession
 {

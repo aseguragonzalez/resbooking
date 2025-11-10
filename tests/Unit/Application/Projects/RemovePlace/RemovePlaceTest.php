@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemovePlace;
 
-use Application\Projects\RemovePlace\{RemovePlace, RemovePlaceCommand};
+use Application\Projects\RemovePlace\RemovePlace;
+use Application\Projects\RemovePlace\RemovePlaceCommand;
 use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Capacity;

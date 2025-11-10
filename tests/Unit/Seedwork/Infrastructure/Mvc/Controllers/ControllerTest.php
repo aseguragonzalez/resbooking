@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Controllers;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\{LocalRedirectTo, View};
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
+use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\AccessControlAllowMethods;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\HomeController;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\SubTestController;

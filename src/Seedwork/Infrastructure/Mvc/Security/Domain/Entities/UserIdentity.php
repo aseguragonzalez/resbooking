@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Mvc\Security\Domain\Entities;
 
 use Seedwork\Infrastructure\Mvc\Security\Identity;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\{
-    InvalidCredentialsException,
-    UserBlockedException,
-    UserIsNotActiveException,
-    UsernameIsNotEmailException
-};
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserBlockedException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UsernameIsNotEmailException;
 
 final class UserIdentity implements Identity
 {

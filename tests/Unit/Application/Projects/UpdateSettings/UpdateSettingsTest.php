@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\UpdateSettings;
 
-use Application\Projects\UpdateSettings\{UpdateSettings, UpdateSettingsCommand};
+use Application\Projects\UpdateSettings\UpdateSettings;
+use Application\Projects\UpdateSettings\UpdateSettingsCommand;
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\ValueObjects\Settings;
-use Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\Capacity;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

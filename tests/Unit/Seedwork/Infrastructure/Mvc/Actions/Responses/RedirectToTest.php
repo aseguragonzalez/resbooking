@@ -7,7 +7,9 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Actions\Responses;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\RedirectTo;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{AccessControlAllowMethods, ContentType, Location};
+use Seedwork\Infrastructure\Mvc\Responses\Headers\AccessControlAllowMethods;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class RedirectToTest extends TestCase
