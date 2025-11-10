@@ -69,7 +69,7 @@ final class App extends WebApp
         );
         $this->container->set(IdentityManager::class, $defaultIdentityManager);
 
-        /** @var CreateNewProjectService $createNewProjectService */
+        /** @var InFileProjectRepository $inFileProjectRepository */
         $inFileProjectRepository = $this->container->get(InFileProjectRepository::class);
         $this->container->set(ProjectRepository::class, $inFileProjectRepository);
         $createNewProjectService = $this->container->get(CreateNewProjectService::class);

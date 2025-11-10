@@ -34,9 +34,9 @@ final class InFileProjectRepository implements ProjectRepository
             return;
         }
 
+        /** @var array<string, mixed> $projectData */
         foreach ($data as $projectData) {
-            $json = json_decode(json_encode($projectData), false, 512, JSON_THROW_ON_ERROR);
-            $projectModel = ProjectModel::fromArray((array) $json);
+            $projectModel = ProjectModel::fromArray((array) $projectData);
             $project = $this->mapper->mapToDomain($projectModel);
             $this->projects[$project->getId()] = $project;
         }

@@ -31,20 +31,28 @@ final readonly class Project implements \JsonSerializable
         ];
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return self
+     */
     public static function fromArray(array $data): self
     {
+        /** @var string $id */
+        $id = $data['id'] ?? '';
+        /** @var array<string, mixed> $settings */
+        $settings = (array) $data['settings'];
+        /** @var array<string, array<string, int|string>> $places */
+        $places = (array) $data['places'];
+        /** @var array<string, array<string, int>> $turns */
+        $turns = (array) $data['turnAvailabilities'];
+        /** @var array<string> $users */
+        $users = $data['users'];
         return new self(
-            id: $data['id'],
-            settings: Settings::fromArray((array) $data['settings']),
-            places: array_map(
-                fn ($placeData) => Place::fromArray((array) $placeData),
-                (array) $data['places'] ?? []
-            ),
-            turnAvailabilities: array_map(
-                fn ($turnData) => TurnAvailability::fromArray((array) $turnData),
-                (array) $data['turnAvailabilities'] ?? []
-            ),
-            users: $data['users'] ?? [],
+            id: $id,
+            settings: Settings::fromArray($settings),
+            places: array_map(fn ($placeData) => Place::fromArray((array) $placeData), $places),
+            turnAvailabilities: array_map(fn ($turnData) => TurnAvailability::fromArray((array) $turnData), $turns),
+            users: $users,
         );
     }
 }

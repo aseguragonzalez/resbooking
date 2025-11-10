@@ -45,6 +45,10 @@ final class ProjectsMapper
         );
     }
 
+    /**
+     * @param array<PlaceModel> $placeModels
+     * @return array<\Domain\Projects\Entities\Place>
+     */
     private static function mapPlacesToDomain(array $placeModels): array
     {
         return array_map(
@@ -57,6 +61,10 @@ final class ProjectsMapper
         );
     }
 
+    /**
+     * @param array<TurnAvailabilityModel> $turnModels
+     * @return array<\Domain\Shared\ValueObjects\TurnAvailability>
+     */
     private static function mapTurnsToDomain(array $turnModels): array
     {
         return array_map(

@@ -17,6 +17,7 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest
 use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
 use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Settings;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Seedwork\Infrastructure\Mvc\Security\Challenge;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
@@ -316,9 +317,7 @@ final class AccountsControllerTest extends TestCase
     {
         $routes = AccountsController::getRoutes();
 
-        $this->assertIsArray($routes);
         $this->assertCount(10, $routes);
-
         $expected = [
             ['Get', '/accounts/sign-in', 'signIn', false],
             ['Post', '/accounts/sign-in', 'signInUser', false],
@@ -331,7 +330,6 @@ final class AccountsControllerTest extends TestCase
             ['Get', '/accounts/reset-password-challenge', 'resetPasswordChallenge', false],
             ['Post', '/accounts/reset-password-challenge', 'confirmResetPassword', false],
         ];
-
         foreach ($expected as $index => [$method, $path, $action, $authRequired]) {
             $route = $routes[$index];
             $this->assertEquals($method, $route->method->name);
@@ -402,7 +400,7 @@ final class AccountsControllerTest extends TestCase
             password: '@Home1234',
             rememberMe: 'off'
         );
-        $this->identityManager->method('signIn')->willThrowException(new \Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException());
+        $this->identityManager->method('signIn')->willThrowException(new UserIsNotActiveException());
 
         $response = $this->controller->signInUser($request);
 
@@ -426,7 +424,7 @@ final class AccountsControllerTest extends TestCase
         );
         $this->identityManager
             ->method('resetPasswordFromToken')
-            ->willThrowException(new \Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException());
+            ->willThrowException(new UserIsNotActiveException());
 
         $response = $this->controller->confirmResetPassword($request);
 
@@ -435,7 +433,10 @@ final class AccountsControllerTest extends TestCase
         $data = $response->data;
         $this->assertTrue(count($data->errorSummary) > 0);
         $this->assertEquals('token', $data->errorSummary[0]->field);
-        $this->assertEquals('{{accounts.reset-password-challenge.form.token.error.invalid}}', $data->errorSummary[0]->message);
+        $this->assertEquals(
+            '{{accounts.reset-password-challenge.form.token.error.invalid}}',
+            $data->errorSummary[0]->message
+        );
         $this->assertEquals(200, $response->statusCode->value);
         /** @var View $view */
         $view = $response;

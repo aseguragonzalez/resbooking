@@ -22,12 +22,22 @@ final readonly class Place implements \JsonSerializable
         ];
     }
 
+    /**
+     * @param array<string, string|int> $data
+     * @return self
+     */
     public static function fromArray(array $data): self
     {
+        /** @var string $id */
+        $id = $data['id'] ?? '';
+        /** @var int $capacity */
+        $capacity = $data['capacity'] ?? 0;
+        /** @var string $name */
+        $name = $data['name'] ?? '';
         return new self(
-            id: $data['id'],
-            capacity: $data['capacity'],
-            name: $data['name'],
+            id: $id,
+            capacity: $capacity,
+            name: $name,
         );
     }
 }
