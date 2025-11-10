@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddTurns;
 
-use Application\Projects\AddTurns\{AddTurns, AddTurnsCommand, TurnItem};
+use Application\Projects\AddTurns\AddTurns;
+use Application\Projects\AddTurns\AddTurnsCommand;
+use Application\Projects\AddTurns\TurnItem;
 use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

@@ -7,7 +7,8 @@ namespace Seedwork\Infrastructure\Mvc\Middlewares;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Requests\{RequestContext, RequestContextKeys};
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Localization extends Middleware

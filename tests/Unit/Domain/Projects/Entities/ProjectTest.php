@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Projects\Entities;
 
-use Domain\Projects\Entities\{Project, Place};
-use Domain\Projects\Events\{
-    OpenCloseEventCreated,
-    OpenCloseEventRemoved,
-    PlaceCreated,
-    PlaceRemoved,
-    ProjectCreated,
-    ProjectModified,
-    TurnAssigned,
-    TurnUnassigned,
-    UserCreated,
-    UserRemoved
-};
-use Domain\Projects\Exceptions\{
-    UserAlreadyExist,
-    UserDoesNotExist,
-    PlaceAlreadyExist,
-    PlaceDoesNotExist
-};
-use Domain\Projects\ValueObjects\{Settings, User};
-use Domain\Shared\Exceptions\{
-    OpenCloseEventAlreadyExist,
-    OpenCloseEventDoesNotExist,
-    OpenCloseEventOutOfRange,
-    TurnAlreadyExist,
-    TurnDoesNotExist
-};
-use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use Domain\Shared\{Capacity, DayOfWeek, Email, Phone, Turn};
+use Domain\Projects\Entities\Project;
+use Domain\Projects\Entities\Place;
+use Domain\Projects\Events\OpenCloseEventCreated;
+use Domain\Projects\Events\OpenCloseEventRemoved;
+use Domain\Projects\Events\PlaceCreated;
+use Domain\Projects\Events\PlaceRemoved;
+use Domain\Projects\Events\ProjectCreated;
+use Domain\Projects\Events\ProjectModified;
+use Domain\Projects\Events\TurnAssigned;
+use Domain\Projects\Events\TurnUnassigned;
+use Domain\Projects\Events\UserCreated;
+use Domain\Projects\Events\UserRemoved;
+use Domain\Projects\Exceptions\UserAlreadyExist;
+use Domain\Projects\Exceptions\UserDoesNotExist;
+use Domain\Projects\Exceptions\PlaceAlreadyExist;
+use Domain\Projects\Exceptions\PlaceDoesNotExist;
+use Domain\Projects\ValueObjects\Settings;
+use Domain\Projects\ValueObjects\User;
+use Domain\Shared\Exceptions\OpenCloseEventAlreadyExist;
+use Domain\Shared\Exceptions\OpenCloseEventDoesNotExist;
+use Domain\Shared\Exceptions\OpenCloseEventOutOfRange;
+use Domain\Shared\Exceptions\TurnAlreadyExist;
+use Domain\Shared\Exceptions\TurnDoesNotExist;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\Capacity;
+use Domain\Shared\DayOfWeek;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
+use Domain\Shared\Turn;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

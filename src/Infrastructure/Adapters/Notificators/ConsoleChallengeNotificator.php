@@ -6,7 +6,8 @@ namespace Infrastructure\Adapters\Notificators;
 
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\{ResetPasswordChallenge, SignUpChallenge};
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
 
 final class ConsoleChallengeNotificator implements ChallengeNotificator
 {

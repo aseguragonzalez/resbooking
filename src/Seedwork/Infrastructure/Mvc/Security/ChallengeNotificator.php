@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Security;
 
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\{ResetPasswordChallenge, SignUpChallenge};
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
 
 interface ChallengeNotificator
 {

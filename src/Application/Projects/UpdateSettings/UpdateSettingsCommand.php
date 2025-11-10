@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Projects\UpdateSettings;
 
-use Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\Capacity;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
 use Seedwork\Application\Command;
 
 final class UpdateSettingsCommand extends Command

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\RemoveOpenCloseEvent;
 
-use Application\Projects\RemoveOpenCloseEvent\{RemoveOpenCloseEvent, RemoveOpenCloseEventCommand};
+use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEvent;
+use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEventCommand;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
 use Domain\Shared\ValueObjects\OpenCloseEvent;

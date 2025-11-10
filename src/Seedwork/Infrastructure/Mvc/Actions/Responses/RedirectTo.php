@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Header, Location};
+use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class RedirectTo extends ActionResponse

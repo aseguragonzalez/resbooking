@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Application\Projects\AddPlace;
 
 use Application\Projects\AddPlace\AddPlaceCommand;
-use Domain\Projects\Entities\{Project, Place};
+use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Capacity;
-use Seedwork\Application\{ApplicationService, Command};
+use Seedwork\Application\ApplicationService;
 
 /**
  * @extends ApplicationService<AddPlaceCommand>

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\AddOpenCloseEvent;
 
-use Application\Projects\AddOpenCloseEvent\{AddOpenCloseEvent, AddOpencloseEventCommand};
+use Application\Projects\AddOpenCloseEvent\AddOpenCloseEvent;
+use Application\Projects\AddOpenCloseEvent\AddOpencloseEventCommand;
 use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

@@ -6,7 +6,8 @@ namespace Tests\Unit\Domain\Offers\Events;
 
 use Domain\Offers\Entities\Offer;
 use Domain\Offers\Events\OfferEnabled;
-use Domain\Offers\ValueObjects\{Project, Settings};
+use Domain\Offers\ValueObjects\Project;
+use Domain\Offers\ValueObjects\Settings;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
-use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\Responses\{SearchRequest, TestController};
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\Responses\SearchRequest;
+use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Actions\Responses\TestController;
 
 final class LocalRedirectToTest extends TestCase
 {

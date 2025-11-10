@@ -5,30 +5,28 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Offers\Entities;
 
 use Domain\Offers\Entities\Offer;
-use Domain\Offers\Events\{
-    OfferCreated,
-    OfferUpdated,
-    OfferDisabled,
-    OfferEnabled,
-    OpenCloseEventCreated,
-    OpenCloseEventRemoved,
-    TurnAssigned,
-    TurnUnassigned
-};
-use Domain\Offers\Exceptions\{
-    OfferAlreadyDisabled,
-    OfferAlreadyEnabled,
-};
-use Domain\Offers\ValueObjects\{Project, Settings};
-use Domain\Shared\Exceptions\{
-    OpenCloseEventAlreadyExist,
-    OpenCloseEventDoesNotExist,
-    OpenCloseEventOutOfRange,
-    TurnAlreadyExist,
-    TurnDoesNotExist,
-};
-use Domain\Shared\ValueObjects\{OpenCloseEvent, TurnAvailability};
-use Domain\Shared\{Capacity, DayOfWeek, Turn};
+use Domain\Offers\Events\OfferCreated;
+use Domain\Offers\Events\OfferUpdated;
+use Domain\Offers\Events\OfferDisabled;
+use Domain\Offers\Events\OfferEnabled;
+use Domain\Offers\Events\OpenCloseEventCreated;
+use Domain\Offers\Events\OpenCloseEventRemoved;
+use Domain\Offers\Events\TurnAssigned;
+use Domain\Offers\Events\TurnUnassigned;
+use Domain\Offers\Exceptions\OfferAlreadyDisabled;
+use Domain\Offers\Exceptions\OfferAlreadyEnabled;
+use Domain\Offers\ValueObjects\Project;
+use Domain\Offers\ValueObjects\Settings;
+use Domain\Shared\Exceptions\OpenCloseEventAlreadyExist;
+use Domain\Shared\Exceptions\OpenCloseEventDoesNotExist;
+use Domain\Shared\Exceptions\OpenCloseEventOutOfRange;
+use Domain\Shared\Exceptions\TurnAlreadyExist;
+use Domain\Shared\Exceptions\TurnDoesNotExist;
+use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Shared\Capacity;
+use Domain\Shared\DayOfWeek;
+use Domain\Shared\Turn;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

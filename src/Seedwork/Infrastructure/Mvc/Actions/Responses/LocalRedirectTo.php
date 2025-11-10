@@ -6,7 +6,8 @@ namespace Seedwork\Infrastructure\Mvc\Actions\Responses;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\{ContentType, Header};
+use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentType;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Header;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 
 final class LocalRedirectTo extends ActionResponse

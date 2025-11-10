@@ -6,7 +6,9 @@ namespace Tests\Unit\Domain\Offers\Events;
 
 use Domain\Offers\Events\TurnUnassigned;
 use Domain\Shared\ValueObjects\TurnAvailability;
-use Domain\Shared\{DayOfWeek, Capacity, Turn};
+use Domain\Shared\DayOfWeek;
+use Domain\Shared\Capacity;
+use Domain\Shared\Turn;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Domain\Shared\ValueObjects;
 
-use Domain\Shared\{DayOfWeek, Capacity, Turn};
+use Domain\Shared\DayOfWeek;
+use Domain\Shared\Capacity;
+use Domain\Shared\Turn;
 use Seedwork\Domain\ValueObject;
 
 final class TurnAvailability extends ValueObject

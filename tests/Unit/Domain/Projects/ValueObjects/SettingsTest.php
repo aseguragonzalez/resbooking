@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Projects\ValueObjects;
 
 use Domain\Projects\ValueObjects\Settings;
-use Domain\Shared\{Capacity, Email, Phone};
+use Domain\Shared\Capacity;
+use Domain\Shared\Email;
+use Domain\Shared\Phone;
 use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
