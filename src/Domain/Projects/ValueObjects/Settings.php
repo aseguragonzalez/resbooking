@@ -14,7 +14,7 @@ final class Settings extends ValueObject
 {
     public function __construct(
         public readonly Email $email,
-        public readonly bool $hasRemainders,
+        public readonly bool $hasReminders,
         public readonly string $name,
         public readonly Capacity $maxNumberOfDiners,
         public readonly Capacity $minNumberOfDiners,

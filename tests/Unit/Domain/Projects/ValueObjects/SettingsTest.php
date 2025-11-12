@@ -31,14 +31,14 @@ final class SettingsTest extends TestCase
         $maxNumberOfDiners = new Capacity(100);
         $minNumberOfDiners = new Capacity(1);
         $numberOfTables = new Capacity(25);
-        $hasRemainders = $this->faker->boolean;
+        $hasReminders = $this->faker->boolean;
         $name = $this->faker->name;
         $email = new Email($this->faker->email);
         $phone = new Phone($this->faker->phoneNumber);
 
         $settings = new Settings(
             email: $email,
-            hasRemainders: $hasRemainders,
+            hasReminders: $hasReminders,
             name: $name,
             maxNumberOfDiners: $maxNumberOfDiners,
             minNumberOfDiners: $minNumberOfDiners,
@@ -49,7 +49,7 @@ final class SettingsTest extends TestCase
         $this->assertInstanceOf(Settings::class, $settings);
         $this->assertSame($maxNumberOfDiners, $settings->maxNumberOfDiners);
         $this->assertSame($minNumberOfDiners, $settings->minNumberOfDiners);
-        $this->assertSame($hasRemainders, $settings->hasRemainders);
+        $this->assertSame($hasReminders, $settings->hasReminders);
         $this->assertSame($name, $settings->name);
         $this->assertSame($email, $settings->email);
         $this->assertSame($phone, $settings->phone);
@@ -63,7 +63,7 @@ final class SettingsTest extends TestCase
 
         new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
+            hasReminders: $this->faker->boolean,
             name: '',
             maxNumberOfDiners: new Capacity(100),
             minNumberOfDiners: new Capacity(1),
@@ -78,7 +78,7 @@ final class SettingsTest extends TestCase
 
         new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
+            hasReminders: $this->faker->boolean,
             name: $this->faker->name,
             maxNumberOfDiners: new Capacity(1),
             minNumberOfDiners: new Capacity(2),

@@ -26,7 +26,7 @@ final class UpdateSettings extends ApplicationService
         $project = $this->projectRepository->getById($command->projectId);
         $project->updateSettings(new Settings(
             email: $command->email,
-            hasRemainders: $command->hasRemainders,
+            hasReminders: $command->hasReminders,
             name: $command->name,
             maxNumberOfDiners: $command->maxNumberOfDiners,
             minNumberOfDiners: $command->minNumberOfDiners,
