@@ -14,7 +14,7 @@ final class UpdateSettingsCommand extends Command
     public function __construct(
         public readonly string $projectId,
         public readonly Email $email,
-        public readonly bool $hasRemainders,
+        public readonly bool $hasReminders,
         public readonly string $name,
         public readonly Capacity $maxNumberOfDiners,
         public readonly Capacity $minNumberOfDiners,

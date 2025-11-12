@@ -52,7 +52,7 @@ final class ProjectBuilder
     {
         $settings = new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
+            hasReminders: $this->faker->boolean,
             name: $this->faker->name,
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),

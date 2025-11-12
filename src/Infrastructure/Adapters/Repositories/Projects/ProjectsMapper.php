@@ -36,7 +36,7 @@ final class ProjectsMapper
     {
         return new Settings(
             email: new Email($settingsModel->email),
-            hasRemainders: $settingsModel->hasRemainders,
+            hasReminders: $settingsModel->hasReminders,
             name: $settingsModel->name,
             maxNumberOfDiners: new Capacity($settingsModel->maxNumberOfDiners),
             minNumberOfDiners: new Capacity($settingsModel->minNumberOfDiners),
@@ -92,7 +92,7 @@ final class ProjectsMapper
     {
         return new SettingsModel(
             email: $settings->email->getValue(),
-            hasRemainders: $settings->hasRemainders,
+            hasReminders: $settings->hasReminders,
             name: $settings->name,
             maxNumberOfDiners: $settings->maxNumberOfDiners->value,
             minNumberOfDiners: $settings->minNumberOfDiners->value,

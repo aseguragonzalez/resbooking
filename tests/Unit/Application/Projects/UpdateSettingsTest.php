@@ -38,7 +38,7 @@ final class UpdateSettingsTest extends TestCase
     {
         $settings = new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
+            hasReminders: $this->faker->boolean,
             name: $this->faker->name,
             maxNumberOfDiners: new Capacity(10),
             minNumberOfDiners: new Capacity(10),
@@ -57,7 +57,7 @@ final class UpdateSettingsTest extends TestCase
         $request = new UpdateSettingsCommand(
             projectId: $this->faker->uuid,
             email: new Email($this->faker->email),
-            hasRemainders: $this->faker->boolean,
+            hasReminders: $this->faker->boolean,
             name: $this->faker->name,
             maxNumberOfDiners: new Capacity(10),
             minNumberOfDiners: new Capacity(10),
@@ -70,7 +70,7 @@ final class UpdateSettingsTest extends TestCase
 
         $currentSettings = $project->getSettings();
         $this->assertSame($request->email, $currentSettings->email);
-        $this->assertSame($request->hasRemainders, $currentSettings->hasRemainders);
+        $this->assertSame($request->hasReminders, $currentSettings->hasReminders);
         $this->assertSame($request->name, $currentSettings->name);
         $this->assertSame($request->maxNumberOfDiners, $currentSettings->maxNumberOfDiners);
         $this->assertSame($request->minNumberOfDiners, $currentSettings->minNumberOfDiners);

@@ -8,7 +8,7 @@ final readonly class Settings implements \JsonSerializable
 {
     public function __construct(
         public string $email,
-        public bool $hasRemainders,
+        public bool $hasReminders,
         public string $name,
         public int $maxNumberOfDiners,
         public int $minNumberOfDiners,
@@ -21,7 +21,7 @@ final readonly class Settings implements \JsonSerializable
     {
         return [
             'email' => $this->email,
-            'hasRemainders' => $this->hasRemainders,
+            'hasReminders' => $this->hasReminders,
             'name' => $this->name,
             'maxNumberOfDiners' => $this->maxNumberOfDiners,
             'minNumberOfDiners' => $this->minNumberOfDiners,
@@ -38,8 +38,8 @@ final readonly class Settings implements \JsonSerializable
     {
         /** @var string $email */
         $email = $data['email'] ?? '';
-        /** @var bool $hasRemainders */
-        $hasRemainders = $data['hasRemainders'] ?? false;
+        /** @var bool $hasReminders */
+        $hasReminders = $data['hasReminders'] ?? false;
         /** @var string $name */
         $name = $data['name'] ?? '';
         /** @var int $maxNumberOfDiners */
@@ -52,7 +52,7 @@ final readonly class Settings implements \JsonSerializable
         $phone = $data['phone'] ?? '';
         return new self(
             email: $email,
-            hasRemainders: $hasRemainders,
+            hasReminders: $hasReminders,
             name: $name,
             maxNumberOfDiners: $maxNumberOfDiners,
             minNumberOfDiners: $minNumberOfDiners,

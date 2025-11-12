@@ -67,7 +67,7 @@ final class Project extends AggregateRoot
         $projectEmail = new Email($email);
         $settings = new Settings(
             email: $projectEmail,
-            hasRemainders: true,
+            hasReminders: true,
             name: self::DEFAULT_PROJECT_NAME,
             maxNumberOfDiners: new Capacity(self::DEFAULT_MAX_NUMBER_OF_DINERS),
             minNumberOfDiners: new Capacity(self::DEFAULT_MIN_NUMBER_OF_DINERS),

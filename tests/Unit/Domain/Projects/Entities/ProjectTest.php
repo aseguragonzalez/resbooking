@@ -58,7 +58,7 @@ final class ProjectTest extends TestCase
     {
         return new Settings(
             email: new Email($this->faker->email),
-            hasRemainders: true,
+            hasReminders: true,
             name: 'New Project',
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),
@@ -78,7 +78,7 @@ final class ProjectTest extends TestCase
         $this->assertSame($id, $project->getId());
         $projectSettings = $project->getSettings();
         $this->assertSame($settings->email->getValue(), $projectSettings->email->getValue());
-        $this->assertSame($settings->hasRemainders, $projectSettings->hasRemainders);
+        $this->assertSame($settings->hasReminders, $projectSettings->hasReminders);
         $this->assertSame($settings->name, $projectSettings->name);
         $this->assertSame($settings->maxNumberOfDiners->value, $projectSettings->maxNumberOfDiners->value);
         $this->assertSame($settings->minNumberOfDiners->value, $projectSettings->minNumberOfDiners->value);

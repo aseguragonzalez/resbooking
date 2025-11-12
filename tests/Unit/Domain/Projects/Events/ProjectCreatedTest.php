@@ -34,7 +34,7 @@ final class ProjectCreatedTest extends TestCase
             id: $projectId,
             settings: new Settings(
                 email: new Email($this->faker->email),
-                hasRemainders: $this->faker->boolean,
+                hasReminders: $this->faker->boolean,
                 name: $this->faker->name,
                 maxNumberOfDiners: new Capacity(100),
                 minNumberOfDiners: new Capacity(1),
@@ -60,7 +60,7 @@ final class ProjectCreatedTest extends TestCase
             id: $projectId,
             settings: new Settings(
                 email: new Email($this->faker->email),
-                hasRemainders: $this->faker->boolean,
+                hasReminders: $this->faker->boolean,
                 name: $this->faker->name,
                 maxNumberOfDiners: new Capacity(100),
                 minNumberOfDiners: new Capacity(1),
