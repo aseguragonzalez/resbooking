@@ -1,7 +1,8 @@
 # 🧩 Copilot Project Instructions
 
 These are project-wide coding and architectural guidelines.
-**Copilot must always follow these rules** when suggesting code, generating tests, or completing functions.
+**Copilot must always follow these rules** when suggesting code, generating
+tests, or completing functions.
 
 ---
 
@@ -10,9 +11,10 @@ These are project-wide coding and architectural guidelines.
 - **Language:** PHP 8.4
   Use strict typing, readonly and promoted properties, and enums where appropriate.
 - **Style:** Must fully comply with **PSR-12** coding standards.
-- **Architecture:** Follow **Domain-Driven Design (DDD)** within a **Hexagonal Architecture** (Ports and Adapters).
-- **Seedwork Alignment:** Always reuse and extend existing abstractions from `Seedwork\Domain`.
-  Never duplicate or redefine their functionality.
+- **Architecture:** Follow **Domain-Driven Design (DDD)** within a
+ **Hexagonal Architecture** (Ports and Adapters).
+- **Seedwork Alignment:** Always reuse and extend existing abstractions. Never
+ duplicate or redefine their functionality.
 - **Quality:** Prefer immutability, explicitness, and domain alignment over brevity.
 - **Testing:** All code must have full **PHPUnit** test coverage.
 
@@ -22,87 +24,61 @@ These are project-wide coding and architectural guidelines.
 
 Copilot must respect this organization:
 
-```
-- src/
-    - Application/
-        - <BoundedContext>/
-            - <UseCases>/
-                - <UseCase>.php
-                - <UseCase>Command.php
-                - <UseCase>Service.php
-    - Domain/
-        - <BoundedContext>/
-            - Entities/
-                - <AggregateRoot>.php
-                - <Entity>.php
-            - ValueObjects/
-                - <ValueObject>.php
-            - Events/
-                - <DomainEvent>.php
-            - Exceptions/
-                - <DomainException>.php
-            - Repositories/
-                - <AggregateRoot>Repository.php
-    - Infrastructure/
-        - Adapters/
-            - Repositories/
-                - <BoundedContext>/
-                    - Models/
-                        - **Model.php
-                    - Sql<AggregateRoot>Repository.php
-                    - <AggregateRoot>Mapper.php
-        - Ports/
-            - <MvcApp>/
-                - Controllers/
-                    - <FeatureController>Controller.php
-                - Models/
-                    - <Feature>/
-                        - Pages/
-                            - <FeaturePage>.php
-                        - Requests/
-                            - <FeatureRequest>.php
-                - Views/
-                    - <Feature>/
-                        - <FeaturePage>.html
-- tests/
-    - Unit/
-        - Application/
-            - <BoundedContext>/
-                - <UseCases>/
-                    - <UseCase>Test.php
-        - Domain/
-            - <BoundedContext>/
-                - Entities/
-                    - <AggregateRoot>Test.php
-                - ValueObjects/
-                    - <ValueObject>Test.php
-                - Events/
-                    - <DomainEvent>Test.php
-                - Exceptions/
-                    - <DomainException>Test.php
-                - Repositories/
-                    - <AggregateRoot>RepositoryTest.php
-        - Infrastructure/
-            - Adapters/
-                - Repositories/
-                    - <BoundedContext>/
-                        - Sql<AggregateRoot>RepositoryTest.php
-            - Ports/
-                - <MvcApp>/
-                    - Controllers/
-                        - <FeatureController>ControllerTest.php
-                    - Models/
-                        - <Feature>/
-                            - Pages/
-                                - <FeaturePage>Test.php
-                            - Requests/
-                                - <FeatureRequest>Test.php
+The project follows a three-layer architecture with source code in `src/` and
+ tests in `tests/`.
 
-```
+Within `src/`, organize code into three main layers:
 
-- **Domain:** Pure business logic.
-- **Application:** Use cases, orchestration, and application services.
-- **Infrastructure:** Technical details behind ports and adapters (persistence, API, etc.).
+**Application Layer** (`src/Application/`):
+Contains use cases organized by bounded context. Each bounded context folder
+ contains a `UseCases/` subdirectory where each use case is implemented as
+ three files:
+
+- The use case interface (`<UseCase>.php`);
+- The application command class (`<UseCase>Command.php`);
+- The application service implementation (`<UseCase>Service.php`).
+
+**Domain Layer** (`src/Domain/`):
+Contains pure business logic organized by bounded context. Each bounded context
+ folder contains:
+
+- `Entities/` for aggregate roots (`<AggregateRoot>.php`) and domain entities (`<Entity>.php`);
+- `ValueObjects/` for value objects (`<ValueObject>.php`);
+- `Events/` for domain events (`<DomainEvent>.php`);
+- `Exceptions/` for domain exceptions (`<DomainException>.php`);
+- `Repositories/` for repository interfaces (`<AggregateRoot>Repository.php`).
+
+**Infrastructure Layer** (`src/Infrastructure/`): Contains technical implementations
+ split into two parts:
+
+- Under `Adapters/Repositories/<BoundedContext>/`:
+  - Place persistence models in `Models/` (any `**Model.php` files)
+  - SQL repository implementations (`Sql<AggregateRoot>Repository.php`)
+  - Domain-Model to Persistence-Model mappers (`<AggregateRoot>Mapper.php`).
+
+- Under `Ports/<MvcApp>/`, organize MVC components:
+  - `Controllers/` for controller classes (`<FeatureController>Controller.php`);
+  - `Models/<Feature>/` containing:
+  - `Pages/` for page models (`<FeaturePage>.php`)
+  - `Requests/` for request models (`<FeatureRequest>.php`);
+  - `Views/<Feature>/` for HTML templates (`<FeaturePage>.html`).
+
+**Tests** (`tests/Unit/`): Mirror the source structure exactly.
+
+- Under `Application/<BoundedContext>/UseCases/`:
+  - `<UseCase>Test.php`.
+- Under `Domain/<BoundedContext>/`:
+  - `Entities/` (`<AggregateRoot>Test.php`)
+  - `ValueObjects/` (`<ValueObject>Test.php`)
+  - `Events/` (`<DomainEvent>Test.php`)
+  - `Exceptions/` (`<DomainException>Test.php`)
+  - `Repositories/` (`<AggregateRoot>RepositoryTest.php`).
+- Under `Infrastructure/Adapters/Repositories/<BoundedContext>/`:
+  - `Sql<AggregateRoot>RepositoryTest.php`.
+- Under `Infrastructure/Ports/<MvcApp>/`:
+  - `Controllers/` (`<FeatureController>ControllerTest.php`)
+  - `Models/<Feature>/Pages/` (`<FeaturePage>Test.php`)
+  - `Requests/` (`<FeatureRequest>Test.php`).
 
 ---
 
@@ -110,15 +86,15 @@ Copilot must respect this organization:
 
 | Type | Namespace | Description |
 |------|------------|-------------|
-| `AggregateRoot` | `Seedwork\Domain\AggregateRoot` | Base for aggregates. Manages ID + domain events. |
+| `AggregateRoot` | `Seedwork\Domain\AggregateRoot` | Base for aggregates. |
 | `Entity` | `Seedwork\Domain\Entity` | Base for domain entities. |
-| `ValueObject` | `Seedwork\Domain\ValueObject` | Base for immutable, equality-based objects. |
-| `DomainEvent` | `Seedwork\Domain\DomainEvent` | Base for all domain events. Must define static factories (`new()`, `build()`). |
-| `DomainException` | `Seedwork\Domain\Exceptions\DomainException` | Base for domain exceptions. |
-| `Repository` | `Seedwork\Domain\Repository` | Base interface for aggregate persistence. |
-| `Controller` | `Seedwork\Infrastructure\Ports\Mvc\Controllers\Controller` | Base for MVC controllers. |
-| `Command` | `Seedwork\Application\Command` | Base for application commands. |
-| `ApplicationService` | `Seedwork\Application\ApplicationService` | Base for application services handling commands of type `T`. |
+| `ValueObject` | `Seedwork\Domain\ValueObject` | Base for immutable value objects.|
+| `DomainEvent` | `Seedwork\Domain\DomainEvent` | Base for domain events.|
+| `DomainException` | `Seedwork\Domain\Exceptions\DomainException` | Domain exceptions.|
+| `Repository` | `Seedwork\Domain\Repository` | Base interface for aggregate repositories.|
+| `Controller` | `Seedwork\Infrastructure\Ports\Mvc\Controllers\Controller` | Controllers.|
+| `Command` | `Seedwork\Application\Command` | Base for application service commands|
+| `ApplicationService` | `Seedwork\Application\ApplicationService` |Application services.|
 
 Always extend or implement these abstractions.
 Example patterns:
@@ -140,7 +116,8 @@ interface CreateNewProject { /* ... */ }
 /**
  * @extends ApplicationService<CreateNewProjectCommand>
  */
-final class CreateNewProjectService extends ApplicationService implements CreateNewProject { /* ... */ }
+final class CreateNewProjectService extends ApplicationService
+ implements CreateNewProject { /* ... */ }
 final class CreateNewProjectCommand extends Command { /* ... */ }
 
 ```
@@ -149,11 +126,11 @@ final class CreateNewProjectCommand extends Command { /* ... */ }
 
 ## 4. Domain Modeling Conventions
 
-* Use **private constructors** + static named constructors (`new()`, `build()`).
-* **Readonly properties** for value objects.
-* Manage domain events with `$this->addEvent(...)`.
-* Equality is defined via `equals()` or value comparison.
-* Keep the **domain pure** — no infrastructure or framework code here.
+- Use **private constructors** + static named constructors (`new()`, `build()`).
+- **Readonly properties** for value objects.
+- Manage domain events with `$this->addEvent(...)`.
+- Equality is defined via `equals()` or value comparison.
+- Keep the **domain pure** — no infrastructure or framework code here.
 
 ---
 
@@ -172,7 +149,6 @@ use Domain\Projects\Events\ProjectCreated;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Shared\Email;
 use Seedwork\Domain\AggregateRoot;
-use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot
 {
@@ -186,7 +162,7 @@ final class Project extends AggregateRoot
     public static function new(string $email, ?string $id = null): self
     {
         $project = new self(
-            $id ?? (string)new Ksuid(),
+            $id ?? uniqid(),
             new Settings(email: new Email($email), /* ... */)
         );
 
@@ -208,7 +184,6 @@ namespace Domain\Projects\Entities;
 use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
 use Seedwork\Domain\Exceptions\ValueException;
-use Tuupola\Ksuid;
 
 final class Place extends Entity
 {
@@ -224,10 +199,11 @@ final class Place extends Entity
         }
     }
 
-    public static function new(Capacity $capacity, string $name, ?string $id = null): self
-    {
+    public static function new(
+        Capacity $capacity, string $name, ?string $id = null
+    ): self {
         return new self(
-            id: $id ?? (string) new Ksuid(),
+            id: $id ?? uniqid(),
             capacity: $capacity,
             name: $name
         );
@@ -280,7 +256,7 @@ final class Settings extends ValueObject
     private function checkMinMaxNumberOfDinners(): void
     {
         if ($this->minNumberOfDiners->value > $this->maxNumberOfDiners->value) {
-            throw new ValueException('Min number of diners must be less than or equal to max number of diners');
+            throw new ValueException('Min number of diners must be less than...');
         }
     }
 }
@@ -440,13 +416,11 @@ final class SignInRequest
 
 ## 6. Event Conventions
 
-* Extend `DomainEvent`.
-* Always provide:
-  * `public static function new(...): self`
-  * `public static function build(...): self`
-* Use `Ksuid` for unique IDs.
-* Event names follow the pattern `<Entity><Action>` (e.g., `ProjectCreated`, `UserRemoved`).
-* Payload must include relevant identifiers and entities.
+- Extend `DomainEvent`.
+- Always provide `public static function new(...): self`
+- Use `uniqid` for unique IDs.
+- Event names follow the pattern `<Entity><Action>` (e.g., `ProjectCreated`, `UserRemoved`).
+- Payload must include relevant identifiers and entities.
 
 Example:
 
@@ -456,7 +430,7 @@ final class ProjectCreated extends DomainEvent
     public static function new(string $projectId, Project $project): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'ProjectCreated',
             payload: ['projectId' => $projectId, 'project' => $project]
         );
@@ -468,8 +442,8 @@ final class ProjectCreated extends DomainEvent
 
 ## 7. Exception Conventions
 
-* Extend `DomainException`.
-* Provide clear, business-relevant messages.
+- Extend `DomainException`.
+- Provide clear, business-relevant messages.
 
 Example:
 
@@ -498,18 +472,21 @@ interface ProjectRepository extends Repository
 }
 ```
 
-* Application handlers must depend on interfaces, **never concrete infrastructure classes**.
+- Application handlers must depend on interfaces,
+    **never concrete infrastructure classes**.
 
 ---
 
 ## 9. Testing Guidelines
 
-* Use **PHPUnit**.
-* Mirror source structure under `/tests`.
-* Each class has a corresponding `*Test.php`.
-* Use **Arrange - Act - Assert (AAA)** structure.
-* Prefer **mocks/test doubles** over real infrastructure.
-* Validate **domain invariants** and **emitted events**.
+- Use **PHPUnit**.
+- Mirror source structure under `/tests`.
+- Each class has a corresponding `*Test.php`.
+- Use **Arrange - Act - Assert (AAA)** structure.
+- Prefer **mocks/test doubles** over real infrastructure.
+- Use **Faker** for generating test data.
+- Use **mocks** for testing dependencies.
+- Validate **domain invariants** and **emitted events**.
 
 Example:
 
@@ -535,13 +512,13 @@ final class ProjectTest extends TestCase
 
 ## 10. General Style Rules
 
-* Always declare `strict_types=1`.
-* Use **constructor injection**.
-* Prefer **final** classes unless extension is required.
-* Explicit parameter and return types are mandatory.
-* Use `===` and `!==` for comparisons.
-* Avoid static utility classes unless defined in Seedwork.
-* No side effects in constructors.
+- Always declare `strict_types=1`.
+- Use **constructor injection**.
+- Prefer **final** classes unless extension is required.
+- Explicit parameter and return types are mandatory.
+- Use `===` and `!==` for comparisons.
+- Avoid static utility classes unless defined in Seedwork.
+- No side effects in constructors.
 
 ---
 
@@ -549,35 +526,39 @@ final class ProjectTest extends TestCase
 
 When generating or completing code, Copilot must:
 
-* Use the existing Seedwork components automatically.
-* Follow DDD naming conventions (e.g., `UserCreated`, `Settings`, `ProjectRepository`).
-* Respect domain boundaries.
-* Suggest PSR-12 compliant code.
-* Include meaningful **unit tests** by default.
+- Use the existing Seedwork components automatically.
+- Follow DDD naming conventions (e.g., `UserCreated`, `Settings`, `ProjectRepository`).
+- Respect domain boundaries.
+- Suggest PSR-12 compliant code.
+- Include meaningful **unit tests** by default.
 
-> **Goal:** Generate *production-quality DDD code* aligned with our conventions and architecture.
+**Goal:** Generate *production-quality DDD code* aligned with our conventions and
+ architecture.
 
 ---
 
 ## 12. Common Mistakes to Avoid
 
-❌ Creating aggregates without extending `AggregateRoot`
-❌ Missing static constructors (`new()`, `build()`)
-❌ Using untyped or mixed parameters
-❌ Writing code without tests
-❌ Mixing domain and infrastructure logic
-❌ Violating PSR-12 formatting rules
+- ❌ Creating aggregates without extending `AggregateRoot`
+- ❌ Missing static constructors (`new()`, `build()`)
+- ❌ Using untyped or mixed parameters
+- ❌ Writing code without tests
+- ❌ Mixing domain and infrastructure logic
+- ❌ Violating PSR-12 formatting rules
 
 ---
 
 **All generated code must align with these principles.**
-Copilot’s primary objective is to assist in writing maintainable, testable, domain-aligned PHP code that integrates perfectly with the project’s Seedwork.
+Copilot’s primary objective is to assist in writing maintainable, testable,
+    domain-aligned PHP code that integrates perfectly with the project’s Seedwork.
 
 ## 13. Infrastructure Layer — Controller Conventions
 
-Controllers in `Infrastructure\Ports\<PortName>\Controllers` act as **adapters** between the external interface (HTTP, CLI, etc.) and the Application layer.
+Controllers in `Infrastructure\Ports\<PortName>\Controllers` act as **adapters**
+    between the external interface (HTTP, CLI, etc.) and the Application layer.
 
 ### ✅ Responsibilities
+
 - Receive and validate external requests (via `Request` models).
 - Invoke **Application commands or services** (use cases).
 - Handle **domain and application exceptions** gracefully.
@@ -615,9 +596,359 @@ final class SomeController extends Controller
     public static function getRoutes(): array
     {
         return [
-            Route::create(RouteMethod::Get, Path::create('/some/path'), self::class, 'someAction'),
+            Route::create(
+                RouteMethod::Get,
+                Path::create('/some/path'),
+                self::class, 'someAction'
+            ),
             // ...
         ];
     }
 }
 ```
+
+## 14. HTML Template Conventions
+
+All HTML templates in `Infrastructure\Ports\<PortName>\Views` must follow
+consistent patterns for forms, tables, and layout structure. Templates use a
+custom templating syntax with conditional blocks, loops, and variable interpolation.
+
+### 14.1 Template Layout Pattern
+
+Every view template must start with `{{#layout layout:}}` to inherit the base
+layout structure. The layout provides the HTML document structure, header
+navigation, main content area, and footer.
+
+**View Template Pattern:**
+
+```html
+{{#layout layout:}}
+<!-- Your view content here -->
+```
+
+### 14.2 Form Template Pattern
+
+Forms must follow a consistent structure with proper accessibility attributes,
+error handling, and semantic HTML.
+
+**Basic Form Structure:**
+
+```html
+{{#layout layout:}}
+<form action="/accounts/sign-in" method="post" class="form">
+    <header>
+        <h2>{{accounts.signin.form.title}}</h2>
+    </header>
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{accounts.signin.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <div class="form-control">
+        <label for="username">
+            {{accounts.signin.form.username.label}}
+        </label>
+        <input
+            aria-describedby="username-help"
+            autocomplete="off"
+            id="username"
+            name="username"
+            placeholder="{{accounts.signin.form.username.placeholder}}"
+            required
+            type="email"
+            {{#if errors->username:}}aria-invalid="true"{{#endif errors->username:}}
+        />
+        <p>
+            <small id="username-help">{{accounts.signin.form.username.help}}</small>
+        </p>
+    </div>
+
+    <div class="form-control">
+        <button type="submit" class="primary-button">
+            {{accounts.signin.form.submit}}
+        </button>
+    </div>
+
+    <footer>
+        <p>
+            {{accounts.signin.form.forgot-password}}
+            <a href="/accounts/reset-password">{{accounts.signin.form.reset}}</a>
+        </p>
+    </footer>
+</form>
+{{#endlayout layout:}}
+```
+
+**Form with Field-Level Validation:**
+
+```html
+{{#layout layout:}}
+<form action="/reservations/{{reservation->id}}" method="post" class="form">
+    <header>
+        <h2>{{reservation.edit.form.title}} | {{reservation->name}}</h2>
+    </header>
+
+    <input type="hidden" name="id" value="{{reservation->id}}" />
+    <input type="hidden" name="backUrl" value="{{backUrl}}" />
+
+    <div class="form-control">
+        <label for="name">
+            {{reservation.form.name.label}}
+        </label>
+        <input
+            aria-describedby="name-help {{#if errors->name:}}name-error{{#endif errors->name:}}"
+            autocomplete="off"
+            id="name"
+            name="name"
+            placeholder="{{reservation.form.name.placeholder}}"
+            required
+            type="text"
+            value="{{reservation->name}}"
+            {{#if errors->name:}}aria-invalid="true"{{#endif errors->name:}}
+        />
+        <p>
+            <small id="name-help">{{reservation.form.name.help}}</small>
+            {{#if errors->name:}}
+            <small id="name-error" class="error" role="alert">
+                {{errors->name}}
+            </small>
+            {{#endif errors->name:}}
+        </p>
+    </div>
+
+    <footer>
+        <button type="submit">{{form.save}}</button>
+        <button type="reset">{{form.cancel}}</button>
+        <a href="{{backUrl}}">{{form.back}}</a>
+    </footer>
+</form>
+{{#endlayout layout:}}
+```
+
+**Checkbox Control Pattern:**
+
+```html
+<div class="form-control">
+    <div class="checkbox-control">
+        <label for="remember">
+            {{accounts.signin.form.remember.label}}
+        </label>
+        <input
+            id="remember"
+            name="remember"
+            type="checkbox"
+            checked
+        />
+    </div>
+</div>
+```
+
+**Form Requirements:**
+
+- Use `class="form"` on the `<form>` element
+- Include a `<header>` with `<h2>` for the form title
+- Show error summary with `role="alert"` and `aria-live="assertive"` when errors
+   exist
+- Wrap each field in `<div class="form-control">`
+- Always pair `<label>` with `for` attribute matching input `id`
+- Use `aria-describedby` to reference help text and error messages
+- Set `aria-invalid="true"` on inputs with validation errors
+- Include help text in `<small>` elements with matching `id`
+- Use `class="primary-button"` for submit buttons
+- Use `class="checkbox-control"` wrapper for checkbox fields
+- Include a `<footer>` section for additional links or actions
+
+### 14.3 Table Template Pattern
+
+Tables must include navigation controls, proper structure, and action buttons
+ for data management.
+
+**Table with Navigation and Pagination:**
+
+```html
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <form action="/reservations" method="get" id="filter-form">
+            <div class="inline-form-control">
+                <label for="from">{{reservations.from}}</label>
+                <input
+                    type="date"
+                    id="from"
+                    name="from"
+                    value="{{date}}"
+                    onchange="this.form.submit()"
+                />
+            </div>
+        </form>
+        <a href="/reservations/create" class="primary-button">
+            {{reservations.new}}
+        </a>
+    </nav>
+
+    {{#if hasReservations:}}
+    <form id="update-status" method="post">
+        <input type="hidden" name="offset" value="{{offset}}">
+        <input type="hidden" name="from" value="{{date}}">
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{reservations.header.time}}</th>
+                <th>{{reservations.header.name}}</th>
+                <th>{{reservations.header.phone}}</th>
+                <th>{{reservations.header.email}}</th>
+                <th>{{reservations.header.details}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#for reservation in reservations:}}
+            <tr>
+                <td>{{reservation->turn}}</td>
+                <td>{{reservation->name}}</td>
+                <td>{{reservation->phone}}</td>
+                <td>{{reservation->email}}</td>
+                <td class="control-group">
+                    <button type="submit"
+                     form="update-status"
+                     name="status"
+                     value="ACCEPTED"
+                     formaction="/reservations/{{reservation->id}}/status"
+                    >
+                        {{reservations.accept}}
+                    </button>
+                    <button type="submit"
+                        form="update-status"
+                        name="status"
+                        value="CANCELLED"
+                        formaction="/reservations/{{reservation->id}}/status"
+                    >
+                        {{reservations.cancel}}
+                    </button>
+                    <a href="/reservations/{{reservation->id}}">{{reservations.details}}</a>
+                </td>
+            </tr>
+            {{#endfor reservations:}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+    <nav class="table-pagination">
+        <button form="filter-form" type="submit" name="offset" value="{{prev}}">
+            {{reservations.prev}}
+        </button>
+        <button form="filter-form" type="submit" name="offset" value="{{next}}">
+            {{reservations.next}}
+        </button>
+    </nav>
+    {{#endif hasReservations:}}
+
+    {{#if !hasReservations:}}
+    <article class="card">
+        <header>
+            <h3>{{reservations.no_found}}</h3>
+        </header>
+        <p>
+            {{reservations.no_found_description}}
+        </p>
+    </article>
+    {{#endif !hasReservations:}}
+</section>
+{{#endlayout layout:}}
+```
+
+**Table Requirements:**
+
+- Wrap table section in `<section class="section">`
+- Use `class="table-nav"` for navigation bar containing filters and action buttons
+- Use `class="inline-form-control"` for inline form fields in navigation
+- Use `class="table"` on the `<table>` element
+- Always include `<thead>`, `<tbody>`, and `<tfoot>` elements
+- Use `class="control-group"` for action button containers in table cells
+- Use `class="table-pagination"` for pagination controls
+- Use `form` attribute on buttons to reference forms outside the table
+- Show empty state with `<article class="card">` when no data exists
+- Use conditional blocks to show/hide table and empty state
+
+### 14.4 Template Syntax Reference
+
+The templating system uses a custom syntax for conditionals, loops, and variable
+ interpolation.
+
+**Conditional Blocks:**
+
+```html
+{{#if condition:}}
+    <!-- Content when condition is true -->
+{{#endif condition:}}
+
+{{#if !condition:}}
+    <!-- Content when condition is false -->
+{{#endif !condition:}}
+```
+
+**Loops:**
+
+```html
+{{#for item in collection:}}
+    <!-- Loop content -->
+    <p>{{item->property}}</p>
+{{#endfor collection:}}
+```
+
+**Variable Interpolation:**
+
+```html
+<!-- Simple variable -->
+{{variableName}}
+
+<!-- Object property access -->
+{{object->property}}
+
+<!-- Nested property access -->
+{{object->nested->property}}
+```
+
+**Template Variables:**
+
+- `{{content}}` - Injected by layout template for view content
+- `{{pageTitle}}` - Page title for `<title>` tag
+- `{{layout.*}}` - Layout-specific translations/values
+- `{{errors->fieldName}}` - Field-specific error messages
+- `{{errorSummary}}` - Array of error summary entries
+
+**Accessibility Guidelines:**
+
+- Always include `aria-describedby` on form inputs linking to help text
+- Use `aria-invalid="true"` on inputs with validation errors
+- Include `role="alert"` and `aria-live="assertive"` on error summary sections
+- Use semantic HTML elements (`<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`)
+- Ensure all form inputs have associated `<label>` elements with matching `for`/`id`
+- Use `tabindex="-1"` on error summaries to allow programmatic focus
+
+**CSS Class Conventions:**
+
+- `form` - Main form container
+- `form-control` - Individual form field wrapper
+- `checkbox-control` - Checkbox field wrapper
+- `primary-button` - Primary action button
+- `error-summary` - Error summary section
+- `table` - Table element
+- `table-nav` - Table navigation bar
+- `table-pagination` - Pagination controls
+- `inline-form-control` - Inline form field in navigation
+- `control-group` - Group of action buttons
+- `section` - Section container
+- `card` - Card component for empty states or content blocks
