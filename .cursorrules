@@ -1,7 +1,7 @@
-# 🧩 Copilot Project Instructions
+# Cursor Project Instructions
 
 These are project-wide coding and architectural guidelines.
-**Copilot must always follow these rules** when suggesting code, generating
+**Cursor must always follow these rules** when suggesting code, generating
 tests, or completing functions.
 
 ---
@@ -22,7 +22,7 @@ tests, or completing functions.
 
 ## 2. Layering and Directory Structure
 
-Copilot must respect this organization:
+Cursor must respect this organization:
 
 The project follows a three-layer architecture with source code in `src/` and
  tests in `tests/`.
@@ -522,9 +522,9 @@ final class ProjectTest extends TestCase
 
 ---
 
-## 11. Copilot Behavior Expectations
+## 11. Cursor Behavior Expectations
 
-When generating or completing code, Copilot must:
+When generating or completing code, Cursor must:
 
 - Use the existing Seedwork components automatically.
 - Follow DDD naming conventions (e.g., `UserCreated`, `Settings`, `ProjectRepository`).
@@ -549,8 +549,8 @@ When generating or completing code, Copilot must:
 ---
 
 **All generated code must align with these principles.**
-Copilot’s primary objective is to assist in writing maintainable, testable,
-    domain-aligned PHP code that integrates perfectly with the project’s Seedwork.
+Cursor's primary objective is to assist in writing maintainable, testable,
+    domain-aligned PHP code that integrates perfectly with the project's Seedwork.
 
 ## 13. Infrastructure Layer — Controller Conventions
 
