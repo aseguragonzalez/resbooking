@@ -7,7 +7,6 @@ namespace Domain\Projects\Entities;
 use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
 use Seedwork\Domain\Exceptions\ValueException;
-use Tuupola\Ksuid;
 
 final class Place extends Entity
 {
@@ -26,7 +25,7 @@ final class Place extends Entity
     public static function new(Capacity $capacity, string $name, ?string $id = null): self
     {
         return new self(
-            id: $id ?? (string) new Ksuid(),
+            id: $id ?? uniqid(),
             capacity: $capacity,
             name: $name
         );

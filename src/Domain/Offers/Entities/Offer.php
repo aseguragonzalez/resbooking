@@ -24,7 +24,6 @@ use Domain\Shared\Exceptions\TurnDoesNotExist;
 use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Domain\AggregateRoot;
-use Tuupola\Ksuid;
 
 final class Offer extends AggregateRoot
 {
@@ -48,7 +47,7 @@ final class Offer extends AggregateRoot
      */
     public static function new(Project $project, Settings $settings, array $turns = []): self
     {
-        $offerId = (string) new Ksuid();
+        $offerId = uniqid();
         $offer = new self(
             id: $offerId,
             project: $project,

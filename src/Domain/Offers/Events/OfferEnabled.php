@@ -6,14 +6,13 @@ namespace Domain\Offers\Events;
 
 use Domain\Offers\Entities\Offer;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class OfferEnabled extends DomainEvent
 {
     public static function new(string $offerId, Offer $offer): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'OfferEnabled',
             payload: ['offerId' => $offerId, 'offer' => $offer]
         );

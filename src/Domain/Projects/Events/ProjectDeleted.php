@@ -6,14 +6,13 @@ namespace Domain\Projects\Events;
 
 use Domain\Projects\Entities\Project;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class ProjectDeleted extends DomainEvent
 {
     public static function new(string $projectId, Project $project): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'ProjectDeleted',
             payload: ['projectId' => $projectId, 'project' => $project]
         );

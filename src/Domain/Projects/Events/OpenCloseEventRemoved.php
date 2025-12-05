@@ -6,14 +6,13 @@ namespace Domain\Projects\Events;
 
 use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class OpenCloseEventRemoved extends DomainEvent
 {
     public static function new(string $projectId, OpenCloseEvent $openCloseEvent): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'OpenCloseEventRemoved',
             payload: ['projectId' => $projectId, 'openCloseEvent' => $openCloseEvent]
         );
