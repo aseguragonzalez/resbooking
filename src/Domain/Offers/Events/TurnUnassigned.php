@@ -6,14 +6,13 @@ namespace Domain\Offers\Events;
 
 use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class TurnUnassigned extends DomainEvent
 {
     public static function new(string $offerId, TurnAvailability $turn): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'TurnUnassigned',
             payload: ['offerId' => $offerId, 'turn' => $turn]
         );

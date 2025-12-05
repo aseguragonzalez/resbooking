@@ -6,14 +6,13 @@ namespace Domain\Projects\Events;
 
 use Domain\Projects\ValueObjects\User;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class UserCreated extends DomainEvent
 {
     public static function new(string $projectId, User $user): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'UserCreated',
             payload: ['projectId' => $projectId, 'user' => $user]
         );

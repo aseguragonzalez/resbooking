@@ -9,7 +9,7 @@ use Seedwork\Infrastructure\Mvc\Security\Identity;
 
 final class Route
 {
-    private const PARAM_PATTERN = '/\{(int:|uuid:|ksuid:|float:)?([^\}]+)\}/';
+    private const PARAM_PATTERN = '/\{(int:|uuid:|float:)?([^\}]+)\}/';
 
     /**
      * @param class-string $controller
@@ -46,7 +46,6 @@ final class Route
             return match ($matches[1]) {
                 'int:' => '(\d+)',
                 'uuid:' => '([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})',
-                'ksuid:' => '([0-9a-zA-Z]{27})',
                 default => '([^/]+)',
             };
         }, $this->path->value()) ?? '';

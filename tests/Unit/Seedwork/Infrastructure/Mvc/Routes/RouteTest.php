@@ -242,13 +242,6 @@ final class RouteTest extends TestCase
             ['/foo/{int:id}/bar/{name}', '/foo/1/baz/1', false],
             ['/foo/{uuid:id}', '/foo/1', false],
             ['/foo/{uuid:id}/bar', '/foo/123e4567-e89b-12d3-a456-426614174000/bar', true],
-            ['/foo/{ksuid:id}', '/foo/1', false],
-            ['/foo/{ksuid:id}/bar', '/foo/1Bz8dJH3y7d9K3a4Q2w5X6Z7Y8V/bar', true],
-            [
-                '/foo/{ksuid:id}/bar/{uuid:id2}',
-                '/foo/1Bz8dJH3y7d9K3a4Q2w5X6Z7Y8V/bar/123e4567-e89b-12d3-a456-426614174000',
-                true
-            ],
         ];
     }
 

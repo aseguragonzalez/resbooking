@@ -34,7 +34,6 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\Turn;
 use Seedwork\Domain\AggregateRoot;
-use Tuupola\Ksuid;
 
 final class Project extends AggregateRoot
 {
@@ -89,7 +88,7 @@ final class Project extends AggregateRoot
         }
 
         $project = new self(
-            id: $id ?? (string) new Ksuid(),
+            id: $id ?? uniqid(),
             settings: $settings,
             users: [$user],
             places: [Place::new(

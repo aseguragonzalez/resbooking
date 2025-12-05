@@ -6,14 +6,13 @@ namespace Domain\Projects\Events;
 
 use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
-use Tuupola\Ksuid;
 
 final class TurnAssigned extends DomainEvent
 {
     public static function new(string $projectId, TurnAvailability $turn): self
     {
         return new self(
-            id: (string)new Ksuid(),
+            id: uniqid(),
             type: 'TurnAssigned',
             payload: ['projectId' => $projectId, 'turn' => $turn]
         );
