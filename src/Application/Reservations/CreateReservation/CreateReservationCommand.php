@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Reservations\CreateReservation;
 
-use Seedwork\Application\Command;
-
-final class CreateReservationCommand extends Command
+final class CreateReservationCommand
 {
     public function __construct(
         public readonly string $projectId,
