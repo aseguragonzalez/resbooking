@@ -17,13 +17,4 @@ final class ProjectCreated extends DomainEvent
             payload: ['projectId' => $projectId, 'project' => $project]
         );
     }
-
-    public static function build(string $projectId, Project $project, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'ProjectCreated',
-            payload: ['projectId' => $projectId, 'project' => $project]
-        );
-    }
 }

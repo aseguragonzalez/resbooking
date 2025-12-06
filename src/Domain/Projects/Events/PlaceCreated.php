@@ -17,13 +17,4 @@ final class PlaceCreated extends DomainEvent
             payload: ['projectId' => $projectId, 'place' => $place]
         );
     }
-
-    public static function build(string $projectId, Place $place, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'PlaceCreated',
-            payload: ['projectId' => $projectId, 'place' => $place]
-        );
-    }
 }

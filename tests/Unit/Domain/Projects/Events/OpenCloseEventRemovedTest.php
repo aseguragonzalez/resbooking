@@ -45,27 +45,4 @@ final class OpenCloseEventRemovedTest extends TestCase
         $this->assertSame($projectId, $payload['projectId']);
         $this->assertSame($openCloseEvent, $payload['openCloseEvent']);
     }
-
-    public function testBuildStoredEvent(): void
-    {
-        $projectId = $this->faker->uuid;
-        $openCloseEvent = new OpenCloseEvent(
-            date: new \DateTimeImmutable(),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        );
-
-        $event = OpenCloseEventRemoved::build(
-            projectId: $projectId,
-            openCloseEvent: $openCloseEvent,
-            id: $this->faker->uuid
-        );
-
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('OpenCloseEventRemoved', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
-        $this->assertSame($projectId, $payload['projectId']);
-        $this->assertSame($openCloseEvent, $payload['openCloseEvent']);
-    }
 }
