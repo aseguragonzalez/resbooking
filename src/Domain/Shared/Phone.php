@@ -8,6 +8,9 @@ final class Phone
 {
     public function __construct(public readonly string $value)
     {
+        if (trim($value) === '') {
+            throw new \InvalidArgumentException('Phone number is required');
+        }
         // TODO: Implement phone number validation
         // if (!preg_match('/^\(\d{2}\) \d{4,5}-\d{4}$/', $value)) {
         //      throw new \InvalidArgumentException('Invalid phone number');

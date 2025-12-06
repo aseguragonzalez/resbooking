@@ -8,7 +8,7 @@ final class Capacity
 {
     public function __construct(public readonly int $value)
     {
-        if ($this->value < 0) {
+        if ($value < 0) {
             throw new \InvalidArgumentException('Capacity must be greater than or equal to 0');
         }
     }
