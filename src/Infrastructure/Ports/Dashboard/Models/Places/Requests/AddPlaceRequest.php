@@ -24,7 +24,7 @@ final class AddPlaceRequest
         }
 
         if ($this->capacity <= 0) {
-            $errors['capacity'] = '{{places.form.capacity.error.required}}';
+            $errors['capacity'] = '{{places.form.capacity.error.min}}';
         }
 
         return $errors;

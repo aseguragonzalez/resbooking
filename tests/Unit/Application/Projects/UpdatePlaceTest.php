@@ -29,10 +29,6 @@ final class UpdatePlaceTest extends TestCase
         $this->projectRepository = $this->createMock(ProjectRepository::class);
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     public function testUpdatePlaceInProject(): void
     {
         $placeId = $this->faker->uuid();

@@ -8,7 +8,7 @@ final class UpdatePlaceRequest
 {
     public function __construct(
         public readonly string $name = '',
-        public readonly int $capacity = 0,
+        public readonly int $capacity = 1,
     ) {
     }
 
@@ -24,7 +24,7 @@ final class UpdatePlaceRequest
         }
 
         if ($this->capacity <= 0) {
-            $errors['capacity'] = '{{places.form.capacity.error.required}}';
+            $errors['capacity'] = '{{places.form.capacity.error.min}}';
         }
 
         return $errors;
