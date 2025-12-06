@@ -43,19 +43,19 @@ final class UpdateSettingsRequest
             $errors['phone'] = '{{projects.settings.form.phone.error.required}}';
         }
 
-        if ($this->minNumberOfDiners === null) {
+        if ($this->minNumberOfDiners == null) {
             $errors['minNumberOfDiners'] = '{{projects.settings.form.min-number-of-diners.error.required}}';
         } elseif ($this->minNumberOfDiners <= 0) {
             $errors['minNumberOfDiners'] = '{{projects.settings.form.min-number-of-diners.error.negative}}';
         }
 
-        if ($this->maxNumberOfDiners === null) {
+        if ($this->maxNumberOfDiners == null) {
             $errors['maxNumberOfDiners'] = '{{projects.settings.form.max-number-of-diners.error.required}}';
         } elseif ($this->maxNumberOfDiners <= 0) {
             $errors['maxNumberOfDiners'] = '{{projects.settings.form.max-number-of-diners.error.negative}}';
         }
 
-        if ($this->numberOfTables === null) {
+        if ($this->numberOfTables == null) {
             $errors['numberOfTables'] = '{{projects.settings.form.number-of-tables.error.required}}';
         } elseif ($this->numberOfTables <= 0) {
             $errors['numberOfTables'] = '{{projects.settings.form.number-of-tables.error.negative}}';
