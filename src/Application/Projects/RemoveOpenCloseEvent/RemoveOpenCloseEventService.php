@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Application\Projects\RemoveOpenCloseEvent;
 
 use Domain\Projects\ProjectRepository;
-use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ValueObjects\OpenCloseEvent;
 
 final class RemoveOpenCloseEventService implements RemoveOpenCloseEvent
 {

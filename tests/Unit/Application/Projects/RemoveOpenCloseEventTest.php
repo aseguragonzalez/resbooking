@@ -9,7 +9,7 @@ use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEventCommand;
 use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEventService;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
-use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

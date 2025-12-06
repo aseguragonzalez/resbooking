@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Projects\Events;
 
 use Domain\Projects\Events\TurnUnassigned;
-use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\TurnAvailability;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Capacity;
 use Domain\Shared\Turn;

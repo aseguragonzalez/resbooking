@@ -6,7 +6,7 @@ namespace Tests\Unit\Domain\Projects\Events;
 
 use Domain\Projects\Events\OpenCloseEventRemoved;
 use Domain\Shared\Turn;
-use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

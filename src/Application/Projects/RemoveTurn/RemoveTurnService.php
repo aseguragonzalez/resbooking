@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Application\Projects\RemoveTurn;
 
 use Domain\Projects\ProjectRepository;
-use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\TurnAvailability;
 
 final class RemoveTurnService implements RemoveTurn
 {

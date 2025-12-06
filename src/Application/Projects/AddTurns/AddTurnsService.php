@@ -8,7 +8,7 @@ use Domain\Projects\ProjectRepository;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
-use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\TurnAvailability;
 
 final class AddTurnsService implements AddTurns
 {
