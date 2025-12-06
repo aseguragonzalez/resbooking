@@ -7,9 +7,8 @@ namespace Application\Projects\UpdateSettings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Application\Command;
 
-final class UpdateSettingsCommand extends Command
+final class UpdateSettingsCommand
 {
     public function __construct(
         public readonly string $projectId,

@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Application\Projects\RemoveOpenCloseEvent;
 
 use Domain\Shared\Turn;
-use Seedwork\Application\Command;
 
-final class RemoveOpenCloseEventCommand extends Command
+final class RemoveOpenCloseEventCommand
 {
     public function __construct(
         public readonly string $projectId,

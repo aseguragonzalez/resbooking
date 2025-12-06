@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Reservations\UpdateReservationStatus;
 
-use Seedwork\Application\Command;
-
-final class UpdateReservationStatusCommand extends Command
+final class UpdateReservationStatusCommand
 {
     public function __construct(
         public readonly string $reservationId,
