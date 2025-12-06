@@ -32,7 +32,7 @@ final class AddTurns extends ApplicationService
                 capacity: new Capacity($turn->capacity),
                 turn: Turn::getByStartTime($turn->startTime)
             );
-            $project->AddTurn($turnAvailability);
+            $project->addTurn($turnAvailability);
         }
         $this->projectRepository->save($project);
     }
