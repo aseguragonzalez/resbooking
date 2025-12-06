@@ -7,21 +7,14 @@ namespace Application\Projects\AddOpenCloseEvent;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
 use Domain\Shared\ValueObjects\OpenCloseEvent;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<AddOpenCloseEventCommand>
- */
-final class AddOpenCloseEventService extends ApplicationService implements AddOpenCloseEvent
+final class AddOpenCloseEventService implements AddOpenCloseEvent
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param AddOpenCloseEventCommand $command
-     */
-    public function execute($command): void
+    public function execute(AddOpenCloseEventCommand $command): void
     {
         $project = $this->projectRepository->getById($command->projectId);
         $turn = Turn::getByStartTime($command->startTime);

@@ -14,11 +14,7 @@ final class GetReservationService implements GetReservation
     {
     }
 
-    /**
-     * @param GetReservationCommand $command
-     * @return Reservation
-     */
-    public function execute($command): Reservation
+    public function execute(GetReservationCommand $command): Reservation
     {
         if (!$this->reservationRepository->exist($command->reservationId)) {
             throw new ReservationDoesNotExist();

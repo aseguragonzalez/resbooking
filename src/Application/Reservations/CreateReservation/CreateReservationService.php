@@ -10,22 +10,15 @@ use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\Turn;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<CreateReservationCommand>
- */
-final class CreateReservationService extends ApplicationService implements CreateReservation
+final class CreateReservationService implements CreateReservation
 {
     public function __construct(
         private readonly ReservationRepository $reservationRepository
     ) {
     }
 
-    /**
-     * @param CreateReservationCommand $command
-     */
-    public function execute($command): void
+    public function execute(CreateReservationCommand $command): void
     {
         try {
             $date = new \DateTimeImmutable($command->date);

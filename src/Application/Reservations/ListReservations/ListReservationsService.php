@@ -14,10 +14,9 @@ final class ListReservationsService implements ListReservations
     }
 
     /**
-     * @param ListReservationsCommand $command
      * @return array<Reservation>
      */
-    public function execute($command): array
+    public function execute(ListReservationsCommand $command): array
     {
         try {
             $fromDate = new \DateTimeImmutable($command->from);

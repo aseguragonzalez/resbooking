@@ -6,21 +6,14 @@ namespace Application\Projects\RemovePlace;
 
 use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<RemovePlaceCommand>
- */
-final class RemovePlaceService extends ApplicationService implements RemovePlace
+final class RemovePlaceService implements RemovePlace
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param RemovePlaceCommand $command
-     */
-    public function execute($command): void
+    public function execute(RemovePlaceCommand $command): void
     {
         $project = $this->projectRepository->getById($command->projectId);
         $project->removePlaces(fn (Place $place) => $place->getId() === $command->placeId);

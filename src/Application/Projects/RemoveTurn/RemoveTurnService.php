@@ -6,21 +6,14 @@ namespace Application\Projects\RemoveTurn;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\ValueObjects\TurnAvailability;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<RemoveTurnCommand>
- */
-final class RemoveTurnService extends ApplicationService implements RemoveTurn
+final class RemoveTurnService implements RemoveTurn
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param RemoveTurnCommand $command
-     */
-    public function execute($command): void
+    public function execute(RemoveTurnCommand $command): void
     {
         $project = $this->projectRepository->getById($command->projectId);
         $project->removeTurns(

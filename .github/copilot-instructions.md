@@ -93,10 +93,9 @@ Contains pure business logic organized by bounded context. Each bounded context
 | `DomainException` | `Seedwork\Domain\Exceptions\DomainException` | Domain exceptions.|
 | `Repository` | `Seedwork\Domain\Repository` | Base interface for aggregate repositories.|
 | `Controller` | `Seedwork\Infrastructure\Ports\Mvc\Controllers\Controller` | Controllers.|
-| `Command` | `Seedwork\Application\Command` | Base for application service commands|
-| `ApplicationService` | `Seedwork\Application\ApplicationService` |Application services.|
 
 Always extend or implement these abstractions.
+
 Example patterns:
 
 ```php
@@ -113,12 +112,8 @@ interface MyAggregateRootRepository extends Repository { /* ... */ }
 
 
 interface CreateNewProject { /* ... */ }
-/**
- * @extends ApplicationService<CreateNewProjectCommand>
- */
-final class CreateNewProjectService extends ApplicationService
- implements CreateNewProject { /* ... */ }
-final class CreateNewProjectCommand extends Command { /* ... */ }
+final class CreateNewProjectService implements CreateNewProject { /* ... */ }
+final class CreateNewProjectCommand { /* ... */ }
 
 ```
 
@@ -287,9 +282,7 @@ declare(strict_types=1);
 
 namespace Application\Projects\CreateNewProject;
 
-use Seedwork\Application\Command;
-
-final class CreateNewProjectCommand extends Command
+final class CreateNewProjectCommand
 {
     public function __construct(public readonly string $email)
     {
@@ -308,21 +301,14 @@ namespace Application\Projects\CreateNewProject;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\Entities\Project;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<CreateNewProjectCommand>
- */
-final class CreateNewProjectService extends ApplicationService implements CreateNewProject
+final class CreateNewProjectService implements CreateNewProject
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param CreateNewProjectCommand $command
-     */
-    public function execute($command): void
+    public function execute(CreateNewProjectCommand $command): void
     {
         $project = Project::new(email: $command->email);
 
