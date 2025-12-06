@@ -31,8 +31,7 @@ Within `src/`, organize code into three main layers:
 
 **Application Layer** (`src/Application/`):
 Contains use cases organized by bounded context. Each bounded context folder
- contains a `UseCases/` subdirectory where each use case is implemented as
- three files:
+ contains use case folders where each use case is implemented as three files:
 
 - The use case interface (`<UseCase>.php`);
 - The application command class (`<UseCase>Command.php`);
@@ -65,7 +64,7 @@ Contains pure business logic organized by bounded context. Each bounded context
 
 **Tests** (`tests/Unit/`): Mirror the source structure exactly.
 
-- Under `Application/<BoundedContext>/UseCases/`:
+- Under `Application/<BoundedContext>/<UseCase>/`:
   - `<UseCase>Test.php`.
 - Under `Domain/<BoundedContext>/`:
   - `Entities/` (`<AggregateRoot>Test.php`)
