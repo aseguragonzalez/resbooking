@@ -6,7 +6,7 @@ namespace Application\Projects\AddOpenCloseEvent;
 
 use Seedwork\Application\Command;
 
-final class AddOpencloseEventCommand extends Command
+final class AddOpenCloseEventCommand extends Command
 {
     public function __construct(
         public readonly string $projectId,

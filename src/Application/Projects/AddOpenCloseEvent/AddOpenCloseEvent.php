@@ -10,7 +10,7 @@ use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Application\ApplicationService;
 
 /**
- * @extends ApplicationService<AddOpencloseEventCommand>
+ * @extends ApplicationService<AddOpenCloseEventCommand>
  */
 final class AddOpenCloseEvent extends ApplicationService
 {
@@ -19,7 +19,7 @@ final class AddOpenCloseEvent extends ApplicationService
     }
 
     /**
-     * @param AddOpencloseEventCommand $command
+     * @param AddOpenCloseEventCommand $command
      */
     public function execute($command): void
     {
