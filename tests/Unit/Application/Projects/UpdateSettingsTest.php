@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\UpdateSettings;
 
 use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
+use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Shared\Capacity;
@@ -64,7 +65,7 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: new Capacity(10),
             phone: new Phone($this->faker->phoneNumber)
         );
-        $ApplicationService = new UpdateSettings(projectRepository: $this->projectRepository);
+        $ApplicationService = new UpdateSettingsService(projectRepository: $this->projectRepository);
 
         $ApplicationService->execute($request);
 

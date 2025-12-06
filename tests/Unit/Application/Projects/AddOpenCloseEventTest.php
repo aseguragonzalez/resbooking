@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\AddOpenCloseEvent;
 
 use Application\Projects\AddOpenCloseEvent\AddOpenCloseEvent;
 use Application\Projects\AddOpenCloseEvent\AddOpenCloseEventCommand;
+use Application\Projects\AddOpenCloseEvent\AddOpenCloseEventService;
 use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -48,7 +49,7 @@ final class AddOpenCloseEventTest extends TestCase
             isAvailable: $this->faker->boolean,
             startTime: '13:00'
         );
-        $ApplicationService = new AddOpenCloseEvent($this->projectRepository);
+        $ApplicationService = new AddOpenCloseEventService($this->projectRepository);
 
         $ApplicationService->execute($request);
 

@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\AddTurns;
 
 use Application\Projects\AddTurns\AddTurns;
 use Application\Projects\AddTurns\AddTurnsCommand;
+use Application\Projects\AddTurns\AddTurnsService;
 use Application\Projects\AddTurns\TurnItem;
 use Domain\Projects\ProjectRepository;
 use Faker\Factory as FakerFactory;
@@ -61,7 +62,7 @@ final class AddTurnsTest extends TestCase
                 ),
             ]
         );
-        $ApplicationService = new AddTurns($this->projectRepository);
+        $ApplicationService = new AddTurnsService($this->projectRepository);
 
         $ApplicationService->execute($request);
 
