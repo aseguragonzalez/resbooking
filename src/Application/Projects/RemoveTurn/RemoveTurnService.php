@@ -9,7 +9,6 @@ use Domain\Shared\ValueObjects\TurnAvailability;
 use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends ApplicationService<RemoveTurnCommand>
  * @extends ApplicationService<RemoveTurnCommand>
  */
 final class RemoveTurnService extends ApplicationService implements RemoveTurn

@@ -9,7 +9,6 @@ use Domain\Shared\ValueObjects\OpenCloseEvent;
 use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends ApplicationService<RemoveOpenCloseEventCommand>
  * @extends ApplicationService<RemoveOpenCloseEventCommand>
  */
 final class RemoveOpenCloseEventService extends ApplicationService implements RemoveOpenCloseEvent

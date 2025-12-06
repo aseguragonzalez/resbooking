@@ -9,7 +9,6 @@ use Domain\Projects\ValueObjects\Settings;
 use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends ApplicationService<UpdateSettingsCommand>
  * @extends ApplicationService<UpdateSettingsCommand>
  */
 final class UpdateSettingsService extends ApplicationService implements UpdateSettings

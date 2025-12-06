@@ -9,7 +9,6 @@ use Domain\Projects\ProjectRepository;
 use Seedwork\Application\ApplicationService;
 
 /**
- * @template-extends ApplicationService<RemovePlaceCommand>
  * @extends ApplicationService<RemovePlaceCommand>
  */
 final class RemovePlaceService extends ApplicationService implements RemovePlace
