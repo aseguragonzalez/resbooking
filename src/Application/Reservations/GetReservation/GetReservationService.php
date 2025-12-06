@@ -7,7 +7,6 @@ namespace Application\Reservations\GetReservation;
 use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
-use Seedwork\Application\ApplicationService;
 
 final class GetReservationService implements GetReservation
 {

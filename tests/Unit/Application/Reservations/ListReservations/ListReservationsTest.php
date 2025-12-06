@@ -7,7 +7,6 @@ namespace Tests\Unit\Application\Reservations\ListReservations;
 use Application\Reservations\ListReservations\ListReservations;
 use Application\Reservations\ListReservations\ListReservationsCommand;
 use Application\Reservations\ListReservations\ListReservationsService;
-use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Repositories\ReservationRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +49,7 @@ final class ListReservationsTest extends TestCase
 
         $result = $this->service->execute($command);
 
-        $this->assertIsArray($result);
+        $this->assertCount(0, $result);
     }
 
     public function testExecuteHandlesInvalidDate(): void
@@ -67,6 +66,6 @@ final class ListReservationsTest extends TestCase
 
         $result = $this->service->execute($command);
 
-        $this->assertIsArray($result);
+        $this->assertCount(0, $result);
     }
 }

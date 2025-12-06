@@ -26,10 +26,6 @@ final class ReservationTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     public function testCreateNewReservation(): void
     {
         $projectId = $this->faker->uuid();
@@ -150,7 +146,7 @@ final class ReservationTest extends TestCase
         $events = $reservation->getEvents();
         $this->assertCount(2, $events);
         $this->assertInstanceOf(ReservationUpdated::class, $events[1]);
-        $event = $events[0];
+        $event = $events[1];
         $this->assertSame($reservation, $event->getPayload()['reservation']);
         $this->assertSame($reservation->getId(), $event->getPayload()['reservationId']);
     }
