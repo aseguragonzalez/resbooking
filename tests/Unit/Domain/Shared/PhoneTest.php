@@ -28,7 +28,7 @@ final class PhoneTest extends TestCase
 
         $phone = new Phone($expected);
 
-        $this->assertSame($expected, $phone->getValue());
+        $this->assertSame($expected, $phone->value);
     }
 
     public function testCastingToString(): void
@@ -44,7 +44,7 @@ final class PhoneTest extends TestCase
     {
         $phone = new Phone($this->faker->phoneNumber);
 
-        $this->assertTrue($phone->equals(new Phone($phone->getValue())));
+        $this->assertTrue($phone->equals(new Phone($phone->value)));
     }
 
     public function testEqualsIsFalseWhenComparedWithDifferentValues(): void
@@ -52,5 +52,12 @@ final class PhoneTest extends TestCase
         $phone = new Phone($this->faker->phoneNumber);
 
         $this->assertFalse($phone->equals(new Phone($this->faker->phoneNumber)));
+    }
+
+    public function testCreateInstanceFailWhenValueIsEmpty(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Phone('');
     }
 }

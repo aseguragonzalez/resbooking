@@ -31,6 +31,36 @@ enum Turn: int
     case H2300 = 23;
     case H2330 = 24;
 
+    public function toString(): string
+    {
+        return match ($this->value) {
+            1 => '12:00:00',
+            2 => '12:30:00',
+            3 => '13:00:00',
+            4 => '13:30:00',
+            5 => '14:00:00',
+            6 => '14:30:00',
+            7 => '15:00:00',
+            8 => '15:30:00',
+            9 => '16:00:00',
+            10 => '16:30:00',
+            11 => '17:00:00',
+            12 => '17:30:00',
+            13 => '18:00:00',
+            14 => '18:30:00',
+            15 => '19:00:00',
+            16 => '19:30:00',
+            17 => '20:00:00',
+            18 => '20:30:00',
+            19 => '21:00:00',
+            20 => '21:30:00',
+            21 => '22:00:00',
+            22 => '22:30:00',
+            23 => '23:00:00',
+            24 => '23:30:00',
+        };
+    }
+
     public static function getById(int $id): self
     {
         return match ($id) {
@@ -64,6 +94,10 @@ enum Turn: int
 
     public static function getByStartTime(string $startTime): self
     {
+        if (strlen($startTime) !== 5 && strlen($startTime) !== 8) {
+            throw new \InvalidArgumentException("Invalid turn start time: $startTime");
+        }
+
         return match (substr($startTime, 0, 5)) {
             '12:00' => self::H1200,
             '12:30' => self::H1230,
@@ -90,36 +124,6 @@ enum Turn: int
             '23:00' => self::H2300,
             '23:30' => self::H2330,
             default => throw new \InvalidArgumentException("Invalid turn start time: $startTime"),
-        };
-    }
-
-    public function toString(): string
-    {
-        return match ($this->value) {
-            1 => '12:00:00',
-            2 => '12:30:00',
-            3 => '13:00:00',
-            4 => '13:30:00',
-            5 => '14:00:00',
-            6 => '14:30:00',
-            7 => '15:00:00',
-            8 => '15:30:00',
-            9 => '16:00:00',
-            10 => '16:30:00',
-            11 => '17:00:00',
-            12 => '17:30:00',
-            13 => '18:00:00',
-            14 => '18:30:00',
-            15 => '19:00:00',
-            16 => '19:30:00',
-            17 => '20:00:00',
-            18 => '20:30:00',
-            19 => '21:00:00',
-            20 => '21:30:00',
-            21 => '22:00:00',
-            22 => '22:30:00',
-            23 => '23:00:00',
-            24 => '23:30:00',
         };
     }
 
