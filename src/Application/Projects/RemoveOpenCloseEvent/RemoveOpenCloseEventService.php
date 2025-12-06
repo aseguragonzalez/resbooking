@@ -6,21 +6,14 @@ namespace Application\Projects\RemoveOpenCloseEvent;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\ValueObjects\OpenCloseEvent;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<RemoveOpenCloseEventCommand>
- */
-final class RemoveOpenCloseEventService extends ApplicationService implements RemoveOpenCloseEvent
+final class RemoveOpenCloseEventService implements RemoveOpenCloseEvent
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param RemoveOpenCloseEventCommand $command
-     */
-    public function execute($command): void
+    public function execute(RemoveOpenCloseEventCommand $command): void
     {
         $project = $this->projectRepository->getById($command->projectId);
         $project->removeOpenCloseEvents(

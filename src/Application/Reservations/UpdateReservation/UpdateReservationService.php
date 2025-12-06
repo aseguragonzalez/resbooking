@@ -9,22 +9,15 @@ use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<UpdateReservationCommand>
- */
-final class UpdateReservationService extends ApplicationService implements UpdateReservation
+final class UpdateReservationService implements UpdateReservation
 {
     public function __construct(
         private readonly ReservationRepository $reservationRepository
     ) {
     }
 
-    /**
-     * @param UpdateReservationCommand $command
-     */
-    public function execute($command): void
+    public function execute(UpdateReservationCommand $command): void
     {
         if (!$this->reservationRepository->exist($command->reservationId)) {
             throw new ReservationDoesNotExist();

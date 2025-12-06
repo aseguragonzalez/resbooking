@@ -6,21 +6,14 @@ namespace Application\Projects\UpdateSettings;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\ValueObjects\Settings;
-use Seedwork\Application\ApplicationService;
 
-/**
- * @extends ApplicationService<UpdateSettingsCommand>
- */
-final class UpdateSettingsService extends ApplicationService implements UpdateSettings
+final class UpdateSettingsService implements UpdateSettings
 {
     public function __construct(private readonly ProjectRepository $projectRepository)
     {
     }
 
-    /**
-     * @param UpdateSettingsCommand $command
-     */
-    public function execute($command): void
+    public function execute(UpdateSettingsCommand $command): void
     {
         $project = $this->projectRepository->getById($command->projectId);
         $project->updateSettings(new Settings(
