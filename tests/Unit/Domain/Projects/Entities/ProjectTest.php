@@ -72,18 +72,18 @@ final class ProjectTest extends TestCase
         $id = $this->faker->uuid;
         $settings = $this->settings();
 
-        $project = Project::new(id: $id, email: $settings->email->getValue());
+        $project = Project::new(id: $id, email: $settings->email->value);
 
         $this->assertInstanceOf(Project::class, $project);
         $this->assertSame($id, $project->getId());
         $projectSettings = $project->getSettings();
-        $this->assertSame($settings->email->getValue(), $projectSettings->email->getValue());
+        $this->assertSame($settings->email->value, $projectSettings->email->value);
         $this->assertSame($settings->hasReminders, $projectSettings->hasReminders);
         $this->assertSame($settings->name, $projectSettings->name);
         $this->assertSame($settings->maxNumberOfDiners->value, $projectSettings->maxNumberOfDiners->value);
         $this->assertSame($settings->minNumberOfDiners->value, $projectSettings->minNumberOfDiners->value);
         $this->assertSame($settings->numberOfTables->value, $projectSettings->numberOfTables->value);
-        $this->assertSame($settings->phone->getValue(), $projectSettings->phone->getValue());
+        $this->assertSame($settings->phone->value, $projectSettings->phone->value);
         $this->assertCount(1, $project->getUsers());
         $this->assertCount(1, $project->getPlaces());
         $numberOfTurns = count(DayOfWeek::all()) * count(Turn::all());

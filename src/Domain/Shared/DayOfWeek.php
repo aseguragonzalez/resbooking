@@ -14,6 +14,11 @@ enum DayOfWeek: int
     case Friday = 6;
     case Saturday = 7;
 
+    public function toString(): string
+    {
+        return $this->name;
+    }
+
     public static function getById(int $id): self
     {
         return match ($id) {

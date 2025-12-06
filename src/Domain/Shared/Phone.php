@@ -6,8 +6,9 @@ namespace Domain\Shared;
 
 final class Phone
 {
-    public function __construct(private readonly string $value)
+    public function __construct(public readonly string $value)
     {
+        // TODO: Implement phone number validation
         // if (!preg_match('/^\(\d{2}\) \d{4,5}-\d{4}$/', $value)) {
         //      throw new \InvalidArgumentException('Invalid phone number');
         // }
@@ -20,11 +21,6 @@ final class Phone
 
     public function equals(Phone $phone): bool
     {
-        return $this->value === $phone->getValue();
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
+        return $this->value === $phone->value;
     }
 }

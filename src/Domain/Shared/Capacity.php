@@ -4,27 +4,22 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-use Seedwork\Domain\Exceptions\ValueException;
-
 final class Capacity
 {
-    public readonly int $value;
-
-    public function __construct(int $value)
+    public function __construct(public readonly int $value)
     {
-        if ($value < 0) {
-            throw new ValueException('Capacity must be greater than or equal to 0');
+        if ($this->value < 0) {
+            throw new \InvalidArgumentException('Capacity must be greater than or equal to 0');
         }
-        $this->value = $value;
-    }
-
-    public function equals(Capacity $other): bool
-    {
-        return $this->value === $other->value;
     }
 
     public function __toString()
     {
         return (string) $this->value;
+    }
+
+    public function equals(Capacity $other): bool
+    {
+        return $this->value === $other->value;
     }
 }

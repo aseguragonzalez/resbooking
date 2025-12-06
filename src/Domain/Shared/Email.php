@@ -6,9 +6,9 @@ namespace Domain\Shared;
 
 final class Email
 {
-    public function __construct(private readonly string $value)
+    public function __construct(public readonly string $value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($this->value, FILTER_VALIDATE_EMAIL)) {
             throw new \InvalidArgumentException('Invalid email address');
         }
     }
@@ -20,11 +20,6 @@ final class Email
 
     public function equals(Email $email): bool
     {
-        return $this->value === $email->getValue();
-    }
-
-    public function getValue(): string
-    {
-        return $this->value;
+        return $this->value === $email->value;
     }
 }

@@ -66,8 +66,8 @@ final class UpdateReservationTest extends TestCase
         $this->service->execute($command);
 
         $this->assertSame('Jane Doe', $reservation->getName());
-        $this->assertSame('jane@example.com', $reservation->getEmail()->getValue());
-        $this->assertSame('+34-555-0200', $reservation->getPhone()->getValue());
+        $this->assertSame('jane@example.com', $reservation->getEmail()->value);
+        $this->assertSame('+34-555-0200', $reservation->getPhone()->value);
     }
 
     public function testExecuteThrowsExceptionWhenReservationDoesNotExist(): void
