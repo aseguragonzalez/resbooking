@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
+use Application\Projects\AddPlace\AddPlace;
+use Application\Projects\AddPlace\AddPlaceService;
 use Application\Projects\CreateNewProject\CreateNewProject;
 use Application\Projects\CreateNewProject\CreateNewProjectService;
+use Application\Projects\RemovePlace\RemovePlace;
+use Application\Projects\RemovePlace\RemovePlaceService;
+use Application\Projects\UpdatePlace\UpdatePlace;
+use Application\Projects\UpdatePlace\UpdatePlaceService;
 use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Domain\Projects\ProjectRepository;
@@ -15,6 +21,7 @@ use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
 use Infrastructure\Adapters\Repositories\Projects\InFileProjectRepository;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
+use Infrastructure\Ports\Dashboard\Controllers\PlacesController;
 use Infrastructure\Ports\Dashboard\Controllers\ProjectController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Monolog\{Logger as MonoLogger, Level};
@@ -79,6 +86,12 @@ final class App extends WebApp
         $this->container->set(CreateNewProject::class, $createNewProjectService);
         $updateSettingsService = $this->container->get(UpdateSettingsService::class);
         $this->container->set(UpdateSettings::class, $updateSettingsService);
+        $addPlaceService = $this->container->get(AddPlaceService::class);
+        $this->container->set(AddPlace::class, $addPlaceService);
+        $removePlaceService = $this->container->get(RemovePlaceService::class);
+        $this->container->set(RemovePlace::class, $removePlaceService);
+        $updatePlaceService = $this->container->get(UpdatePlaceService::class);
+        $this->container->set(UpdatePlace::class, $updatePlaceService);
     }
 
     protected function router(): Router
@@ -87,11 +100,13 @@ final class App extends WebApp
         $reservationsRoutes = ReservationsController::getRoutes();
         $dashboardRoutes = DashboardController::getRoutes();
         $projectRoutes = ProjectController::getRoutes();
+        $placesRoutes = PlacesController::getRoutes();
         return new Router(routes:[
             ...$accountsRoutes,
             ...$reservationsRoutes,
             ...$dashboardRoutes,
-            ...$projectRoutes
+            ...$projectRoutes,
+            ...$placesRoutes
         ]);
     }
 }

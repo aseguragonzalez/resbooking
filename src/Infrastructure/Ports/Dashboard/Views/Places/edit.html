@@ -1,0 +1,81 @@
+{{#layout layout:}}
+<form action="{{actionUrl}}" method="post" class="form">
+    <header>
+        <h2>{{pageTitle}}</h2>
+    </header>
+
+    {{#if placeId:}}
+    <input type="hidden" name="id" value="{{placeId}}" />
+    {{#endif placeId:}}
+    <input type="hidden" name="backUrl" value="{{backUrl}}" />
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{places.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <div class="form-control">
+        <label for="name">
+            {{places.form.name.label}}
+        </label>
+        <input
+            aria-describedby="name-help {{#if errors->name:}}name-error{{#endif errors->name:}}"
+            autocomplete="off"
+            id="name"
+            name="name"
+            placeholder="{{places.form.name.placeholder}}"
+            required
+            type="text"
+            value="{{place->name}}"
+            {{#if errors->name:}}aria-invalid="true"{{#endif errors->name:}}
+        />
+        <p>
+            <small id="name-help">{{places.form.name.help}}</small>
+            {{#if errors->name:}}
+            <small id="name-error" class="error" role="alert">
+                {{errors->name}}
+            </small>
+            {{#endif errors->name:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label for="capacity">
+            {{places.form.capacity.label}}
+        </label>
+        <input
+            aria-describedby="capacity-help {{#if errors->capacity:}}capacity-error{{#endif errors->capacity:}}"
+            autocomplete="off"
+            id="capacity"
+            name="capacity"
+            placeholder="{{places.form.capacity.placeholder}}"
+            required
+            type="number"
+            min="1"
+            value="{{place->capacity}}"
+            {{#if errors->capacity:}}aria-invalid="true"{{#endif errors->capacity:}}
+        />
+        <p>
+            <small id="capacity-help">{{places.form.capacity.help}}</small>
+            {{#if errors->capacity:}}
+            <small id="capacity-error" class="error" role="alert">
+                {{errors->capacity}}
+            </small>
+            {{#endif errors->capacity:}}
+        </p>
+    </div>
+
+    <footer>
+        <button type="submit" class="primary-button">{{form.save}}</button>
+        <button type="reset">{{form.cancel}}</button>
+        <a href="{{backUrl}}">{{form.back}}</a>
+    </footer>
+</form>
