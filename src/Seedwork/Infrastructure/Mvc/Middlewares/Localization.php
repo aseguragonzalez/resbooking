@@ -97,7 +97,7 @@ final class Localization extends Middleware
         $cookieParams = $request->getCookieParams();
         /** @var string $language */
         $language = $cookieParams[$this->settings->languageCookieName];
-        $context->set(RequestContextKeys::LANGUAGE->value, $language);
+        $context->set(RequestContextKeys::Language->value, $language);
         return $next->handleRequest($request)->withAddedHeader('Content-Language', $language);
     }
 
@@ -107,7 +107,7 @@ final class Localization extends Middleware
         ServerRequestInterface $request
     ): ResponseInterface {
         $language = $this->getLanguageFromRequestOrDefault($request);
-        $context->set(RequestContextKeys::LANGUAGE->value, $language);
+        $context->set(RequestContextKeys::Language->value, $language);
         return $next->handleRequest($request)
             ->withAddedHeader('Content-Language', $language)
             ->withAddedHeader('Set-Cookie', "{$this->settings->languageCookieName}={$language}");

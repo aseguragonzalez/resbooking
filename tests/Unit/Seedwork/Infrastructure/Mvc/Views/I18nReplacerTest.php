@@ -32,7 +32,7 @@ final class I18nReplacerTest extends TestCase
                 'greeting' => 'Hello',
                 'name' => 'Peter',
             ]);
-        $context = new RequestContext([RequestContextKeys::LANGUAGE->value => 'en']);
+        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
         $template = '{{greeting}}, {{name}}!';
         $result = $this->i18nReplacer->replace((object)[], $template, $context);
         $this->assertSame('Hello, Peter!', $result);
@@ -43,7 +43,7 @@ final class I18nReplacerTest extends TestCase
         $this->fileManager
             ->method('readKeyValueJson')
             ->willReturn([]);
-        $context = new RequestContext([RequestContextKeys::LANGUAGE->value => 'en']);
+        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
         $template = 'No keys here. {{some-key}}';
         $result = $this->i18nReplacer->replace((object)[], $template, $context);
         $this->assertSame('No keys here. {{some-key}}', $result);
@@ -54,7 +54,7 @@ final class I18nReplacerTest extends TestCase
         $this->fileManager
             ->method('readKeyValueJson')
             ->willReturn(['greeting' => 'Hello']);
-        $context = new RequestContext([RequestContextKeys::LANGUAGE->value => 'en']);
+        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
         $template = '{{greeting}}, {{name}}!';
         $result = $this->i18nReplacer->replace((object)[], $template, $context);
         $this->assertSame('Hello, {{name}}!', $result);

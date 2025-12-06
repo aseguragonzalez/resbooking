@@ -6,7 +6,7 @@ namespace Domain\Reservations\ValueObjects;
 
 enum ReservationStatus: string
 {
-    case PENDING = 'PENDING';
-    case ACCEPTED = 'ACCEPTED';
-    case CANCELLED = 'CANCELLED';
+    case Pending = 'PENDING';
+    case Accepted = 'ACCEPTED';
+    case Cancelled = 'CANCELLED';
 }

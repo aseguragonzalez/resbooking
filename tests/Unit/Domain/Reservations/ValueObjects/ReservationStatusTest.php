@@ -11,22 +11,22 @@ final class ReservationStatusTest extends TestCase
 {
     public function testReservationStatusHasAllCases(): void
     {
-        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::PENDING);
-        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::ACCEPTED);
-        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::CANCELLED);
+        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::Pending);
+        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::Accepted);
+        $this->assertInstanceOf(ReservationStatus::class, ReservationStatus::Cancelled);
     }
 
     public function testReservationStatusValues(): void
     {
-        $this->assertSame('PENDING', ReservationStatus::PENDING->value);
-        $this->assertSame('ACCEPTED', ReservationStatus::ACCEPTED->value);
-        $this->assertSame('CANCELLED', ReservationStatus::CANCELLED->value);
+        $this->assertSame('PENDING', ReservationStatus::Pending->value);
+        $this->assertSame('ACCEPTED', ReservationStatus::Accepted->value);
+        $this->assertSame('CANCELLED', ReservationStatus::Cancelled->value);
     }
 
     public function testReservationStatusFromString(): void
     {
-        $this->assertSame(ReservationStatus::PENDING, ReservationStatus::from('PENDING'));
-        $this->assertSame(ReservationStatus::ACCEPTED, ReservationStatus::from('ACCEPTED'));
-        $this->assertSame(ReservationStatus::CANCELLED, ReservationStatus::from('CANCELLED'));
+        $this->assertSame(ReservationStatus::Pending, ReservationStatus::from('PENDING'));
+        $this->assertSame(ReservationStatus::Accepted, ReservationStatus::from('ACCEPTED'));
+        $this->assertSame(ReservationStatus::Cancelled, ReservationStatus::from('CANCELLED'));
     }
 }

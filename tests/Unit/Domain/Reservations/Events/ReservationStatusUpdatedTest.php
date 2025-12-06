@@ -27,8 +27,8 @@ final class ReservationStatusUpdatedTest extends TestCase
             numberOfDiners: new Capacity(4)
         );
 
-        $oldStatus = ReservationStatus::PENDING;
-        $newStatus = ReservationStatus::ACCEPTED;
+        $oldStatus = ReservationStatus::Pending;
+        $newStatus = ReservationStatus::Accepted;
 
         $event = ReservationStatusUpdated::new(
             reservationId: $reservation->getId(),
