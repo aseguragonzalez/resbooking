@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\RemoveTurn;
 
 use Application\Projects\RemoveTurn\RemoveTurn;
 use Application\Projects\RemoveTurn\RemoveTurnCommand;
+use Application\Projects\RemoveTurn\RemoveTurnService;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\ValueObjects\TurnAvailability;
 use Domain\Shared\DayOfWeek;
@@ -55,7 +56,7 @@ final class RemoveTurnTest extends TestCase
             turn: Turn::H1200,
             dayOfWeek: DayOfWeek::Monday
         );
-        $ApplicationService = new RemoveTurn(projectRepository: $this->projectRepository);
+        $ApplicationService = new RemoveTurnService(projectRepository: $this->projectRepository);
 
         $ApplicationService->execute($request);
 

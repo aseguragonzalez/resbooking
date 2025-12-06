@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\RemoveOpenCloseEvent;
 
 use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEvent;
 use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEventCommand;
+use Application\Projects\RemoveOpenCloseEvent\RemoveOpenCloseEventService;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
 use Domain\Shared\ValueObjects\OpenCloseEvent;
@@ -50,7 +51,7 @@ final class RemoveOpenCloseEventTest extends TestCase
             ->method('save')
             ->with($project);
         $request = new RemoveOpenCloseEventCommand(projectId: $this->faker->uuid, turn: Turn::H1200, date: $today);
-        $ApplicationService = new RemoveOpenCloseEvent(projectRepository: $this->projectRepository);
+        $ApplicationService = new RemoveOpenCloseEventService(projectRepository: $this->projectRepository);
 
         $ApplicationService->execute($request);
 

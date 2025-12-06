@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Projects\RemovePlace;
 
 use Application\Projects\RemovePlace\RemovePlace;
 use Application\Projects\RemovePlace\RemovePlaceCommand;
+use Application\Projects\RemovePlace\RemovePlaceService;
 use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Capacity;
@@ -49,7 +50,7 @@ final class RemovePlaceTest extends TestCase
             ->method('save')
             ->with($project);
         $request = new RemovePlaceCommand(projectId: $this->faker->uuid, placeId: $place->getId());
-        $ApplicationService = new RemovePlace(projectRepository: $this->projectRepository);
+        $ApplicationService = new RemovePlaceService(projectRepository: $this->projectRepository);
 
         $ApplicationService->execute($request);
 
