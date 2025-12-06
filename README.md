@@ -26,8 +26,8 @@ exploring PHP, I hope this project helps you in some way!
 - **Restaurant Configuration** – Set up tables, capacity, and available slots
 per day and shift.
 - **Email Notifications** – Send confirmations and reminders to customers.
-- **Promotions & Offers** – Restaurants can publish special offers based on
-the day and shift.
+- ~~**Promotions & Offers** – Restaurants can publish special offers based on
+the day and shift.~~
 
 ### Tech Stack
 
