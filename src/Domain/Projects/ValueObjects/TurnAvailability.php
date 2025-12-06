@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Domain\Shared\ValueObjects;
+namespace Domain\Projects\ValueObjects;
 
-use Domain\Shared\DayOfWeek;
 use Domain\Shared\Capacity;
+use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use Seedwork\Domain\ValueObject;
 

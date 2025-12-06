@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Domain\Projects\Events;
 
-use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
 
 final class TurnAssigned extends DomainEvent

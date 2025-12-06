@@ -6,7 +6,7 @@ namespace Application\Projects\AddOpenCloseEvent;
 
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
-use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ValueObjects\OpenCloseEvent;
 
 final class AddOpenCloseEventService implements AddOpenCloseEvent
 {

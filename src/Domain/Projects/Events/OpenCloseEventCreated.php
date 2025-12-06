@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Domain\Projects\Events;
 
-use Domain\Shared\ValueObjects\OpenCloseEvent;
+use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Seedwork\Domain\DomainEvent;
 
 final class OpenCloseEventCreated extends DomainEvent

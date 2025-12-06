@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Domain\Shared\ValueObjects;
+namespace Domain\Projects\ValueObjects;
 
 use Domain\Shared\Turn;
 use Seedwork\Domain\ValueObject;

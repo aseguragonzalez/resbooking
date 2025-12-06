@@ -7,12 +7,12 @@ namespace Infrastructure\Adapters\Repositories\Projects;
 use Domain\Projects\Entities\Place;
 use Domain\Projects\Entities\Project;
 use Domain\Projects\ValueObjects\Settings;
+use Domain\Projects\ValueObjects\TurnAvailability;
 use Domain\Projects\ValueObjects\User;
 use Domain\Shared\Capacity;
+use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\ValueObjects\TurnAvailability;
-use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use Infrastructure\Adapters\Repositories\Projects\Models\Place as PlaceModel;
 use Infrastructure\Adapters\Repositories\Projects\Models\Project as ProjectModel;
@@ -63,7 +63,7 @@ final class ProjectsMapper
 
     /**
      * @param array<TurnAvailabilityModel> $turnModels
-     * @return array<\Domain\Shared\ValueObjects\TurnAvailability>
+     * @return array<\Domain\Projects\ValueObjects\TurnAvailability>
      */
     private static function mapTurnsToDomain(array $turnModels): array
     {
@@ -118,7 +118,7 @@ final class ProjectsMapper
     }
 
     /**
-     * @param array<\Domain\Shared\ValueObjects\TurnAvailability> $turns
+     * @param array<\Domain\Projects\ValueObjects\TurnAvailability> $turns
      * @return array<\Infrastructure\Adapters\Repositories\Projects\Models\TurnAvailability>
      */
     private static function mapTurnsToModel(array $turns): array

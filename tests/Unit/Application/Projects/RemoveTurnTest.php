@@ -8,7 +8,7 @@ use Application\Projects\RemoveTurn\RemoveTurn;
 use Application\Projects\RemoveTurn\RemoveTurnCommand;
 use Application\Projects\RemoveTurn\RemoveTurnService;
 use Domain\Projects\ProjectRepository;
-use Domain\Shared\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\TurnAvailability;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Capacity;
 use Domain\Shared\Turn;
