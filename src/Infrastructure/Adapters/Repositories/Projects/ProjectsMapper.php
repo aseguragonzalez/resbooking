@@ -84,20 +84,20 @@ final class ProjectsMapper
             settings: self::mapSettingsToModel($project->getSettings()),
             places: self::mapPlacesToModel($project->getPlaces()),
             turnAvailabilities: self::mapTurnsToModel($project->getTurns()),
-            users: array_map(fn ($user) => $user->username->getValue(), $project->getUsers()),
+            users: array_map(fn ($user) => $user->username->value, $project->getUsers()),
         );
     }
 
     private static function mapSettingsToModel(Settings $settings): SettingsModel
     {
         return new SettingsModel(
-            email: $settings->email->getValue(),
+            email: $settings->email->value,
             hasReminders: $settings->hasReminders,
             name: $settings->name,
             maxNumberOfDiners: $settings->maxNumberOfDiners->value,
             minNumberOfDiners: $settings->minNumberOfDiners->value,
             numberOfTables: $settings->numberOfTables->value,
-            phone: $settings->phone->getValue(),
+            phone: $settings->phone->value,
         );
     }
 

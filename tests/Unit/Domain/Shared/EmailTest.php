@@ -7,6 +7,7 @@ namespace Tests\Unit\Domain\Shared;
 use Domain\Shared\Email;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class EmailTest extends TestCase
@@ -59,5 +60,37 @@ final class EmailTest extends TestCase
         $email = new Email($this->faker->email);
 
         $this->assertFalse($email->equals(new Email($this->faker->email)));
+    }
+
+    public function testCreateInstanceFailWhenValueIsEmpty(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Email('');
+    }
+
+    /**
+     * @return array<array{string}>
+     */
+    public static function invalidEmailProvider(): array
+    {
+        return [
+            ['no-at-sign'],
+            ['@nodomain.com'],
+            ['nodomain@'],
+            ['spaces in@email.com'],
+            ['invalid@'],
+            ['@invalid'],
+            ['missing.domain@'],
+        ];
+    }
+
+    #[DataProvider('invalidEmailProvider')]
+    public function testCreateInstanceFailWhenValueIsInvalidFormat(string $invalidEmail): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid email address');
+
+        new Email($invalidEmail);
     }
 }

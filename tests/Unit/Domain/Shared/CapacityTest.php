@@ -37,4 +37,36 @@ final class CapacityTest extends TestCase
 
         new Capacity($this->faker->numberBetween(-100, -1));
     }
+
+    public function testCreateInstanceWithZero(): void
+    {
+        $capacity = new Capacity(0);
+
+        $this->assertSame(0, $capacity->value);
+    }
+
+    public function testToString(): void
+    {
+        $value = $this->faker->numberBetween(0, 100);
+        $capacity = new Capacity($value);
+
+        $this->assertSame((string) $value, (string) $capacity);
+    }
+
+    public function testEquals(): void
+    {
+        $value = $this->faker->numberBetween(0, 100);
+        $capacity = new Capacity($value);
+
+        $this->assertTrue($capacity->equals(new Capacity($value)));
+    }
+
+    public function testEqualsIsFalseWhenComparedWithDifferentValues(): void
+    {
+        $value1 = $this->faker->numberBetween(1, 50);
+        $value2 = $this->faker->numberBetween(51, 100);
+        $capacity = new Capacity($value1);
+
+        $this->assertFalse($capacity->equals(new Capacity($value2)));
+    }
 }

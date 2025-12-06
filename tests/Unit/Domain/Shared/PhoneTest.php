@@ -53,4 +53,11 @@ final class PhoneTest extends TestCase
 
         $this->assertFalse($phone->equals(new Phone($this->faker->phoneNumber)));
     }
+
+    public function testCreateInstanceFailWhenValueIsEmpty(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        new Phone('');
+    }
 }

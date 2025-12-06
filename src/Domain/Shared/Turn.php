@@ -94,6 +94,10 @@ enum Turn: int
 
     public static function getByStartTime(string $startTime): self
     {
+        if (strlen($startTime) !== 5 && strlen($startTime) !== 8) {
+            throw new \InvalidArgumentException("Invalid turn start time: $startTime");
+        }
+
         return match (substr($startTime, 0, 5)) {
             '12:00' => self::H1200,
             '12:30' => self::H1230,
