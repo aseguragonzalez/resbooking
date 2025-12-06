@@ -64,7 +64,7 @@ final class UpdateReservationStatusTest extends TestCase
 
         $this->service->execute($command);
 
-        $this->assertSame(ReservationStatus::ACCEPTED, $reservation->getStatus());
+        $this->assertSame(ReservationStatus::Accepted, $reservation->getStatus());
     }
 
     public function testExecuteThrowsExceptionWhenReservationDoesNotExist(): void

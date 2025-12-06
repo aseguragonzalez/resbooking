@@ -6,5 +6,5 @@ namespace Seedwork\Infrastructure\Mvc\Requests;
 
 enum RequestContextKeys: string
 {
-    case LANGUAGE = 'language';
+    case Language = 'language';
 }

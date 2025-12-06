@@ -55,7 +55,7 @@ final class ReservationTest extends TestCase
         $this->assertSame($email, $reservation->getEmail());
         $this->assertSame($phone, $reservation->getPhone());
         $this->assertSame($numberOfDiners, $reservation->getNumberOfDiners());
-        $this->assertSame(ReservationStatus::PENDING, $reservation->getStatus());
+        $this->assertSame(ReservationStatus::Pending, $reservation->getStatus());
 
         $events = $reservation->getEvents();
         $this->assertCount(1, $events);
@@ -100,7 +100,7 @@ final class ReservationTest extends TestCase
         $email = new Email($this->faker->email());
         $phone = new Phone($this->faker->phoneNumber());
         $numberOfDiners = new Capacity(6);
-        $status = ReservationStatus::ACCEPTED;
+        $status = ReservationStatus::Accepted;
 
         $reservation = Reservation::build(
             id: $id,
@@ -155,7 +155,7 @@ final class ReservationTest extends TestCase
     {
         $reservation = $this->createReservation();
         $oldStatus = $reservation->getStatus();
-        $newStatus = ReservationStatus::ACCEPTED;
+        $newStatus = ReservationStatus::Accepted;
 
         $reservation->updateStatus($newStatus);
 

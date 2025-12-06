@@ -49,7 +49,7 @@ final class Reservation extends AggregateRoot
             email: $email,
             phone: $phone,
             numberOfDiners: $numberOfDiners,
-            status: ReservationStatus::PENDING
+            status: ReservationStatus::Pending
         );
 
         $reservation->addEvent(
