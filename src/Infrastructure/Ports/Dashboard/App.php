@@ -7,12 +7,15 @@ namespace Infrastructure\Ports\Dashboard;
 use DI\Container;
 use Application\Projects\CreateNewProject\CreateNewProject;
 use Application\Projects\CreateNewProject\CreateNewProjectService;
+use Application\Projects\UpdateSettings\UpdateSettings;
+use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Domain\Projects\ProjectRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
 use Infrastructure\Adapters\Repositories\Projects\InFileProjectRepository;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
+use Infrastructure\Ports\Dashboard\Controllers\ProjectController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Monolog\{Logger as MonoLogger, Level};
 use Monolog\Handler\StreamHandler;
@@ -74,6 +77,8 @@ final class App extends WebApp
         $this->container->set(ProjectRepository::class, $inFileProjectRepository);
         $createNewProjectService = $this->container->get(CreateNewProjectService::class);
         $this->container->set(CreateNewProject::class, $createNewProjectService);
+        $updateSettingsService = $this->container->get(UpdateSettingsService::class);
+        $this->container->set(UpdateSettings::class, $updateSettingsService);
     }
 
     protected function router(): Router
@@ -81,10 +86,12 @@ final class App extends WebApp
         $accountsRoutes = AccountsController::getRoutes();
         $reservationsRoutes = ReservationsController::getRoutes();
         $dashboardRoutes = DashboardController::getRoutes();
+        $projectRoutes = ProjectController::getRoutes();
         return new Router(routes:[
             ...$accountsRoutes,
             ...$reservationsRoutes,
-            ...$dashboardRoutes
+            ...$dashboardRoutes,
+            ...$projectRoutes
         ]);
     }
 }

@@ -16,6 +16,7 @@
             {{#if user->isAuthenticated:}}
             <nav class="nav">
                 <a href="/reservations">{{layout.reservations}}</a>
+                <a href="/project/settings">{{layout.settings}}</a>
                 <a href="/accounts/sign-out">{{layout.signout}}</a>
             </nav>
             {{#endif user->isAuthenticated:}}
