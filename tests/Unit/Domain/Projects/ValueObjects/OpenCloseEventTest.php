@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Domain\Shared\ValueObjects;
+namespace Tests\Unit\Domain\Projects\ValueObjects;
 
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Domain\Shared\Turn;
