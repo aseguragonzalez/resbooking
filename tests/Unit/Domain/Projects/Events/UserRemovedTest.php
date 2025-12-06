@@ -38,19 +38,4 @@ final class UserRemovedTest extends TestCase
         $this->assertSame($projectId, $payload['projectId']);
         $this->assertSame($user, $payload['user']);
     }
-
-    public function testBuildShouldInstanciateStoredEvent(): void
-    {
-        $projectId = $this->faker->uuid;
-        $user = new User(username: new Email($this->faker->email));
-
-        $event = UserRemoved::build(projectId: $projectId, user: $user, id: $this->faker->uuid);
-
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('UserRemoved', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
-        $this->assertSame($projectId, $payload['projectId']);
-        $this->assertSame($user, $payload['user']);
-    }
 }

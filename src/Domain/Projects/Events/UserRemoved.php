@@ -17,13 +17,4 @@ final class UserRemoved extends DomainEvent
             payload: ['projectId' => $projectId, 'user' => $user]
         );
     }
-
-    public static function build(string $projectId, User $user, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'UserRemoved',
-            payload: ['projectId' => $projectId, 'user' => $user]
-        );
-    }
 }

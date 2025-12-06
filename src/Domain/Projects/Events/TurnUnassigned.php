@@ -17,13 +17,4 @@ final class TurnUnassigned extends DomainEvent
             payload: ['projectId' => $projectId, 'turn' => $turn]
         );
     }
-
-    public static function build(string $projectId, TurnAvailability $turn, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'TurnUnassigned',
-            payload: ['projectId' => $projectId, 'turn' => $turn]
-        );
-    }
 }

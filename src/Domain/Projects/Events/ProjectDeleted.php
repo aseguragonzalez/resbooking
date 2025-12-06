@@ -17,13 +17,4 @@ final class ProjectDeleted extends DomainEvent
             payload: ['projectId' => $projectId, 'project' => $project]
         );
     }
-
-    public static function build(string $projectId, Project $project, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'ProjectDeleted',
-            payload: ['projectId' => $projectId, 'project' => $project]
-        );
-    }
 }

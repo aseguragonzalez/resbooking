@@ -17,13 +17,4 @@ final class OpenCloseEventRemoved extends DomainEvent
             payload: ['projectId' => $projectId, 'openCloseEvent' => $openCloseEvent]
         );
     }
-
-    public static function build(string $projectId, OpenCloseEvent $openCloseEvent, string $id): self
-    {
-        return new self(
-            id: $id,
-            type: 'OpenCloseEventRemoved',
-            payload: ['projectId' => $projectId, 'openCloseEvent' => $openCloseEvent]
-        );
-    }
 }

@@ -42,23 +42,4 @@ final class PlaceRemovedTest extends TestCase
         $this->assertSame($projectId, $payload['projectId']);
         $this->assertSame($place, $payload['place']);
     }
-
-    public function testBuildStoredEvent(): void
-    {
-        $projectId = $this->faker->uuid;
-        $place = Place::build(
-            id: $this->faker->uuid,
-            capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
-            name: $this->faker->name
-        );
-
-        $event = PlaceRemoved::build(projectId: $projectId, place: $place, id: $this->faker->uuid);
-
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('PlaceRemoved', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
-        $this->assertSame($projectId, $payload['projectId']);
-        $this->assertSame($place, $payload['place']);
-    }
 }

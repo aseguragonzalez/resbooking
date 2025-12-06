@@ -52,30 +52,4 @@ final class ProjectCreatedTest extends TestCase
         $this->assertSame($projectId, $payload['projectId']);
         $this->assertSame($project, $payload['project']);
     }
-
-    public function testBuildStoredEvent(): void
-    {
-        $projectId = $this->faker->uuid;
-        $project = Project::build(
-            id: $projectId,
-            settings: new Settings(
-                email: new Email($this->faker->email),
-                hasReminders: $this->faker->boolean,
-                name: $this->faker->name,
-                maxNumberOfDiners: new Capacity(100),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(25),
-                phone: new Phone($this->faker->phoneNumber)
-            )
-        );
-
-        $event = ProjectCreated::build(projectId: $projectId, project: $project, id: $this->faker->uuid);
-
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('ProjectCreated', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
-        $this->assertSame($projectId, $payload['projectId']);
-        $this->assertSame($project, $payload['project']);
-    }
 }

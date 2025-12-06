@@ -44,23 +44,4 @@ final class TurnAssignedTest extends TestCase
         $this->assertSame($projectId, $payload['projectId']);
         $this->assertSame($turn, $payload['turn']);
     }
-
-    public function testBuildStoredEvent(): void
-    {
-        $projectId = $this->faker->uuid;
-        $turn = new TurnAvailability(
-            capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
-            dayOfWeek: DayOfWeek::Monday,
-            turn: Turn::H1200,
-        );
-
-        $event = TurnAssigned::build(projectId: $projectId, turn: $turn, id: $this->faker->uuid);
-
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('TurnAssigned', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
-        $this->assertSame($projectId, $payload['projectId']);
-        $this->assertSame($turn, $payload['turn']);
-    }
 }
