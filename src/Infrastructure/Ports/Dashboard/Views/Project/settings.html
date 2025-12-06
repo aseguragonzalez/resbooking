@@ -1,0 +1,191 @@
+{{#layout layout:}}
+<form action="/project/settings" method="post" class="form">
+    <header>
+        <h2>{{projects.settings.form.title}}</h2>
+    </header>
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{projects.settings.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <div class="form-control">
+        <label for="email">
+            {{projects.settings.form.email.label}}
+        </label>
+        <input
+            aria-describedby="email-help {{#if errors->email:}}email-error{{#endif errors->email:}}"
+            autocomplete="off"
+            id="email"
+            name="email"
+            placeholder="{{projects.settings.form.email.placeholder}}"
+            required
+            type="email"
+            value="{{settings->email}}"
+            {{#if errors->email:}}aria-invalid="true"{{#endif errors->email:}}
+        />
+        <p>
+            <small id="email-help">{{projects.settings.form.email.help}}</small>
+            {{#if errors->email:}}
+            <small id="email-error" class="error" role="alert">
+                {{errors->email}}
+            </small>
+            {{#endif errors->email:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label for="name">
+            {{projects.settings.form.name.label}}
+        </label>
+        <input
+            aria-describedby="name-help {{#if errors->name:}}name-error{{#endif errors->name:}}"
+            autocomplete="off"
+            id="name"
+            name="name"
+            placeholder="{{projects.settings.form.name.placeholder}}"
+            required
+            type="text"
+            value="{{settings->name}}"
+            {{#if errors->name:}}aria-invalid="true"{{#endif errors->name:}}
+        />
+        <p>
+            <small id="name-help">{{projects.settings.form.name.help}}</small>
+            {{#if errors->name:}}
+            <small id="name-error" class="error" role="alert">
+                {{errors->name}}
+            </small>
+            {{#endif errors->name:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label for="phone">
+            {{projects.settings.form.phone.label}}
+        </label>
+        <input
+            aria-describedby="phone-help {{#if errors->phone:}}phone-error{{#endif errors->phone:}}"
+            autocomplete="off"
+            id="phone"
+            name="phone"
+            placeholder="{{projects.settings.form.phone.placeholder}}"
+            required
+            type="tel"
+            value="{{settings->phone}}"
+            {{#if errors->phone:}}aria-invalid="true"{{#endif errors->phone:}}
+        />
+        <p>
+            <small id="phone-help">{{projects.settings.form.phone.help}}</small>
+            {{#if errors->phone:}}
+            <small id="phone-error" class="error" role="alert">
+                {{errors->phone}}
+            </small>
+            {{#endif errors->phone:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <div class="checkbox-control">
+            <label for="hasReminders">
+                {{projects.settings.form.has-reminders.label}}
+            </label>
+            <input
+                id="hasReminders"
+                name="hasReminders"
+                type="checkbox"
+                {{#if settings->hasRemindersChecked():}}checked{{#endif settings->hasRemindersChecked():}}
+            />
+        </div>
+    </div>
+
+    <div class="form-control">
+        <label for="minNumberOfDiners">
+            {{projects.settings.form.min-number-of-diners.label}}
+        </label>
+        <input
+            aria-describedby="minNumberOfDiners-help {{#if errors->minNumberOfDiners:}}minNumberOfDiners-error{{#endif errors->minNumberOfDiners:}}"
+            autocomplete="off"
+            id="minNumberOfDiners"
+            name="minNumberOfDiners"
+            placeholder="{{projects.settings.form.min-number-of-diners.placeholder}}"
+            required
+            type="number"
+            min="0"
+            value="{{settings->minNumberOfDiners}}"
+            {{#if errors->minNumberOfDiners:}}aria-invalid="true"{{#endif errors->minNumberOfDiners:}}
+        />
+        <p>
+            <small id="minNumberOfDiners-help">{{projects.settings.form.min-number-of-diners.help}}</small>
+            {{#if errors->minNumberOfDiners:}}
+            <small id="minNumberOfDiners-error" class="error" role="alert">
+                {{errors->minNumberOfDiners}}
+            </small>
+            {{#endif errors->minNumberOfDiners:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label for="maxNumberOfDiners">
+            {{projects.settings.form.max-number-of-diners.label}}
+        </label>
+        <input
+            aria-describedby="maxNumberOfDiners-help {{#if errors->maxNumberOfDiners:}}maxNumberOfDiners-error{{#endif errors->maxNumberOfDiners:}}"
+            autocomplete="off"
+            id="maxNumberOfDiners"
+            name="maxNumberOfDiners"
+            placeholder="{{projects.settings.form.max-number-of-diners.placeholder}}"
+            required
+            type="number"
+            min="0"
+            value="{{settings->maxNumberOfDiners}}"
+            {{#if errors->maxNumberOfDiners:}}aria-invalid="true"{{#endif errors->maxNumberOfDiners:}}
+        />
+        <p>
+            <small id="maxNumberOfDiners-help">{{projects.settings.form.max-number-of-diners.help}}</small>
+            {{#if errors->maxNumberOfDiners:}}
+            <small id="maxNumberOfDiners-error" class="error" role="alert">
+                {{errors->maxNumberOfDiners}}
+            </small>
+            {{#endif errors->maxNumberOfDiners:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <label for="numberOfTables">
+            {{projects.settings.form.number-of-tables.label}}
+        </label>
+        <input
+            aria-describedby="numberOfTables-help {{#if errors->numberOfTables:}}numberOfTables-error{{#endif errors->numberOfTables:}}"
+            autocomplete="off"
+            id="numberOfTables"
+            name="numberOfTables"
+            placeholder="{{projects.settings.form.number-of-tables.placeholder}}"
+            required
+            type="number"
+            min="0"
+            value="{{settings->numberOfTables}}"
+            {{#if errors->numberOfTables:}}aria-invalid="true"{{#endif errors->numberOfTables:}}
+        />
+        <p>
+            <small id="numberOfTables-help">{{projects.settings.form.number-of-tables.help}}</small>
+            {{#if errors->numberOfTables:}}
+            <small id="numberOfTables-error" class="error" role="alert">
+                {{errors->numberOfTables}}
+            </small>
+            {{#endif errors->numberOfTables:}}
+        </p>
+    </div>
+
+    <footer>
+        <button type="submit" class="primary-button">{{projects.settings.form.submit}}</button>
+        <button type="reset">{{projects.settings.form.cancel}}</button>
+    </footer>
+</form>

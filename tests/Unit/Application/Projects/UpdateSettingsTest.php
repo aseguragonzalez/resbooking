@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Projects\UpdateSettings;
 
-use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
 use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Domain\Projects\ProjectRepository;
@@ -57,25 +56,25 @@ final class UpdateSettingsTest extends TestCase
             ->with($project);
         $request = new UpdateSettingsCommand(
             projectId: $this->faker->uuid,
-            email: new Email($this->faker->email),
+            email: $this->faker->email,
             hasReminders: $this->faker->boolean,
             name: $this->faker->name,
-            maxNumberOfDiners: new Capacity(10),
-            minNumberOfDiners: new Capacity(10),
-            numberOfTables: new Capacity(10),
-            phone: new Phone($this->faker->phoneNumber)
+            maxNumberOfDiners: 10,
+            minNumberOfDiners: 10,
+            numberOfTables: 10,
+            phone: $this->faker->phoneNumber
         );
         $ApplicationService = new UpdateSettingsService(projectRepository: $this->projectRepository);
 
         $ApplicationService->execute($request);
 
         $currentSettings = $project->getSettings();
-        $this->assertSame($request->email, $currentSettings->email);
+        $this->assertSame($request->email, $currentSettings->email->value);
         $this->assertSame($request->hasReminders, $currentSettings->hasReminders);
         $this->assertSame($request->name, $currentSettings->name);
-        $this->assertSame($request->maxNumberOfDiners, $currentSettings->maxNumberOfDiners);
-        $this->assertSame($request->minNumberOfDiners, $currentSettings->minNumberOfDiners);
-        $this->assertSame($request->numberOfTables, $currentSettings->numberOfTables);
-        $this->assertSame($request->phone, $currentSettings->phone);
+        $this->assertSame($request->maxNumberOfDiners, $currentSettings->maxNumberOfDiners->value);
+        $this->assertSame($request->minNumberOfDiners, $currentSettings->minNumberOfDiners->value);
+        $this->assertSame($request->numberOfTables, $currentSettings->numberOfTables->value);
+        $this->assertSame($request->phone, $currentSettings->phone->value);
     }
 }
