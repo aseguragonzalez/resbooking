@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard;
 
-use DI\Container;
 use Application\Projects\AddPlace\AddPlace;
 use Application\Projects\AddPlace\AddPlaceService;
 use Application\Projects\CreateNewProject\CreateNewProject;
@@ -15,6 +14,9 @@ use Application\Projects\UpdatePlace\UpdatePlace;
 use Application\Projects\UpdatePlace\UpdatePlaceService;
 use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsService;
+use Application\Projects\UpdateTurns\UpdateTurns;
+use Application\Projects\UpdateTurns\UpdateTurnsService;
+use DI\Container;
 use Domain\Projects\ProjectRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
@@ -24,19 +26,20 @@ use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
 use Infrastructure\Ports\Dashboard\Controllers\PlacesController;
 use Infrastructure\Ports\Dashboard\Controllers\ProjectController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
-use Monolog\{Logger as MonoLogger, Level};
-use Monolog\Handler\StreamHandler;
-use Seedwork\Application\Logging\Logger;
+use Infrastructure\Ports\Dashboard\Controllers\TurnsController;
 use Monolog\Formatter\JsonFormatter;
-use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\WebApp;
+use Monolog\Handler\StreamHandler;
+use Monolog\{Logger as MonoLogger, Level};
+use Seedwork\Application\Logging\Logger;
+use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
 use Seedwork\Infrastructure\Mvc\Security\ChallengesExpirationTime;
 use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
-use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
+use Seedwork\Infrastructure\Mvc\Settings;
+use Seedwork\Infrastructure\Mvc\WebApp;
 
 final class App extends WebApp
 {
@@ -92,6 +95,8 @@ final class App extends WebApp
         $this->container->set(RemovePlace::class, $removePlaceService);
         $updatePlaceService = $this->container->get(UpdatePlaceService::class);
         $this->container->set(UpdatePlace::class, $updatePlaceService);
+        $updateTurnsService = $this->container->get(UpdateTurnsService::class);
+        $this->container->set(UpdateTurns::class, $updateTurnsService);
     }
 
     protected function router(): Router
@@ -101,12 +106,14 @@ final class App extends WebApp
         $dashboardRoutes = DashboardController::getRoutes();
         $projectRoutes = ProjectController::getRoutes();
         $placesRoutes = PlacesController::getRoutes();
+        $turnsRoutes = TurnsController::getRoutes();
         return new Router(routes:[
             ...$accountsRoutes,
             ...$reservationsRoutes,
             ...$dashboardRoutes,
             ...$projectRoutes,
-            ...$placesRoutes
+            ...$placesRoutes,
+            ...$turnsRoutes
         ]);
     }
 }

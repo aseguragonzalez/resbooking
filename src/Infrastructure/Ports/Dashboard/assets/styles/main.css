@@ -186,3 +186,40 @@
 .table-pagination button:hover {
     background-color: var(--color-accent);
 }
+
+/*** TURNS ****/
+
+.turns-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.turn-control {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: calc(100% / 8);
+
+    > input {
+        border: var(--border-width) solid var(--color-secondary);
+        border-radius: var(--border-radius-sm);
+        padding: var(--spacing-sm);
+        width: 100%;
+        text-align: right;
+    }
+}
+
+.turn-form-control {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-sm);
+    justify-content: flex-right;
+    width: 100%;
+}
+
+.turns-form {
+    width: fit-content;
+}

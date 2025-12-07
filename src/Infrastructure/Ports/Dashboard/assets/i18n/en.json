@@ -87,6 +87,7 @@
   "layout.signin": "Sign In",
   "layout.signout": "Sign Out",
   "layout.signup": "Sign Up",
+  "layout.turns": "Turns",
   "reservation.create.title": "Create Reservation",
   "reservation.edit.form.title": "Edit Reservation",
   "reservation.edit.title": "Edit Reservation",
@@ -117,5 +118,15 @@
   "reservations.no_found": "No Reservations Found",
   "reservations.no_found_description": "There are no reservations for the selected date.",
   "reservations.prev": "Prev",
-  "reservations.title": "Reservations | Dashboard"
+  "reservations.title": "Reservations | Dashboard",
+  "turns.dayOfWeek.1": "Monday",
+  "turns.dayOfWeek.2": "Tuesday",
+  "turns.dayOfWeek.3": "Wednesday",
+  "turns.dayOfWeek.4": "Thursday",
+  "turns.dayOfWeek.5": "Friday",
+  "turns.dayOfWeek.6": "Saturday",
+  "turns.dayOfWeek.7": "Sunday",
+  "turns.form.days": "Days",
+  "turns.form.title": "Turns",
+  "turns.title": "Turns | Dashboard"
 }

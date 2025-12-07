@@ -1,0 +1,29 @@
+{{#layout layout:}}
+<form action="/turns" method="post" class="form turns-form">
+    <header>
+        <h2>{{turns.form.title}}</h2>
+    </header>
+
+    <div class="turns-container">
+        {{#for turn in turns:}}
+        <div class="turn-control">
+            <label for="{{turn->turnId}}-{{turn->dayOfWeekId}}">
+                {{turn->time}} {{turns.dayOfWeek.{{turn->dayOfWeekId}}}}
+            </label>
+            <input
+                type="number"
+                step="1"
+                min="0"
+                id="{{turn->turnId}}_{{turn->dayOfWeekId}}"
+                name="{{turn->turnId}}_{{turn->dayOfWeekId}}"
+                value="{{turn->capacity}}"
+            />
+        </div>
+        {{#endfor turns:}}
+    </div>
+
+    <div class="turn-form-control">
+        <button type="submit" class="primary-button">{{form.save}}</button>
+        <button type="reset">{{form.cancel}}</button>
+    </div>
+</form>
