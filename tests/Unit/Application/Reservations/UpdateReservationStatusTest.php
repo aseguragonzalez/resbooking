@@ -8,8 +8,8 @@ use Application\Reservations\UpdateReservationStatus\UpdateReservationStatus;
 use Application\Reservations\UpdateReservationStatus\UpdateReservationStatusCommand;
 use Application\Reservations\UpdateReservationStatus\UpdateReservationStatusService;
 use Domain\Reservations\Entities\Reservation;
-use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
+use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Reservations\ValueObjects\ReservationStatus;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
@@ -21,12 +21,14 @@ use PHPUnit\Framework\TestCase;
 final class UpdateReservationStatusTest extends TestCase
 {
     private MockObject&ReservationRepository $reservationRepository;
+    private MockObject&ReservationObtainer $reservationObtainer;
     private UpdateReservationStatus $service;
 
     protected function setUp(): void
     {
         $this->reservationRepository = $this->createMock(ReservationRepository::class);
-        $this->service = new UpdateReservationStatusService($this->reservationRepository);
+        $this->reservationObtainer = $this->createMock(ReservationObtainer::class);
+        $this->service = new UpdateReservationStatusService($this->reservationObtainer, $this->reservationRepository);
     }
 
     public function testExecuteUpdatesStatusAndSavesReservation(): void
@@ -48,13 +50,8 @@ final class UpdateReservationStatusTest extends TestCase
             id: $reservationId
         );
 
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(true);
-
-        $this->reservationRepository->expects($this->once())
-            ->method('getById')
+        $this->reservationObtainer->expects($this->once())
+            ->method('obtain')
             ->with($this->equalTo($reservationId))
             ->willReturn($reservation);
 
@@ -65,23 +62,5 @@ final class UpdateReservationStatusTest extends TestCase
         $this->service->execute($command);
 
         $this->assertSame(ReservationStatus::Accepted, $reservation->getStatus());
-    }
-
-    public function testExecuteThrowsExceptionWhenReservationDoesNotExist(): void
-    {
-        $reservationId = 'reservation-123';
-        $command = new UpdateReservationStatusCommand(
-            reservationId: $reservationId,
-            status: 'ACCEPTED'
-        );
-
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(false);
-
-        $this->expectException(ReservationDoesNotExist::class);
-
-        $this->service->execute($command);
     }
 }

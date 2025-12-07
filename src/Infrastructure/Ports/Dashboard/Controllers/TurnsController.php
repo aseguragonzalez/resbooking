@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Application\Projects\GetProjectById\GetProjectById;
+use Application\Projects\GetProjectById\GetProjectByIdCommand;
 use Application\Projects\UpdateTurns\UpdateTurns;
 use Application\Projects\UpdateTurns\UpdateTurnsCommand;
-use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Turns\Pages\TurnsList;
 use Infrastructure\Ports\Dashboard\Models\Turns\Requests\UpdateTurnsRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,14 +22,15 @@ final class TurnsController extends Controller
     private const string PROJECT_ID = '69347ea320d5a';
 
     public function __construct(
-        private readonly ProjectRepository $projectRepository,
+        private readonly GetProjectById $getProjectById,
         private readonly UpdateTurns $updateTurns,
     ) {
     }
 
     public function turns(): ActionResponse
     {
-        $project = $this->projectRepository->getById(self::PROJECT_ID);
+        $command = new GetProjectByIdCommand(id: self::PROJECT_ID);
+        $project = $this->getProjectById->execute($command);
         $turnAvailables = $project->getTurns();
         $pageModel = TurnsList::create(turnAvailables: $turnAvailables);
         return $this->view(model: $pageModel);

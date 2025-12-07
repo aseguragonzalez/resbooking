@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Application\Projects\GetProjectById\GetProjectById;
+use Application\Projects\GetProjectById\GetProjectByIdCommand;
 use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
-use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Projects\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Projects\Requests\UpdateSettingsRequest;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
@@ -21,13 +22,14 @@ final class ProjectController extends Controller
 
     public function __construct(
         private readonly UpdateSettings $updateSettings,
-        private readonly ProjectRepository $projectRepository,
+        private readonly GetProjectById $getProjectById,
     ) {
     }
 
     public function settings(): ActionResponse
     {
-        $project = $this->projectRepository->getById(self::PROJECT_ID);
+        $command = new GetProjectByIdCommand(id: self::PROJECT_ID);
+        $project = $this->getProjectById->execute($command);
         $settings = $project->getSettings();
 
         $pageModel = UpdateSettingsPage::new(

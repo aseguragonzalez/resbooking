@@ -8,6 +8,8 @@ use Application\Projects\AddPlace\AddPlace;
 use Application\Projects\AddPlace\AddPlaceService;
 use Application\Projects\CreateNewProject\CreateNewProject;
 use Application\Projects\CreateNewProject\CreateNewProjectService;
+use Application\Projects\GetProjectById\GetProjectById;
+use Application\Projects\GetProjectById\GetProjectByIdService;
 use Application\Projects\RemovePlace\RemovePlace;
 use Application\Projects\RemovePlace\RemovePlaceService;
 use Application\Projects\UpdatePlace\UpdatePlace;
@@ -97,6 +99,8 @@ final class App extends WebApp
         $this->container->set(UpdatePlace::class, $updatePlaceService);
         $updateTurnsService = $this->container->get(UpdateTurnsService::class);
         $this->container->set(UpdateTurns::class, $updateTurnsService);
+        $getProjectByIdService = $this->container->get(GetProjectByIdService::class);
+        $this->container->set(GetProjectById::class, $getProjectByIdService);
     }
 
     protected function router(): Router

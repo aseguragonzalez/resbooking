@@ -9,6 +9,7 @@ use Application\Projects\UpdateTurns\UpdateTurnsCommand;
 use Application\Projects\UpdateTurns\UpdateTurnsService;
 use Domain\Projects\Entities\Project;
 use Domain\Projects\Repositories\ProjectRepository;
+use Domain\Projects\Services\ProjectObtainer;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use PHPUnit\Framework\TestCase;
@@ -20,9 +21,9 @@ final class UpdateTurnsTest extends TestCase
         $projectId = 'test-project-id';
         $project = Project::new('test@example.com', $projectId);
         $repository = $this->createMock(ProjectRepository::class);
-
-        $repository->expects($this->once())
-            ->method('getById')
+        $projectObtainer = $this->createMock(ProjectObtainer::class);
+        $projectObtainer->expects($this->once())
+            ->method('obtain')
             ->with($projectId)
             ->willReturn($project);
 
@@ -47,8 +48,8 @@ final class UpdateTurnsTest extends TestCase
                 ),
             ],
         );
+        $service = new UpdateTurnsService($projectObtainer, $repository);
 
-        $service = new UpdateTurnsService($repository);
         $service->execute($command);
 
         $turns = $project->getTurns();
