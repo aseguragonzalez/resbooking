@@ -258,7 +258,7 @@ final class ProjectTest extends TestCase
         $this->assertCount(1, $project->getEvents());
     }
 
-    public function testUpdateTurns(): void
+    public function testUpdateTurnsSucceedsAndEmitsTurnsUpdatedEvent(): void
     {
         $project = $this->projectBuilder->withSettings($this->settings())->build();
         $newTurns = [

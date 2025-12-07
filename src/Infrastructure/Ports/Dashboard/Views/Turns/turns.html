@@ -7,15 +7,15 @@
     <div class="turns-container">
         {{#for turn in turns:}}
         <div class="turn-control">
-            <label for="{{turn->turnId}}-{{turn->dayOfWeekId}}">
+            <label for="{{turn->id}}">
                 {{turn->time}} {{turns.dayOfWeek.{{turn->dayOfWeekId}}}}
             </label>
             <input
                 type="number"
                 step="1"
                 min="0"
-                id="{{turn->turnId}}_{{turn->dayOfWeekId}}"
-                name="{{turn->turnId}}_{{turn->dayOfWeekId}}"
+                id="{{turn->id}}"
+                name="{{turn->id}}"
                 value="{{turn->capacity}}"
             />
         </div>

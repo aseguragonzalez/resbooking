@@ -30,7 +30,7 @@ final class UpdateTurnsRequest
             $turns[] = new TurnAvailability(
                 turnId: $turnId,
                 dayOfWeekId: $dayOfWeekId,
-                capacity: is_int($value) ? intval($value) : 0
+                capacity: is_numeric($value) ? intval($value) : 0
             );
         }
 
