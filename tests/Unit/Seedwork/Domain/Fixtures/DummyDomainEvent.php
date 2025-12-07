@@ -6,7 +6,7 @@ namespace Tests\Unit\Seedwork\Domain\Fixtures;
 
 use Seedwork\Domain\DomainEvent;
 
-class DummyDomainEvent extends DomainEvent
+final readonly class DummyDomainEvent extends DomainEvent
 {
     public function __construct(
         string $id = 'event-id',

@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Seedwork\Domain\DomainEvent;
 
-final class OpenCloseEventCreated extends DomainEvent
+final readonly class OpenCloseEventCreated extends DomainEvent
 {
     public static function new(string $projectId, OpenCloseEvent $openCloseEvent): self
     {

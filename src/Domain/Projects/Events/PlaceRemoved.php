@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\Entities\Place;
 use Seedwork\Domain\DomainEvent;
 
-final class PlaceRemoved extends DomainEvent
+final readonly class PlaceRemoved extends DomainEvent
 {
     public static function new(string $projectId, Place $place): self
     {

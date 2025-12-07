@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Seedwork\Domain;
 
-abstract class DomainEvent
+abstract readonly class DomainEvent
 {
     /**
      * @param array<string, mixed> $payload
      */
     protected function __construct(
-        private readonly string $id,
-        private readonly string $type = "DomainEvent",
-        private readonly string $version = "1.0",
-        private readonly array $payload = [],
-        private readonly \DateTimeImmutable $createdAt = new \DateTimeImmutable(
+        private string $id,
+        private string $type = "DomainEvent",
+        private string $version = "1.0",
+        private array $payload = [],
+        private \DateTimeImmutable $createdAt = new \DateTimeImmutable(
             'now',
             new \DateTimeZone('UTC')
         )

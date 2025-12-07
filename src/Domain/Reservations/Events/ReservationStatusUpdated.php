@@ -8,7 +8,7 @@ use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\ValueObjects\ReservationStatus;
 use Seedwork\Domain\DomainEvent;
 
-final class ReservationStatusUpdated extends DomainEvent
+final readonly class ReservationStatusUpdated extends DomainEvent
 {
     public static function new(
         string $reservationId,
