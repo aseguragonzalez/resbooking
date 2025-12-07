@@ -13,7 +13,7 @@ use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use PHPUnit\Framework\TestCase;
 
-final class UpdateTurnsServiceTest extends TestCase
+final class UpdateTurnsTest extends TestCase
 {
     public function testExecuteUpdatesTurns(): void
     {

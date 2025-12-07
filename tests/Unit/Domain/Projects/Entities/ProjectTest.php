@@ -78,7 +78,6 @@ final class ProjectTest extends TestCase
         $this->assertCount(1, $project->getPlaces());
         $numberOfTurns = count(DayOfWeek::all()) * count(Turn::all());
         $this->assertCount($numberOfTurns, $project->getTurns());
-        $this->assertEmpty($project->getOpenCloseEvents());
         $events = $project->getEvents();
         $this->assertCount(1, $events);
         $this->assertInstanceOf(ProjectCreated::class, $events[0]);
@@ -112,90 +111,6 @@ final class ProjectTest extends TestCase
         $project->addPlace($place);
     }
 
-    public function testAddOpenCloseEventToProject(): void
-    {
-        $project = $this->projectBuilder->withSettings($this->settings())->build();
-        $openCloseEvent = new OpenCloseEvent(
-            date: new \DateTimeImmutable(),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        );
-
-        $project->addOpenCloseEvent($openCloseEvent);
-
-        $this->assertContains($openCloseEvent, $project->getOpenCloseEvents());
-        $events = $project->getEvents();
-        $this->assertSame(1, count($events));
-        $this->assertInstanceOf(OpenCloseEventCreated::class, $events[0]);
-        $event = $events[0];
-        $this->assertSame($openCloseEvent, $event->getPayload()['openCloseEvent']);
-        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
-    }
-
-    public function testAddOpenCloseEventFailWhenOpenCloseEventAlreadyExist(): void
-    {
-        $openCloseEvent = new OpenCloseEvent(
-            date: new \DateTimeImmutable(),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        );
-        $project = $this->projectBuilder
-            ->withSettings($this->settings())
-            ->withOpenCloseEvents([$openCloseEvent])
-            ->build();
-        $this->expectException(OpenCloseEventAlreadyExist::class);
-
-        $project->addOpenCloseEvent($openCloseEvent);
-    }
-
-    public function testAddOpenCloseEventFailWhenDateIsOutOfRange(): void
-    {
-        $project = $this->projectBuilder->withSettings($this->settings())->build();
-        $date = new \DateTimeImmutable();
-        $this->expectException(OpenCloseEventOutOfRange::class);
-
-        $project->addOpenCloseEvent(new OpenCloseEvent(
-            date: $date->sub(new \DateInterval('P1D')),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        ));
-    }
-
-    public function testRemoveOpenCloseEventFromProject(): void
-    {
-        $openCloseEvent = new OpenCloseEvent(
-            date: new \DateTimeImmutable(),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        );
-        $project = $this->projectBuilder
-            ->withSettings($this->settings())
-            ->withOpenCloseEvents([$openCloseEvent])
-            ->build();
-
-        $project->removeOpenCloseEvent($openCloseEvent);
-
-        $this->assertEmpty($project->getOpenCloseEvents());
-        $events = $project->getEvents();
-        $this->assertSame(1, count($events));
-        $this->assertInstanceOf(OpenCloseEventRemoved::class, $events[0]);
-        $event = $events[0];
-        $this->assertSame($openCloseEvent, $event->getPayload()['openCloseEvent']);
-        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
-    }
-
-    public function testRemoveOpenCloseEventFailWhenOpenCloseEventDoesNotExist(): void
-    {
-        $project = $this->projectBuilder->withSettings($this->settings())->build();
-        $this->expectException(OpenCloseEventDoesNotExist::class);
-
-        $project->removeOpenCloseEvent(new OpenCloseEvent(
-            date: new \DateTimeImmutable(),
-            isAvailable: $this->faker->boolean,
-            turn: Turn::H1200,
-        ));
-    }
-
     public function testUpdateProjectSettings(): void
     {
         $project = $this->projectBuilder->withSettings($this->settings())->build();
@@ -225,36 +140,6 @@ final class ProjectTest extends TestCase
         $project->removePlaces(fn (Place $place) => $place->name === $name);
 
         $this->assertNotContains($places[1], $project->getPlaces());
-        $this->assertCount(1, $project->getEvents());
-    }
-
-    public function testRemoveOpenCloseEventsFromProject(): void
-    {
-        $openCloseEvents = [
-            new OpenCloseEvent(
-                date: new \DateTimeImmutable(),
-                isAvailable: $this->faker->boolean,
-                turn: Turn::H1200,
-            ),
-            new OpenCloseEvent(
-                date: new \DateTimeImmutable(),
-                isAvailable: $this->faker->boolean,
-                turn: Turn::H1230,
-            ),
-            new OpenCloseEvent(
-                date: new \DateTimeImmutable(),
-                isAvailable: $this->faker->boolean,
-                turn: Turn::H1200,
-            ),
-        ];
-        $project = $this->projectBuilder
-            ->withSettings($this->settings())
-            ->withOpenCloseEvents($openCloseEvents)
-            ->build();
-
-        $project->removeOpenCloseEvents(fn (OpenCloseEvent $openCloseEvent) => $openCloseEvent->turn === Turn::H1230);
-
-        $this->assertNotContains($openCloseEvents[1], $project->getOpenCloseEvents());
         $this->assertCount(1, $project->getEvents());
     }
 

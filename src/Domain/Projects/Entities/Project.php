@@ -5,18 +5,12 @@ declare(strict_types=1);
 namespace Domain\Projects\Entities;
 
 use Domain\Projects\Entities\Place;
-use Domain\Projects\Events\OpenCloseEventCreated;
-use Domain\Projects\Events\OpenCloseEventRemoved;
 use Domain\Projects\Events\PlaceCreated;
 use Domain\Projects\Events\PlaceRemoved;
 use Domain\Projects\Events\ProjectCreated;
 use Domain\Projects\Events\ProjectModified;
 use Domain\Projects\Events\TurnsUpdated;
-use Domain\Projects\Exceptions\OpenCloseEventAlreadyExist;
-use Domain\Projects\Exceptions\OpenCloseEventDoesNotExist;
-use Domain\Projects\Exceptions\OpenCloseEventOutOfRange;
 use Domain\Projects\Exceptions\PlaceAlreadyExist;
-use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Projects\ValueObjects\TurnAvailability;
 use Domain\Projects\ValueObjects\User;
@@ -40,7 +34,6 @@ final class Project extends AggregateRoot
      * @param array<User> $users
      * @param array<Place> $places
      * @param array<TurnAvailability> $turns
-     * @param array<OpenCloseEvent> $openCloseEvents
      */
     private function __construct(
         string $id,
@@ -48,7 +41,6 @@ final class Project extends AggregateRoot
         private array $users = [],
         private array $places = [],
         private array $turns = [],
-        private array $openCloseEvents = [],
     ) {
         parent::__construct($id);
     }
@@ -88,7 +80,6 @@ final class Project extends AggregateRoot
                 name: self::DEFAULT_PLACE_NAME
             )],
             turns: $turns,
-            openCloseEvents: [],
         );
         $project->addEvent(ProjectCreated::new(projectId: $project->getId(), project: $project));
         return $project;
@@ -98,7 +89,6 @@ final class Project extends AggregateRoot
      * @param array<User> $users
      * @param array<Place> $places
      * @param array<TurnAvailability> $turns
-     * @param array<OpenCloseEvent> $openCloseEvents
      */
     public static function build(
         string $id,
@@ -106,7 +96,6 @@ final class Project extends AggregateRoot
         array $users = [],
         array $places = [],
         array $turns = [],
-        array $openCloseEvents = [],
     ): self {
         return new self(
             id: $id,
@@ -114,7 +103,6 @@ final class Project extends AggregateRoot
             users: $users,
             places: $places,
             turns: $turns,
-            openCloseEvents: $openCloseEvents,
         );
     }
 
@@ -163,61 +151,6 @@ final class Project extends AggregateRoot
     public function getTurns(): array
     {
         return $this->turns;
-    }
-
-    /**
-     * @return array<OpenCloseEvent>
-     */
-    public function getOpenCloseEvents(): array
-    {
-        return $this->openCloseEvents;
-    }
-
-    public function addOpenCloseEvent(OpenCloseEvent $event): void
-    {
-        $events = array_filter($this->openCloseEvents, fn (OpenCloseEvent $s) => $s->equals($event));
-        if (!empty($events)) {
-            throw new OpenCloseEventAlreadyExist();
-        }
-        $yesterday = (new \DateTimeImmutable())->sub(new \DateInterval('P1D'));
-
-        if ($event->date <= $yesterday) {
-            throw new OpenCloseEventOutOfRange();
-        }
-
-        $this->openCloseEvents[] = $event;
-        $this->addEvent(
-            OpenCloseEventCreated::new(projectId: $this->getId(), openCloseEvent: $event)
-        );
-    }
-
-    public function removeOpenCloseEvent(OpenCloseEvent $event): void
-    {
-        $events = array_filter($this->openCloseEvents, fn (OpenCloseEvent $s) => $s->equals($event));
-        if (empty($events)) {
-            throw new OpenCloseEventDoesNotExist();
-        }
-        $this->openCloseEvents = array_filter(
-            $this->openCloseEvents,
-            fn (OpenCloseEvent $event) => !$event->equals($event)
-        );
-        $this->addEvent(
-            OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
-        );
-    }
-
-    /**
-     * @param callable(OpenCloseEvent): bool $filter
-     */
-    public function removeOpenCloseEvents(callable $filter): void
-    {
-        $eventsToBeRemoved = array_filter($this->openCloseEvents, $filter);
-        foreach ($eventsToBeRemoved as $event) {
-            $this->addEvent(
-                OpenCloseEventRemoved::new(projectId: $this->getId(), openCloseEvent: $event)
-            );
-        }
-        $this->openCloseEvents = array_filter($this->openCloseEvents, fn (OpenCloseEvent $event) => !$filter($event));
     }
 
     public function getSettings(): Settings

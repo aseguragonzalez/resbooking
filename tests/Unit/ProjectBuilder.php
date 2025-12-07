@@ -7,9 +7,8 @@ namespace Tests\Unit;
 use Domain\Projects\Entities\Place;
 use Domain\Projects\Entities\Project;
 use Domain\Projects\ValueObjects\Settings;
-use Domain\Projects\ValueObjects\User;
-use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Domain\Projects\ValueObjects\TurnAvailability;
+use Domain\Projects\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
@@ -32,16 +31,10 @@ final class ProjectBuilder
      */
     private array $turns;
 
-    /**
-     * @var array<OpenCloseEvent> $openCloseEvents
-     */
-    private array $openCloseEvents;
-
     private ?Settings $settings;
 
     public function __construct(private readonly Faker $faker)
     {
-        $this->openCloseEvents = [];
         $this->places = [];
         $this->turns = [];
         $this->users = [];
@@ -65,18 +58,7 @@ final class ProjectBuilder
             places: $this->places,
             users: $this->users,
             turns: $this->turns,
-            openCloseEvents: $this->openCloseEvents,
         );
-    }
-
-    /**
-     * @param array<OpenCloseEvent> $openCloseEvents
-     * @return ProjectBuilder
-     */
-    public function withOpenCloseEvents(array $openCloseEvents = []): ProjectBuilder
-    {
-        $this->openCloseEvents = $openCloseEvents;
-        return $this;
     }
 
     /**
