@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Projects\UpdateSettings;
 
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
 use Application\Projects\UpdateSettings\UpdateSettingsService;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;

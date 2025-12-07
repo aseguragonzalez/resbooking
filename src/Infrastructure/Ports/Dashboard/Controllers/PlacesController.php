@@ -10,7 +10,7 @@ use Application\Projects\RemovePlace\RemovePlace;
 use Application\Projects\RemovePlace\RemovePlaceCommand;
 use Application\Projects\UpdatePlace\UpdatePlace;
 use Application\Projects\UpdatePlace\UpdatePlaceCommand;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Places\Pages\EditPlace;
 use Infrastructure\Ports\Dashboard\Models\Places\Pages\PlacesList;
 use Infrastructure\Ports\Dashboard\Models\Places\Place;

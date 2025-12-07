@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Application\Projects\RemovePlace;
 
 use Domain\Projects\Entities\Place;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 
 final readonly class RemovePlaceService implements RemovePlace
 {

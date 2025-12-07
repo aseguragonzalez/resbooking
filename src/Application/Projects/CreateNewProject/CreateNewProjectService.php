@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Application\Projects\CreateNewProject;
 
 use Domain\Projects\Entities\Project;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 
 final readonly class CreateNewProjectService implements CreateNewProject
 {

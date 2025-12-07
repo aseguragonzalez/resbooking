@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Projects\UpdateTurns;
 
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Projects\ValueObjects\TurnAvailability;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;

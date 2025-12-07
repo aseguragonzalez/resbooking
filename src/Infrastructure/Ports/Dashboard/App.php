@@ -17,7 +17,7 @@ use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Application\Projects\UpdateTurns\UpdateTurns;
 use Application\Projects\UpdateTurns\UpdateTurnsService;
 use DI\Container;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
 use Infrastructure\Adapters\Repositories\Projects\InFileProjectRepository;

@@ -8,7 +8,7 @@ use Application\Projects\RemovePlace\RemovePlace;
 use Application\Projects\RemovePlace\RemovePlaceCommand;
 use Application\Projects\RemovePlace\RemovePlaceService;
 use Domain\Projects\Entities\Place;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
