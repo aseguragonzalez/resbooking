@@ -28,7 +28,6 @@ final class ProjectObtainerTest extends TestCase
 
     public function testObtainReturnsProjectWhenItExists(): void
     {
-
         $projectId = $this->faker->uuid;
         $project = Project::new(email: $this->faker->email, id: $projectId);
         $this->projectRepository->expects($this->once())
@@ -39,7 +38,6 @@ final class ProjectObtainerTest extends TestCase
 
         $result = $this->projectObtainer->obtain($projectId);
 
-
         $this->assertInstanceOf(Project::class, $result);
         $this->assertSame($project, $result);
         $this->assertSame($projectId, $result->getId());
@@ -47,16 +45,12 @@ final class ProjectObtainerTest extends TestCase
 
     public function testObtainThrowsExceptionWhenProjectDoesNotExist(): void
     {
-
         $projectId = $this->faker->uuid;
         $this->projectRepository->expects($this->once())
             ->method('getById')
             ->with($projectId)
             ->willReturn(null);
-
-
         $this->expectException(ProjectDoesNotExist::class);
-
 
         $this->projectObtainer->obtain($projectId);
     }
