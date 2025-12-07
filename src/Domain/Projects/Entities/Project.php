@@ -11,19 +11,10 @@ use Domain\Projects\Events\PlaceCreated;
 use Domain\Projects\Events\PlaceRemoved;
 use Domain\Projects\Events\ProjectCreated;
 use Domain\Projects\Events\ProjectModified;
-use Domain\Projects\Events\TurnAssigned;
-use Domain\Projects\Events\TurnUnassigned;
-use Domain\Projects\Events\UserCreated;
-use Domain\Projects\Events\UserRemoved;
 use Domain\Projects\Exceptions\OpenCloseEventAlreadyExist;
 use Domain\Projects\Exceptions\OpenCloseEventDoesNotExist;
 use Domain\Projects\Exceptions\OpenCloseEventOutOfRange;
 use Domain\Projects\Exceptions\PlaceAlreadyExist;
-use Domain\Projects\Exceptions\PlaceDoesNotExist;
-use Domain\Projects\Exceptions\TurnAlreadyExist;
-use Domain\Projects\Exceptions\TurnDoesNotExist;
-use Domain\Projects\Exceptions\UserAlreadyExist;
-use Domain\Projects\Exceptions\UserDoesNotExist;
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Projects\ValueObjects\TurnAvailability;
@@ -134,42 +125,6 @@ final class Project extends AggregateRoot
         return $this->users;
     }
 
-    public function addUser(User $user): void
-    {
-        $users = array_filter($this->users, fn (User $s) => $s == $user);
-        if (!empty($users)) {
-            throw new UserAlreadyExist();
-        }
-        $this->users[] = $user;
-        $this->addEvent(UserCreated::new(projectId: $this->getId(), user: $user));
-    }
-
-    public function removeUser(User $user): void
-    {
-        $users = array_filter($this->users, fn (User $s) => $s->username->equals($user->username));
-        if (empty($users)) {
-            throw new UserDoesNotExist();
-        }
-
-        $this->users = array_filter(
-            $this->users,
-            fn (User $s) => $s != $user
-        );
-        $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
-    }
-
-    /**
-     * @param callable(User): bool $filter
-     */
-    public function removeUsers(callable $filter): void
-    {
-        $usersToBeRemoved = array_filter($this->users, $filter);
-        foreach ($usersToBeRemoved as $user) {
-            $this->addEvent(UserRemoved::new(projectId: $this->getId(), user: $user));
-        }
-        $this->users = array_filter($this->users, fn (User $user) => !$filter($user));
-    }
-
     /**
      * @return array<Place>
      */
@@ -187,19 +142,6 @@ final class Project extends AggregateRoot
         }
         $this->places[] = $place;
         $this->addEvent(PlaceCreated::new(projectId: $this->getId(), place: $place));
-    }
-
-    public function removePlace(Place $place): void
-    {
-        $places = array_filter($this->places, fn (Place $s) => $s->equals($place));
-        if (empty($places)) {
-            throw new PlaceDoesNotExist();
-        }
-        $this->places = array_filter(
-            $this->places,
-            fn (Place $s) => !$s->equals($place)
-        );
-        $this->addEvent(PlaceRemoved::new(projectId: $this->getId(), place: $place));
     }
 
     /**
@@ -220,41 +162,6 @@ final class Project extends AggregateRoot
     public function getTurns(): array
     {
         return $this->turns;
-    }
-
-    public function addTurn(TurnAvailability $turn): void
-    {
-        $turns = array_filter($this->turns, fn (TurnAvailability $s) => $s->equals($turn));
-        if (!empty($turns)) {
-            throw new TurnAlreadyExist();
-        }
-        $this->turns[] = $turn;
-        $this->addEvent(TurnAssigned::new(projectId: $this->getId(), turn: $turn));
-    }
-
-    public function removeTurn(TurnAvailability $turn): void
-    {
-        $turns = array_filter($this->turns, fn (TurnAvailability $s) => $s->equals($turn));
-        if (empty($turns)) {
-            throw new TurnDoesNotExist();
-        }
-        $this->turns = array_filter(
-            $this->turns,
-            fn (TurnAvailability $s) => !$s->equals($turn)
-        );
-        $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
-    }
-
-    /**
-     * @param callable(TurnAvailability): bool $filter
-     */
-    public function removeTurns(callable $filter): void
-    {
-        $turnsToBeRemoved = array_filter($this->turns, $filter);
-        foreach ($turnsToBeRemoved as $turn) {
-            $this->addEvent(TurnUnassigned::new(projectId: $this->getId(), turn: $turn));
-        }
-        $this->turns = array_filter($this->turns, fn (TurnAvailability $turn) => !$filter($turn));
     }
 
     /**
