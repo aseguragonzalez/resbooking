@@ -11,6 +11,7 @@ use Domain\Projects\Events\PlaceCreated;
 use Domain\Projects\Events\PlaceRemoved;
 use Domain\Projects\Events\ProjectCreated;
 use Domain\Projects\Events\ProjectModified;
+use Domain\Projects\Events\TurnsUpdated;
 use Domain\Projects\Exceptions\OpenCloseEventAlreadyExist;
 use Domain\Projects\Exceptions\OpenCloseEventDoesNotExist;
 use Domain\Projects\Exceptions\OpenCloseEventOutOfRange;
@@ -228,5 +229,14 @@ final class Project extends AggregateRoot
     {
         $this->settings = $settings;
         $this->addEvent(ProjectModified::new(projectId: $this->getId(), project: $this));
+    }
+
+    /**
+     * @param array<TurnAvailability> $turns
+     */
+    public function updateTurns(array $turns): void
+    {
+        $this->turns = $turns;
+        $this->addEvent(TurnsUpdated::new(projectId: $this->getId(), turns: $turns));
     }
 }
