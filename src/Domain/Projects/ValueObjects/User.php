@@ -7,9 +7,9 @@ namespace Domain\Projects\ValueObjects;
 use Domain\Shared\Email;
 use Seedwork\Domain\ValueObject;
 
-final class User extends ValueObject
+final readonly class User extends ValueObject
 {
-    public function __construct(public readonly Email $username)
+    public function __construct(public Email $username)
     {
     }
 }
