@@ -8,9 +8,9 @@ use Domain\Projects\ProjectRepository;
 use Domain\Shared\Turn;
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 
-final class AddOpenCloseEventService implements AddOpenCloseEvent
+final readonly class AddOpenCloseEventService implements AddOpenCloseEvent
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

@@ -8,9 +8,9 @@ use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
 use Domain\Shared\Capacity;
 
-final class AddPlaceService implements AddPlace
+final readonly class AddPlaceService implements AddPlace
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

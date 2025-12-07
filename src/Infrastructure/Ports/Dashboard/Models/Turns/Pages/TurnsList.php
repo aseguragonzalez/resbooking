@@ -8,12 +8,12 @@ use Domain\Projects\ValueObjects\TurnAvailability;
 use Infrastructure\Ports\Dashboard\Models\PageModel;
 use Infrastructure\Ports\Dashboard\Models\Turns\Turn;
 
-final class TurnsList extends PageModel
+final readonly class TurnsList extends PageModel
 {
     /**
      * @param array<Turn> $turns
      */
-    private function __construct(public readonly array $turns)
+    private function __construct(public array $turns)
     {
         parent::__construct(pageTitle: '{{turns.title}}');
     }

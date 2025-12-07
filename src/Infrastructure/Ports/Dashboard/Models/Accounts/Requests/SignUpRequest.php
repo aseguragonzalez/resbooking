@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Accounts\Requests;
 
-final class SignUpRequest
+final readonly class SignUpRequest
 {
     public function __construct(
-        public readonly string $username,
-        public readonly string $password,
-        public readonly string $passwordConfirm,
-        public readonly string $agree = 'off',
+        public string $username,
+        public string $password,
+        public string $passwordConfirm,
+        public string $agree = 'off',
     ) {
     }
 

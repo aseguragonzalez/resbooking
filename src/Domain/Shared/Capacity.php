@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-final class Capacity
+final readonly class Capacity
 {
-    public function __construct(public readonly int $value)
+    public function __construct(public int $value)
     {
         if ($value < 0) {
             throw new \InvalidArgumentException('Capacity must be greater than or equal to 0');

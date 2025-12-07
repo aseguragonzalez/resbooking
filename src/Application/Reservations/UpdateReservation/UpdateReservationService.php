@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Application\Reservations\UpdateReservation;
 
-use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 
-final class UpdateReservationService implements UpdateReservation
+final readonly class UpdateReservationService implements UpdateReservation
 {
     public function __construct(
-        private readonly ReservationRepository $reservationRepository
+        private ReservationRepository $reservationRepository
     ) {
     }
 

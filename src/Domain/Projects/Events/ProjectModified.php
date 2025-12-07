@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\Entities\Project;
 use Seedwork\Domain\DomainEvent;
 
-final class ProjectModified extends DomainEvent
+final readonly class ProjectModified extends DomainEvent
 {
     public static function new(string $projectId, Project $project): self
     {

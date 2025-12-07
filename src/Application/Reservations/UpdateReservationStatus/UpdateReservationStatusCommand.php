@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Application\Reservations\UpdateReservationStatus;
 
-final class UpdateReservationStatusCommand
+final readonly class UpdateReservationStatusCommand
 {
     public function __construct(
-        public readonly string $reservationId,
-        public readonly string $status
+        public string $reservationId,
+        public string $status
     ) {
     }
 }

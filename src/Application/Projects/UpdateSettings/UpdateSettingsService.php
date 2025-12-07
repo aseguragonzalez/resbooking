@@ -10,9 +10,9 @@ use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 
-final class UpdateSettingsService implements UpdateSettings
+final readonly class UpdateSettingsService implements UpdateSettings
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

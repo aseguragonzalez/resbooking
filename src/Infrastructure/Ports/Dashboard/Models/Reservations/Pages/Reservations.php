@@ -7,20 +7,20 @@ namespace Infrastructure\Ports\Dashboard\Models\Reservations\Pages;
 use Infrastructure\Ports\Dashboard\Models\PageModel;
 use Infrastructure\Ports\Dashboard\Models\Reservations\Reservation;
 
-final class Reservations extends PageModel
+final readonly class Reservations extends PageModel
 {
-    public readonly bool $hasReservations;
-    public readonly bool $prevDisabled;
+    public bool $hasReservations;
+    public bool $prevDisabled;
 
     /**
      * @param array<Reservation> $reservations
      */
     private function __construct(
-        public readonly string $date,
-        public readonly int $prev,
-        public readonly int $next,
-        public readonly int $offset,
-        public readonly array $reservations
+        public string $date,
+        public int $prev,
+        public int $next,
+        public int $offset,
+        public array $reservations
     ) {
         parent::__construct('{{reservations.title}}');
         $this->hasReservations = !empty($reservations);

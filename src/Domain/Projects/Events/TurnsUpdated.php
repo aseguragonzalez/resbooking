@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
 
-final class TurnsUpdated extends DomainEvent
+final readonly class TurnsUpdated extends DomainEvent
 {
     /**
      * @param array<TurnAvailability> $turns

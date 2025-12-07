@@ -7,9 +7,9 @@ namespace Infrastructure\Ports\Dashboard\Models\Places\Pages;
 use Infrastructure\Ports\Dashboard\Models\PageModel;
 use Infrastructure\Ports\Dashboard\Models\Places\Place;
 
-final class PlacesList extends PageModel
+final readonly class PlacesList extends PageModel
 {
-    public readonly bool $hasPlaces;
+    public bool $hasPlaces;
 
     /**
      * @param array<Place> $places

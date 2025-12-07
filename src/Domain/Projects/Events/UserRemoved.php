@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\ValueObjects\User;
 use Seedwork\Domain\DomainEvent;
 
-final class UserRemoved extends DomainEvent
+final readonly class UserRemoved extends DomainEvent
 {
     public static function new(string $projectId, User $user): self
     {

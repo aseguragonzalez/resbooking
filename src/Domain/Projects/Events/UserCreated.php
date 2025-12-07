@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\ValueObjects\User;
 use Seedwork\Domain\DomainEvent;
 
-final class UserCreated extends DomainEvent
+final readonly class UserCreated extends DomainEvent
 {
     public static function new(string $projectId, User $user): self
     {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models;
 
-final class ErrorModel
+final readonly class ErrorModel
 {
-    public function __construct(public readonly string $field, public readonly string $message)
+    public function __construct(public string $field, public string $message)
     {
     }
 }

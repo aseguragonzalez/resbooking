@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Accounts\Requests;
 
-final class ConfirmResetPasswordRequest
+final readonly class ConfirmResetPasswordRequest
 {
     public function __construct(
-        public readonly string $token,
-        public readonly string $newPassword
+        public string $token,
+        public string $newPassword
     ) {
     }
 

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Application\Reservations\CreateReservation;
 
-final class CreateReservationCommand
+final readonly class CreateReservationCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $date,
-        public readonly int $turn,
-        public readonly string $name,
-        public readonly string $email,
-        public readonly string $phone,
-        public readonly int $numberOfDiners
+        public string $projectId,
+        public string $date,
+        public int $turn,
+        public string $name,
+        public string $email,
+        public string $phone,
+        public int $numberOfDiners
     ) {
     }
 }

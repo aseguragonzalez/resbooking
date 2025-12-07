@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Accounts\Requests;
 
-final class ResetPasswordRequest
+final readonly class ResetPasswordRequest
 {
-    public function __construct(public readonly string $username)
+    public function __construct(public string $username)
     {
     }
 

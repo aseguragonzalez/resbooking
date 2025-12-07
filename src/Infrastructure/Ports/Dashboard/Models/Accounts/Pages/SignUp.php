@@ -6,12 +6,12 @@ namespace Infrastructure\Ports\Dashboard\Models\Accounts\Pages;
 
 use Infrastructure\Ports\Dashboard\Models\FormModel;
 
-final class SignUp extends FormModel
+final readonly class SignUp extends FormModel
 {
     /**
      * @param array<string, string> $errors
      */
-    protected function __construct(array $errors = [])
+    private function __construct(array $errors = [])
     {
         parent::__construct(pageTitle: '{{accounts.signup.title}}', errors: $errors);
     }

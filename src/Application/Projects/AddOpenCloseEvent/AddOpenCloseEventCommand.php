@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Application\Projects\AddOpenCloseEvent;
 
-final class AddOpenCloseEventCommand
+final readonly class AddOpenCloseEventCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly \DateTimeImmutable $date,
-        public readonly bool $isAvailable,
-        public readonly string $startTime
+        public string $projectId,
+        public \DateTimeImmutable $date,
+        public bool $isAvailable,
+        public string $startTime
     ) {
     }
 }

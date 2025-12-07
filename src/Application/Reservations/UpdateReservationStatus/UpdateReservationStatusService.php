@@ -8,10 +8,10 @@ use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Reservations\ValueObjects\ReservationStatus;
 
-final class UpdateReservationStatusService implements UpdateReservationStatus
+final readonly class UpdateReservationStatusService implements UpdateReservationStatus
 {
     public function __construct(
-        private readonly ReservationRepository $reservationRepository
+        private ReservationRepository $reservationRepository
     ) {
     }
 

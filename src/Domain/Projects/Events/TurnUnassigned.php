@@ -7,7 +7,7 @@ namespace Domain\Projects\Events;
 use Domain\Projects\ValueObjects\TurnAvailability;
 use Seedwork\Domain\DomainEvent;
 
-final class TurnUnassigned extends DomainEvent
+final readonly class TurnUnassigned extends DomainEvent
 {
     public static function new(string $projectId, TurnAvailability $turn): self
     {

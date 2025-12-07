@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models;
 
-abstract class PageModel
+abstract readonly class PageModel
 {
     protected function __construct(
-        public readonly string $pageTitle,
+        public string $pageTitle,
     ) {
     }
 }

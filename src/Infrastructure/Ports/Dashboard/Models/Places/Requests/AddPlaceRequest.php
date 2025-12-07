@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Places\Requests;
 
-final class AddPlaceRequest
+final readonly class AddPlaceRequest
 {
     public function __construct(
-        public readonly string $name = '',
-        public readonly int $capacity = 1,
+        public string $name = '',
+        public int $capacity = 1,
     ) {
     }
 

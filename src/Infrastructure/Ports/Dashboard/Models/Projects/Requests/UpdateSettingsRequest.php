@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Projects\Requests;
 
-final class UpdateSettingsRequest
+final readonly class UpdateSettingsRequest
 {
     public function __construct(
-        public readonly string $email,
-        public readonly string $name,
-        public readonly int $maxNumberOfDiners,
-        public readonly int $minNumberOfDiners,
-        public readonly int $numberOfTables,
-        public readonly string $phone,
-        public readonly string $hasReminders = 'off',
+        public string $email,
+        public string $name,
+        public int $maxNumberOfDiners,
+        public int $minNumberOfDiners,
+        public int $numberOfTables,
+        public string $phone,
+        public string $hasReminders = 'off',
     ) {
     }
 

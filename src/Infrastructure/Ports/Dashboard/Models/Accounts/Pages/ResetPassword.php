@@ -6,12 +6,12 @@ namespace Infrastructure\Ports\Dashboard\Models\Accounts\Pages;
 
 use Infrastructure\Ports\Dashboard\Models\FormModel;
 
-final class ResetPassword extends FormModel
+final readonly class ResetPassword extends FormModel
 {
     /**
      * @param array<string, string> $errors
      */
-    private function __construct(array $errors = [], public readonly bool $hasSucceeded = false)
+    private function __construct(array $errors = [], public bool $hasSucceeded = false)
     {
         parent::__construct(pageTitle: '{{accounts.reset-password.title}}', errors: $errors);
     }

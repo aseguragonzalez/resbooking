@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Application\Projects\RemovePlace;
 
-final class RemovePlaceCommand
+final readonly class RemovePlaceCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $placeId
+        public string $projectId,
+        public string $placeId
     ) {
     }
 }

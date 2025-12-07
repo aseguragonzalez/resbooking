@@ -10,9 +10,9 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 
-final class UpdateTurnsService implements UpdateTurns
+final readonly class UpdateTurnsService implements UpdateTurns
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

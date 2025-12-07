@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Reservations\ListReservations;
 
-final class ListReservationsCommand
+final readonly class ListReservationsCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $from,
-        public readonly int $offset = 0
+        public string $projectId,
+        public string $from,
+        public int $offset = 0
     ) {
     }
 }

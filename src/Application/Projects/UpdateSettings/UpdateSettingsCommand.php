@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Application\Projects\UpdateSettings;
 
-final class UpdateSettingsCommand
+final readonly class UpdateSettingsCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $email,
-        public readonly bool $hasReminders,
-        public readonly string $name,
-        public readonly int $maxNumberOfDiners,
-        public readonly int $minNumberOfDiners,
-        public readonly int $numberOfTables,
-        public readonly string $phone,
+        public string $projectId,
+        public string $email,
+        public bool $hasReminders,
+        public string $name,
+        public int $maxNumberOfDiners,
+        public int $minNumberOfDiners,
+        public int $numberOfTables,
+        public string $phone,
     ) {
     }
 }

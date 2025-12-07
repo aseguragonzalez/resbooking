@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Application\Projects\UpdateTurns;
 
-final class UpdateTurnsCommand
+final readonly class UpdateTurnsCommand
 {
     /**
      * @param array<TurnAvailability> $turns
      */
     public function __construct(
-        public readonly string $projectId,
-        public readonly array $turns,
+        public string $projectId,
+        public array $turns,
     ) {
     }
 }
