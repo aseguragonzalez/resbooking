@@ -9,12 +9,12 @@ use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use Seedwork\Domain\ValueObject;
 
-final class TurnAvailability extends ValueObject
+final readonly class TurnAvailability extends ValueObject
 {
     public function __construct(
-        public readonly Capacity $capacity,
-        public readonly DayOfWeek $dayOfWeek,
-        public readonly Turn $turn,
+        public Capacity $capacity,
+        public DayOfWeek $dayOfWeek,
+        public Turn $turn,
     ) {
     }
 

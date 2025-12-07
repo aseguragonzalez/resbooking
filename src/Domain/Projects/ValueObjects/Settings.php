@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Domain\Projects\ValueObjects;
 
-use Seedwork\Domain\ValueObject;
-use Seedwork\Domain\Exceptions\ValueException;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
+use Seedwork\Domain\Exceptions\ValueException;
+use Seedwork\Domain\ValueObject;
 
-final class Settings extends ValueObject
+final readonly class Settings extends ValueObject
 {
     public function __construct(
-        public readonly Email $email,
-        public readonly bool $hasReminders,
-        public readonly string $name,
-        public readonly Capacity $maxNumberOfDiners,
-        public readonly Capacity $minNumberOfDiners,
-        public readonly Capacity $numberOfTables,
-        public readonly Phone $phone,
+        public Email $email,
+        public bool $hasReminders,
+        public string $name,
+        public Capacity $maxNumberOfDiners,
+        public Capacity $minNumberOfDiners,
+        public Capacity $numberOfTables,
+        public Phone $phone,
     ) {
         $this->checkName();
         $this->checkMinMaxNumberOfDinners();
