@@ -6,7 +6,8 @@ namespace Infrastructure\Ports\Dashboard\Models\Turns;
 
 final readonly class Turn
 {
-    public readonly string $id;
+    public string $id;
+
     public function __construct(
         public string $time,
         public int $dayOfWeekId,

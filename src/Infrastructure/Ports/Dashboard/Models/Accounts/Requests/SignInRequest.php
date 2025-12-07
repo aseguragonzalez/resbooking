@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Accounts\Requests;
 
-final class SignInRequest
+final readonly class SignInRequest
 {
     public function __construct(
-        public readonly string $username,
-        public readonly string $password,
-        public readonly string $rememberMe = 'off',
+        public string $username,
+        public string $password,
+        public string $rememberMe = 'off',
     ) {
     }
 

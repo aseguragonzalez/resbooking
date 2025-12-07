@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Places;
 
-final class Place
+final readonly class Place
 {
     public function __construct(
-        public readonly string $id,
-        public readonly string $name,
-        public readonly int $capacity
+        public string $id,
+        public string $name,
+        public int $capacity
     ) {
     }
 }

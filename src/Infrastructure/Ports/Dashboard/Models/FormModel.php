@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models;
 
-abstract class FormModel
+abstract readonly class FormModel
 {
-    public readonly object $errors;
+    public object $errors;
 
     /**
      * @var array<ErrorModel>
      */
-    public readonly array $errorSummary;
+    public array $errorSummary;
 
     /**
      * @param array<string, string> $errors
      */
     protected function __construct(
-        public readonly string $pageTitle,
+        public string $pageTitle,
         array $errors = [],
     ) {
         $this->errors = (object)$errors;

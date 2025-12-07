@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Reservations;
 
-final class Reservation
+final readonly class Reservation
 {
     public function __construct(
-        public readonly string $id,
-        public readonly string $turn,
-        public readonly string $name,
-        public readonly string $phone,
-        public readonly string $email
+        public string $id,
+        public string $turn,
+        public string $name,
+        public string $phone,
+        public string $email
     ) {
     }
 }

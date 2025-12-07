@@ -7,12 +7,12 @@ namespace Infrastructure\Ports\Dashboard\Models\Turns\Requests;
 use Application\Projects\UpdateTurns\TurnAvailability;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateTurnsRequest
+final readonly class UpdateTurnsRequest
 {
     /**
      * @var array<TurnAvailability> $turns
      */
-    public readonly array $turns;
+    public array $turns;
 
     public function __construct(ServerRequestInterface $request)
     {

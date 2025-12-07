@@ -8,17 +8,17 @@ use Infrastructure\Ports\Dashboard\Models\FormModel;
 use Infrastructure\Ports\Dashboard\Models\Places\Requests\AddPlaceRequest;
 use Infrastructure\Ports\Dashboard\Models\Places\Requests\UpdatePlaceRequest;
 
-final class EditPlace extends FormModel
+final readonly class EditPlace extends FormModel
 {
-    public readonly ?string $placeId;
-    public readonly string $backUrl;
-    public readonly string $actionUrl;
+    public ?string $placeId;
+    public string $backUrl;
+    public string $actionUrl;
 
     /**
      * @param array<string, string> $errors
      */
-    protected function __construct(
-        public readonly AddPlaceRequest|UpdatePlaceRequest $place,
+    private function __construct(
+        public AddPlaceRequest|UpdatePlaceRequest $place,
         array $errors = [],
         ?string $placeId = null,
         string $backUrl = '/places',

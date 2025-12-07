@@ -7,12 +7,12 @@ namespace Infrastructure\Ports\Dashboard\Models\Projects\Pages;
 use Infrastructure\Ports\Dashboard\Models\FormModel;
 use Infrastructure\Ports\Dashboard\Models\Projects\Requests\UpdateSettingsRequest;
 
-final class UpdateSettings extends FormModel
+final readonly class UpdateSettings extends FormModel
 {
     /**
      * @param array<string, string> $errors
      */
-    protected function __construct(public readonly UpdateSettingsRequest $settings, array $errors = [])
+    private function __construct(public UpdateSettingsRequest $settings, array $errors = [])
     {
         parent::__construct(pageTitle: '{{projects.settings.form.title}}', errors: $errors);
     }

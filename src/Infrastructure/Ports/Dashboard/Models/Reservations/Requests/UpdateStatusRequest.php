@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Reservations\Requests;
 
-final class UpdateStatusRequest
+final readonly class UpdateStatusRequest
 {
     public function __construct(
-        public readonly string $id,
-        public readonly string $status,
-        public readonly int $offset = 0,
-        public readonly string $from = 'now'
+        public string $id,
+        public string $status,
+        public int $offset = 0,
+        public string $from = 'now'
     ) {
     }
 }
