@@ -9,26 +9,16 @@ use Domain\Projects\Entities\Project;
 use Domain\Projects\Events\OpenCloseEventCreated;
 use Domain\Projects\Events\OpenCloseEventRemoved;
 use Domain\Projects\Events\PlaceCreated;
-use Domain\Projects\Events\PlaceRemoved;
 use Domain\Projects\Events\ProjectCreated;
 use Domain\Projects\Events\ProjectModified;
-use Domain\Projects\Events\TurnAssigned;
-use Domain\Projects\Events\TurnUnassigned;
-use Domain\Projects\Events\UserCreated;
-use Domain\Projects\Events\UserRemoved;
+use Domain\Projects\Events\TurnsUpdated;
 use Domain\Projects\Exceptions\OpenCloseEventAlreadyExist;
 use Domain\Projects\Exceptions\OpenCloseEventDoesNotExist;
 use Domain\Projects\Exceptions\OpenCloseEventOutOfRange;
 use Domain\Projects\Exceptions\PlaceAlreadyExist;
-use Domain\Projects\Exceptions\PlaceDoesNotExist;
-use Domain\Projects\Exceptions\TurnAlreadyExist;
-use Domain\Projects\Exceptions\TurnDoesNotExist;
-use Domain\Projects\Exceptions\UserAlreadyExist;
-use Domain\Projects\Exceptions\UserDoesNotExist;
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Projects\ValueObjects\TurnAvailability;
-use Domain\Projects\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
@@ -266,5 +256,32 @@ final class ProjectTest extends TestCase
 
         $this->assertNotContains($openCloseEvents[1], $project->getOpenCloseEvents());
         $this->assertCount(1, $project->getEvents());
+    }
+
+    public function testUpdateTurns(): void
+    {
+        $project = $this->projectBuilder->withSettings($this->settings())->build();
+        $newTurns = [
+            new TurnAvailability(
+                capacity: new Capacity(value: 10),
+                dayOfWeek: DayOfWeek::Monday,
+                turn: Turn::H1200,
+            ),
+            new TurnAvailability(
+                capacity: new Capacity(value: 20),
+                dayOfWeek: DayOfWeek::Tuesday,
+                turn: Turn::H1230,
+            ),
+        ];
+
+        $project->updateTurns($newTurns);
+
+        $this->assertSame($newTurns, $project->getTurns());
+        $events = $project->getEvents();
+        $this->assertSame(1, count($events));
+        $this->assertInstanceOf(TurnsUpdated::class, $events[0]);
+        $event = $events[0];
+        $this->assertSame($project->getId(), $event->getPayload()['projectId']);
+        $this->assertSame($newTurns, $event->getPayload()['turns']);
     }
 }
