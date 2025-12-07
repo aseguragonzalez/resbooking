@@ -26,14 +26,7 @@ interface Repository
     /**
      * Retrieve an entity by its id.
      * @param string $id AggreagateRoot id
-     * @return T
+     * @return T|null
      */
     public function getById(string $id);
-
-    /**
-     * Check if an entity with the given id exists in the repository.
-     * @param string $id AggreagateRoot id
-     * @return bool
-     */
-    public function exist(string $id): bool;
 }

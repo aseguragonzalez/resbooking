@@ -6,11 +6,12 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Projects\AddPlace\AddPlace;
 use Application\Projects\AddPlace\AddPlaceCommand;
+use Application\Projects\GetProjectById\GetProjectById;
+use Application\Projects\GetProjectById\GetProjectByIdCommand;
 use Application\Projects\RemovePlace\RemovePlace;
 use Application\Projects\RemovePlace\RemovePlaceCommand;
 use Application\Projects\UpdatePlace\UpdatePlace;
 use Application\Projects\UpdatePlace\UpdatePlaceCommand;
-use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Places\Pages\EditPlace;
 use Infrastructure\Ports\Dashboard\Models\Places\Pages\PlacesList;
 use Infrastructure\Ports\Dashboard\Models\Places\Place;
@@ -31,13 +32,14 @@ final class PlacesController extends Controller
         private readonly AddPlace $addPlace,
         private readonly RemovePlace $removePlace,
         private readonly UpdatePlace $updatePlace,
-        private readonly ProjectRepository $projectRepository,
+        private readonly GetProjectById $getProjectById,
     ) {
     }
 
     public function index(): ActionResponse
     {
-        $project = $this->projectRepository->getById(self::PROJECT_ID);
+        $command = new GetProjectByIdCommand(id: self::PROJECT_ID);
+        $project = $this->getProjectById->execute($command);
         $places = array_map(
             fn ($place) => new Place(
                 id: $place->getId(),
@@ -77,7 +79,8 @@ final class PlacesController extends Controller
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $project = $this->projectRepository->getById(self::PROJECT_ID);
+        $command = new GetProjectByIdCommand(id: self::PROJECT_ID);
+        $project = $this->getProjectById->execute($command);
         $places = $project->getPlaces();
         $place = array_filter($places, fn ($p) => $p->getId() === $id);
         if (empty($place)) {

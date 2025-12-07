@@ -60,9 +60,4 @@ final class InFileProjectRepository implements ProjectRepository
     {
         return $this->projects[$id];
     }
-
-    public function exist(string $id): bool
-    {
-        return isset($this->projects[$id]);
-    }
 }

@@ -8,8 +8,8 @@ use Application\Reservations\UpdateReservation\UpdateReservation;
 use Application\Reservations\UpdateReservation\UpdateReservationCommand;
 use Application\Reservations\UpdateReservation\UpdateReservationService;
 use Domain\Reservations\Entities\Reservation;
-use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
+use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
@@ -19,13 +19,15 @@ use PHPUnit\Framework\TestCase;
 
 final class UpdateReservationTest extends TestCase
 {
+    private MockObject&ReservationObtainer $reservationObtainer;
     private MockObject&ReservationRepository $reservationRepository;
     private UpdateReservation $service;
 
     protected function setUp(): void
     {
+        $this->reservationObtainer = $this->createMock(ReservationObtainer::class);
         $this->reservationRepository = $this->createMock(ReservationRepository::class);
-        $this->service = new UpdateReservationService($this->reservationRepository);
+        $this->service = new UpdateReservationService($this->reservationObtainer, $this->reservationRepository);
     }
 
     public function testExecuteUpdatesAndSavesReservation(): void
@@ -49,13 +51,8 @@ final class UpdateReservationTest extends TestCase
             id: $reservationId
         );
 
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(true);
-
-        $this->reservationRepository->expects($this->once())
-            ->method('getById')
+        $this->reservationObtainer->expects($this->once())
+            ->method('obtain')
             ->with($this->equalTo($reservationId))
             ->willReturn($reservation);
 
@@ -68,25 +65,5 @@ final class UpdateReservationTest extends TestCase
         $this->assertSame('Jane Doe', $reservation->getName());
         $this->assertSame('jane@example.com', $reservation->getEmail()->value);
         $this->assertSame('+34-555-0200', $reservation->getPhone()->value);
-    }
-
-    public function testExecuteThrowsExceptionWhenReservationDoesNotExist(): void
-    {
-        $reservationId = 'reservation-123';
-        $command = new UpdateReservationCommand(
-            reservationId: $reservationId,
-            name: 'Jane Doe',
-            email: 'jane@example.com',
-            phone: '+34-555-0200'
-        );
-
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(false);
-
-        $this->expectException(ReservationDoesNotExist::class);
-
-        $this->service->execute($command);
     }
 }

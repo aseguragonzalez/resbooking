@@ -7,6 +7,7 @@ namespace Tests\Unit\Application\Projects\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
 use Application\Projects\UpdateSettings\UpdateSettingsService;
 use Domain\Projects\Repositories\ProjectRepository;
+use Domain\Projects\Services\ProjectObtainer;
 use Domain\Projects\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
@@ -22,16 +23,14 @@ final class UpdateSettingsTest extends TestCase
     private Faker $faker;
     private ProjectBuilder $projectBuilder;
     private MockObject&ProjectRepository $projectRepository;
+    private MockObject&ProjectObtainer $projectObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->projectBuilder = new ProjectBuilder($this->faker);
         $this->projectRepository = $this->createMock(ProjectRepository::class);
-    }
-
-    protected function tearDown(): void
-    {
+        $this->projectObtainer = $this->createMock(ProjectObtainer::class);
     }
 
     public function testUpdateProjectSettings(): void
@@ -46,9 +45,9 @@ final class UpdateSettingsTest extends TestCase
             phone: new Phone($this->faker->phoneNumber)
         );
         $project = $this->projectBuilder->withSettings($settings)->build();
-        $this->projectRepository
-            ->expects($this->once())
-            ->method('getById')
+        $this->projectObtainer->expects($this->once())
+            ->method('obtain')
+            ->with($this->isString())
             ->willReturn($project);
         $this->projectRepository
             ->expects($this->once())
@@ -64,7 +63,7 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: 10,
             phone: $this->faker->phoneNumber
         );
-        $ApplicationService = new UpdateSettingsService(projectRepository: $this->projectRepository);
+        $ApplicationService = new UpdateSettingsService($this->projectObtainer, $this->projectRepository);
 
         $ApplicationService->execute($request);
 

@@ -481,13 +481,13 @@ final class ProjectTest extends TestCase
 {
     public function testItCreatesANewProject(): void
     {
-        // Given
+
         $email = 'test@example.com';
 
-        // When
+
         $project = Project::new($email);
 
-        // Then
+
         $this->assertNotEmpty($project->getId());
         $this->assertCount(1, $project->getEvents());
     }

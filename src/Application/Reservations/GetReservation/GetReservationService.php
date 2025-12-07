@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace Application\Reservations\GetReservation;
 
 use Domain\Reservations\Entities\Reservation;
-use Domain\Reservations\Exceptions\ReservationDoesNotExist;
-use Domain\Reservations\Repositories\ReservationRepository;
+use Domain\Reservations\Services\ReservationObtainer;
 
 final readonly class GetReservationService implements GetReservation
 {
-    public function __construct(private ReservationRepository $reservationRepository)
-    {
+    public function __construct(
+        private ReservationObtainer $reservationObtainer,
+    ) {
     }
 
     public function execute(GetReservationCommand $command): Reservation
     {
-        if (!$this->reservationRepository->exist($command->reservationId)) {
-            throw new ReservationDoesNotExist();
-        }
-
-        return $this->reservationRepository->getById($command->reservationId);
+        return $this->reservationObtainer->obtain($command->reservationId);
     }
 }

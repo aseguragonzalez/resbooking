@@ -8,8 +8,7 @@ use Application\Reservations\GetReservation\GetReservation;
 use Application\Reservations\GetReservation\GetReservationCommand;
 use Application\Reservations\GetReservation\GetReservationService;
 use Domain\Reservations\Entities\Reservation;
-use Domain\Reservations\Exceptions\ReservationDoesNotExist;
-use Domain\Reservations\Repositories\ReservationRepository;
+use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
@@ -19,13 +18,13 @@ use PHPUnit\Framework\TestCase;
 
 final class GetReservationTest extends TestCase
 {
-    private MockObject&ReservationRepository $reservationRepository;
+    private MockObject&ReservationObtainer $reservationObtainer;
     private GetReservation $service;
 
     protected function setUp(): void
     {
-        $this->reservationRepository = $this->createMock(ReservationRepository::class);
-        $this->service = new GetReservationService($this->reservationRepository);
+        $this->reservationObtainer = $this->createMock(ReservationObtainer::class);
+        $this->service = new GetReservationService($this->reservationObtainer);
     }
 
     public function testExecuteReturnsReservation(): void
@@ -44,13 +43,8 @@ final class GetReservationTest extends TestCase
             id: $reservationId
         );
 
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(true);
-
-        $this->reservationRepository->expects($this->once())
-            ->method('getById')
+        $this->reservationObtainer->expects($this->once())
+            ->method('obtain')
             ->with($this->equalTo($reservationId))
             ->willReturn($reservation);
 
@@ -58,20 +52,5 @@ final class GetReservationTest extends TestCase
 
         $this->assertInstanceOf(Reservation::class, $result);
         $this->assertSame($reservationId, $result->getId());
-    }
-
-    public function testExecuteThrowsExceptionWhenReservationDoesNotExist(): void
-    {
-        $reservationId = 'reservation-123';
-        $command = new GetReservationCommand(reservationId: $reservationId);
-
-        $this->reservationRepository->expects($this->once())
-            ->method('exist')
-            ->with($this->equalTo($reservationId))
-            ->willReturn(false);
-
-        $this->expectException(ReservationDoesNotExist::class);
-
-        $this->service->execute($command);
     }
 }
