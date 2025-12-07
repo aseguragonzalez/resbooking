@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-final class Phone
+final readonly class Phone
 {
-    public function __construct(public readonly string $value)
+    public function __construct(public string $value)
     {
         if (trim($value) === '') {
             throw new \InvalidArgumentException('Phone number is required');
