@@ -6,7 +6,7 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Projects\UpdateTurns\UpdateTurns;
 use Application\Projects\UpdateTurns\UpdateTurnsCommand;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Turns\Pages\TurnsList;
 use Infrastructure\Ports\Dashboard\Models\Turns\Requests\UpdateTurnsRequest;
 use Psr\Http\Message\ServerRequestInterface;

@@ -7,7 +7,7 @@ namespace Tests\Unit\Application\Projects\AddPlace;
 use Application\Projects\AddPlace\AddPlace;
 use Application\Projects\AddPlace\AddPlaceCommand;
 use Application\Projects\AddPlace\AddPlaceService;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;

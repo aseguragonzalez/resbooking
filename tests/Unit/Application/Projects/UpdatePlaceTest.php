@@ -8,7 +8,7 @@ use Application\Projects\UpdatePlace\UpdatePlace;
 use Application\Projects\UpdatePlace\UpdatePlaceCommand;
 use Application\Projects\UpdatePlace\UpdatePlaceService;
 use Domain\Projects\Entities\Place;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;

@@ -6,7 +6,7 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Projects\UpdateSettings\UpdateSettings;
 use Application\Projects\UpdateSettings\UpdateSettingsCommand;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Ports\Dashboard\Models\Projects\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Projects\Requests\UpdateSettingsRequest;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;

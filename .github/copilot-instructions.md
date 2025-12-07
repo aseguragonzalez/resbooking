@@ -299,7 +299,7 @@ declare(strict_types=1);
 
 namespace Application\Projects\CreateNewProject;
 
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Projects\Entities\Project;
 
 final class CreateNewProjectService implements CreateNewProject

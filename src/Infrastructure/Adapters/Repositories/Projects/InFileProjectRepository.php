@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Adapters\Repositories\Projects;
 
 use Domain\Projects\Entities\Project;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Infrastructure\Adapters\Repositories\Projects\Models\Project as ProjectModel;
 
 final class InFileProjectRepository implements ProjectRepository

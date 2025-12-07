@@ -8,7 +8,7 @@ use Application\Projects\UpdateTurns\TurnAvailability;
 use Application\Projects\UpdateTurns\UpdateTurnsCommand;
 use Application\Projects\UpdateTurns\UpdateTurnsService;
 use Domain\Projects\Entities\Project;
-use Domain\Projects\ProjectRepository;
+use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Turn;
 use PHPUnit\Framework\TestCase;
