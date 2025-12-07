@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Application\Projects\UpdatePlace;
 
-final class UpdatePlaceCommand
+final readonly class UpdatePlaceCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $placeId,
-        public readonly string $name,
-        public readonly int $capacity
+        public string $projectId,
+        public string $placeId,
+        public string $name,
+        public int $capacity
     ) {
     }
 }

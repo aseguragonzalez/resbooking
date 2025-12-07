@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Projects\AddPlace;
 
-final class AddPlaceCommand
+final readonly class AddPlaceCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly string $name,
-        public readonly int $capacity
+        public string $projectId,
+        public string $name,
+        public int $capacity
     ) {
     }
 }

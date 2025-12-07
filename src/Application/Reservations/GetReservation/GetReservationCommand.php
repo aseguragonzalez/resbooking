@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Reservations\GetReservation;
 
-final class GetReservationCommand
+final readonly class GetReservationCommand
 {
-    public function __construct(public readonly string $reservationId)
+    public function __construct(public string $reservationId)
     {
     }
 }

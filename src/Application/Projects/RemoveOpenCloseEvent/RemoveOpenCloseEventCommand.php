@@ -6,12 +6,12 @@ namespace Application\Projects\RemoveOpenCloseEvent;
 
 use Domain\Shared\Turn;
 
-final class RemoveOpenCloseEventCommand
+final readonly class RemoveOpenCloseEventCommand
 {
     public function __construct(
-        public readonly string $projectId,
-        public readonly \DateTimeImmutable $date,
-        public readonly Turn $turn,
+        public string $projectId,
+        public \DateTimeImmutable $date,
+        public Turn $turn,
     ) {
     }
 }
