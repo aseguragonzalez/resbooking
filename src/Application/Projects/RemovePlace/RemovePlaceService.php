@@ -7,9 +7,9 @@ namespace Application\Projects\RemovePlace;
 use Domain\Projects\Entities\Place;
 use Domain\Projects\ProjectRepository;
 
-final class RemovePlaceService implements RemovePlace
+final readonly class RemovePlaceService implements RemovePlace
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

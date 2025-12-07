@@ -8,9 +8,9 @@ use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Exceptions\ReservationDoesNotExist;
 use Domain\Reservations\Repositories\ReservationRepository;
 
-final class GetReservationService implements GetReservation
+final readonly class GetReservationService implements GetReservation
 {
-    public function __construct(private readonly ReservationRepository $reservationRepository)
+    public function __construct(private ReservationRepository $reservationRepository)
     {
     }
 

@@ -7,9 +7,9 @@ namespace Application\Projects\RemoveOpenCloseEvent;
 use Domain\Projects\ProjectRepository;
 use Domain\Projects\ValueObjects\OpenCloseEvent;
 
-final class RemoveOpenCloseEventService implements RemoveOpenCloseEvent
+final readonly class RemoveOpenCloseEventService implements RemoveOpenCloseEvent
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 

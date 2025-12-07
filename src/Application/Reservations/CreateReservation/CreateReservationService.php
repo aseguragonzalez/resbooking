@@ -11,10 +11,10 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\Turn;
 
-final class CreateReservationService implements CreateReservation
+final readonly class CreateReservationService implements CreateReservation
 {
     public function __construct(
-        private readonly ReservationRepository $reservationRepository
+        private ReservationRepository $reservationRepository
     ) {
     }
 

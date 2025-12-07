@@ -7,9 +7,9 @@ namespace Application\Projects\CreateNewProject;
 use Domain\Projects\Entities\Project;
 use Domain\Projects\ProjectRepository;
 
-final class CreateNewProjectService implements CreateNewProject
+final readonly class CreateNewProjectService implements CreateNewProject
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 
