@@ -6,18 +6,18 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\TimeSlot;
+use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
-use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
 
 final class RestaurantsMapper
 {
@@ -109,7 +109,7 @@ final class RestaurantsMapper
     {
         return array_map(
             fn ($diningArea) => new DiningAreaModel(
-                id: $diningArea->getId(),
+                id: $diningArea->id,
                 capacity: $diningArea->capacity->value,
                 name: $diningArea->name,
             ),

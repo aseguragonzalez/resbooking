@@ -8,12 +8,12 @@ use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
 use Seedwork\Domain\Exceptions\ValueException;
 
-final class DiningArea extends Entity
+final readonly class DiningArea extends Entity
 {
     private function __construct(
         string $id,
-        public readonly Capacity $capacity,
-        public readonly string $name,
+        public Capacity $capacity,
+        public string $name,
     ) {
         parent::__construct(id: $id);
 

@@ -140,7 +140,7 @@ final class Restaurant extends AggregateRoot
 
     public function removeDiningAreasById(string $diningAreaId): void
     {
-        $filter = fn (DiningArea $diningArea) => $diningArea->getId() === $diningAreaId;
+        $filter = fn (DiningArea $diningArea) => $diningArea->id === $diningAreaId;
         $diningAreasToBeRemoved = array_filter($this->diningAreas, $filter);
         foreach ($diningAreasToBeRemoved as $diningArea) {
             $this->addEvent(DiningAreaRemoved::new(restaurantId: $this->getId(), diningArea: $diningArea));
@@ -152,14 +152,14 @@ final class Restaurant extends AggregateRoot
     {
         $existingDiningArea = array_filter(
             $this->diningAreas,
-            fn (DiningArea $existingDiningArea) => $existingDiningArea->getId() === $diningArea->getId()
+            fn (DiningArea $existingDiningArea) => $existingDiningArea->id === $diningArea->id
         );
         if (empty($existingDiningArea)) {
-            throw new DiningAreaNotFound(diningAreaId: $diningArea->getId());
+            throw new DiningAreaNotFound(diningAreaId: $diningArea->id);
         }
 
         $this->diningAreas = array_map(
-            fn (DiningArea $s) => $s->getId() === $diningArea->getId() ? $diningArea : $s,
+            fn (DiningArea $s) => $s->id === $diningArea->id ? $diningArea : $s,
             $this->diningAreas
         );
         $this->addEvent(DiningAreaModified::new(restaurantId: $this->getId(), diningArea: $diningArea));

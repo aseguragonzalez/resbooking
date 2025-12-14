@@ -12,9 +12,9 @@ use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
-use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
-use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\DiningArea;
+use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
+use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -42,7 +42,7 @@ final class DiningAreasController extends Controller
         $restaurant = $this->getRestaurantById->execute($command);
         $diningAreas = array_map(
             fn ($diningArea) => new DiningArea(
-                id: $diningArea->getId(),
+                id: $diningArea->id,
                 name: $diningArea->name,
                 capacity: $diningArea->capacity->value
             ),
@@ -82,7 +82,7 @@ final class DiningAreasController extends Controller
         $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
         $restaurant = $this->getRestaurantById->execute($command);
         $diningAreas = $restaurant->getDiningAreas();
-        $diningArea = array_filter($diningAreas, fn ($da) => $da->getId() === $id);
+        $diningArea = array_filter($diningAreas, fn ($da) => $da->id === $id);
         if (empty($diningArea)) {
             return $this->redirectToAction('index', DiningAreasController::class);
         }
@@ -90,7 +90,7 @@ final class DiningAreasController extends Controller
         $diningArea = array_values($diningArea)[0];
         $backUrl = $request->getHeaderLine('Referer') ?: '/dining-areas';
         $model = EditDiningArea::fromDiningArea(
-            diningAreaId: $diningArea->getId(),
+            diningAreaId: $diningArea->id,
             name: $diningArea->name,
             capacity: $diningArea->capacity->value,
             backUrl: $backUrl

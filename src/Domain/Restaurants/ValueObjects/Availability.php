@@ -18,8 +18,13 @@ final readonly class Availability extends ValueObject
     ) {
     }
 
-    public function equals(Availability $other): bool
+    public function equals(ValueObject $other): bool
     {
-        return $this->dayOfWeek == $other->dayOfWeek && $this->timeSlot == $other->timeSlot;
+        if (!$other instanceof self) {
+            return false;
+        }
+        /** @var self $other */
+        return $this->dayOfWeek === $other->dayOfWeek
+            && $this->timeSlot === $other->timeSlot;
     }
 }

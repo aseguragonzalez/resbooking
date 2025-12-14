@@ -38,4 +38,19 @@ final readonly class Settings extends ValueObject
             throw new ValueException('Min number of diners must be less than or equal to max number of diners');
         }
     }
+
+    public function equals(ValueObject $other): bool
+    {
+        if (!$other instanceof self) {
+            return false;
+        }
+        /** @var self $other */
+        return $this->email->equals($other->email)
+            && $this->hasReminders === $other->hasReminders
+            && $this->name === $other->name
+            && $this->maxNumberOfDiners->equals($other->maxNumberOfDiners)
+            && $this->minNumberOfDiners->equals($other->minNumberOfDiners)
+            && $this->numberOfTables->equals($other->numberOfTables)
+            && $this->phone->equals($other->phone);
+    }
 }
