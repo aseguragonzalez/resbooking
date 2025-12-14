@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages;
 
-use Infrastructure\Ports\Dashboard\Models\FormModel;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
+use Infrastructure\Ports\Dashboard\Models\FormModel;
 
 final readonly class EditDiningArea extends FormModel
 {
@@ -44,8 +44,12 @@ final readonly class EditDiningArea extends FormModel
         );
     }
 
-    public static function fromDiningArea(string $diningAreaId, string $name, int $capacity, string $backUrl = '/dining-areas'): self
-    {
+    public static function fromDiningArea(
+        string $diningAreaId,
+        string $name,
+        int $capacity,
+        string $backUrl = '/dining-areas'
+    ): self {
         return new self(
             diningArea: new UpdateDiningAreaRequest(name: $name, capacity: $capacity),
             errors: [],

@@ -50,8 +50,14 @@ final readonly class Restaurant implements \JsonSerializable
         return new self(
             id: $id,
             settings: Settings::fromArray($settings),
-            diningAreas: array_map(fn ($diningAreaData) => DiningArea::fromArray((array) $diningAreaData), $diningAreas),
-            availabilities: array_map(fn ($availabilityData) => Availability::fromArray((array) $availabilityData), $availabilities),
+            diningAreas: array_map(
+                fn ($diningAreaData) => DiningArea::fromArray((array) $diningAreaData),
+                $diningAreas
+            ),
+            availabilities: array_map(
+                fn ($availabilityData) => Availability::fromArray((array) $availabilityData),
+                $availabilities
+            ),
             users: $users,
         );
     }

@@ -6,13 +6,13 @@ namespace Tests\Unit\Domain\Restaurants\Entities;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
+use Domain\Restaurants\Events\AvailabilitiesUpdated;
 use Domain\Restaurants\Events\DiningAreaCreated;
 use Domain\Restaurants\Events\RestaurantCreated;
 use Domain\Restaurants\Events\RestaurantModified;
-use Domain\Restaurants\Events\AvailabilitiesUpdated;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
-use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
@@ -99,7 +99,10 @@ final class RestaurantTest extends TestCase
     public function testAddDiningAreaFailWhenDiningAreaAlreadyExist(): void
     {
         $diningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
-        $restaurant = $this->restaurantBuilder->withSettings($this->settings())->withDiningAreas([$diningArea])->build();
+        $restaurant = $this->restaurantBuilder
+            ->withSettings($this->settings())
+            ->withDiningAreas([$diningArea])
+            ->build();
         $this->expectException(DiningAreaAlreadyExist::class);
 
         $restaurant->addDiningArea($diningArea);
