@@ -8,15 +8,15 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\UpdateSettings as UpdateSettingsPage;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\UpdateSettingsRequest;
+use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
+use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 
-final class RestaurantController extends Controller
+final class SettingsController extends Controller
 {
     private const string RESTAURANT_ID = '69347ea320d5a';
 
@@ -62,7 +62,7 @@ final class RestaurantController extends Controller
             numberOfTables: $request->numberOfTables,
             phone: $request->phone,
         ));
-        return $this->redirectToAction("settings", RestaurantController::class);
+        return $this->redirectToAction("settings", SettingsController::class);
     }
 
     /**
@@ -73,15 +73,15 @@ final class RestaurantController extends Controller
         return [
             Route::create(
                 method: RouteMethod::Get,
-                path: Path::create('/restaurant/settings'),
-                controller: RestaurantController::class,
+                path: Path::create('/settings'),
+                controller: SettingsController::class,
                 action: 'settings',
                 authRequired: true
             ),
             Route::create(
                 method: RouteMethod::Post,
-                path: Path::create('/restaurant/settings'),
-                controller: RestaurantController::class,
+                path: Path::create('/settings'),
+                controller: SettingsController::class,
                 action: 'updateSettings',
                 authRequired: true
             ),

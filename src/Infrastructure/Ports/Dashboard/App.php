@@ -26,7 +26,7 @@ use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
 use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
-use Infrastructure\Ports\Dashboard\Controllers\RestaurantController;
+use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Infrastructure\Ports\Dashboard\Controllers\AvailabilitiesController;
 use Monolog\Formatter\JsonFormatter;
@@ -108,7 +108,7 @@ final class App extends WebApp
         $accountsRoutes = AccountsController::getRoutes();
         $reservationsRoutes = ReservationsController::getRoutes();
         $dashboardRoutes = DashboardController::getRoutes();
-        $restaurantRoutes = RestaurantController::getRoutes();
+        $restaurantRoutes = SettingsController::getRoutes();
         $diningAreasRoutes = DiningAreasController::getRoutes();
         $availabilitiesRoutes = AvailabilitiesController::getRoutes();
         return new Router(routes:[

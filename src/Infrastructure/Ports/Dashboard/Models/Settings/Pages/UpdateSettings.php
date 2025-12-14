@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models\Restaurants\Pages;
+namespace Infrastructure\Ports\Dashboard\Models\Settings\Pages;
 
 use Infrastructure\Ports\Dashboard\Models\FormModel;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\UpdateSettingsRequest;
+use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 
 final readonly class UpdateSettings extends FormModel
 {

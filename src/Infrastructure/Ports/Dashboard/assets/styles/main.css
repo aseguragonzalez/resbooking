@@ -187,9 +187,9 @@
     background-color: var(--color-accent);
 }
 
-/*** TURNS ****/
+/*** AVAILABILITIES ****/
 
-.turns-container {
+.availabilities-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -197,7 +197,7 @@
     width: 100%;
 }
 
-.turn-control {
+.availability-control {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
@@ -212,7 +212,7 @@
     }
 }
 
-.turn-form-control {
+.availability-form-control {
     display: flex;
     flex-direction: row;
     gap: var(--spacing-sm);
@@ -220,6 +220,6 @@
     width: 100%;
 }
 
-.turns-form {
+.availability-form {
     width: fit-content;
 }
