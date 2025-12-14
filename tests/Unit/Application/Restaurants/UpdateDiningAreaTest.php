@@ -65,7 +65,7 @@ final class UpdateDiningAreaTest extends TestCase
 
         $this->assertSame(1, count($restaurant->getDiningAreas()));
         $updatedDiningArea = $restaurant->getDiningAreas()[0];
-        $this->assertSame($diningAreaId, $updatedDiningArea->getId());
+        $this->assertSame($diningAreaId, $updatedDiningArea->id);
         $this->assertSame($newName, $updatedDiningArea->name);
         $this->assertSame($newCapacity, $updatedDiningArea->capacity->value);
         $events = $restaurant->getEvents();

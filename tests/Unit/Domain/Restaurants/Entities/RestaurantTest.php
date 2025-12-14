@@ -136,7 +136,7 @@ final class RestaurantTest extends TestCase
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->withDiningAreas($diningAreas)->build();
         $diningAreaToRemove = $diningAreas[1];
 
-        $restaurant->removeDiningAreasById($diningAreaToRemove->getId());
+        $restaurant->removeDiningAreasById($diningAreaToRemove->id);
 
         $this->assertNotContains($diningAreaToRemove, $restaurant->getDiningAreas());
         $events = $restaurant->getEvents();
@@ -155,7 +155,7 @@ final class RestaurantTest extends TestCase
             ->withDiningAreas([$originalDiningArea])
             ->build();
         $updatedDiningArea = DiningArea::build(
-            id: $originalDiningArea->getId(),
+            id: $originalDiningArea->id,
             capacity: new Capacity(value: 200),
             name: $this->faker->name
         );

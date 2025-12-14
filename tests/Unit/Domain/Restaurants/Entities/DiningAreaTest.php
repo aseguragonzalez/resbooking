@@ -6,10 +6,10 @@ namespace Tests\Unit\Domain\Restaurants\Entities;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Shared\Capacity;
-use Seedwork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\Exceptions\ValueException;
 
 final class DiningAreaTest extends TestCase
 {
@@ -33,7 +33,7 @@ final class DiningAreaTest extends TestCase
         $diningArea = DiningArea::new(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(DiningArea::class, $diningArea);
-        $this->assertSame($id, $diningArea->getId());
+        $this->assertSame($id, $diningArea->id);
         $this->assertSame($capacity, $diningArea->capacity);
         $this->assertSame($name, $diningArea->name);
     }
@@ -47,7 +47,7 @@ final class DiningAreaTest extends TestCase
         $diningArea = DiningArea::build(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(DiningArea::class, $diningArea);
-        $this->assertSame($id, $diningArea->getId());
+        $this->assertSame($id, $diningArea->id);
         $this->assertSame($capacity, $diningArea->capacity);
         $this->assertSame($name, $diningArea->name);
     }

@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Seedwork\Domain;
 
-abstract class Entity
+abstract readonly class Entity
 {
-    protected function __construct(private string $id)
+    protected function __construct(public string $id)
     {
     }
 
     public function equals(Entity $other): bool
     {
-        return $this->id === $other->getId();
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
+        return $this->id === $other->id;
     }
 }

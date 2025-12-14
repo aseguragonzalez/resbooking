@@ -6,7 +6,7 @@ namespace Tests\Unit\Seedwork\Domain\Fixtures;
 
 use Seedwork\Domain\Entity;
 
-class DummyEntity extends Entity
+final readonly class DummyEntity extends Entity
 {
     public function __construct(string $id)
     {

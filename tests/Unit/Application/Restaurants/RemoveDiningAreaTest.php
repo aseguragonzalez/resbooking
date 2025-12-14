@@ -48,7 +48,7 @@ final class RemoveDiningAreaTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
-        $request = new RemoveDiningAreaCommand(restaurantId: $this->faker->uuid, diningAreaId: $diningArea->getId());
+        $request = new RemoveDiningAreaCommand(restaurantId: $this->faker->uuid, diningAreaId: $diningArea->id);
         $ApplicationService = new RemoveDiningAreaService($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);

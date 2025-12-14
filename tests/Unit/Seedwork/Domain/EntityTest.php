@@ -26,6 +26,6 @@ class EntityTest extends TestCase
     public function testGetIdReturnsId(): void
     {
         $entity = new DummyEntity('my-id');
-        $this->assertSame('my-id', $entity->getId());
+        $this->assertSame('my-id', $entity->id);
     }
 }

@@ -6,4 +6,5 @@ namespace Seedwork\Domain;
 
 abstract readonly class ValueObject
 {
+    abstract public function equals(ValueObject $other): bool;
 }

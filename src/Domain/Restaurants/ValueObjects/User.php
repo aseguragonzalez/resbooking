@@ -12,4 +12,13 @@ final readonly class User extends ValueObject
     public function __construct(public Email $username)
     {
     }
+
+    public function equals(ValueObject $other): bool
+    {
+        if (!$other instanceof self) {
+            return false;
+        }
+        /** @var self $other */
+        return $this->username == $other->username;
+    }
 }
