@@ -671,7 +671,7 @@ error handling, and semantic HTML.
         </p>
     </footer>
 </form>
-{{#endlayout layout:}}
+
 ```
 
 **Form with Field-Level Validation:**
@@ -717,7 +717,7 @@ error handling, and semantic HTML.
         <a href="{{backUrl}}">{{form.back}}</a>
     </footer>
 </form>
-{{#endlayout layout:}}
+
 ```
 
 **Checkbox Control Pattern:**
@@ -852,7 +852,7 @@ Tables must include navigation controls, proper structure, and action buttons
     </article>
     {{#endif !hasReservations:}}
 </section>
-{{#endlayout layout:}}
+
 ```
 
 **Table Requirements:**

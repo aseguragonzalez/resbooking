@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard\Models\Restaurants\Requests;
+namespace Infrastructure\Ports\Dashboard\Models\Settings\Requests;
 
 final readonly class UpdateSettingsRequest
 {
