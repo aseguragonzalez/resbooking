@@ -1,0 +1,51 @@
+{{#layout layout:}}
+<section class="section">
+    <nav class="table-nav">
+        <a href="/dining-areas/create" class="primary-button">
+            {{dining-areas.new}}
+        </a>
+    </nav>
+
+    {{#if hasDiningAreas:}}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{dining-areas.header.name}}</th>
+                <th>{{dining-areas.header.capacity}}</th>
+                <th>{{dining-areas.header.actions}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#for diningArea in diningAreas:}}
+            <tr>
+                <td>{{diningArea->name}}</td>
+                <td>{{diningArea->capacity}}</td>
+                <td class="control-group">
+                    <a href="/dining-areas/{{diningArea->id}}">{{dining-areas.edit}}</a>
+                    <form method="post" action="/dining-areas/{{diningArea->id}}/delete" style="display: inline;">
+                        <button type="submit">{{dining-areas.delete}}</button>
+                    </form>
+                </td>
+            </tr>
+            {{#endfor diningAreas:}}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+        </tfoot>
+    </table>
+    {{#endif hasDiningAreas:}}
+
+    {{#if !hasDiningAreas:}}
+    <article class="card">
+        <header>
+            <h3>{{dining-areas.no_found}}</h3>
+        </header>
+        <p>
+            {{dining-areas.no_found_description}}
+        </p>
+    </article>
+    {{#endif !hasDiningAreas:}}
+</section>
+{{#endlayout layout:}}

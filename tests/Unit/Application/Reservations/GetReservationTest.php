@@ -12,7 +12,7 @@ use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\Turn;
+use Domain\Shared\TimeSlot;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,9 +33,9 @@ final class GetReservationTest extends TestCase
         $command = new GetReservationCommand(reservationId: $reservationId);
 
         $reservation = Reservation::new(
-            projectId: 'project-123',
+            restaurantId: 'restaurant-123',
             date: new \DateTimeImmutable('2024-12-25'),
-            turn: Turn::H1900,
+            turn: TimeSlot::H1900,
             name: 'John Doe',
             email: new Email('john@example.com'),
             phone: new Phone('+34-555-0100'),

@@ -26,7 +26,7 @@ final class CreateReservationTest extends TestCase
     public function testExecuteCreatesAndSavesReservation(): void
     {
         $command = new CreateReservationCommand(
-            projectId: 'project-123',
+            restaurantId: 'restaurant-123',
             date: '2024-12-25',
             turn: 15,
             name: 'John Doe',
@@ -47,7 +47,7 @@ final class CreateReservationTest extends TestCase
     public function testExecuteHandlesInvalidDate(): void
     {
         $command = new CreateReservationCommand(
-            projectId: 'project-123',
+            restaurantId: 'restaurant-123',
             date: 'invalid-date',
             turn: 15,
             name: 'John Doe',

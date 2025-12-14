@@ -13,17 +13,17 @@ use Seedwork\Domain\Repository;
 interface ReservationRepository extends Repository
 {
     /**
-     * Find reservations by project ID and date range
+     * Find reservations by restaurant ID and date range
      *
-     * @param string $projectId
+     * @param string $restaurantId
      * @param \DateTimeImmutable $from
      * @param \DateTimeImmutable $to
      * @param int $offset
      * @param int $limit
      * @return array<Reservation>
      */
-    public function findByProjectAndDateRange(
-        string $projectId,
+    public function findByRestaurantAndDateRange(
+        string $restaurantId,
         \DateTimeImmutable $from,
         \DateTimeImmutable $to,
         int $offset = 0,

@@ -4,31 +4,31 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard;
 
-use Application\Projects\AddPlace\AddPlace;
-use Application\Projects\AddPlace\AddPlaceService;
-use Application\Projects\CreateNewProject\CreateNewProject;
-use Application\Projects\CreateNewProject\CreateNewProjectService;
-use Application\Projects\GetProjectById\GetProjectById;
-use Application\Projects\GetProjectById\GetProjectByIdService;
-use Application\Projects\RemovePlace\RemovePlace;
-use Application\Projects\RemovePlace\RemovePlaceService;
-use Application\Projects\UpdatePlace\UpdatePlace;
-use Application\Projects\UpdatePlace\UpdatePlaceService;
-use Application\Projects\UpdateSettings\UpdateSettings;
-use Application\Projects\UpdateSettings\UpdateSettingsService;
-use Application\Projects\UpdateTurns\UpdateTurns;
-use Application\Projects\UpdateTurns\UpdateTurnsService;
+use Application\Restaurants\AddDiningArea\AddDiningArea;
+use Application\Restaurants\AddDiningArea\AddDiningAreaService;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantService;
+use Application\Restaurants\GetRestaurantById\GetRestaurantById;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdService;
+use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
+use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaService;
+use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
+use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaService;
+use Application\Restaurants\UpdateSettings\UpdateSettings;
+use Application\Restaurants\UpdateSettings\UpdateSettingsService;
+use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
+use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesService;
 use DI\Container;
-use Domain\Projects\Repositories\ProjectRepository;
+use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
-use Infrastructure\Adapters\Repositories\Projects\InFileProjectRepository;
+use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
-use Infrastructure\Ports\Dashboard\Controllers\PlacesController;
-use Infrastructure\Ports\Dashboard\Controllers\ProjectController;
+use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
+use Infrastructure\Ports\Dashboard\Controllers\RestaurantController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
-use Infrastructure\Ports\Dashboard\Controllers\TurnsController;
+use Infrastructure\Ports\Dashboard\Controllers\AvailabilitiesController;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\{Logger as MonoLogger, Level};
@@ -84,23 +84,23 @@ final class App extends WebApp
         );
         $this->container->set(IdentityManager::class, $defaultIdentityManager);
 
-        /** @var InFileProjectRepository $inFileProjectRepository */
-        $inFileProjectRepository = $this->container->get(InFileProjectRepository::class);
-        $this->container->set(ProjectRepository::class, $inFileProjectRepository);
-        $createNewProjectService = $this->container->get(CreateNewProjectService::class);
-        $this->container->set(CreateNewProject::class, $createNewProjectService);
+        /** @var InFileRestaurantRepository $inFileRestaurantRepository */
+        $inFileRestaurantRepository = $this->container->get(InFileRestaurantRepository::class);
+        $this->container->set(RestaurantRepository::class, $inFileRestaurantRepository);
+        $createNewRestaurantService = $this->container->get(CreateNewRestaurantService::class);
+        $this->container->set(CreateNewRestaurant::class, $createNewRestaurantService);
         $updateSettingsService = $this->container->get(UpdateSettingsService::class);
         $this->container->set(UpdateSettings::class, $updateSettingsService);
-        $addPlaceService = $this->container->get(AddPlaceService::class);
-        $this->container->set(AddPlace::class, $addPlaceService);
-        $removePlaceService = $this->container->get(RemovePlaceService::class);
-        $this->container->set(RemovePlace::class, $removePlaceService);
-        $updatePlaceService = $this->container->get(UpdatePlaceService::class);
-        $this->container->set(UpdatePlace::class, $updatePlaceService);
-        $updateTurnsService = $this->container->get(UpdateTurnsService::class);
-        $this->container->set(UpdateTurns::class, $updateTurnsService);
-        $getProjectByIdService = $this->container->get(GetProjectByIdService::class);
-        $this->container->set(GetProjectById::class, $getProjectByIdService);
+        $addDiningAreaService = $this->container->get(AddDiningAreaService::class);
+        $this->container->set(AddDiningArea::class, $addDiningAreaService);
+        $removeDiningAreaService = $this->container->get(RemoveDiningAreaService::class);
+        $this->container->set(RemoveDiningArea::class, $removeDiningAreaService);
+        $updateDiningAreaService = $this->container->get(UpdateDiningAreaService::class);
+        $this->container->set(UpdateDiningArea::class, $updateDiningAreaService);
+        $updateAvailabilitiesService = $this->container->get(UpdateAvailabilitiesService::class);
+        $this->container->set(UpdateAvailabilities::class, $updateAvailabilitiesService);
+        $getRestaurantByIdService = $this->container->get(GetRestaurantByIdService::class);
+        $this->container->set(GetRestaurantById::class, $getRestaurantByIdService);
     }
 
     protected function router(): Router
@@ -108,16 +108,16 @@ final class App extends WebApp
         $accountsRoutes = AccountsController::getRoutes();
         $reservationsRoutes = ReservationsController::getRoutes();
         $dashboardRoutes = DashboardController::getRoutes();
-        $projectRoutes = ProjectController::getRoutes();
-        $placesRoutes = PlacesController::getRoutes();
-        $turnsRoutes = TurnsController::getRoutes();
+        $restaurantRoutes = RestaurantController::getRoutes();
+        $diningAreasRoutes = DiningAreasController::getRoutes();
+        $availabilitiesRoutes = AvailabilitiesController::getRoutes();
         return new Router(routes:[
             ...$accountsRoutes,
             ...$reservationsRoutes,
             ...$dashboardRoutes,
-            ...$projectRoutes,
-            ...$placesRoutes,
-            ...$turnsRoutes
+            ...$restaurantRoutes,
+            ...$diningAreasRoutes,
+            ...$availabilitiesRoutes
         ]);
     }
 }

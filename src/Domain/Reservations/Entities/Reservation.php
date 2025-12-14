@@ -11,16 +11,16 @@ use Domain\Reservations\ValueObjects\ReservationStatus;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\Turn;
+use Domain\Shared\TimeSlot;
 use Seedwork\Domain\AggregateRoot;
 
 final class Reservation extends AggregateRoot
 {
     private function __construct(
         string $id,
-        private readonly string $projectId,
+        private readonly string $restaurantId,
         private readonly \DateTimeImmutable $date,
-        private readonly Turn $turn,
+        private readonly TimeSlot $turn,
         private string $name,
         private Email $email,
         private Phone $phone,
@@ -31,9 +31,9 @@ final class Reservation extends AggregateRoot
     }
 
     public static function new(
-        string $projectId,
+        string $restaurantId,
         \DateTimeImmutable $date,
-        Turn $turn,
+        TimeSlot $turn,
         string $name,
         Email $email,
         Phone $phone,
@@ -42,7 +42,7 @@ final class Reservation extends AggregateRoot
     ): self {
         $reservation = new self(
             id: $id ?? uniqid(),
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             date: $date,
             turn: $turn,
             name: $name,
@@ -61,9 +61,9 @@ final class Reservation extends AggregateRoot
 
     public static function build(
         string $id,
-        string $projectId,
+        string $restaurantId,
         \DateTimeImmutable $date,
-        Turn $turn,
+        TimeSlot $turn,
         string $name,
         Email $email,
         Phone $phone,
@@ -72,7 +72,7 @@ final class Reservation extends AggregateRoot
     ): self {
         return new self(
             id: $id,
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             date: $date,
             turn: $turn,
             name: $name,
@@ -83,9 +83,9 @@ final class Reservation extends AggregateRoot
         );
     }
 
-    public function getProjectId(): string
+    public function getRestaurantId(): string
     {
-        return $this->projectId;
+        return $this->restaurantId;
     }
 
     public function getDate(): \DateTimeImmutable
@@ -93,7 +93,7 @@ final class Reservation extends AggregateRoot
         return $this->date;
     }
 
-    public function getTurn(): Turn
+    public function getTurn(): TimeSlot
     {
         return $this->turn;
     }

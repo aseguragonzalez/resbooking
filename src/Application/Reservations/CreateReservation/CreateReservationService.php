@@ -9,7 +9,7 @@ use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\Turn;
+use Domain\Shared\TimeSlot;
 
 final readonly class CreateReservationService implements CreateReservation
 {
@@ -26,13 +26,13 @@ final readonly class CreateReservationService implements CreateReservation
             $date = new \DateTimeImmutable('now');
         }
 
-        $turn = Turn::getById($command->turn);
+        $turn = TimeSlot::getById($command->turn);
         $email = new Email($command->email);
         $phone = new Phone($command->phone);
         $numberOfDiners = new Capacity($command->numberOfDiners);
 
         $reservation = Reservation::new(
-            projectId: $command->projectId,
+            restaurantId: $command->restaurantId,
             date: $date,
             turn: $turn,
             name: $command->name,

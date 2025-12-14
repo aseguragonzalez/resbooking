@@ -24,12 +24,12 @@ final class ListReservationsTest extends TestCase
 
     public function testExecuteReturnsReservations(): void
     {
-        $projectId = 'project-123';
+        $restaurantId = 'restaurant-123';
         $from = '2024-12-25';
         $offset = 0;
 
         $command = new ListReservationsCommand(
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             from: $from,
             offset: $offset
         );
@@ -37,9 +37,9 @@ final class ListReservationsTest extends TestCase
         $expectedReservations = [];
 
         $this->reservationRepository->expects($this->once())
-            ->method('findByProjectAndDateRange')
+            ->method('findByRestaurantAndDateRange')
             ->with(
-                $this->equalTo($projectId),
+                $this->equalTo($restaurantId),
                 $this->isInstanceOf(\DateTimeImmutable::class),
                 $this->isInstanceOf(\DateTimeImmutable::class),
                 $this->equalTo($offset),
@@ -55,13 +55,13 @@ final class ListReservationsTest extends TestCase
     public function testExecuteHandlesInvalidDate(): void
     {
         $command = new ListReservationsCommand(
-            projectId: 'project-123',
+            restaurantId: 'restaurant-123',
             from: 'invalid-date',
             offset: 0
         );
 
         $this->reservationRepository->expects($this->once())
-            ->method('findByProjectAndDateRange')
+            ->method('findByRestaurantAndDateRange')
             ->willReturn([]);
 
         $result = $this->service->execute($command);

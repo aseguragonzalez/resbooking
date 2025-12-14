@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Projects\CreateNewProject\CreateNewProject;
-use Application\Projects\CreateNewProject\CreateNewProjectCommand;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -31,7 +31,7 @@ use Seedwork\Infrastructure\Mvc\Settings;
 final class AccountsController extends Controller
 {
     public function __construct(
-        private readonly CreateNewProject $createNewProject,
+        private readonly CreateNewRestaurant $createNewRestaurant,
         private readonly IdentityManager $identityManager,
         private readonly Settings $settings
     ) {
@@ -111,7 +111,7 @@ final class AccountsController extends Controller
             ['admin']
         );
 
-        $this->createNewProject->execute(new CreateNewProjectCommand(email: $request->username));
+        $this->createNewRestaurant->execute(new CreateNewRestaurantCommand(email: $request->username));
 
         return $this->redirectToAction("signIn");
     }

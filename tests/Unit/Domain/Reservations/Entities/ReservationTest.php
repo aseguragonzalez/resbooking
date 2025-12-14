@@ -12,7 +12,7 @@ use Domain\Reservations\ValueObjects\ReservationStatus;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\Turn;
+use Domain\Shared\TimeSlot;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
@@ -28,16 +28,16 @@ final class ReservationTest extends TestCase
 
     public function testCreateNewReservation(): void
     {
-        $projectId = $this->faker->uuid();
+        $restaurantId = $this->faker->uuid();
         $date = new \DateTimeImmutable('2024-12-25');
-        $turn = Turn::H1900;
+        $turn = TimeSlot::H1900;
         $name = $this->faker->name();
         $email = new Email($this->faker->email());
         $phone = new Phone($this->faker->phoneNumber());
         $numberOfDiners = new Capacity(4);
 
         $reservation = Reservation::new(
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             date: $date,
             turn: $turn,
             name: $name,
@@ -48,7 +48,7 @@ final class ReservationTest extends TestCase
 
         $this->assertInstanceOf(Reservation::class, $reservation);
         $this->assertNotEmpty($reservation->getId());
-        $this->assertSame($projectId, $reservation->getProjectId());
+        $this->assertSame($restaurantId, $reservation->getRestaurantId());
         $this->assertSame($date, $reservation->getDate());
         $this->assertSame($turn, $reservation->getTurn());
         $this->assertSame($name, $reservation->getName());
@@ -68,16 +68,16 @@ final class ReservationTest extends TestCase
     public function testCreateReservationWithId(): void
     {
         $id = $this->faker->uuid();
-        $projectId = $this->faker->uuid();
+        $restaurantId = $this->faker->uuid();
         $date = new \DateTimeImmutable('2024-12-25');
-        $turn = Turn::H2000;
+        $turn = TimeSlot::H2000;
         $name = $this->faker->name();
         $email = new Email($this->faker->email());
         $phone = new Phone($this->faker->phoneNumber());
         $numberOfDiners = new Capacity(2);
 
         $reservation = Reservation::new(
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             date: $date,
             turn: $turn,
             name: $name,
@@ -93,9 +93,9 @@ final class ReservationTest extends TestCase
     public function testBuildReservation(): void
     {
         $id = $this->faker->uuid();
-        $projectId = $this->faker->uuid();
+        $restaurantId = $this->faker->uuid();
         $date = new \DateTimeImmutable('2024-12-25');
-        $turn = Turn::H1930;
+        $turn = TimeSlot::H1930;
         $name = $this->faker->name();
         $email = new Email($this->faker->email());
         $phone = new Phone($this->faker->phoneNumber());
@@ -104,7 +104,7 @@ final class ReservationTest extends TestCase
 
         $reservation = Reservation::build(
             id: $id,
-            projectId: $projectId,
+            restaurantId: $restaurantId,
             date: $date,
             turn: $turn,
             name: $name,
@@ -115,7 +115,7 @@ final class ReservationTest extends TestCase
         );
 
         $this->assertSame($id, $reservation->getId());
-        $this->assertSame($projectId, $reservation->getProjectId());
+        $this->assertSame($restaurantId, $reservation->getRestaurantId());
         $this->assertSame($date, $reservation->getDate());
         $this->assertSame($turn, $reservation->getTurn());
         $this->assertSame($name, $reservation->getName());
@@ -174,9 +174,9 @@ final class ReservationTest extends TestCase
     private function createReservation(): Reservation
     {
         return Reservation::new(
-            projectId: $this->faker->uuid(),
+            restaurantId: $this->faker->uuid(),
             date: new \DateTimeImmutable('2024-12-25'),
-            turn: Turn::H1900,
+            turn: TimeSlot::H1900,
             name: $this->faker->name(),
             email: new Email($this->faker->email()),
             phone: new Phone($this->faker->phoneNumber()),
