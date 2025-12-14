@@ -12,6 +12,7 @@ use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Events\RestaurantCreated;
 use Domain\Restaurants\Events\RestaurantModified;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
+use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Domain\Restaurants\ValueObjects\Availability;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
@@ -127,7 +128,8 @@ final class Restaurant extends AggregateRoot
     {
         $diningAreas = array_filter(
             $this->diningAreas,
-            fn (DiningArea $s) => $s->equals($diningArea) || $s->name === $diningArea->name
+            fn (DiningArea $existingDiningArea) => $existingDiningArea->equals($diningArea)
+                || $existingDiningArea->name === $diningArea->name
         );
         if (!empty($diningAreas)) {
             throw new DiningAreaAlreadyExist();
@@ -148,6 +150,14 @@ final class Restaurant extends AggregateRoot
 
     public function updateDiningArea(DiningArea $diningArea): void
     {
+        $existingDiningArea = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $existingDiningArea) => $existingDiningArea->getId() === $diningArea->getId()
+        );
+        if (empty($existingDiningArea)) {
+            throw new DiningAreaNotFound(diningAreaId: $diningArea->getId());
+        }
+
         $this->diningAreas = array_map(
             fn (DiningArea $s) => $s->getId() === $diningArea->getId() ? $diningArea : $s,
             $this->diningAreas
