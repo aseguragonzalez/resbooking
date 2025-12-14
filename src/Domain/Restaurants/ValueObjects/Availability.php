@@ -25,7 +25,6 @@ final readonly class Availability extends ValueObject
         }
         /** @var self $other */
         return $this->dayOfWeek === $other->dayOfWeek
-            && $this->timeSlot === $other->timeSlot
-            && $this->capacity->equals($other->capacity);
+            && $this->timeSlot === $other->timeSlot;
     }
 }
