@@ -20,16 +20,12 @@ final readonly class UpdateDiningAreaService implements UpdateDiningArea
     public function execute(UpdateDiningAreaCommand $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: $command->restaurantId);
-
-        $restaurant->removeDiningAreas(fn (DiningArea $diningArea) => $diningArea->getId() === $command->diningAreaId);
-
         $updatedDiningArea = DiningArea::build(
             id: $command->diningAreaId,
             capacity: new Capacity(value: $command->capacity),
             name: $command->name
         );
-
-        $restaurant->addDiningArea(diningArea: $updatedDiningArea);
+        $restaurant->updateDiningArea(diningArea: $updatedDiningArea);
         $this->restaurantRepository->save($restaurant);
     }
 }

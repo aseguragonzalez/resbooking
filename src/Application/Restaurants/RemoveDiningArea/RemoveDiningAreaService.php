@@ -19,7 +19,7 @@ final readonly class RemoveDiningAreaService implements RemoveDiningArea
     public function execute(RemoveDiningAreaCommand $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: $command->restaurantId);
-        $restaurant->removeDiningAreas(fn (DiningArea $diningArea) => $diningArea->getId() === $command->diningAreaId);
+        $restaurant->removeDiningAreasById(diningAreaId: $command->diningAreaId);
         $this->restaurantRepository->save($restaurant);
     }
 }

@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Domain\Restaurants\Entities;
 
 use Domain\Restaurants\Entities\DiningArea;
+use Domain\Restaurants\Events\AvailabilitiesUpdated;
 use Domain\Restaurants\Events\DiningAreaCreated;
+use Domain\Restaurants\Events\DiningAreaModified;
 use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Events\RestaurantCreated;
 use Domain\Restaurants\Events\RestaurantModified;
-use Domain\Restaurants\Events\AvailabilitiesUpdated;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
-use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
@@ -124,8 +125,10 @@ final class Restaurant extends AggregateRoot
 
     public function addDiningArea(DiningArea $diningArea): void
     {
-        // TODO: check if other dining area with same name exists
-        $diningAreas = array_filter($this->diningAreas, fn (DiningArea $s) => $s->equals($diningArea));
+        $diningAreas = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $s) => $s->equals($diningArea) || $s->name === $diningArea->name
+        );
         if (!empty($diningAreas)) {
             throw new DiningAreaAlreadyExist();
         }
@@ -133,16 +136,23 @@ final class Restaurant extends AggregateRoot
         $this->addEvent(DiningAreaCreated::new(restaurantId: $this->getId(), diningArea: $diningArea));
     }
 
-    /**
-     * @param callable(DiningArea): bool $filter
-     */
-    public function removeDiningAreas(callable $filter): void
+    public function removeDiningAreasById(string $diningAreaId): void
     {
+        $filter = fn (DiningArea $diningArea) => $diningArea->getId() === $diningAreaId;
         $diningAreasToBeRemoved = array_filter($this->diningAreas, $filter);
         foreach ($diningAreasToBeRemoved as $diningArea) {
             $this->addEvent(DiningAreaRemoved::new(restaurantId: $this->getId(), diningArea: $diningArea));
         }
         $this->diningAreas = array_filter($this->diningAreas, fn (DiningArea $diningArea) => !$filter($diningArea));
+    }
+
+    public function updateDiningArea(DiningArea $diningArea): void
+    {
+        $this->diningAreas = array_map(
+            fn (DiningArea $s) => $s->getId() === $diningArea->getId() ? $diningArea : $s,
+            $this->diningAreas
+        );
+        $this->addEvent(DiningAreaModified::new(restaurantId: $this->getId(), diningArea: $diningArea));
     }
 
     /**
