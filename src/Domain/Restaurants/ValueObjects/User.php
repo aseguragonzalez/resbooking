@@ -19,6 +19,6 @@ final readonly class User extends ValueObject
             return false;
         }
         /** @var self $other */
-        return $this->username == $other->username;
+        return $this->username->equals($other->username);
     }
 }

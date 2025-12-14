@@ -24,6 +24,8 @@ final readonly class Availability extends ValueObject
             return false;
         }
         /** @var self $other */
-        return $this->dayOfWeek == $other->dayOfWeek && $this->timeSlot == $other->timeSlot;
+        return $this->dayOfWeek === $other->dayOfWeek
+            && $this->timeSlot === $other->timeSlot
+            && $this->capacity->equals($other->capacity);
     }
 }

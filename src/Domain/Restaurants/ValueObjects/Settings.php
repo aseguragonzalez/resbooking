@@ -45,12 +45,12 @@ final readonly class Settings extends ValueObject
             return false;
         }
         /** @var self $other */
-        return $this->email == $other->email
-            && $this->hasReminders == $other->hasReminders
-            && $this->name == $other->name
-            && $this->maxNumberOfDiners == $other->maxNumberOfDiners
-            && $this->minNumberOfDiners == $other->minNumberOfDiners
-            && $this->numberOfTables == $other->numberOfTables
-            && $this->phone == $other->phone;
+        return $this->email->equals($other->email)
+            && $this->hasReminders === $other->hasReminders
+            && $this->name === $other->name
+            && $this->maxNumberOfDiners->equals($other->maxNumberOfDiners)
+            && $this->minNumberOfDiners->equals($other->minNumberOfDiners)
+            && $this->numberOfTables->equals($other->numberOfTables)
+            && $this->phone->equals($other->phone);
     }
 }
