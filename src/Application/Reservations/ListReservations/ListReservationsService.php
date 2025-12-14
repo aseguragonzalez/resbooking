@@ -26,8 +26,8 @@ final readonly class ListReservationsService implements ListReservations
 
         $toDate = $fromDate->modify('+1 day');
 
-        return $this->reservationRepository->findByProjectAndDateRange(
-            projectId: $command->projectId,
+        return $this->reservationRepository->findByRestaurantAndDateRange(
+            restaurantId: $command->restaurantId,
             from: $fromDate,
             to: $toDate,
             offset: $command->offset,

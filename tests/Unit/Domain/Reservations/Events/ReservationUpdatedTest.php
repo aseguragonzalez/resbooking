@@ -9,7 +9,7 @@ use Domain\Reservations\Events\ReservationUpdated;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Domain\Shared\Turn;
+use Domain\Shared\TimeSlot;
 use PHPUnit\Framework\TestCase;
 
 final class ReservationUpdatedTest extends TestCase
@@ -17,9 +17,9 @@ final class ReservationUpdatedTest extends TestCase
     public function testCreateReservationUpdatedEvent(): void
     {
         $reservation = Reservation::new(
-            projectId: 'project-123',
+            restaurantId: 'restaurant-123',
             date: new \DateTimeImmutable('2024-12-25'),
-            turn: Turn::H1900,
+            turn: TimeSlot::H1900,
             name: 'John Doe',
             email: new Email('john@example.com'),
             phone: new Phone('+34-555-0100'),

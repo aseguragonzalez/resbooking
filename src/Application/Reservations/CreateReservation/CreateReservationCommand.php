@@ -7,7 +7,7 @@ namespace Application\Reservations\CreateReservation;
 final readonly class CreateReservationCommand
 {
     public function __construct(
-        public string $projectId,
+        public string $restaurantId,
         public string $date,
         public int $turn,
         public string $name,

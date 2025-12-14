@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Projects\CreateNewProject\CreateNewProject;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use PHPUnit\Framework\TestCase;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -30,7 +30,7 @@ use Faker\Generator;
 
 final class AccountsControllerTest extends TestCase
 {
-    private CreateNewProject&MockObject $createNewProject;
+    private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
     private Settings $settings;
     private AccountsController $controller;
@@ -38,10 +38,10 @@ final class AccountsControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->createNewProject = $this->createMock(CreateNewProject::class);
+        $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
         $this->settings = new Settings(basePath: '/');
-        $this->controller = new AccountsController($this->createNewProject, $this->identityManager, $this->settings);
+        $this->controller = new AccountsController($this->createNewRestaurant, $this->identityManager, $this->settings);
         $this->faker = Factory::create();
     }
 
@@ -184,7 +184,7 @@ final class AccountsControllerTest extends TestCase
             agree: 'on'
         );
         $this->identityManager->expects($this->once())->method('signUp');
-        $this->createNewProject->expects($this->once())->method('execute');
+        $this->createNewRestaurant->expects($this->once())->method('execute');
 
         $response = $this->controller->signUpUser($request);
 

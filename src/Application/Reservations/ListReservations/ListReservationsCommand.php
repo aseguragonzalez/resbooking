@@ -7,7 +7,7 @@ namespace Application\Reservations\ListReservations;
 final readonly class ListReservationsCommand
 {
     public function __construct(
-        public string $projectId,
+        public string $restaurantId,
         public string $from,
         public int $offset = 0
     ) {

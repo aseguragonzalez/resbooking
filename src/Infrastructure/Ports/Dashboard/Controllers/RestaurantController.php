@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Infrastructure\Ports\Dashboard\Controllers;
+
+use Application\Restaurants\GetRestaurantById\GetRestaurantById;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\UpdateSettings\UpdateSettings;
+use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\UpdateSettings as UpdateSettingsPage;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\UpdateSettingsRequest;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
+use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
+use Seedwork\Infrastructure\Mvc\Routes\Route;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+
+final class RestaurantController extends Controller
+{
+    private const string RESTAURANT_ID = '69347ea320d5a';
+
+    public function __construct(
+        private readonly UpdateSettings $updateSettings,
+        private readonly GetRestaurantById $getRestaurantById,
+    ) {
+    }
+
+    public function settings(): ActionResponse
+    {
+        $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
+        $restaurant = $this->getRestaurantById->execute($command);
+        $settings = $restaurant->getSettings();
+
+        $pageModel = UpdateSettingsPage::new(
+            email: $settings->email->value,
+            hasReminders: $settings->hasReminders,
+            name: $settings->name,
+            maxNumberOfDiners: $settings->maxNumberOfDiners->value,
+            minNumberOfDiners: $settings->minNumberOfDiners->value,
+            numberOfTables: $settings->numberOfTables->value,
+            phone: $settings->phone->value,
+        );
+        return $this->view(model: $pageModel);
+    }
+
+    public function updateSettings(UpdateSettingsRequest $request): ActionResponse
+    {
+        $errors = $request->validate();
+        if (!empty($errors)) {
+            $pageModel = UpdateSettingsPage::withErrors($request, $errors);
+            return $this->view("settings", model: $pageModel);
+        }
+
+        $this->updateSettings->execute(new UpdateSettingsCommand(
+            restaurantId: self::RESTAURANT_ID,
+            email: $request->email,
+            hasReminders: $request->hasRemindersChecked(),
+            name: $request->name,
+            maxNumberOfDiners: $request->maxNumberOfDiners,
+            minNumberOfDiners: $request->minNumberOfDiners,
+            numberOfTables: $request->numberOfTables,
+            phone: $request->phone,
+        ));
+        return $this->redirectToAction("settings", RestaurantController::class);
+    }
+
+    /**
+     * @return array<Route>
+     */
+    public static function getRoutes(): array
+    {
+        return [
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/restaurant/settings'),
+                controller: RestaurantController::class,
+                action: 'settings',
+                authRequired: true
+            ),
+            Route::create(
+                method: RouteMethod::Post,
+                path: Path::create('/restaurant/settings'),
+                controller: RestaurantController::class,
+                action: 'updateSettings',
+                authRequired: true
+            ),
+        ];
+    }
+}

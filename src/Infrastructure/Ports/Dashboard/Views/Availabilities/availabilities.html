@@ -1,0 +1,30 @@
+{{#layout layout:}}
+<form action="/availabilities" method="post" class="form availabilities-form">
+    <header>
+        <h2>{{availabilities.form.title}}</h2>
+    </header>
+
+    <div class="availabilities-container">
+        {{#for availability in availabilities:}}
+        <div class="availability-control">
+            <label for="{{availability->id}}">
+                {{availability->time}} {{availabilities.dayOfWeek.{{availability->dayOfWeekId}}}}
+            </label>
+            <input
+                type="number"
+                step="1"
+                min="0"
+                id="{{availability->id}}"
+                name="{{availability->id}}"
+                value="{{availability->capacity}}"
+            />
+        </div>
+        {{#endfor availabilities:}}
+    </div>
+
+    <div class="availability-form-control">
+        <button type="submit" class="primary-button">{{form.save}}</button>
+        <button type="reset">{{form.cancel}}</button>
+    </div>
+</form>
+{{#endlayout layout:}}
