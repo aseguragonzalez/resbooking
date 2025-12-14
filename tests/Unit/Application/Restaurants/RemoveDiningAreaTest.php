@@ -7,6 +7,7 @@ namespace Tests\Unit\Application\Restaurants\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaService;
 use Domain\Restaurants\Entities\DiningArea;
+use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\Capacity;
@@ -53,5 +54,11 @@ final class RemoveDiningAreaTest extends TestCase
         $ApplicationService->execute($request);
 
         $this->assertSame(1, count($restaurant->getDiningAreas()));
+        $events = $restaurant->getEvents();
+        $this->assertCount(1, $events);
+        $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
+        $event = $events[0];
+        $this->assertSame($diningArea, $event->getPayload()['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
     }
 }

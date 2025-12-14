@@ -7,6 +7,7 @@ namespace Tests\Unit\Application\Restaurants\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaService;
 use Domain\Restaurants\Entities\DiningArea;
+use Domain\Restaurants\Events\DiningAreaModified;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\Capacity;
@@ -67,5 +68,11 @@ final class UpdateDiningAreaTest extends TestCase
         $this->assertSame($diningAreaId, $updatedDiningArea->getId());
         $this->assertSame($newName, $updatedDiningArea->name);
         $this->assertSame($newCapacity, $updatedDiningArea->capacity->value);
+        $events = $restaurant->getEvents();
+        $this->assertCount(1, $events);
+        $this->assertInstanceOf(DiningAreaModified::class, $events[0]);
+        $event = $events[0];
+        $this->assertSame($updatedDiningArea, $event->getPayload()['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
     }
 }
