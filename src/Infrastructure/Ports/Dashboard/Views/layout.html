@@ -9,12 +9,17 @@
         <link rel="stylesheet" type="text/css" href="/assets/styles/main.css" />
     </head>
     <body>
+        <a href="#main-content" class="skip-to-content">{{layout.skipToContent}}</a>
         <header class="header">
             <h1>
                 <a href="/">{{layout.app}}</a>
             </h1>
+            <a href="#nav-menu" class="menu-toggle" aria-label="{{layout.menuToggle}}">
+                <span class="menu-toggle-icon" aria-hidden="true"></span>
+            </a>
             {{#if user->isAuthenticated:}}
-            <nav class="nav">
+            <nav class="nav" id="nav-menu">
+                <a href="#" class="nav-close" aria-label="{{layout.closeMenu}}">×</a>
                 <a href="/reservations">{{layout.reservations}}</a>
                 <a href="/availabilities">{{layout.availabilities}}</a>
                 <a href="/settings">{{layout.settings}}</a>
@@ -22,13 +27,14 @@
             </nav>
             {{#endif user->isAuthenticated:}}
             {{#if !user->isAuthenticated:}}
-            <nav class="nav">
+            <nav class="nav" id="nav-menu">
+                <a href="#" class="nav-close" aria-label="{{layout.closeMenu}}">×</a>
                 <a href="/accounts/sign-in">{{layout.signin}}</a>
                 <a href="/accounts/sign-up">{{layout.signup}}</a>
             </nav>
             {{#endif !user->isAuthenticated:}}
         </header>
-        <main class="main">
+        <main class="main" id="main-content">
             {{content}}
         </main>
         <footer class="footer">

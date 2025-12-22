@@ -23,6 +23,7 @@
         <input type="hidden" name="offset" value="{{offset}}">
         <input type="hidden" name="from" value="{{date}}">
     </form>
+    <div class="table-wrapper">
     <table class="table">
         <thead>
             <tr>
@@ -44,7 +45,7 @@
                     <button type="submit" form="update-status" name="status" value="ACCEPTED" formaction="/reservations/{{reservation->id}}/status">
                         {{reservations.accept}}
                     </button>
-                    <button type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
+                    <button class="danger-button" type="submit" form="update-status" name="status" value="CANCELLED" formaction="/reservations/{{reservation->id}}/status">
                         {{reservations.cancel}}
                     </button>
                     <a href="/reservations/{{reservation->id}}">{{reservations.details}}</a>
@@ -58,6 +59,7 @@
             </tr>
         </tfoot>
     </table>
+    </div>
     <nav class="table-pagination">
         <button form="filter-form" type="submit" name="offset" value="{{prev}}">
             {{reservations.prev}}
