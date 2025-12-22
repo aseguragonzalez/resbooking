@@ -1,28 +1,93 @@
+/* ============================================
+   Reset & Base
+   ============================================ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html, body {
-    background-color: var(--color-background);
-    font-family: var(--font-family-base);
-    font-size: var(--font-size-base);
+html {
     height: 100%;
     min-height: 100%;
     width: 100%;
 }
 
-a {
-    cursor: pointer;
+html, body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    height: 100%;
+    min-height: 100vh;
+    width: 100%;
+    transition: background-color var(--transition-theme), color var(--transition-theme);
 }
+
+a {
+    color: var(--color-primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary);
+    text-underline-offset: 2px;
+    transition: color var(--transition-base), text-decoration-color var(--transition-base);
+}
+
+a:visited {
+    color: var(--color-primary-light);
+    text-decoration-color: var(--color-primary-light);
+}
+
+a:hover {
+    color: var(--color-primary-hover);
+    text-decoration-color: var(--color-primary-hover);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-sm);
+}
+
+a:active {
+    color: var(--color-primary-dark);
+    text-decoration-color: var(--color-primary-dark);
+}
+
+
+/* ============================================
+   Body Layout
+   ============================================ */
 
 body {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-base);
-    justify-content: space-between;
+    gap: 0;
+    min-height: 100vh;
 }
+
+/* ============================================
+   Container
+   ============================================ */
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-base);
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-lg);
+    }
+}
+
+/* ============================================
+   Header
+   ============================================ */
 
 .header {
     align-items: center;
@@ -31,62 +96,325 @@ body {
     display: flex;
     flex-direction: row;
     flex-grow: 0;
+    flex-wrap: wrap;
     justify-content: space-between;
+    position: relative;
+    transition: background-color var(--transition-theme);
+    width: 100%;
 }
 
 .header h1 {
-    padding: 0 var(--spacing-base);
+    flex: 1 1 auto;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+    min-width: 0;
+    padding: var(--spacing-base);
 }
 
 .header h1 a {
     color: var(--color-text-inverse);
+    display: block;
+    transition: opacity var(--transition-base);
 }
+
+.header h1 a:hover {
+    opacity: 0.9;
+}
+
+.header h1 a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* Mobile Menu Toggle Button */
+.menu-toggle {
+    background: transparent;
+    border: none;
+    color: var(--color-text-on-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-base);
+    min-width: 44px;
+    min-height: 44px;
+    transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.menu-toggle:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--color-text-on-primary);
+}
+
+.menu-toggle:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+}
+
+.menu-toggle-icon {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text-on-primary);
+    position: relative;
+    transition: background-color var(--transition-base);
+}
+
+.menu-toggle-icon::before,
+.menu-toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text-on-primary);
+    transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.menu-toggle-icon::before {
+    top: -8px;
+}
+
+.menu-toggle-icon::after {
+    bottom: -8px;
+}
+
+/* Hide toggle on desktop */
+@media (min-width: 768px) {
+    .menu-toggle {
+        display: none;
+    }
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
 
 .nav {
     display: flex;
     flex-direction: row;
     position: relative;
+    width: 100%;
+}
 
-    a {
+.nav a {
+    color: var(--color-text-on-primary);
+    display: block;
+    padding: var(--spacing-base) var(--spacing-lg);
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.6);
+    text-underline-offset: 4px;
+    transition: background-color var(--transition-base), color var(--transition-base), text-decoration-color var(--transition-base);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav a:focus {
+    background-color: var(--color-accent);
+    outline: none;
+    color: var(--color-text-on-primary);
+    text-decoration-color: var(--color-text-on-primary);
+}
+
+.nav a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    color: var(--color-text-on-primary);
+}
+
+.nav a:hover {
+    background-color: var(--color-primary-hover);
+    color: var(--color-text-on-primary);
+    text-decoration-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Close button - hidden by default, shown only on mobile */
+.nav-close {
+    display: none !important;
+    visibility: hidden;
+}
+
+/* Mobile Navigation - Collapsible using :target */
+@media (max-width: 767px) {
+    .nav {
+        background-color: var(--color-primary-dark);
+        display: none;
+        flex-direction: column;
+        left: 0;
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        z-index: var(--z-index-dropdown);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Show menu when targeted */
+    .nav:target {
+        display: flex;
+    }
+
+    /* Close button inside mobile menu */
+    .nav-close {
+        align-self: flex-end;
+        background: transparent;
+        border: none;
         color: var(--color-text-inverse);
-        padding: var(--spacing-lg) var(--spacing-base);
         cursor: pointer;
+        font-size: var(--font-size-3xl);
+        font-weight: var(--font-weight-bold);
+        line-height: 1;
+        padding: var(--spacing-base);
+        min-width: 44px;
+        min-height: 44px;
+        width: 44px;
+        height: 44px;
+        display: flex !important;
+        visibility: visible !important;
+        align-items: center;
+        justify-content: center;
+        transition: background-color var(--transition-base), color var(--transition-base), opacity var(--transition-base);
+        opacity: 1;
     }
 
-    a:focus {
-        background-color: var(--color-accent);
-    }
-
-    a:focus-visible {
-        outline: none;
-        outline-offset: none;
-    }
-
-    a:hover {
+    .nav-close:hover {
         background-color: var(--color-primary-hover);
+        color: var(--color-text-inverse);
+        opacity: 1;
+    }
+
+    .nav-close:active {
+        opacity: 0.8;
+    }
+
+    .nav-close:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: -2px;
+        opacity: 1;
+    }
+
+    .nav a {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: var(--spacing-lg) var(--spacing-base);
+        width: 100%;
+        text-align: left;
+        justify-content: flex-start;
+        color: var(--color-text-on-primary);
+        text-decoration: underline;
+        text-decoration-color: rgba(255, 255, 255, 0.6);
+        text-underline-offset: 4px;
+    }
+
+    .nav a:hover {
+        text-decoration-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .nav a:last-child {
+        border-bottom: none;
     }
 }
+
+/* Desktop Navigation */
+@media (min-width: 768px) {
+    .nav {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        width: auto;
+    }
+
+    .nav-close {
+        display: none !important;
+        visibility: hidden;
+    }
+}
+
+/* ============================================
+   Main Content
+   ============================================ */
 
 .main {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1 0 auto;
     justify-content: flex-start;
-    gap: var(--spacing-base);
+    min-height: 0;
+    width: 100%;
 }
 
-.footer {
-    background-color: var(--color-secondary);
-    color: var(--color-text-inverse);
-    display: flex;
-    flex-direction: row;
-    flex-grow: 0;
-    padding: var(--spacing-xl);
-}
+/* ============================================
+   Section
+   ============================================ */
 
 .section {
     display: flex;
     flex-direction: column;
     padding: var(--spacing-base);
     gap: var(--spacing-base);
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .section {
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (min-width: 1024px) {
+    .section {
+        padding: var(--spacing-xl);
+    }
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+
+.footer {
+    background-color: var(--color-neutral-700);
+    color: var(--color-text-inverse);
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    padding: var(--spacing-lg) var(--spacing-base);
+    text-align: center;
+    transition: background-color var(--transition-theme);
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .footer {
+        flex-direction: row;
+        justify-content: center;
+        padding: var(--spacing-xl);
+        text-align: left;
+    }
+}
+
+/* ============================================
+   Skip to Content Link (Accessibility)
+   ============================================ */
+
+.skip-to-content {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    left: -9999px;
+    padding: var(--spacing-base) var(--spacing-lg);
+    position: absolute;
+    text-decoration: none;
+    top: var(--spacing-base);
+    z-index: var(--z-index-tooltip);
+}
+
+.skip-to-content:focus {
+    left: var(--spacing-base);
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
