@@ -9,7 +9,7 @@ a.primary-button {
     background-color: var(--color-primary);
     border: none;
     border-radius: var(--border-radius-base);
-    color: #ffffff !important;
+    color: var(--color-text-on-primary);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -21,15 +21,17 @@ a.primary-button {
     min-height: 44px;
     min-width: 44px;
     padding: var(--spacing-base) var(--spacing-lg);
-    text-decoration: none !important;
+    text-decoration: none;
     transition: background-color var(--transition-base), transform var(--transition-fast);
 }
 
+a.primary-button:link,
 a.primary-button:visited,
 a.primary-button:hover,
-a.primary-button:active {
-    color: #ffffff !important;
-    text-decoration: none !important;
+a.primary-button:active,
+a.primary-button:focus {
+    color: var(--color-text-on-primary);
+    text-decoration: none;
 }
 
 .primary-button:hover,
@@ -64,7 +66,7 @@ a.danger-button {
     background-color: var(--color-error);
     border: none;
     border-radius: var(--border-radius-base);
-    color: #ffffff !important;
+    color: var(--color-text-on-primary);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -76,21 +78,23 @@ a.danger-button {
     min-height: 44px;
     min-width: 44px;
     padding: var(--spacing-base) var(--spacing-lg);
-    text-decoration: none !important;
+    text-decoration: none;
     transition: background-color var(--transition-base), transform var(--transition-fast);
 }
 
+a.danger-button:link,
 a.danger-button:visited,
 a.danger-button:hover,
-a.danger-button:active {
-    color: #ffffff !important;
-    text-decoration: none !important;
+a.danger-button:active,
+a.danger-button:focus {
+    color: var(--color-text-on-primary);
+    text-decoration: none;
 }
 
 .danger-button:hover,
 button.danger-button:hover,
 a.danger-button:hover {
-    background-color: #c91a1a;
+    background-color: var(--color-error-hover);
 }
 
 .danger-button:active,
