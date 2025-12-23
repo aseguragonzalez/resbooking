@@ -21,9 +21,9 @@
                 <td>{{diningArea->name}}</td>
                 <td>{{diningArea->capacity}}</td>
                 <td class="control-group">
-                    <a href="/dining-areas/{{diningArea->id}}">{{dining-areas.edit}}</a>
+                    <a class="primary-button" href="/dining-areas/{{diningArea->id}}">{{dining-areas.edit}}</a>
                     <form method="post" action="/dining-areas/{{diningArea->id}}/delete" style="display: inline;">
-                        <button type="submit">{{dining-areas.delete}}</button>
+                        <button class="danger-button" type="submit">{{dining-areas.delete}}</button>
                     </form>
                 </td>
             </tr>
