@@ -110,6 +110,7 @@
   "layout.app": "Reservations",
   "layout.availabilities": "Availabilities",
   "layout.customers": "Customers",
+  "layout.diningAreas": "Dining Areas",
   "layout.footer": "&copy; 2025 Reservations. Every right reserved.",
   "layout.header.lang": "en",
   "layout.profile": "Profile",
