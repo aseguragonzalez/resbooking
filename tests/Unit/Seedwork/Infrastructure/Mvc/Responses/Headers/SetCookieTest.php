@@ -42,7 +42,7 @@ final class SetCookieTest extends TestCase
 
     public function testSetCookieWithoutExpires(): void
     {
-        $setCookie = new SetCookie('test', 'value', 0);
+        $setCookie = new SetCookie('test', 'value', -1);
 
         $this->assertStringNotContainsString('Expires=', $setCookie->value);
     }

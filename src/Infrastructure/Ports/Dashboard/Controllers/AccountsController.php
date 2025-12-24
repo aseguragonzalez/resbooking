@@ -87,18 +87,11 @@ final class AccountsController extends Controller
         $cookiesToBeRemoved = [
             $this->settings->authCookieName,
             $this->settings->restaurantCookieName,
+            $this->settings->languageCookieName,
         ];
 
         foreach ($cookiesToBeRemoved as $cookieName) {
-            // TODO: configure httpOnly and secure
-            $this->addHeader(new SetCookie(
-                cookieName: $cookieName,
-                expires: 1,
-                cookieValue: '',
-                httpOnly: false,
-                secure: false,
-                sameSite: 'Lax'
-            ));
+            $this->addHeader(SetCookie::removeCookie($cookieName));
         }
 
         return $this->redirectToAction("signIn");
