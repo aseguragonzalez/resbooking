@@ -66,6 +66,9 @@ final class App extends WebApp
         $loggerAdapter = new MonoLoggerAdapter($logger, $context);
         $this->container->set(Logger::class, $loggerAdapter);
 
+        // configure settings
+        $this->container->set(DashboardSettings::class, $this->settings);
+
         // configure security: IdentityManager, IdentityStore and ChallengeNotificator
         $this->container->set(ChallengeNotificator::class, $this->container->get(ConsoleChallengeNotificator::class));
         $this->container->set(IdentityStore::class, $this->container->get(InFileIdentityStore::class));
@@ -80,6 +83,9 @@ final class App extends WebApp
         $this->container->set(UpdateDiningArea::class, $this->container->get(UpdateDiningAreaService::class));
         $this->container->set(UpdateAvailabilities::class, $this->container->get(UpdateAvailabilitiesService::class));
         $this->container->set(GetRestaurantById::class, $this->container->get(GetRestaurantByIdService::class));
+
+        // configure middlewares
+        $this->addMiddleware(RestaurantContext::class);
     }
 
     protected function router(): Router

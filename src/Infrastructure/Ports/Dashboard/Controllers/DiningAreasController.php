@@ -12,6 +12,7 @@ use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\DiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
@@ -19,26 +20,27 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequ
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 
-final class DiningAreasController extends Controller
+final class DiningAreasController extends RestaurantBaseController
 {
-    private const string RESTAURANT_ID = '69347ea320d5a';
-
     public function __construct(
         private readonly AddDiningArea $addDiningArea,
         private readonly RemoveDiningArea $removeDiningArea,
         private readonly UpdateDiningArea $updateDiningArea,
         private readonly GetRestaurantById $getRestaurantById,
+        RequestContext $requestContext,
+        DashboardSettings $settings,
     ) {
+        parent::__construct($requestContext, $settings);
     }
 
     public function index(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
+        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($command);
         $diningAreas = array_map(
             fn ($diningArea) => new DiningArea(
@@ -69,7 +71,7 @@ final class DiningAreasController extends Controller
         }
 
         $this->addDiningArea->execute(new AddDiningAreaCommand(
-            restaurantId: self::RESTAURANT_ID,
+            restaurantId: $this->getRestaurantId(),
             name: $request->name,
             capacity: $request->capacity
         ));
@@ -79,7 +81,7 @@ final class DiningAreasController extends Controller
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
+        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($command);
         $diningAreas = $restaurant->getDiningAreas();
         $diningArea = array_filter($diningAreas, fn ($da) => $da->id === $id);
@@ -111,7 +113,7 @@ final class DiningAreasController extends Controller
         }
 
         $this->updateDiningArea->execute(new UpdateDiningAreaCommand(
-            restaurantId: self::RESTAURANT_ID,
+            restaurantId: $this->getRestaurantId(),
             diningAreaId: $id,
             name: $request->name,
             capacity: $request->capacity
@@ -123,7 +125,7 @@ final class DiningAreasController extends Controller
     public function delete(string $id): ActionResponse
     {
         $this->removeDiningArea->execute(new RemoveDiningAreaCommand(
-            restaurantId: self::RESTAURANT_ID,
+            restaurantId: $this->getRestaurantId(),
             diningAreaId: $id
         ));
 

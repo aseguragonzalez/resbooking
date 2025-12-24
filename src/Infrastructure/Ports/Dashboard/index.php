@@ -11,4 +11,4 @@ use Infrastructure\Ports\Dashboard\DashboardSettings;
 $settings = new DashboardSettings(basePath: __DIR__, environment: 'local');
 $app = new App(new Container(), $settings);
 
-$app->onRequest();
+$app->handleRequest();

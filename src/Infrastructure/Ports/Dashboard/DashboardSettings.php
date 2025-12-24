@@ -17,6 +17,7 @@ final class DashboardSettings extends Settings
         string $environment = 'local',
         public readonly string $restaurantCookieName = 'restaurant',
         public readonly string $restaurantSelectionUrl = '/restaurants/select',
+        public readonly string $restaurantIdContextKey = 'restaurantId',
     ) {
         parent::__construct(
             basePath: $basePath,
