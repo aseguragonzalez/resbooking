@@ -1,0 +1,66 @@
+{{#layout layout:}}
+{{#if hasNoRestaurants:}}
+<article class="card">
+    <header>
+        <h2>{{restaurants.select.no_restaurants.title}}</h2>
+    </header>
+    <p>
+        {{restaurants.select.no_restaurants.message}}
+    </p>
+</article>
+{{#endif hasNoRestaurants:}}
+
+{{#if !hasNoRestaurants:}}
+<form action="/restaurants/select" method="post" class="form">
+    <header>
+        <h2>{{restaurants.select.form.title}}</h2>
+    </header>
+
+    {{#if errorSummary:}}
+    <section role="alert" aria-live="assertive" class="error-summary" tabindex="-1">
+        <h3>{{restaurants.select.form.error.summary}}</h3>
+        <ul>
+            {{#for entry in errorSummary:}}
+            <li>
+                <a href="#{{entry->field}}">{{entry->message}}</a>
+            </li>
+            {{#endfor errorSummary:}}
+        </ul>
+    </section>
+    {{#endif errorSummary:}}
+
+    <input type="hidden" name="backUrl" value="{{backUrl}}" />
+
+    <div class="form-control">
+        <label for="restaurantId">
+            {{restaurants.select.form.restaurantId.label}}
+        </label>
+        <select
+            aria-describedby="restaurantId-help {{#if errors->restaurantId:}}restaurantId-error{{#endif errors->restaurantId:}}"
+            id="restaurantId"
+            name="restaurantId"
+            required
+            {{#if errors->restaurantId:}}aria-invalid="true"{{#endif errors->restaurantId:}}
+        >
+            <option value="">{{restaurants.select.form.restaurantId.placeholder}}</option>
+            {{#for restaurant in restaurants:}}
+            <option value="{{restaurant->id}}">{{restaurant->name}}</option>
+            {{#endfor restaurants:}}
+        </select>
+        <p>
+            <small id="restaurantId-help">{{restaurants.select.form.restaurantId.help}}</small>
+            {{#if errors->restaurantId:}}
+            <small id="restaurantId-error" class="error" role="alert">
+                {{errors->restaurantId}}
+            </small>
+            {{#endif errors->restaurantId:}}
+        </p>
+    </div>
+
+    <div class="form-control">
+        <button type="submit" class="primary-button">
+            {{restaurants.select.form.submit}}
+        </button>
+    </div>
+</form>
+{{#endif !hasNoRestaurants:}}

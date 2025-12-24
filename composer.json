@@ -14,6 +14,11 @@
       "Vscode\\Workspace\\": "src/"
     }
   },
+  "config": {
+    "platform": {
+      "php": "8.4"
+    }
+  },
   "license": "MIT",
   "name": "vscode/workspace",
   "require": {
