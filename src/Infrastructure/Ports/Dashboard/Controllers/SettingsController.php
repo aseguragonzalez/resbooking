@@ -8,27 +8,29 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 
-final class SettingsController extends Controller
+final class SettingsController extends RestaurantBaseController
 {
-    private const string RESTAURANT_ID = '69347ea320d5a';
-
     public function __construct(
         private readonly UpdateSettings $updateSettings,
         private readonly GetRestaurantById $getRestaurantById,
+        RequestContext $requestContext,
+        DashboardSettings $settings,
     ) {
+        parent::__construct($requestContext, $settings);
     }
 
     public function settings(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
+        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($command);
         $settings = $restaurant->getSettings();
 
@@ -53,7 +55,7 @@ final class SettingsController extends Controller
         }
 
         $this->updateSettings->execute(new UpdateSettingsCommand(
-            restaurantId: self::RESTAURANT_ID,
+            restaurantId: $this->getRestaurantId(),
             email: $request->email,
             hasReminders: $request->hasRemindersChecked(),
             name: $request->name,

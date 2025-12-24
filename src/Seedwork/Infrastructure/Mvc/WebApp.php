@@ -6,12 +6,11 @@ namespace Seedwork\Infrastructure\Mvc;
 
 use DI\Container;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Nyholm\Psr7\Factory\Psr17Factory;
 use Seedwork\Infrastructure\Files\DefaultFileManager;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authentication;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
@@ -22,10 +21,11 @@ use Seedwork\Infrastructure\Mvc\Middlewares\RequestHandling;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
+use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
-use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 abstract class WebApp
@@ -33,16 +33,55 @@ abstract class WebApp
     /**
      * @param Settings $settings
      * @param Container $container
+     * @param array<class-string<Middleware>> $middlewares
      */
     protected function __construct(
         protected readonly Settings $settings,
         protected readonly Container $container = new Container(),
+        private array $middlewares = [],
     ) {
     }
 
     abstract protected function configure(): void;
 
     abstract protected function router(): Router;
+
+    /**
+     * @param class-string<Middleware> $middleware
+     */
+    protected function addMiddleware(string $middleware): void
+    {
+        $this->middlewares[] = $middleware;
+    }
+
+    private function buildMiddlewareChain(): void
+    {
+        /** @var RequestHandling $lastMiddleware */
+        $lastMiddleware = $this->container->get(RequestHandling::class);
+        // Configure dynamic middlewares
+        $middlewares = array_reverse($this->middlewares);
+        $lastMiddleware = array_reduce($middlewares, function (Middleware $lastMiddleware, string $middleware) {
+            /** @var Middleware $currentMiddleware */
+            $currentMiddleware = $this->container->get($middleware);
+            $currentMiddleware->setNext($lastMiddleware);
+            return $currentMiddleware;
+        }, $lastMiddleware);
+
+        // Configure fixed middlewares: Authorization, Authentication, Localization, ErrorHandling
+        /** @var Authorization $authorizationMiddleware */
+        $authorizationMiddleware = $this->container->get(Authorization::class);
+        $authorizationMiddleware->setNext($lastMiddleware);
+        /** @var Authentication $authenticationMiddleware */
+        $authenticationMiddleware = $this->container->get(Authentication::class);
+        $authenticationMiddleware->setNext($authorizationMiddleware);
+        /** @var Localization $localizationMiddleware */
+        $localizationMiddleware = $this->container->get(Localization::class);
+        $localizationMiddleware->setNext($authenticationMiddleware);
+        /** @var ErrorHandling $errorMiddleware */
+        $errorMiddleware = $this->container->get(ErrorHandling::class);
+        $errorMiddleware->setNext($localizationMiddleware);
+        $this->container->set(Middleware::class, $errorMiddleware);
+    }
 
     private function configureMvc(): void
     {
@@ -63,31 +102,16 @@ abstract class WebApp
         $this->container->set(FileManager::class, $fileManager);
         $i18nReplacer = new I18nReplacer($this->settings, $fileManager, new BranchesReplacer(new ModelReplacer()));
         $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
-
-        /** @var RequestHandler $requestHandler */
-        $requestHandler = $this->container->get(RequestHandler::class);
-        $this->container->set(RequestHandlerInterface::class, $requestHandler);
-        /** @var RequestHandling $requestHandlingMiddleware */
-        $requestHandlingMiddleware = $this->container->get(RequestHandling::class);
-        /** @var Authorization $authorizationMiddleware */
-        $authorizationMiddleware = $this->container->get(Authorization::class);
-        $authorizationMiddleware->setNext($requestHandlingMiddleware);
-        /** @var Authentication $authenticationMiddleware */
-        $authenticationMiddleware = $this->container->get(Authentication::class);
-        $authenticationMiddleware->setNext($authorizationMiddleware);
-        /** @var Localization $localizationMiddleware */
-        $localizationMiddleware = $this->container->get(Localization::class);
-        $localizationMiddleware->setNext($authenticationMiddleware);
-        /** @var ErrorHandling $errorMiddleware */
-        $errorMiddleware = $this->container->get(ErrorHandling::class);
-        $errorMiddleware->setNext($localizationMiddleware);
-        $this->container->set(Middleware::class, $errorMiddleware);
+        $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }
 
-    public function onRequest(): void
+    public function handleRequest(): void
     {
+        $requestContext = new RequestContext();
+        $this->container->set(RequestContext::class, $requestContext);
         $this->configure();
         $this->configureMvc();
+        $this->buildMiddlewareChain();
 
         $requestCreator = $this->container->get(ServerRequestCreator::class);
         if (!$requestCreator instanceof ServerRequestCreator) {
@@ -101,7 +125,7 @@ abstract class WebApp
 
         $request = $requestCreator->fromGlobals();
         $response = $middlewareChain->handleRequest(
-            $request->withAttribute(RequestContext::class, new RequestContext())
+            $request->withAttribute(RequestContext::class, $requestContext)
         );
 
         http_response_code($response->getStatusCode());

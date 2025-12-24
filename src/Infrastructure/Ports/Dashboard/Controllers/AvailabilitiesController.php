@@ -8,28 +8,30 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 
-final class AvailabilitiesController extends Controller
+final class AvailabilitiesController extends RestaurantBaseController
 {
-    private const string RESTAURANT_ID = '69347ea320d5a';
-
     public function __construct(
         private readonly GetRestaurantById $getRestaurantById,
         private readonly UpdateAvailabilities $updateAvailabilities,
+        DashboardSettings $settings,
+        RequestContext $requestContext,
     ) {
+        parent::__construct($requestContext, $settings);
     }
 
     public function availabilities(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: self::RESTAURANT_ID);
+        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($command);
         $availabilities = $restaurant->getAvailabilities();
         $pageModel = AvailabilitiesList::create(availabilities: $availabilities);
@@ -40,7 +42,7 @@ final class AvailabilitiesController extends Controller
     {
         $availabilityRequest = new UpdateAvailabilitiesRequest($request);
         $command = new UpdateAvailabilitiesCommand(
-            restaurantId: self::RESTAURANT_ID,
+            restaurantId: $this->getRestaurantId(),
             availabilities: $availabilityRequest->availabilities
         );
         $this->updateAvailabilities->execute($command);

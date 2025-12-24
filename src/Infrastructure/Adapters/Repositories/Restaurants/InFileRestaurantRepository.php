@@ -60,4 +60,22 @@ final class InFileRestaurantRepository implements RestaurantRepository
     {
         return $this->restaurants[$id];
     }
+
+    /**
+     * @return array<Restaurant>
+     */
+    public function findByUserEmail(string $email): array
+    {
+        $matchingRestaurants = [];
+        foreach ($this->restaurants as $restaurant) {
+            $users = $restaurant->getUsers();
+            foreach ($users as $user) {
+                if ($user->username->value === $email) {
+                    $matchingRestaurants[] = $restaurant;
+                    break;
+                }
+            }
+        }
+        return $matchingRestaurants;
+    }
 }

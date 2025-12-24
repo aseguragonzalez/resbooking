@@ -5,34 +5,34 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
-use PHPUnit\Framework\TestCase;
-use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
-use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
-use PHPUnit\Framework\MockObject\MockObject;
-use Seedwork\Infrastructure\Mvc\Security\Challenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Faker\Factory;
 use Faker\Generator;
+use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
+use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
+use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 
 final class AccountsControllerTest extends TestCase
 {
     private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
-    private Settings $settings;
+    private DashboardSettings $settings;
     private AccountsController $controller;
     private Generator $faker;
 
@@ -40,7 +40,7 @@ final class AccountsControllerTest extends TestCase
     {
         $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
-        $this->settings = new Settings(basePath: '/');
+        $this->settings = new DashboardSettings(basePath: '/');
         $this->controller = new AccountsController($this->createNewRestaurant, $this->identityManager, $this->settings);
         $this->faker = Factory::create();
     }

@@ -19,12 +19,19 @@ final class SetCookie extends Header
         parent::__construct('Set-Cookie', $this->buildValue());
     }
 
+    public static function removeCookie(string $cookieName): self
+    {
+        return new self($cookieName, '', 0);
+    }
+
     private function buildValue(): string
     {
         $value = urlencode($this->cookieName) . '=' . urlencode($this->cookieValue);
 
         if ($this->expires > 0) {
             $value .= '; Expires=' . gmdate('D, d-M-Y H:i:s T', $this->expires);
+        } elseif ($this->expires === 0) {
+            $value .= '; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0';
         }
 
         if ($this->path !== '') {

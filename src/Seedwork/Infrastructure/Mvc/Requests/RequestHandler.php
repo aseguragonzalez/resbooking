@@ -15,9 +15,9 @@ use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\RedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 final class RequestHandler implements RequestHandlerInterface
@@ -146,7 +146,7 @@ final class RequestHandler implements RequestHandlerInterface
             ->createResponse(code: StatusCode::SeeOther->value)
             ->withHeader('Location', "{$host}{$path}");
         foreach ($actionResponse->headers as $header) {
-            $response = $response->withHeader($header->name, $header->value);
+            $response = $response->withAddedHeader($header->name, $header->value);
         }
         return $response;
     }
@@ -155,7 +155,7 @@ final class RequestHandler implements RequestHandlerInterface
     {
         $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
         foreach ($actionResponse->headers as $header) {
-            $response = $response->withHeader($header->name, $header->value);
+            $response = $response->withAddedHeader($header->name, $header->value);
         }
         return $response;
     }
@@ -167,7 +167,7 @@ final class RequestHandler implements RequestHandlerInterface
         $responseBody = $this->viewEngine->render($actionResponse, $context);
         $response = $this->responseFactory->createResponse($actionResponse->statusCode->value);
         foreach ($actionResponse->headers as $header) {
-            $response = $response->withHeader($header->name, $header->value);
+            $response = $response->withAddedHeader($header->name, $header->value);
         }
         $response->getBody()->write($responseBody);
         return $response;

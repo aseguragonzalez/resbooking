@@ -6,7 +6,7 @@ namespace Seedwork\Infrastructure\Mvc;
 
 use Seedwork\Infrastructure\Mvc\ErrorMapping;
 
-final class Settings
+class Settings
 {
     public readonly string $i18nPath;
     public readonly string $viewPath;

@@ -6,6 +6,7 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -21,19 +22,18 @@ use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
-use Seedwork\Infrastructure\Mvc\Settings;
+use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 
 final class AccountsController extends Controller
 {
     public function __construct(
         private readonly CreateNewRestaurant $createNewRestaurant,
         private readonly IdentityManager $identityManager,
-        private readonly Settings $settings
+        private readonly DashboardSettings $settings
     ) {
     }
 
@@ -83,13 +83,17 @@ final class AccountsController extends Controller
         }
 
         $this->identityManager->signOut($token);
-        $this->addHeader(new SetCookie(
-            cookieName: $this->settings->authCookieName,
-            cookieValue: '',
-            httpOnly: false,
-            secure: false,
-            sameSite: 'Lax'
-        ));
+
+        $cookiesToBeRemoved = [
+            $this->settings->authCookieName,
+            $this->settings->restaurantCookieName,
+            $this->settings->languageCookieName,
+        ];
+
+        foreach ($cookiesToBeRemoved as $cookieName) {
+            $this->addHeader(SetCookie::removeCookie($cookieName));
+        }
+
         return $this->redirectToAction("signIn");
     }
 

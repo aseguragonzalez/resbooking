@@ -12,4 +12,8 @@ use Seedwork\Domain\Repository;
  */
 interface RestaurantRepository extends Repository
 {
+    /**
+     * @return array<Restaurant>
+     */
+    public function findByUserEmail(string $email): array;
 }
