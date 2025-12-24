@@ -67,7 +67,7 @@ final class RestaurantsController extends Controller
         }
 
         $this->setRestaurantCookie($request->restaurantId);
-        $backUrl = $request->backUrl ?: $this->getBackUrl($serverRequest);
+        $backUrl = $request->backUrl ?? $this->getBackUrl($serverRequest);
         return $this->redirectTo($backUrl);
     }
 

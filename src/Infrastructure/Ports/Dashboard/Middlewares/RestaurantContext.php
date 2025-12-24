@@ -51,7 +51,7 @@ final class RestaurantContext extends Middleware
             return $this->next->handleRequest($request);
         }
 
-        $backUrl = $request->getUri()->__toString();
+        $backUrl = (string)$request->getUri();
         $selectionUrl = $this->settings->restaurantSelectionUrl . '?backUrl=' . urlencode($backUrl);
         return $this->responseFactory
             ->createResponse(303)
