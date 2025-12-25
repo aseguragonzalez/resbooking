@@ -465,10 +465,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->signIn();
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('index', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\DashboardController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 
@@ -483,10 +486,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->signUp();
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('index', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\DashboardController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 
@@ -501,10 +507,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->resetPassword();
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('index', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\DashboardController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 
@@ -520,10 +529,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->resetPasswordChallenge($token);
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('index', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\DashboardController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 
@@ -606,10 +618,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->signInUser($request);
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('index', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\DashboardController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 
@@ -622,10 +637,13 @@ final class AccountsControllerTest extends TestCase
         $response = $this->controller->signOut($request);
 
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $data */
-        $data = $response;
-        $this->assertEquals('signIn', $data->action);
-        $this->assertEquals('Infrastructure\Ports\Dashboard\Controllers\AccountsController', $data->controller);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('signIn', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\AccountsController',
+            $redirectResponse->controller
+        );
         $this->assertEquals(303, $response->statusCode->value);
     }
 }
