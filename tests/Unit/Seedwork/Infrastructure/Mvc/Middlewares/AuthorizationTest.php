@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -11,20 +12,30 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
 use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
-use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Security\Identity;
+use Seedwork\Infrastructure\Mvc\Settings;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Route\RouteController;
 
 final class AuthorizationTest extends TestCase
 {
-    public function testHandleRequestEnsureAuthenticatedAndAuthorizedUser(): void
+    private Psr17Factory $psrFactory;
+    private Settings $settings;
+    private Router $router;
+    private MockObject&Middleware $next;
+
+    protected function setUp(): void
     {
-        $response = $this->createMock(ResponseInterface::class);
-        $request = $this->createMock(ServerRequestInterface::class);
+        $this->psrFactory = new Psr17Factory();
+        $this->settings = new Settings(
+            basePath: '',
+            authCookieName: 'auth_token',
+            authLoginUrl: '/login',
+        );
         $route = Route::create(
             RouteMethod::Get,
             Path::create('/foo'),
@@ -33,9 +44,16 @@ final class AuthorizationTest extends TestCase
             true,
             ['admin', 'user']
         );
-        $router = new Router([$route]);
-        $next = $this->createMock(Middleware::class);
-        $next->expects($this->once())
+        $this->router = new Router([$route]);
+        $this->next = $this->createMock(Middleware::class);
+    }
+
+    public function testHandleRequestEnsureAuthenticatedAndAuthorizedUser(): void
+    {
+        $response = $this->createMock(ResponseInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
+        $this->next
+            ->expects($this->once())
             ->method('handleRequest')
             ->with($request)
             ->willReturn($response);
@@ -51,7 +69,7 @@ final class AuthorizationTest extends TestCase
         $request->method('getAttribute')
             ->with(RequestContext::class)
             ->willReturn($context);
-        $middleware = new Authorization($router, $next);
+        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
 
         $result = $middleware->handleRequest($request);
 
@@ -60,7 +78,7 @@ final class AuthorizationTest extends TestCase
 
     public function testHandleRequestThrowsIfNoNextMiddleware(): void
     {
-        $middleware = new Authorization(new Router(), null);
+        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, null);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $this->expectException(\RuntimeException::class);

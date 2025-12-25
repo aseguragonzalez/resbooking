@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Middlewares;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
+use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Authorization extends Middleware
 {
-    public function __construct(private readonly Router $router, ?Middleware $next = null)
-    {
+    public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly Router $router,
+        private readonly Settings $settings,
+        ?Middleware $next = null
+    ) {
         parent::__construct($next);
     }
 
@@ -29,7 +36,15 @@ final class Authorization extends Middleware
         /** @var RequestContext $context */
         $context = $request->getAttribute(RequestContext::class);
         $identity = $context->getIdentity();
-        $route->ensureAuthenticated($identity);
+        try {
+            $route->ensureAuthenticated($identity);
+        } catch (AuthenticationRequiredException) {
+            $cookie = "{$this->settings->authCookieName}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0";
+            return $this->responseFactory
+                ->createResponse(303)
+                ->withHeader('Location', $this->settings->authLoginUrl)
+                ->withHeader('Set-Cookie', $cookie);
+        }
         $route->ensureAuthorized($identity);
         return $this->next->handleRequest($request);
     }
