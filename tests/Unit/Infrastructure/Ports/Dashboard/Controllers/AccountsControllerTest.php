@@ -21,7 +21,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
@@ -32,16 +34,24 @@ final class AccountsControllerTest extends TestCase
 {
     private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
+    private RequestContext $requestContext;
     private DashboardSettings $settings;
     private AccountsController $controller;
     private Generator $faker;
 
     protected function setUp(): void
     {
+        $this->requestContext = new RequestContext();
+        $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
         $this->settings = new DashboardSettings(basePath: '/');
-        $this->controller = new AccountsController($this->createNewRestaurant, $this->identityManager, $this->settings);
+        $this->controller = new AccountsController(
+            $this->createNewRestaurant,
+            $this->identityManager,
+            $this->settings,
+            $this->requestContext,
+        );
         $this->faker = Factory::create();
     }
 

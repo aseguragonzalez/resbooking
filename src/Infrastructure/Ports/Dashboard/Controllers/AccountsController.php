@@ -18,6 +18,7 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
@@ -33,12 +34,16 @@ final class AccountsController extends Controller
     public function __construct(
         private readonly CreateNewRestaurant $createNewRestaurant,
         private readonly IdentityManager $identityManager,
-        private readonly DashboardSettings $settings
+        private readonly DashboardSettings $settings,
+        private readonly RequestContext $requestContext,
     ) {
     }
 
     public function signIn(): ActionResponse
     {
+        if ($this->isUserAuthenticated()) {
+            return $this->redirectToAction("index", DashboardController::class);
+        }
         return $this->view(model: SignIn::new());
     }
 
@@ -99,6 +104,9 @@ final class AccountsController extends Controller
 
     public function signUp(): ActionResponse
     {
+        if ($this->isUserAuthenticated()) {
+            return $this->redirectToAction("index", DashboardController::class);
+        }
         return $this->view(model: SignUp::new());
     }
 
@@ -132,6 +140,9 @@ final class AccountsController extends Controller
 
     public function resetPassword(): ActionResponse
     {
+        if ($this->isUserAuthenticated()) {
+            return $this->redirectToAction("index", DashboardController::class);
+        }
         return $this->view(model: ResetPassword::new());
     }
 
@@ -148,6 +159,9 @@ final class AccountsController extends Controller
 
     public function resetPasswordChallenge(string $token): ActionResponse
     {
+        if ($this->isUserAuthenticated()) {
+            return $this->redirectToAction("index", DashboardController::class);
+        }
         return $this->view(model: ResetPasswordChallenge::new($token));
     }
 
@@ -180,6 +194,11 @@ final class AccountsController extends Controller
         }
 
         return $this->redirectToAction("signIn");
+    }
+
+    private function isUserAuthenticated(): bool
+    {
+        return $this->requestContext->getIdentity()->isAuthenticated();
     }
 
     /**
