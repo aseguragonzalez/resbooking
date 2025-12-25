@@ -21,7 +21,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
@@ -32,16 +34,24 @@ final class AccountsControllerTest extends TestCase
 {
     private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
+    private RequestContext $requestContext;
     private DashboardSettings $settings;
     private AccountsController $controller;
     private Generator $faker;
 
     protected function setUp(): void
     {
+        $this->requestContext = new RequestContext();
+        $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
         $this->settings = new DashboardSettings(basePath: '/');
-        $this->controller = new AccountsController($this->createNewRestaurant, $this->identityManager, $this->settings);
+        $this->controller = new AccountsController(
+            $this->createNewRestaurant,
+            $this->identityManager,
+            $this->settings,
+            $this->requestContext,
+        );
         $this->faker = Factory::create();
     }
 
@@ -442,5 +452,198 @@ final class AccountsControllerTest extends TestCase
         $view = $response;
         $this->assertInstanceOf(View::class, $view);
         $this->assertEquals('Accounts/resetPasswordChallenge', $view->viewPath);
+    }
+
+    public function testSignInRedirectsWhenUserIsAuthenticated(): void
+    {
+        $password = '@Home1234';
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $password)
+            ->activate()
+            ->authenticate($password);
+        $this->requestContext->setIdentity($identity);
+
+        $response = $this->controller->signIn();
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testSignUpRedirectsWhenUserIsAuthenticated(): void
+    {
+        $password = '@Home1234';
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $password)
+            ->activate()
+            ->authenticate($password);
+        $this->requestContext->setIdentity($identity);
+
+        $response = $this->controller->signUp();
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testResetPasswordRedirectsWhenUserIsAuthenticated(): void
+    {
+        $password = '@Home1234';
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $password)
+            ->activate()
+            ->authenticate($password);
+        $this->requestContext->setIdentity($identity);
+
+        $response = $this->controller->resetPassword();
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testResetPasswordChallengeRedirectsWhenUserIsAuthenticated(): void
+    {
+        $password = '@Home1234';
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $password)
+            ->activate()
+            ->authenticate($password);
+        $this->requestContext->setIdentity($identity);
+
+        $token = $this->faker->uuid();
+        $response = $this->controller->resetPasswordChallenge($token);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testSignInUserSetsAuthCookie(): void
+    {
+        $request = new SignInRequest(
+            username: $this->faker->email(),
+            password: '@Home1234',
+            rememberMe: 'off'
+        );
+        $token = $this->faker->uuid();
+        $expiresAt = new \DateTimeImmutable('+1 hour');
+        $challenge = $this->createMock(Challenge::class);
+        $challenge->method('getExpiresAt')->willReturn($expiresAt);
+        $challenge->method('getToken')->willReturn($token);
+        $this->identityManager->method('signIn')->willReturn($challenge);
+
+        $response = $this->controller->signInUser($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        $setCookieHeaders = array_filter(
+            $response->headers,
+            fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
+                && str_contains($header->value, $this->settings->authCookieName)
+        );
+        $this->assertCount(1, $setCookieHeaders);
+        /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $setCookie */
+        $setCookie = reset($setCookieHeaders);
+        $this->assertStringContainsString($this->settings->authCookieName . '=' . $token, $setCookie->value);
+    }
+
+    public function testSignOutRemovesAllCookies(): void
+    {
+        $token = $this->faker->uuid();
+        $request = $this->createMock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->method('getCookieParams')->willReturn(['auth' => $token]);
+        $this->identityManager->expects($this->once())->method('signOut')->with($token);
+
+        $response = $this->controller->signOut($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        $setCookieHeaders = array_filter(
+            $response->headers,
+            fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
+        );
+        $this->assertCount(3, $setCookieHeaders);
+        $cookieNames = [
+            $this->settings->authCookieName,
+            $this->settings->restaurantCookieName,
+            $this->settings->languageCookieName,
+        ];
+        foreach ($cookieNames as $cookieName) {
+            $found = false;
+            foreach ($setCookieHeaders as $header) {
+                /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $header */
+                if (str_contains($header->value, $cookieName . '=')) {
+                    $found = true;
+                    break;
+                }
+            }
+            $this->assertTrue($found, "Cookie removal header for {$cookieName} not found");
+        }
+    }
+
+    public function testSignInUserWithRememberMeOn(): void
+    {
+        $request = new SignInRequest(
+            username: $this->faker->email(),
+            password: '@Home1234',
+            rememberMe: 'on'
+        );
+        $challenge = $this->createMock(Challenge::class);
+        $challenge->method('getExpiresAt')->willReturn(new \DateTimeImmutable('+1 hour'));
+        $challenge->method('getToken')->willReturn($this->faker->uuid());
+        $this->identityManager->expects($this->once())
+            ->method('signIn')
+            ->with($request->username, $request->password, true)
+            ->willReturn($challenge);
+
+        $response = $this->controller->signInUser($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('index', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\DashboardController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
+    }
+
+    public function testSignOutWithNonStringToken(): void
+    {
+        $request = $this->createMock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request->method('getCookieParams')->willReturn(['auth' => ['invalid' => 'array']]);
+        $this->identityManager->expects($this->never())->method('signOut');
+
+        $response = $this->controller->signOut($request);
+
+        $this->assertInstanceOf(LocalRedirectTo::class, $response);
+        /** @var LocalRedirectTo $redirectResponse */
+        $redirectResponse = $response;
+        $this->assertEquals('signIn', $redirectResponse->action);
+        $this->assertEquals(
+            'Infrastructure\Ports\Dashboard\Controllers\AccountsController',
+            $redirectResponse->controller
+        );
+        $this->assertEquals(303, $response->statusCode->value);
     }
 }
