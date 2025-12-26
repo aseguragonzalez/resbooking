@@ -1,42 +1,40 @@
-.PHONY: all test fix lint analyse
+.PHONY: all format lint static-analyse test
 
-all: test fix lint analyse
+all: format lint static-analyse test
 
 install:
 	@pre-commit install
 	@composer install
 	@export PATH=$PATH:./vendor/bin
-	@export XDEBUG_MODE=coverage
-
-analyse:
-	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
 
 clean:
 	@rm -rf vendor
 	@rm -rf coverage
-
-clean-cache:
 	@rm -rf .phpunit.cache
 	@rm -rf .php-cs-fixer.cache
-
-clean-coverage:
 	@rm -rf coverage
 
-fix:
+format:
 	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12
+
+format-check:
+	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12 --dry-run --diff
 
 lint:
 	@./vendor/bin/phpcs --standard=PSR12 ./src ./tests
+
+static-analyse:
+	@rm -rf /tmp/phpstan/cache
+	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
+
+serve:
+	@php -S 0.0.0.0:8080 src/Infrastructure/Ports/Dashboard/local.php 2> php-server.log
 
 open-coverage:
 	cd coverage && php -S 0.0.0.0:9000
 
 test:
-	@XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage/
-
-# Start the PHP built-in server but redirect output to a log file
-serve:
-	@php -S 0.0.0.0:8080 src/Infrastructure/Ports/Dashboard/local.php 2> php-server.log
+	@./vendor/bin/phpunit --coverage-html coverage/
 
 update-autoload:
 	@composer dump-autoload

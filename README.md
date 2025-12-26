@@ -48,7 +48,7 @@ Common tasks are automated using `Makefile`.
 **Environment Variables:**
 
 ```shell
-export XDEBUG_MODE=coverage
+export XDEBUG_MODE=coverage,debug,develop
 export DEFAULT_HOST=http://localhost:8080
 ```
 
