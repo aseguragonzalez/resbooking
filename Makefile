@@ -6,7 +6,6 @@ install:
 	@pre-commit install
 	@composer install
 	@export PATH=$PATH:./vendor/bin
-	@export XDEBUG_MODE=coverage,debug,develop
 
 clean:
 	@rm -rf vendor
@@ -25,6 +24,7 @@ lint:
 	@./vendor/bin/phpcs --standard=PSR12 ./src ./tests
 
 static-analyse:
+	@rm -rf /tmp/phpstan/cache
 	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
 
 serve:
