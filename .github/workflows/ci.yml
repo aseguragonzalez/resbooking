@@ -46,13 +46,5 @@ jobs:
           pre-commit run --all-files
         fi
 
-    - name: Coding standards
-      if: matrix.analysis
-      run: vendor/bin/phpcs --standard=PSR12 ./src ./tests
-
-    - name: Static analysis
-      if: matrix.analysis
-      run: vendor/bin/phpstan analyse ./src ./tests --level=max
-
     - name: Tests
-      run: vendor/bin/phpunit
+      run: make test
