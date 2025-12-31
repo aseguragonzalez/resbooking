@@ -2,7 +2,10 @@
   "configurations": [
     {
       "name": "Listen for Xdebug",
-      "port": 9000,
+      "pathMappings": {
+        "/var/www/html": "${workspaceFolder}"
+      },
+      "port": 9003,
       "request": "launch",
       "type": "php"
     }
