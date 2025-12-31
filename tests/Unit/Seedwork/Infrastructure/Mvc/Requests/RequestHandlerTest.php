@@ -215,7 +215,7 @@ final class RequestHandlerTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame(303, $response->getStatusCode());
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
-        $defaultHost = getenv('DEFAULT_HOST') ?: 'http://localhost:8080';
+        $defaultHost = getenv('DEFAULT_HOST') ?: '';
         $this->assertSame("{$defaultHost}/test/get?offset=10&limit=20", $response->getHeaderLine('Location'));
         $this->assertEmpty((string) $response->getBody());
     }
