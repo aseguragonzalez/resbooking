@@ -1,6 +1,7 @@
 {
   "containerEnv": {
-    "DEFAULT_HOST": "http://localhost:8080",
+    "DEFAULT_HOST": "http://dashboard",
+    "ENVIRONMENT": "local",
     "XDEBUG_MODE": "coverage,debug,develop"
   },
   "customizations": {
@@ -21,9 +22,9 @@
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
   "forwardPorts": [
-    8080,
-    9000,
-    9003
+    9003,
+    80,
+    443
   ],
   "image": "php:8.4-apache-bookworm",
   "mounts": [

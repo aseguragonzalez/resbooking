@@ -8,15 +8,33 @@ if [ -z "$1" ]; then
 fi
 
 WEBAPP_NAME=$1
-SITE_CONFIG="/var/www/html/deployment/apache/sites-available/${WEBAPP_NAME}.conf"
+APP_DIR="/var/www/html/deployment/apps/${WEBAPP_NAME}"
+VHOST_CONFIG="${APP_DIR}/vhost.conf"
+ENVVARS_CONFIG="${APP_DIR}/envvars.conf"
 
-if [ ! -f "$SITE_CONFIG" ]; then
-    echo "Error: Site configuration not found: $SITE_CONFIG"
+if [ ! -d "$APP_DIR" ]; then
+    echo "Error: App directory not found: $APP_DIR"
+    exit 1
+fi
+
+if [ ! -f "$VHOST_CONFIG" ]; then
+    echo "Error: VirtualHost configuration not found: $VHOST_CONFIG"
     exit 1
 fi
 
 echo "Enabling site: $WEBAPP_NAME"
-cp "$SITE_CONFIG" "/etc/apache2/sites-available/${WEBAPP_NAME}.conf"
+
+# Copy VirtualHost configuration
+cp "$VHOST_CONFIG" "/etc/apache2/sites-available/${WEBAPP_NAME}.conf"
+
+# Copy environment variables if they exist
+if [ -f "$ENVVARS_CONFIG" ]; then
+    mkdir -p /etc/apache2/conf-available/envvars
+    cp "$ENVVARS_CONFIG" "/etc/apache2/conf-available/envvars/${WEBAPP_NAME}.envvars.conf"
+    echo "  - Environment variables configured"
+fi
+
+# Enable the site
 a2ensite "${WEBAPP_NAME}.conf"
 apache2ctl graceful
 

@@ -54,11 +54,15 @@ a2enconf server-name
 # Copy and enable per-webapp environment variables
 echo "Configuring Apache environment variables..."
 mkdir -p /etc/apache2/conf-available/envvars
-for envfile in /var/www/html/deployment/apache/envvars/*.envvars.conf; do
-    if [ -f "$envfile" ]; then
-        filename=$(basename "$envfile")
-        echo "  - Copying $filename..."
-        cp "$envfile" "/etc/apache2/conf-available/envvars/$filename"
+for app_dir in /var/www/html/deployment/apps/*/; do
+    if [ -d "$app_dir" ]; then
+        app_name=$(basename "$app_dir")
+        envvars_file="$app_dir/envvars.conf"
+
+        if [ -f "$envvars_file" ]; then
+            echo "  - Copying envvars for $app_name..."
+            cp "$envvars_file" "/etc/apache2/conf-available/envvars/$app_name.envvars.conf"
+        fi
     fi
 done
 
@@ -68,13 +72,15 @@ a2enmod rewrite headers
 
 # Enable all available sites
 echo "Enabling webapp sites..."
-for site in /var/www/html/deployment/apache/sites-available/*.conf; do
-    if [ -f "$site" ]; then
-        site_name=$(basename "$site" .conf)
-        if [ "$site_name" != "README" ]; then
-            echo "  - Enabling $site_name..."
-            cp "$site" "/etc/apache2/sites-available/$site_name.conf"
-            a2ensite "$site_name.conf"
+for app_dir in /var/www/html/deployment/apps/*/; do
+    if [ -d "$app_dir" ]; then
+        app_name=$(basename "$app_dir")
+        vhost_file="$app_dir/vhost.conf"
+
+        if [ -f "$vhost_file" ]; then
+            echo "  - Enabling $app_name..."
+            cp "$vhost_file" "/etc/apache2/sites-available/$app_name.conf"
+            a2ensite "$app_name.conf" || true
         fi
     fi
 done
