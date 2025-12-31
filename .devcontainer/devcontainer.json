@@ -1,6 +1,7 @@
 {
   "containerEnv": {
-    "DEFAULT_HOST": "http://localhost:8080",
+    "DEFAULT_HOST": "http://dashboard",
+    "ENVIRONMENT": "local",
     "XDEBUG_MODE": "coverage,debug,develop"
   },
   "customizations": {
@@ -17,9 +18,19 @@
     }
   },
   "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
-  "image": "mcr.microsoft.com/devcontainers/php:8.4-bookworm",
-  "name": "PHP 8.4",
-  "remoteUser": "vscode"
+  "forwardPorts": [
+    9003,
+    80,
+    443
+  ],
+  "image": "php:8.4-apache-bookworm",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/var/www/html,type=bind,consistency=cached"
+  ],
+  "name": "PHP 8.4 with Apache",
+  "postCreateCommand": "bash deployment/scripts/setup-apache.sh && apache2ctl start",
+  "remoteUser": "root"
 }

@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
@@ -18,6 +17,7 @@ use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
@@ -215,7 +215,8 @@ final class RequestHandlerTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame(303, $response->getStatusCode());
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
-        $this->assertSame('http://localhost:8080/test/get?offset=10&limit=20', $response->getHeaderLine('Location'));
+        $defaultHost = getenv('DEFAULT_HOST') ?: '';
+        $this->assertSame("{$defaultHost}/test/get?offset=10&limit=20", $response->getHeaderLine('Location'));
         $this->assertEmpty((string) $response->getBody());
     }
 
