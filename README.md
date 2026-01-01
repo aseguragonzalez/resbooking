@@ -58,6 +58,22 @@ ENVIRONMENT=local
 XDEBUG_MODE=coverage,debug,develop
 ```
 
+## Host Configuration
+
+Before accessing the dashboard and coverage reports, you need to configure your
+ local `/etc/hosts` file to map the application domains to `127.0.0.1`. Add the
+ following entries to your `/etc/hosts` file:
+
+```text
+127.0.0.1    dashboard
+127.0.0.1    coverage
+```
+
+After adding these entries, you can access:
+
+- Dashboard: `http://dashboard`
+- Coverage reports: `http://coverage` (after running tests with coverage)
+
 ## Getting Started
 
 Open the project in VS Code or Cursor (with the Dev Containers extension) and

@@ -24,7 +24,7 @@ lint:
 
 static-analyse:
 	@rm -rf /tmp/phpstan/cache
-	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
+	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=1G
 
 test:
 	@./vendor/bin/phpunit -c phpunit.xml --coverage-html coverage/
