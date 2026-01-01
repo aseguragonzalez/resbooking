@@ -31,9 +31,9 @@ the day and shift.~~
 
 ### Tech Stack
 
-- **Backend:** PHP 8.4 (upgraded from PHP 5.5)
+- **Backend:** PHP 8.4 (upgraded from PHP 5.5) (MVC architecture over Apache)
 - **Database:** MySQL
-- **Frontend:** Javascript, HTML, CSS
+- **Frontend:** Javascript, HTML5, CSS3
 
 ## Requirements
 
@@ -41,27 +41,64 @@ the day and shift.~~
 - [VS Code][vscode]
 - [Dev Containers Extension][devcontainers]
 
+## Environment Variables
+
+Before starting, you need to create a `.env` file with the environment variables
+ for each application. You can use the `.env.example` file as a template.
+
+```env
+DASHBOARD_DATABASE_HOST=mysql
+DASHBOARD_DATABASE_NAME=dashboard
+DASHBOARD_DATABASE_PASSWORD=********
+DASHBOARD_DATABASE_USER=dashboard
+DASHBOARD_DEFAULT_HOST=http://dashboard
+DASHBOARD_SERVICE_NAME=dashboard
+DASHBOARD_SERVICE_VERSION=0.1.0
+ENVIRONMENT=local
+XDEBUG_MODE=coverage,debug,develop
+```
+
 ## Getting Started
 
-Common tasks are automated using `Makefile`.
+Open the project in VS Code or Cursor (with the Dev Containers extension) and
+ wait for the Dev Container to build. Common tasks are automated using `Makefile`.
 
-**Environment Variables:**
-
-```shell
-export XDEBUG_MODE=coverage,debug,develop
-export DEFAULT_HOST=http://localhost:8080
-```
+### Make commands
 
 **Install dependencies:**
 
+Install dependencies and pre-commit checks:
+
 ```shell
 make install
+```
+
+**Clean up:**
+
+Remove dependencies and build artifacts:
+
+```shell
+make clean
 ```
 
 **Run tests:**
 
 ```shell
 make test
+```
+
+**Format code:**
+
+Fix formatting issues:
+
+```shell
+make format
+```
+
+or check formatting issues:
+
+```shell
+make format-check
 ```
 
 **Check for linting issues:**
@@ -73,11 +110,58 @@ make lint
 **Run static analysis:**
 
 ```shell
-make analyze
+make static-analyse
+```
+
+**Update autoload:**
+
+```shell
+make update-autoload
+```
+
+### How to manage the Apache server
+
+**Disable site:**
+
+```shell
+bash deployment/scripts/disable-site.sh <webapp-name>
+```
+
+**Enable site:**
+
+```shell
+bash deployment/scripts/enable-site.sh <webapp-name>
+```
+
+**Reload Apache:**
+
+```shell
+apache2ctl graceful
+```
+
+**Restart Apache:**
+
+```shell
+apache2ctl restart
+```
+
+**Check Apache logs:**
+
+Check the access logs for the specific webapp:
+
+```shell
+tail -f /var/log/apache2/<webapp-name>-access.log
+```
+
+or check the error logs:
+
+```shell
+tail -f /var/log/apache2/<webapp-name>-error.log
 ```
 
 ## Built With
 
+- [Apache][apache]
 - [Composer][composer]
 - [PHP][php]
 - [PHP Code Sniffer][php-cs]
@@ -90,6 +174,7 @@ make analyze
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
+[apache]: https://httpd.apache.org/
 [docker]: https://www.docker.com/
 [vscode]: https://code.visualstudio.com/
 [devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers

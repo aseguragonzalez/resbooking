@@ -2,35 +2,11 @@
 
 all: format lint static-analyse test
 
-apache-restart:
-	@apache2ctl restart
-
-apache-reload:
-	@apache2ctl graceful
-
-apache-logs:
-	@tail -f /var/log/apache2/*.log
-
 clean:
 	@rm -rf vendor
 	@rm -rf coverage
 	@rm -rf .phpunit.cache
 	@rm -rf .php-cs-fixer.cache
-	@rm -rf coverage
-
-disable-site:
-	@if [ -z "$(WEBAPP)"; then \
-		echo "Usage: make disable-site WEBAPP=dashboard|coverage"; \
-		exit 1; \
-	fi
-	@bash deployment/scripts/disable-site.sh $(WEBAPP)
-
-enable-site:
-	@if [ -z "$(WEBAPP)"; then \
-		echo "Usage: make enable-site WEBAPP=dashboard|coverage"; \
-		exit 1; \
-	fi
-	@bash deployment/scripts/enable-site.sh $(WEBAPP)
 
 format:
 	@./vendor/bin/php-cs-fixer fix . --rules=@PSR12

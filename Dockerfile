@@ -5,16 +5,19 @@ ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 
 # Install system dependencies and Composer
-RUN apt-get update && apt-get install -y --no-install-recommends curl unzip \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y --no-install-recommends curl unzip $PHPIZE_DEPS\
+    && pecl install xdebug\
+    && docker-php-ext-enable xdebug\
+    && apt-get purge -y -o APT::AutoRemove::RecommendsImportant=false $PHPIZE_DEPS\
+    && apt-get install -y make\
+    && apt-get autoremove -y\
+    && rm -rf /var/lib/apt/lists/*\
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apt-get update && apt-get install -y --no-install-recommends $PHPIZE_DEPS && \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
-    apt-get purge -y -o APT::AutoRemove::RecommendsImportant=false $PHPIZE_DEPS && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*;
+# Set working directory
+WORKDIR /var/www/html
+COPY . .
+RUN composer install
 
 # Copy Apache configuration files
 COPY deployment/apache/ports.conf /etc/apache2/ports.conf
@@ -30,15 +33,10 @@ COPY deployment/apps/coverage/vhost.conf /etc/apache2/sites-available/coverage.c
 COPY deployment/apps/coverage/envvars.conf /etc/apache2/conf-available/envvars/coverage.envvars.conf
 
 # Enable Apache modules and configurations
-RUN a2enmod rewrite headers && \
-    a2enconf server-name && \
-    a2ensite dashboard.conf && \
-    a2dissite 000-default.conf 2>/dev/null || true
-
-# Set working directory
-WORKDIR /var/www/html
-COPY . .
-RUN composer install
+RUN a2enmod rewrite headers\
+    && a2enconf server-name\
+    && a2ensite dashboard.conf\
+    && a2dissite 000-default.conf 2>/dev/null || true
 
 # Expose ports
 EXPOSE 80 443
