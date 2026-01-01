@@ -133,7 +133,7 @@ fi
 if [ "$(id -u)" = "0" ]; then
     # Running as root, update /etc/passwd directly
     if ! grep -q "^root:.*:.*:.*:.*:.*:.*$ZSH_PATH" /etc/passwd; then
-        sed -i "s|^root:\(.*\):\(.*\):\(.*\):\(.*\):\(.*\):\(.*\):.*|root:\1:\2:\3:\4:\5:\6:$ZSH_PATH|" /etc/passwd
+        sed -i "s|^\(root:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:\).*|\1$ZSH_PATH|" /etc/passwd
         echo "✅ Updated /etc/passwd to set zsh as default shell for root"
     fi
 fi
@@ -155,8 +155,8 @@ fi
 echo "🎉 Development environment setup complete!"
 echo ""
 echo "Installed tools:"
-echo "  - git: $(git --version 2>/dev/null | cut -d' ' -f3 || echo 'installed')"
-echo "  - zsh: $(zsh --version 2>/dev/null | cut -d' ' -f2 || echo 'installed')"
+echo "  - git: $(git --version 2>/dev/null | sed 's/^git version //' || echo 'installed')"
+echo "  - zsh: $(zsh --version 2>/dev/null | awk '{print $2}' || echo 'installed')"
 echo "  - pre-commit: $(pre-commit --version 2>/dev/null | head -n1 || echo 'installed')"
 echo ""
 echo "Note: You may need to restart your terminal or devcontainer for zsh to take effect."
