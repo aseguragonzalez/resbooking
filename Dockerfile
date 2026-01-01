@@ -19,6 +19,9 @@ WORKDIR /var/www/html
 COPY . .
 RUN composer install
 
+# Copy Xdebug configuration
+COPY deployment/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Copy Apache configuration files
 COPY deployment/apache/ports.conf /etc/apache2/ports.conf
 COPY deployment/apache/server-name.conf /etc/apache2/conf-available/server-name.conf

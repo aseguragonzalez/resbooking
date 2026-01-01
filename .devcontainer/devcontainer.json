@@ -22,6 +22,12 @@
     9003
   ],
   "name": "PHP 8.4 with Apache",
+  "portsAttributes": {
+    "9003": {
+      "label": "Xdebug",
+      "onAutoForward": "notify"
+    }
+  },
   "remoteUser": "root",
   "service": "apache",
   "workspaceFolder": "/var/www/html"

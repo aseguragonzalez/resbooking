@@ -159,6 +159,12 @@ or check the error logs:
 tail -f /var/log/apache2/<webapp-name>-error.log
 ```
 
+### How to debug Xdebug
+
+1. Set the Xdebug mode (`XDEBUG_MODE`) to `debug,coverage,develop` in the `.env`.
+ It is set to `coverage,debug,develop` by default.
+2. Install the Xdebug extension for your browser. [Chrome Xdebug][chrome-xdebug]
+
 ## Built With
 
 - [Apache][apache]
@@ -168,13 +174,16 @@ tail -f /var/log/apache2/<webapp-name>-error.log
 - [PHP Coding Standards Fixer][php-cs-fixer]
 - [PHPStan][php-stan]
 - [PHPUnit][php-unit]
+- [PHPUnit Test Explorer][vscode-phpunit]
 - [Pre-commit][pre-commit]
+- [Xdebug][xdebug]
 
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 [apache]: https://httpd.apache.org/
+[chrome-xdebug]: https://chromewebstore.google.com/detail/oiofkammbajfehgpleginfomeppgnglk?utm_source=item-share-cb
 [docker]: https://www.docker.com/
 [vscode]: https://code.visualstudio.com/
 [devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
@@ -185,3 +194,5 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 [php-stan]: https://phpstan.org/user-guide/getting-started
 [php-unit]: https://phpunit.de/index.html
 [pre-commit]: https://pre-commit.com/
+[vscode-phpunit]: https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit
+[xdebug]: https://xdebug.org/
