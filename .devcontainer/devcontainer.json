@@ -1,12 +1,8 @@
 {
-  "containerEnv": {
-    "DEFAULT_HOST": "http://dashboard",
-    "ENVIRONMENT": "local",
-    "XDEBUG_MODE": "coverage,debug,develop"
-  },
   "customizations": {
     "vscode": {
       "extensions": [
+        "bmewburn.vscode-intelephense-client",
         "DavidAnson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
         "MehediDracula.php-namespace-resolver",
@@ -17,20 +13,22 @@
       ]
     }
   },
+  "dockerComposeFile": "../docker-compose.yml",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
   },
   "forwardPorts": [
-    9003,
-    80,
-    443
-  ],
-  "image": "php:8.4-apache-bookworm",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/var/www/html,type=bind,consistency=cached"
+    9003
   ],
   "name": "PHP 8.4 with Apache",
-  "postCreateCommand": "bash deployment/scripts/setup-apache.sh && apache2ctl start",
-  "remoteUser": "root"
+  "portsAttributes": {
+    "9003": {
+      "label": "Xdebug",
+      "onAutoForward": "notify"
+    }
+  },
+  "remoteUser": "root",
+  "service": "apache",
+  "workspaceFolder": "/var/www/html"
 }
