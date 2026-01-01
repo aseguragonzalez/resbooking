@@ -27,7 +27,7 @@ static-analyse:
 	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=512M
 
 test:
-	@./vendor/bin/phpunit --coverage-html coverage/
+	@./vendor/bin/phpunit -c phpunit.xml --coverage-html coverage/
 
 update-autoload:
 	@composer dump-autoload
