@@ -5,18 +5,22 @@
         "bmewburn.vscode-intelephense-client",
         "DavidAnson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
+        "donjayamanne.githistory",
         "MehediDracula.php-namespace-resolver",
+        "mhutchie.git-graph",
         "recca0120.vscode-phpunit",
         "xdebug.php-debug",
         "redhat.vscode-xml",
         "wongjn.php-sniffer"
-      ]
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
     }
   },
   "dockerComposeFile": "../docker-compose.yml",
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/gvatsal60/dev-container-features/pre-commit:1": {}
+    "ghcr.io/devcontainers/features/git:1": {}
   },
   "forwardPorts": [
     9003
@@ -28,6 +32,7 @@
       "onAutoForward": "notify"
     }
   },
+  "postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh",
   "remoteUser": "root",
   "service": "apache",
   "workspaceFolder": "/var/www/html"
