@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class Expires extends Header
+final readonly class Expires extends Header
 {
     public function __construct(\DateTimeImmutable $expires)
     {

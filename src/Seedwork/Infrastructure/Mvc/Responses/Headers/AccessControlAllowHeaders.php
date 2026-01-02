@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class AccessControlAllowHeaders extends Header
+final readonly class AccessControlAllowHeaders extends Header
 {
     public function __construct(
         private bool $contentTypes = true,

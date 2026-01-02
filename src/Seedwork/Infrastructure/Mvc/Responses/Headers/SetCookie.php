@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class SetCookie extends Header
+final readonly class SetCookie extends Header
 {
     /**
      * @param int $expires Unix timestamp for cookie expiration. (Default: 0)
@@ -14,17 +14,15 @@ final class SetCookie extends Header
      *    cookie that expires when the browser closes.
      *  - If $expires < 0: Sets cookie as expires in the past, effectively removing/deleting the cookie.
      * @param string $path The path on the server in which the cookie will be available on.
-     * @param string $domain The domain that the cookie is available to.
      * @param bool $secure Whether the cookie should only be sent over a secure HTTPS connection.
      * @param bool $httpOnly Whether the cookie should only be accessible via HTTP(S), not JavaScript.
      * @param string $sameSite Whether the cookie should be sent with requests originating from the same site.
      */
-    public function __construct(
+    private function __construct(
         private string $cookieName,
         private string $cookieValue,
         private int $expires = 0,
         private string $path = '/',
-        private string $domain = '',
         private bool $secure = false,
         private bool $httpOnly = false,
         private string $sameSite = 'Lax'
@@ -81,10 +79,6 @@ final class SetCookie extends Header
             $value .= '; Path=' . $this->path;
         }
 
-        if ($this->domain !== '') {
-            $value .= '; Domain=' . $this->domain;
-        }
-
         if ($this->secure) {
             $value .= '; Secure';
         }
@@ -96,6 +90,8 @@ final class SetCookie extends Header
         if ($this->sameSite !== '') {
             $value .= '; SameSite=' . $this->sameSite;
         }
+
+        $value .= '; Domain=';
 
         return $value;
     }

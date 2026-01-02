@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class AccessControlAllowOrigin extends Header
+final readonly class AccessControlAllowOrigin extends Header
 {
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
         parent::__construct('Access-Control-Allow-Origin', $value);
     }
 
     public static function any(): Header
     {
-        return new AccessControlAllowOrigin('*');
+        return new self('*');
     }
 
     public static function none(): Header
     {
-        return new AccessControlAllowOrigin('null');
+        return new self('null');
     }
 
     public static function specific(string $origin): Header
     {
-        return new AccessControlAllowOrigin($origin);
+        return new self($origin);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class LastModified extends Header
+final readonly class LastModified extends Header
 {
     public function __construct(\DateTimeImmutable $lastModified)
     {
