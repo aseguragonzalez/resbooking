@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all
 
 all: format lint static-analyse test
 
@@ -31,3 +31,26 @@ test:
 
 update-autoload:
 	@composer dump-autoload
+
+# Setup SSL certificate for a specific app (SSL is mandatory)
+# Usage: make setup-ssl APP=dashboard
+setup-ssl:
+	@if [ -z "$(APP)" ]; then \
+		echo "❌ Error: APP parameter is required"; \
+		echo "Usage: make setup-ssl APP=<app-name>"; \
+		echo "Example: make setup-ssl APP=dashboard"; \
+		exit 1; \
+	fi
+	@bash deployment/scripts/generate-ssl-cert.sh $(APP)
+
+# Setup SSL certificates for all apps (SSL is mandatory)
+setup-ssl-all:
+	@echo "🔐 Generating SSL certificates for all apps (SSL is mandatory)..."
+	@for app in deployment/apps/*/; do \
+		app_name=$$(basename $$app); \
+		echo ""; \
+		echo "📦 Processing app: $$app_name"; \
+		bash deployment/scripts/generate-ssl-cert.sh $$app_name || true; \
+	done
+	@echo ""
+	@echo "✅ SSL certificate generation complete!"

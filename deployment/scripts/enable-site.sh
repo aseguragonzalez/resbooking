@@ -22,6 +22,20 @@ if [ ! -f "$VHOST_CONFIG" ]; then
     exit 1
 fi
 
+# Check if SSL certificate files exist (SSL is mandatory)
+CERT_FILE="/etc/apache2/ssl/${WEBAPP_NAME}.crt"
+KEY_FILE="/etc/apache2/ssl/${WEBAPP_NAME}.key"
+
+if [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; then
+    echo "❌ Error: SSL certificate files not found"
+    echo "   Expected: $CERT_FILE"
+    echo "   Expected: $KEY_FILE"
+    echo ""
+    echo "SSL is mandatory. Please generate the certificate first:"
+    echo "  bash deployment/scripts/generate-ssl-cert.sh $WEBAPP_NAME"
+    exit 1
+fi
+
 echo "Enabling site: $WEBAPP_NAME"
 
 # Copy VirtualHost configuration
@@ -36,6 +50,6 @@ fi
 
 # Enable the site
 a2ensite "${WEBAPP_NAME}.conf"
-apache2ctl graceful
+apache2ctl configtest && apache2ctl graceful
 
 echo "Site $WEBAPP_NAME enabled and Apache reloaded"

@@ -71,8 +71,78 @@ Before accessing the dashboard and coverage reports, you need to configure your
 
 After adding these entries, you can access:
 
-- Dashboard: `http://dashboard`
-- Coverage reports: `http://coverage` (after running tests with coverage)
+- Dashboard: `https://dashboard` (SSL is mandatory)
+- Coverage reports: `https://coverage` (SSL is mandatory, after running tests
+  with coverage)
+
+## SSL Certificate Setup (Required)
+
+This project requires SSL for all webapps. We use [mkcert][mkcert] to generate
+locally-trusted SSL certificates for development. These certificates are
+automatically trusted by your browser, so you won't see security warnings.
+
+**SSL is mandatory** - all sites require SSL certificates to function.
+
+### Initial Setup
+
+1. **Install mkcert** on your host machine:
+
+   ```bash
+   # macOS
+   brew install mkcert
+   brew install nss  # For Firefox support
+
+   # Linux
+   sudo apt install libnss3-tools
+   curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+   chmod +x mkcert-v*-linux-amd64
+   sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+
+   # Windows
+   choco install mkcert
+   ```
+
+2. **Generate certificates**:
+
+   ```bash
+   # Generate certificates for all apps
+   make setup-ssl-all
+
+   # Or generate for a specific app
+   make setup-ssl APP=dashboard
+   ```
+
+   This will:
+   - Install mkcert's local CA (if not already installed)
+   - Generate browser-valid certificates for each app based on their ServerName/ServerAlias
+   - Store them in `deployment/ssl/`
+
+3. **Start your devcontainer** - certificates are automatically mounted
+
+4. **Enable the app** (inside container):
+
+   ```bash
+   bash deployment/scripts/enable-site.sh dashboard
+   ```
+
+   Note: The script will verify SSL certificates exist before enabling the site.
+
+### Accessing Applications
+
+After setup, you can access:
+
+- **Dashboard**: `https://dashboard` (port 443)
+- **Coverage**: `https://coverage` (port 443)
+
+HTTP requests are automatically redirected to HTTPS (production-like behavior).
+
+### Certificate Details
+
+- Certificates are stored in `deployment/ssl/`
+- They are valid for 1 year (mkcert default)
+- Automatically trusted by all browsers
+- Work exactly like production certificates
+- Each app has its own certificate (dashboard.crt, coverage.crt, etc.)
 
 ## Getting Started
 
@@ -149,6 +219,9 @@ bash deployment/scripts/disable-site.sh <webapp-name>
 bash deployment/scripts/enable-site.sh <webapp-name>
 ```
 
+Note: SSL certificates are required. The script will verify certificates exist
+ before enabling the site.
+
 **Reload Apache:**
 
 ```shell
@@ -200,15 +273,16 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 [apache]: https://httpd.apache.org/
 [chrome-xdebug]: https://chromewebstore.google.com/detail/oiofkammbajfehgpleginfomeppgnglk?utm_source=item-share-cb
-[docker]: https://www.docker.com/
-[vscode]: https://code.visualstudio.com/
-[devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 [composer]: https://getcomposer.org/
+[devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+[docker]: https://www.docker.com/
+[mkcert]: https://github.com/FiloSottile/mkcert
 [php]: https://www.php.net/
 [php-cs]: https://github.com/PHPCSStandards/PHP_CodeSniffer/
 [php-cs-fixer]: https://github.com/PHP-CS-Fixer/PHP-CS-Fixer
 [php-stan]: https://phpstan.org/user-guide/getting-started
 [php-unit]: https://phpunit.de/index.html
 [pre-commit]: https://pre-commit.com/
+[vscode]: https://code.visualstudio.com/
 [vscode-phpunit]: https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit
 [xdebug]: https://xdebug.org/

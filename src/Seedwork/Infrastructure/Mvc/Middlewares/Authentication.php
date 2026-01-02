@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SessionExpiredException;
+use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
 use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Authentication extends Middleware
@@ -39,11 +42,12 @@ final class Authentication extends Middleware
             $context->setIdentityToken($token);
             return $this->next->handleRequest($request);
         } catch (SessionExpiredException) {
-            $cookie = "{$this->settings->authCookieName}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0";
+            $setCookieHeader = SetCookie::removeCookie($this->settings->authCookieName);
+            $locationHeader = Location::redirectToInternal($this->settings->authLoginUrl);
             return $this->responseFactory
-                ->createResponse(303)
-                ->withHeader('Location', $this->settings->authLoginUrl)
-                ->withHeader('Set-Cookie', $cookie);
+                ->createResponse(StatusCode::SeeOther->value)
+                ->withHeader($locationHeader->name, $locationHeader->value)
+                ->withHeader($setCookieHeader->name, $setCookieHeader->value);
         }
     }
 }

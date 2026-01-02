@@ -73,15 +73,12 @@ final class RestaurantsController extends Controller
 
     private function setRestaurantCookie(string $restaurantId): void
     {
-        // TODO: review cookie settings (expiration time, httpOnly, secure, sameSite)
-        $this->addHeader(new SetCookie(
+        $setCookieHeader = SetCookie::createSecureCookie(
             cookieName: $this->settings->restaurantCookieName,
             cookieValue: $restaurantId,
-            expires: time() + (365 * 24 * 60 * 60), // 1 year
-            httpOnly: false,
-            secure: false,
-            sameSite: 'Lax'
-        ));
+            expires: -1,
+        );
+        $this->addHeader($setCookieHeader);
     }
 
     private function getBackUrl(ServerRequestInterface $request): string

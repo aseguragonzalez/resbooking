@@ -8,7 +8,9 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
@@ -41,9 +43,10 @@ final class Authorization extends Middleware
             $route->ensureAuthenticated($identity);
         } catch (AuthenticationRequiredException) {
             $setCookieHeader = SetCookie::removeCookie($this->settings->authCookieName);
+            $locationHeader = Location::redirectToInternal($this->settings->authLoginUrl);
             return $this->responseFactory
-                ->createResponse(303)
-                ->withHeader('Location', $this->settings->authLoginUrl)
+                ->createResponse(StatusCode::SeeOther->value)
+                ->withHeader($locationHeader->name, $locationHeader->value)
                 ->withHeader($setCookieHeader->name, $setCookieHeader->value);
         }
         $route->ensureAuthorized($identity);
