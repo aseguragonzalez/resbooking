@@ -19,6 +19,20 @@ final class ContentLanguage extends Header
         parent::__construct('Content-Language', $this->buildValue());
     }
 
+    public static function createFromCurrentLanguage(string $language): ContentLanguage
+    {
+        return new self(
+            english: $language === 'en',
+            french: $language === 'fr',
+            spanish: $language === 'es',
+            portuguese: $language === 'pt',
+            german: $language === 'de',
+            italian: $language === 'it',
+            dutch: $language === 'nl',
+            russian: $language === 'ru',
+        );
+    }
+
     private function buildValue(): string
     {
         $languages = [];

@@ -60,12 +60,12 @@ final class AccountsController extends Controller
                 $request->password,
                 $request->keepMeSignedIn()
             );
-            $cookie = SetCookie::createSecureCookie(
+            $setCookieHeader = SetCookie::createSecureCookie(
                 cookieName: $this->settings->authCookieName,
                 cookieValue: $challenge->getToken(),
                 expires: $challenge->getExpiresAt()->getTimestamp(),
             );
-            $this->addHeader($cookie);
+            $this->addHeader($setCookieHeader);
             return $this->redirectToAction("index", DashboardController::class);
         } catch (InvalidCredentialsException) {
             return $this->view("signIn", model: SignIn::withErrors([

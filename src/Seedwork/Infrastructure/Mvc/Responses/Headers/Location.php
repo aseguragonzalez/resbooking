@@ -21,6 +21,11 @@ final class Location extends Header
         ) {
             throw new \InvalidArgumentException("Invalid URL provided for Location header");
         }
-        return new Location($url);
+        return new self($url);
+    }
+
+    public static function redirectToInternal(string $url): Location
+    {
+        return new self($url);
     }
 }

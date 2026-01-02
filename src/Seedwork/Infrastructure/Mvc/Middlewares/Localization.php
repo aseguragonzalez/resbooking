@@ -9,6 +9,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentLanguage;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Localization extends Middleware
@@ -53,12 +57,18 @@ final class Localization extends Middleware
     private function createSetLanguageResponse(ServerRequestInterface $request): ResponseInterface
     {
         $language = $this->getLanguageFromBodyOrDefault($request->getParsedBody());
-
+        $setCookieHeader = SetCookie::createSecureCookie(
+            cookieName: $this->settings->languageCookieName,
+            cookieValue: $language,
+            expires: -1
+        );
+        $locationHeader = Location::redirectToInternal($request->getHeaderLine('Referer') ?: '/');
+        $contentLanguageHeader = ContentLanguage::createFromCurrentLanguage($language);
         return $this->responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $request->getHeaderLine('Referer') ?: '/')
-            ->withAddedHeader('Content-Language', $language)
-            ->withAddedHeader('Set-Cookie', "{$this->settings->languageCookieName}={$language}");
+            ->createResponse(StatusCode::Found->value)
+            ->withHeader($locationHeader->name, $locationHeader->value)
+            ->withAddedHeader($contentLanguageHeader->name, $contentLanguageHeader->value)
+            ->withAddedHeader($setCookieHeader->name, $setCookieHeader->value);
     }
 
     /**
@@ -98,7 +108,9 @@ final class Localization extends Middleware
         /** @var string $language */
         $language = $cookieParams[$this->settings->languageCookieName];
         $context->set(RequestContextKeys::Language->value, $language);
-        return $next->handleRequest($request)->withAddedHeader('Content-Language', $language);
+        $contentLanguageHeader = ContentLanguage::createFromCurrentLanguage($language);
+        return $next->handleRequest($request)
+            ->withHeader($contentLanguageHeader->name, $contentLanguageHeader->value);
     }
 
     private function handleRequestWithAcceptedOrDefaultLanguage(
@@ -107,10 +119,16 @@ final class Localization extends Middleware
         ServerRequestInterface $request
     ): ResponseInterface {
         $language = $this->getLanguageFromRequestOrDefault($request);
+        $setCookieHeader = SetCookie::createSecureCookie(
+            cookieName: $this->settings->languageCookieName,
+            cookieValue: $language,
+            expires: -1
+        );
+        $contentLanguageHeader = ContentLanguage::createFromCurrentLanguage($language);
         $context->set(RequestContextKeys::Language->value, $language);
         return $next->handleRequest($request)
-            ->withAddedHeader('Content-Language', $language)
-            ->withAddedHeader('Set-Cookie', "{$this->settings->languageCookieName}={$language}");
+            ->withAddedHeader($contentLanguageHeader->name, $contentLanguageHeader->value)
+            ->withAddedHeader($setCookieHeader->name, $setCookieHeader->value);
     }
 
     private function getLanguageFromRequestOrDefault(ServerRequestInterface $request): string
