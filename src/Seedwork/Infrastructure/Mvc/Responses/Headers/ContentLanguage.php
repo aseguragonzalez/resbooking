@@ -21,6 +21,10 @@ final class ContentLanguage extends Header
 
     public static function createFromCurrentLanguage(string $language): ContentLanguage
     {
+        if (!in_array($language, ['en', 'fr', 'es', 'pt', 'de', 'it', 'nl', 'ru'], true)) {
+            throw new \InvalidArgumentException("Invalid language: $language");
+        }
+
         return new self(
             english: $language === 'en',
             french: $language === 'fr',

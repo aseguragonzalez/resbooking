@@ -6,6 +6,19 @@ namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
 final class SetCookie extends Header
 {
+    /**
+     * @param int $expires Unix timestamp for cookie expiration. (Default: 0)
+     *  - If $expires > 0: Sets the cookie expiration to the specified timestamp (formatted as GMT date string)
+     *  - If $expires === 0: Sets cookie to expire immediately (Thu, 01 Jan 1970 00:00:00 GMT) with Max-Age=0,
+     *    effectively removing/deleting the cookie if the cookie value is empty. Else, it will be a session
+     *    cookie that expires when the browser closes.
+     *  - If $expires < 0: Sets cookie as expires in the past, effectively removing/deleting the cookie.
+     * @param string $path The path on the server in which the cookie will be available on.
+     * @param string $domain The domain that the cookie is available to.
+     * @param bool $secure Whether the cookie should only be sent over a secure HTTPS connection.
+     * @param bool $httpOnly Whether the cookie should only be accessible via HTTP(S), not JavaScript.
+     * @param string $sameSite Whether the cookie should be sent with requests originating from the same site.
+     */
     public function __construct(
         private string $cookieName,
         private string $cookieValue,
@@ -24,6 +37,19 @@ final class SetCookie extends Header
         return new self($cookieName, '', 0);
     }
 
+    /**
+     * Creates a secure cookie with the given name, value, expiration date, path, and secure flag.
+     * @param string $cookieName The name of the cookie.
+     * @param string $cookieValue The value of the cookie.
+     * @param int $expires The expiration date of the cookie. (Default: 0)
+     *  - If $expires > 0: Sets the cookie expiration to the specified timestamp (formatted as GMT date string)
+     *  - If $expires === 0: Sets cookie to expire immediately (Thu, 01 Jan 1970 00:00:00 GMT) with Max-Age=0,
+     *    effectively removing/deleting the cookie if the cookie value is empty. Else, it will be a session
+     *    cookie that expires when the browser closes.
+     *  - If $expires < 0: Sets cookie as expires in the past, effectively removing/deleting the cookie.
+     * @param string $path The path on the server in which the cookie will be available on. (Default: '/')
+     * @return self The created cookie.
+     */
     public static function createSecureCookie(
         string $cookieName,
         string $cookieValue,
