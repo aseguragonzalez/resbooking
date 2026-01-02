@@ -77,8 +77,7 @@ After adding these entries, you can access:
 
 ## SSL Certificate Setup (Required)
 
-This project requires SSL for all webapps. We use
- [mkcert](https://github.com/FiloSottile/mkcert) to generate
+This project requires SSL for all webapps. We use [mkcert][mkcert] to generate
 locally-trusted SSL certificates for development. These certificates are
 automatically trusted by your browser, so you won't see security warnings.
 
@@ -274,15 +273,16 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 [apache]: https://httpd.apache.org/
 [chrome-xdebug]: https://chromewebstore.google.com/detail/oiofkammbajfehgpleginfomeppgnglk?utm_source=item-share-cb
-[docker]: https://www.docker.com/
-[vscode]: https://code.visualstudio.com/
-[devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 [composer]: https://getcomposer.org/
+[devcontainers]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+[docker]: https://www.docker.com/
+[mkcert]: https://github.com/FiloSottile/mkcert
 [php]: https://www.php.net/
 [php-cs]: https://github.com/PHPCSStandards/PHP_CodeSniffer/
 [php-cs-fixer]: https://github.com/PHP-CS-Fixer/PHP-CS-Fixer
 [php-stan]: https://phpstan.org/user-guide/getting-started
 [php-unit]: https://phpunit.de/index.html
 [pre-commit]: https://pre-commit.com/
+[vscode]: https://code.visualstudio.com/
 [vscode-phpunit]: https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit
 [xdebug]: https://xdebug.org/
