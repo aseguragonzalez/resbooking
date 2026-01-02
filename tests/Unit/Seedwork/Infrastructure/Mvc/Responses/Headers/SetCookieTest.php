@@ -85,4 +85,87 @@ final class SetCookieTest extends TestCase
 
         $this->assertSame($expectedString, (string) $setCookie);
     }
+
+    public function testRemoveCookie(): void
+    {
+        $setCookie = SetCookie::removeCookie('testCookie');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('testCookie=', $setCookie->value);
+        $this->assertStringContainsString('Expires=Thu, 01 Jan 1970 00:00:00 GMT', $setCookie->value);
+        $this->assertStringContainsString('Max-Age=0', $setCookie->value);
+        $this->assertStringContainsString('Path=/', $setCookie->value);
+    }
+
+    public function testCreateSecureCookie(): void
+    {
+        $expires = time() + 3600;
+        $setCookie = SetCookie::createSecureCookie('authToken', 'token123', $expires);
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('authToken=token123', $setCookie->value);
+        $this->assertStringContainsString('Expires=' . gmdate('D, d-M-Y H:i:s T', $expires), $setCookie->value);
+        $this->assertStringContainsString('Path=/', $setCookie->value);
+        $this->assertStringContainsString('Secure', $setCookie->value);
+        $this->assertStringContainsString('HttpOnly', $setCookie->value);
+        $this->assertStringContainsString('SameSite=Strict', $setCookie->value);
+    }
+
+    public function testCreateSecureCookieWithCustomPath(): void
+    {
+        $setCookie = SetCookie::createSecureCookie('authToken', 'token123', 0, '/admin');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('authToken=token123', $setCookie->value);
+        $this->assertStringContainsString('Path=/admin', $setCookie->value);
+        $this->assertStringContainsString('Secure', $setCookie->value);
+        $this->assertStringContainsString('HttpOnly', $setCookie->value);
+        $this->assertStringContainsString('SameSite=Strict', $setCookie->value);
+    }
+
+    public function testSetCookieWithUrlEncodedNameAndValue(): void
+    {
+        $setCookie = new SetCookie('cookie name', 'value=with=equals; and semicolons');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('cookie+name=', $setCookie->value);
+        $this->assertStringContainsString('value%3Dwith%3Dequals%3B+and+semicolons', $setCookie->value);
+    }
+
+    public function testSetCookieWithExpiresZero(): void
+    {
+        $setCookie = new SetCookie('test', 'value', 0);
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('test=value', $setCookie->value);
+        $this->assertStringContainsString('Expires=Thu, 01 Jan 1970 00:00:00 GMT', $setCookie->value);
+        $this->assertStringContainsString('Max-Age=0', $setCookie->value);
+    }
+
+    public function testSetCookieWithSameSiteNone(): void
+    {
+        $setCookie = new SetCookie('test', 'value', 0, '/', '', true, true, 'None');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('test=value', $setCookie->value);
+        $this->assertStringContainsString('SameSite=None', $setCookie->value);
+    }
+
+    public function testSetCookieWithSameSiteLax(): void
+    {
+        $setCookie = new SetCookie('test', 'value');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('test=value', $setCookie->value);
+        $this->assertStringContainsString('SameSite=Lax', $setCookie->value);
+    }
+
+    public function testSetCookieWithSameSiteStrict(): void
+    {
+        $setCookie = new SetCookie('test', 'value', 0, '/', '', false, false, 'Strict');
+
+        $this->assertSame('Set-Cookie', $setCookie->name);
+        $this->assertStringContainsString('test=value', $setCookie->value);
+        $this->assertStringContainsString('SameSite=Strict', $setCookie->value);
+    }
 }

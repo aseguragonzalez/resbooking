@@ -24,6 +24,23 @@ final class SetCookie extends Header
         return new self($cookieName, '', 0);
     }
 
+    public static function createSecureCookie(
+        string $cookieName,
+        string $cookieValue,
+        int $expires = 0,
+        string $path = '/',
+    ): self {
+        return new self(
+            cookieName: $cookieName,
+            cookieValue: $cookieValue,
+            expires: $expires,
+            path: $path,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'Strict'
+        );
+    }
+
     private function buildValue(): string
     {
         $value = urlencode($this->cookieName) . '=' . urlencode($this->cookieValue);
