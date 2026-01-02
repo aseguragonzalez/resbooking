@@ -6,3 +6,5 @@ vendor/
 *.log
 inmemory_*.json
 .env
+/deployment/ssl/*.crt
+/deployment/ssl/*.key
