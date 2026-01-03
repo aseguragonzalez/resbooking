@@ -115,7 +115,7 @@ final class ControllerTest extends TestCase
 
         $this->assertSame(StatusCode::Found, $response->statusCode);
         $this->assertEquals(
-            [Location::new("$url?offset=1&limit=10"), ContentType::html()],
+            [Location::toUrl("$url?offset=1&limit=10"), ContentType::html()],
             $response->headers
         );
     }

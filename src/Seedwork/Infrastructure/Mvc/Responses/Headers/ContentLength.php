@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class ContentLength extends Header
+final readonly class ContentLength extends Header
 {
     public function __construct(int $length)
     {

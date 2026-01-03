@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Responses\Headers;
 
-final class AccessControlAllowMethods extends Header
+final readonly class AccessControlAllowMethods extends Header
 {
     public function __construct(
         private bool $get = true,

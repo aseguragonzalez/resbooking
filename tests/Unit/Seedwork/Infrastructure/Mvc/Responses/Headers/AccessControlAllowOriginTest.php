@@ -9,14 +9,6 @@ use Seedwork\Infrastructure\Mvc\Responses\Headers\AccessControlAllowOrigin;
 
 final class AccessControlAllowOriginTest extends TestCase
 {
-    public function testConstructorSetsNameAndValue(): void
-    {
-        $header = new AccessControlAllowOrigin('https://example.com');
-
-        $this->assertSame('Access-Control-Allow-Origin', $header->name);
-        $this->assertSame('https://example.com', $header->value);
-    }
-
     public function testAnyReturnsHeaderWithWildcard(): void
     {
         $header = AccessControlAllowOrigin::any();
@@ -44,7 +36,7 @@ final class AccessControlAllowOriginTest extends TestCase
 
     public function testToStringReturnsFormattedHeader(): void
     {
-        $header = new AccessControlAllowOrigin('https://example.com');
+        $header = AccessControlAllowOrigin::specific('https://example.com');
 
         $this->assertSame('Access-Control-Allow-Origin: https://example.com', (string) $header);
     }

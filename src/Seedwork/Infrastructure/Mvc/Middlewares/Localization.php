@@ -62,7 +62,7 @@ final class Localization extends Middleware
             cookieValue: $language,
             expires: -1
         );
-        $locationHeader = Location::redirectToInternal($request->getHeaderLine('Referer') ?: '/');
+        $locationHeader = Location::toInternalUrl($request->getHeaderLine('Referer') ?: '/');
         $contentLanguageHeader = ContentLanguage::createFromCurrentLanguage($language);
         return $this->responseFactory
             ->createResponse(StatusCode::Found->value)
