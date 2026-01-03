@@ -11,7 +11,7 @@ final readonly class Location extends Header
         parent::__construct('Location', $value);
     }
 
-    public static function new(string $url): Location
+    public static function toUrl(string $url): Location
     {
         $scheme = parse_url($url, PHP_URL_SCHEME);
         if (
@@ -24,7 +24,7 @@ final readonly class Location extends Header
         return new self($url);
     }
 
-    public static function redirectToInternal(string $url): Location
+    public static function toInternalUrl(string $url): Location
     {
         return new self($url);
     }

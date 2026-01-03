@@ -43,7 +43,7 @@ final class Authentication extends Middleware
             return $this->next->handleRequest($request);
         } catch (SessionExpiredException) {
             $setCookieHeader = SetCookie::removeCookie($this->settings->authCookieName);
-            $locationHeader = Location::redirectToInternal($this->settings->authLoginUrl);
+            $locationHeader = Location::toInternalUrl($this->settings->authLoginUrl);
             return $this->responseFactory
                 ->createResponse(StatusCode::SeeOther->value)
                 ->withHeader($locationHeader->name, $locationHeader->value)

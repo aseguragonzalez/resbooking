@@ -38,7 +38,7 @@ final class RedirectTo extends ActionResponse
             $urlBlocks[] = http_build_query($args);
         }
         $urlWithQueryParams = implode('?', $urlBlocks);
-        $newHeaders = [Location::new($urlWithQueryParams)];
+        $newHeaders = [Location::toUrl($urlWithQueryParams)];
         if (empty(array_filter($headers, fn (Header $header) => $header instanceof ContentType === true))) {
             $newHeaders[] = ContentType::html();
         }

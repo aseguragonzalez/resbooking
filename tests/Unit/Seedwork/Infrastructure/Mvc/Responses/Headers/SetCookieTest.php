@@ -22,7 +22,7 @@ final class SetCookieTest extends TestCase
         $setCookie = SetCookie::createSecureCookie('test', 'value', $expires, '/path');
         $expectedString = 'Set-Cookie: test=value; Expires='
             . gmdate('D, d-M-Y H:i:s T', $expires)
-            . '; Path=/path; Secure; HttpOnly; SameSite=Strict; Domain=';
+            . '; Path=/path; Secure; HttpOnly; SameSite=Strict';
 
         $this->assertSame($expectedString, (string) $setCookie);
     }

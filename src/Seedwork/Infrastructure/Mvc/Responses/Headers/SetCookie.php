@@ -91,8 +91,6 @@ final readonly class SetCookie extends Header
             $value .= '; SameSite=' . $this->sameSite;
         }
 
-        $value .= '; Domain=';
-
         return $value;
     }
 }
