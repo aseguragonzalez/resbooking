@@ -7,18 +7,18 @@ namespace Seedwork\Infrastructure\Mvc\Middlewares;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Seedwork\Infrastructure\Mvc\LanguageSetting;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentLanguage;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
-use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Localization extends Middleware
 {
     public function __construct(
-        private readonly Settings $settings,
+        private readonly LanguageSetting $settings,
         private readonly ResponseFactoryInterface $responseFactory,
         ?Middleware $next = null,
     ) {
@@ -51,14 +51,14 @@ final class Localization extends Middleware
     {
         $uri = $request->getUri()->getPath();
         $method = strtoupper($request->getMethod());
-        return $method === 'POST' && $uri === $this->settings->languageSetUrl;
+        return $method === 'POST' && $uri === $this->settings->setUrl;
     }
 
     private function createSetLanguageResponse(ServerRequestInterface $request): ResponseInterface
     {
         $language = $this->getLanguageFromBodyOrDefault($request->getParsedBody());
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->settings->languageCookieName,
+            cookieName: $this->settings->cookieName,
             cookieValue: $language,
             expires: -1
         );
@@ -82,7 +82,7 @@ final class Localization extends Middleware
 
         return isset($language) && $this->isValidLanguage($language)
             ? $language
-            : $this->settings->languageDefaultValue;
+            : $this->settings->defaultValue;
     }
 
     private function isValidLanguage(?string $language): bool
@@ -94,7 +94,7 @@ final class Localization extends Middleware
     {
         $cookieParams = $request->getCookieParams();
         /** @var string|null $cookieValue */
-        $cookieValue = $cookieParams[$this->settings->languageCookieName] ?? null;
+        $cookieValue = $cookieParams[$this->settings->cookieName] ?? null;
 
         return $this->isValidLanguage($cookieValue);
     }
@@ -106,7 +106,7 @@ final class Localization extends Middleware
     ): ResponseInterface {
         $cookieParams = $request->getCookieParams();
         /** @var string $language */
-        $language = $cookieParams[$this->settings->languageCookieName];
+        $language = $cookieParams[$this->settings->cookieName];
         $context->set(RequestContextKeys::Language->value, $language);
         $contentLanguageHeader = ContentLanguage::createFromCurrentLanguage($language);
         return $next->handleRequest($request)
@@ -120,7 +120,7 @@ final class Localization extends Middleware
     ): ResponseInterface {
         $language = $this->getLanguageFromRequestOrDefault($request);
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->settings->languageCookieName,
+            cookieName: $this->settings->cookieName,
             cookieValue: $language,
             expires: -1
         );
@@ -135,7 +135,7 @@ final class Localization extends Middleware
     {
         $header = $request->getHeaderLine('Accept-Language');
         if (!$header) {
-            return $this->settings->languageDefaultValue;
+            return $this->settings->defaultValue;
         }
 
         $header = preg_replace('/^Accept-Language:\s*/i', '', $header);
@@ -151,6 +151,6 @@ final class Localization extends Middleware
         }
 
         $filtered = array_values(array_intersect($languages, $this->settings->languages));
-        return $filtered[0] ?? $this->settings->languageDefaultValue;
+        return $filtered[0] ?? $this->settings->defaultValue;
     }
 }

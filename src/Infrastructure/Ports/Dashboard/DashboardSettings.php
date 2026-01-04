@@ -24,7 +24,6 @@ final class DashboardSettings extends Settings
             environment: $environment,
             errorsMappingDefaultValue: $this->getDefaultErrorsMapping(),
             errorsMapping: $this->getErrorsMapping(),
-            languages: ['en'],
             serviceName: 'dashboard',
             serviceVersion: '1.0.0',
         );

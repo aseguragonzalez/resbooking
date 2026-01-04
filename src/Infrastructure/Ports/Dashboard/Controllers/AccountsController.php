@@ -87,13 +87,9 @@ final class AccountsController extends Controller
 
         $this->identityManager->signOut($token);
 
-        $cookiesToBeRemoved = [
-            $this->settings->authCookieName,
-            $this->settings->restaurantCookieName,
-            $this->settings->languageCookieName,
-        ];
-
-        foreach ($cookiesToBeRemoved as $cookieName) {
+        $currentCookies = $request->getCookieParams();
+        $cookieNames = array_keys($currentCookies);
+        foreach ($cookieNames as $cookieName) {
             $this->addHeader(SetCookie::removeCookie($cookieName));
         }
 

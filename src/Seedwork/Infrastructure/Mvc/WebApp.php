@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Files\DefaultFileManager;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authentication;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
 use Seedwork\Infrastructure\Mvc\Middlewares\ErrorHandling;
@@ -22,10 +21,7 @@ use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
-use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
-use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 abstract class WebApp
@@ -85,6 +81,8 @@ abstract class WebApp
 
     private function configureMvc(): void
     {
+        $this->container->set(Settings::class, $this->settings);
+
         $psr17Factory = new Psr17Factory();
         $this->container->set(Psr17Factory::class, $psr17Factory);
         $this->container->set(ResponseFactoryInterface::class, $psr17Factory);
@@ -94,14 +92,9 @@ abstract class WebApp
             $psr17Factory,
             $psr17Factory,
         ));
-        $this->container->set(ActionParameterBuilder::class, new ActionParameterBuilder());
-        $this->container->set(Settings::class, $this->settings);
         $this->container->set(Router::class, $this->router());
-
-        $fileManager = new DefaultFileManager();
-        $this->container->set(FileManager::class, $fileManager);
-        $i18nReplacer = new I18nReplacer($this->settings, $fileManager, new BranchesReplacer(new ModelReplacer()));
-        $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
+        $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
+        $this->container->set(ViewEngine::class, $this->container->get(HtmlViewEngine::class));
         $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }
 

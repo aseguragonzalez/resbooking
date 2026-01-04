@@ -10,8 +10,10 @@ use Seedwork\Infrastructure\Mvc\Settings;
 
 final class HtmlViewEngine implements ViewEngine
 {
-    public function __construct(private readonly Settings $settings, private readonly ContentReplacer $contentReplacer)
-    {
+    public function __construct(
+        private readonly Settings $settings,
+        private readonly I18nReplacer $contentReplacer
+    ) {
     }
 
     public function render(View $view, RequestContext $context): string

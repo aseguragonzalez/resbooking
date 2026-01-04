@@ -4,29 +4,38 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\LanguageSetting;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
 use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
-use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
+use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
     private string $basePath = __DIR__ . "/Files/";
-
-    private ViewEngine $viewEngine;
+    private FileManager&MockObject $fileManager;
+    private HtmlViewEngine $viewEngine;
 
     protected function setUp(): void
     {
-        $branchesReplacer = new BranchesReplacer();
-        $branchesReplacer->setNext(new ModelReplacer());
+        $this->fileManager = $this->createMock(FileManager::class);
+        $i18nReplacer = new I18nReplacer(
+            new LanguageSetting(i18nPath: __DIR__ . '/assets/i18n'),
+            $this->fileManager,
+            new BranchesReplacer(new ModelReplacer())
+        );
         $settings = new Settings(basePath: __DIR__, viewPath: "/Files");
-        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $branchesReplacer);
+        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $i18nReplacer);
     }
 
     protected function tearDown(): void
@@ -257,7 +266,8 @@ final class HtmlViewEngineTest extends TestCase
     private function getRequestContext(): RequestContext
     {
         $requestContext = new RequestContext();
-        $identity = $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Identity::class);
+        $requestContext->set(RequestContextKeys::Language->value, 'en');
+        $identity = $this->createMock(Identity::class);
         $identity->method('isAuthenticated')->willReturn(false);
         $identity->method('hasRole')->willReturn(false);
         $identity->method('username')->willReturn('anonymous');

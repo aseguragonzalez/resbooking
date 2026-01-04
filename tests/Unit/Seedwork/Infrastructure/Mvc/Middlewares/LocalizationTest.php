@@ -7,6 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
+use Seedwork\Infrastructure\Mvc\LanguageSetting;
 use Seedwork\Infrastructure\Mvc\Middlewares\Localization;
 use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
@@ -18,8 +19,8 @@ class LocalizationTest extends TestCase
 {
     private Psr17Factory $requestFactory;
     private Localization $middleware;
-    private string $languageCookieName = 'lang';
-    private string $languageDefaultValue = 'en';
+    private string $cookieName = 'lang';
+    private string $defaultValue = 'en';
 
     protected function setUp(): void
     {
@@ -27,12 +28,12 @@ class LocalizationTest extends TestCase
         $mock = $this->createMock(Middleware::class);
         $mock->method('handleRequest')->willReturn($this->requestFactory->createResponse(200));
         $this->middleware = new Localization(
-            settings: new Settings(
-                basePath: __DIR__,
+            settings: new LanguageSetting(
+                i18nPath: __DIR__ . '/assets/i18n',
                 languages: ['en', 'es', 'fr'],
-                languageCookieName: $this->languageCookieName,
-                languageDefaultValue: $this->languageDefaultValue,
-                languageSetUrl: '/set-language',
+                cookieName: $this->cookieName,
+                defaultValue: $this->defaultValue,
+                setUrl: '/set-language',
             ),
             responseFactory: new Psr17Factory(),
             next: $mock,
@@ -55,7 +56,7 @@ class LocalizationTest extends TestCase
         $response = $this->middleware->handleRequest($request);
 
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->languageCookieName,
+            cookieName: $this->cookieName,
             cookieValue: 'es',
             expires: -1,
         );
@@ -77,14 +78,14 @@ class LocalizationTest extends TestCase
         $response = $this->middleware->handleRequest($request);
 
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->languageCookieName,
-            cookieValue: $this->languageDefaultValue,
+            cookieName: $this->cookieName,
+            cookieValue: $this->defaultValue,
             expires: -1,
         );
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::Found->value, $response->getStatusCode());
         $this->assertEquals($setCookieHeader->value, $response->getHeaderLine('Set-Cookie'));
-        $this->assertEquals($this->languageDefaultValue, $response->getHeaderLine('Content-Language'));
+        $this->assertEquals($this->defaultValue, $response->getHeaderLine('Content-Language'));
     }
 
     public function testHandleRequestSetsDefaultLanguageOnInvalidPost(): void
@@ -98,21 +99,21 @@ class LocalizationTest extends TestCase
         $response = $this->middleware->handleRequest($request);
 
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->languageCookieName,
-            cookieValue: $this->languageDefaultValue,
+            cookieName: $this->cookieName,
+            cookieValue: $this->defaultValue,
             expires: -1,
         );
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::Found->value, $response->getStatusCode());
         $this->assertEquals($setCookieHeader->value, $response->getHeaderLine('Set-Cookie'));
-        $this->assertEquals($this->languageDefaultValue, $response->getHeaderLine('Content-Language'));
+        $this->assertEquals($this->defaultValue, $response->getHeaderLine('Content-Language'));
     }
 
     public function testHandleRequestWithValidLanguageCookie(): void
     {
         $request = $this->requestFactory
             ->createServerRequest('GET', '/any-uri')
-            ->withCookieParams([$this->languageCookieName => 'es'])
+            ->withCookieParams([$this->cookieName => 'es'])
             ->withAddedHeader('Accept-Language', 'fr;q=0.8')
             ->withAttribute(RequestContext::class, new RequestContext());
 
@@ -147,7 +148,7 @@ class LocalizationTest extends TestCase
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::Ok->value, $response->getStatusCode());
-        $this->assertEquals($this->languageDefaultValue, $response->getHeaderLine('Content-Language'));
+        $this->assertEquals($this->defaultValue, $response->getHeaderLine('Content-Language'));
     }
 
     public function testLocalizationMiddlewareFailsIfNoRequestContext(): void
@@ -163,12 +164,12 @@ class LocalizationTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No middleware to handle the request');
         $middleware = new Localization(
-            settings: new Settings(
-                basePath: __DIR__,
+            settings: new LanguageSetting(
+                i18nPath: __DIR__ . '/assets/i18n',
                 languages: ['en', 'es', 'fr'],
-                languageCookieName: $this->languageCookieName,
-                languageDefaultValue: $this->languageDefaultValue,
-                languageSetUrl: '/set-language',
+                cookieName: $this->cookieName,
+                defaultValue: $this->defaultValue,
+                setUrl: '/set-language',
             ),
             responseFactory: new Psr17Factory(),
             next: null,
