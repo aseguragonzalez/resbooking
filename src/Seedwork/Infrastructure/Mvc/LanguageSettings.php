@@ -12,7 +12,7 @@ final readonly class LanguageSettings
     public function __construct(
         public string $i18nPath,
         public array $languages = ['en'],
-        public string $cookieName = 'language',
+        public string $cookieName = 'lang',
         public string $defaultValue = 'en',
         public string $setUrl = '/set-language',
     ) {

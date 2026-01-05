@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
 use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
@@ -19,23 +20,23 @@ use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Security\Identity;
-use Seedwork\Infrastructure\Mvc\Settings;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Routes\Route\RouteController;
 
 final class AuthorizationTest extends TestCase
 {
+    private Authorization $middleware;
+    private AuthSettings $settings;
+    private Middleware&MockObject $next;
     private Psr17Factory $psrFactory;
-    private Settings $settings;
     private Router $router;
-    private MockObject&Middleware $next;
 
     protected function setUp(): void
     {
         $this->psrFactory = new Psr17Factory();
-        $this->settings = new Settings(
-            basePath: '',
-            authCookieName: 'auth_token',
-            authLoginUrl: '/login',
+        $this->settings = new AuthSettings(
+            cookieName: 'auth_token',
+            signInPath: '/login',
+            signOutPath: '/logout',
         );
         $route = Route::create(
             RouteMethod::Get,
@@ -47,6 +48,12 @@ final class AuthorizationTest extends TestCase
         );
         $this->router = new Router([$route]);
         $this->next = $this->createMock(Middleware::class);
+        $this->middleware = new Authorization(
+            settings: $this->settings,
+            responseFactory: $this->psrFactory,
+            router: $this->router,
+            next: $this->next,
+        );
     }
 
     public function testHandleRequestEnsureAuthenticatedAndAuthorizedUser(): void
@@ -67,20 +74,21 @@ final class AuthorizationTest extends TestCase
         $uri->method('getPath')->willReturn('/foo');
         $request->method('getUri')->willReturn($uri);
         $request->method('getMethod')->willReturn('GET');
-        $request->method('getAttribute')
-            ->with(RequestContext::class)
-            ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
+        $request->method('getAttribute')->with(RequestContext::class)->willReturn($context);
 
-        $result = $middleware->handleRequest($request);
+        $result = $this->middleware->handleRequest($request);
 
         $this->assertSame($response, $result);
     }
 
     public function testHandleRequestThrowsIfNoNextMiddleware(): void
     {
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, null);
-
+        $middleware = new Authorization(
+            settings: $this->settings,
+            responseFactory: $this->psrFactory,
+            router: $this->router,
+            next: null,
+        );
         $request = $this->createMock(ServerRequestInterface::class);
         $this->expectException(\RuntimeException::class);
         $middleware->handleRequest($request);
@@ -89,9 +97,7 @@ final class AuthorizationTest extends TestCase
     public function testHandleRequestRedirectsWhenNotAuthenticated(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $this->next
-            ->expects($this->never())
-            ->method('handleRequest');
+        $this->next->expects($this->never())->method('handleRequest');
         $identity = $this->createMock(Identity::class);
         $identity->method('isAuthenticated')->willReturn(false);
         $context = new RequestContext();
@@ -100,12 +106,9 @@ final class AuthorizationTest extends TestCase
         $uri->method('getPath')->willReturn('/foo');
         $request->method('getUri')->willReturn($uri);
         $request->method('getMethod')->willReturn('GET');
-        $request->method('getAttribute')
-            ->with(RequestContext::class)
-            ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
+        $request->method('getAttribute')->with(RequestContext::class)->willReturn($context);
 
-        $result = $middleware->handleRequest($request);
+        $result = $this->middleware->handleRequest($request);
 
         $this->assertEquals(303, $result->getStatusCode());
         $this->assertEquals('/login', $result->getHeaderLine('Location'));
@@ -141,7 +144,12 @@ final class AuthorizationTest extends TestCase
         $request->method('getAttribute')
             ->with(RequestContext::class)
             ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $router, $this->settings, $this->next);
+        $middleware = new Authorization(
+            settings: $this->settings,
+            responseFactory: $this->psrFactory,
+            router: $router,
+            next: $this->next,
+        );
 
         $result = $middleware->handleRequest($request);
 
@@ -151,9 +159,7 @@ final class AuthorizationTest extends TestCase
     public function testHandleRequestThrowsAccessDeniedWhenUserHasNoRoles(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $this->next
-            ->expects($this->never())
-            ->method('handleRequest');
+        $this->next->expects($this->never())->method('handleRequest');
         $identity = $this->createMock(Identity::class);
         $identity->method('isAuthenticated')->willReturn(true);
         $identity->method('getRoles')->willReturn([]);
@@ -163,21 +169,16 @@ final class AuthorizationTest extends TestCase
         $uri->method('getPath')->willReturn('/foo');
         $request->method('getUri')->willReturn($uri);
         $request->method('getMethod')->willReturn('GET');
-        $request->method('getAttribute')
-            ->with(RequestContext::class)
-            ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
-
+        $request->method('getAttribute')->with(RequestContext::class)->willReturn($context);
         $this->expectException(AccessDeniedException::class);
-        $middleware->handleRequest($request);
+
+        $this->middleware->handleRequest($request);
     }
 
     public function testHandleRequestThrowsAccessDeniedWhenRolesMismatch(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $this->next
-            ->expects($this->never())
-            ->method('handleRequest');
+        $this->next->expects($this->never())->method('handleRequest');
         $identity = $this->createMock(Identity::class);
         $identity->method('isAuthenticated')->willReturn(true);
         $identity->method('getRoles')->willReturn(['guest']);
@@ -190,10 +191,9 @@ final class AuthorizationTest extends TestCase
         $request->method('getAttribute')
             ->with(RequestContext::class)
             ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
-
         $this->expectException(AccessDeniedException::class);
-        $middleware->handleRequest($request);
+
+        $this->middleware->handleRequest($request);
     }
 
     public function testHandleRequestPassesThroughWhenRouteHasNoRoleRequirements(): void
@@ -226,7 +226,12 @@ final class AuthorizationTest extends TestCase
         $request->method('getAttribute')
             ->with(RequestContext::class)
             ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $router, $this->settings, $this->next);
+        $middleware = new Authorization(
+            settings: $this->settings,
+            responseFactory: $this->psrFactory,
+            router: $router,
+            next: $this->next,
+        );
 
         $result = $middleware->handleRequest($request);
 
@@ -254,9 +259,8 @@ final class AuthorizationTest extends TestCase
         $request->method('getAttribute')
             ->with(RequestContext::class)
             ->willReturn($context);
-        $middleware = new Authorization($this->psrFactory, $this->router, $this->settings, $this->next);
 
-        $result = $middleware->handleRequest($request);
+        $result = $this->middleware->handleRequest($request);
 
         $this->assertSame($response, $result);
     }

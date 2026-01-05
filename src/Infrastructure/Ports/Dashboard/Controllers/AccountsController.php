@@ -6,7 +6,6 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -17,6 +16,7 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\Controllers\Controller;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
@@ -34,7 +34,7 @@ final class AccountsController extends Controller
     public function __construct(
         private readonly CreateNewRestaurant $createNewRestaurant,
         private readonly IdentityManager $identityManager,
-        private readonly DashboardSettings $settings,
+        private readonly AuthSettings $settings,
         private readonly RequestContext $requestContext,
     ) {
     }
@@ -61,7 +61,7 @@ final class AccountsController extends Controller
                 $request->keepMeSignedIn()
             );
             $setCookieHeader = SetCookie::createSecureCookie(
-                cookieName: $this->settings->authCookieName,
+                cookieName: $this->settings->cookieName,
                 cookieValue: $challenge->getToken(),
                 expires: $challenge->getExpiresAt()->getTimestamp(),
             );

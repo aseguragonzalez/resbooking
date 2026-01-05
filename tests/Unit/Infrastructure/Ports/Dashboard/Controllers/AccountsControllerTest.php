@@ -8,7 +8,6 @@ use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -22,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Security\Challenge;
@@ -37,7 +37,7 @@ final class AccountsControllerTest extends TestCase
     private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private AuthSettings $settings;
     private AccountsController $controller;
     private Generator $faker;
 
@@ -47,7 +47,10 @@ final class AccountsControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new AuthSettings(
+            signInPath: '/accounts/sign-in',
+            signOutPath: '/accounts/sign-out',
+        );
         $this->controller = new AccountsController(
             $this->createNewRestaurant,
             $this->identityManager,
@@ -561,12 +564,12 @@ final class AccountsControllerTest extends TestCase
         $setCookieHeaders = array_filter(
             $response->headers,
             fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
-                && str_contains($header->value, $this->settings->authCookieName)
+                && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
-        $this->assertStringContainsString($this->settings->authCookieName . '=' . $token, $setCookie->value);
+        $this->assertStringContainsString($this->settings->cookieName . '=' . $token, $setCookie->value);
     }
 
     public function testSignOutRemovesAllCookies(): void
@@ -582,7 +585,7 @@ final class AccountsControllerTest extends TestCase
         $setCookieHeaders = array_filter(
             $response->headers,
             fn ($header) => $header instanceof SetCookie
-                && str_contains($header->value, $this->settings->authCookieName)
+                && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         $this->assertEquals('Set-Cookie', $setCookieHeaders[0]->name);
