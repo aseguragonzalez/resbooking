@@ -40,6 +40,8 @@ abstract class WebApp
 
     abstract protected function configure(): void;
 
+    abstract protected function getErrorSettings(): ErrorSettings;
+
     abstract protected function router(): Router;
 
     /**
@@ -102,6 +104,7 @@ abstract class WebApp
     {
         $requestContext = new RequestContext();
         $this->container->set(RequestContext::class, $requestContext);
+        $this->container->set(ErrorSettings::class, $this->getErrorSettings());
         $this->configure();
         $this->configureMvc();
         $this->buildMiddlewareChain();

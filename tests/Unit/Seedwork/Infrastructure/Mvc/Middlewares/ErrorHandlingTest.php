@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Middlewares\ErrorHandling;
-use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Application\Logging\Logger;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
+use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Mvc\ErrorMapping;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Nyholm\Psr7\Factory\Psr17Factory;
+use Seedwork\Infrastructure\Mvc\ErrorSettings;
+use Seedwork\Infrastructure\Mvc\Middlewares\ErrorHandling;
 use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
+use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 class ErrorHandlingTest extends TestCase
 {
@@ -22,7 +23,7 @@ class ErrorHandlingTest extends TestCase
     private Logger $logger;
     private ResponseFactoryInterface $responseFactory;
     private ViewEngine $viewEngine;
-    private Settings $settings;
+    private ErrorSettings $settings;
     private Psr17Factory $psrFactory;
 
     protected function setUp(): void
@@ -32,8 +33,7 @@ class ErrorHandlingTest extends TestCase
             ->getMock();
         $this->responseFactory = new Psr17Factory();
         $this->viewEngine = $this->createMock(ViewEngine::class);
-        $this->settings = new Settings(
-            basePath: __DIR__,
+        $this->settings = new ErrorSettings(
             errorsMapping: [\InvalidArgumentException::class => new ErrorMapping(400, 'custom_error', 'custom_error')],
             errorsMappingDefaultValue: new ErrorMapping(500, 'error', 'error')
         );
@@ -67,7 +67,7 @@ class ErrorHandlingTest extends TestCase
         $response = $this->middleware->handleRequest($request);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(StatusCode::BadRequest->value, $response->getStatusCode());
     }
 
     public function testHandlesExceptionWithDefaultMapping(): void
@@ -83,6 +83,6 @@ class ErrorHandlingTest extends TestCase
         $response = $this->middleware->handleRequest($request);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals(StatusCode::InternalServerError->value, $response->getStatusCode());
     }
 }

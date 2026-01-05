@@ -34,6 +34,11 @@ use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
+use Seedwork\Infrastructure\Mvc\ErrorMapping;
+use Seedwork\Infrastructure\Mvc\ErrorSettings;
+use Seedwork\Infrastructure\Mvc\Routes\AccessDeniedException;
+use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
+use Seedwork\Infrastructure\Mvc\Routes\RouteDoesNotFoundException;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
 use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
 use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
@@ -70,6 +75,38 @@ final class App extends WebApp
 
         // configure middlewares
         $this->addMiddleware(RestaurantContext::class);
+    }
+
+    protected function getErrorSettings(): ErrorSettings
+    {
+        $errorsMapping = [
+            RouteDoesNotFoundException::class => new ErrorMapping(
+                statusCode: 404,
+                templateName: 'Shared/404',
+                pageTitle: '{{notFound.title}}'
+            ),
+            AuthenticationRequiredException::class => new ErrorMapping(
+                statusCode: 401,
+                templateName: 'Shared/401',
+                pageTitle: '{{unauthenticated.title}}'
+            ),
+            AccessDeniedException::class => new ErrorMapping(
+                statusCode: 403,
+                templateName: 'Shared/403',
+                pageTitle: '{{accessDenied.title}}'
+            ),
+        ];
+
+        $defaultErrorMapping = new ErrorMapping(
+            statusCode: 500,
+            templateName: 'Shared/500',
+            pageTitle: '{{internalServerError.title}}'
+        );
+
+        return new ErrorSettings(
+            errorsMapping: $errorsMapping,
+            errorsMappingDefaultValue: $defaultErrorMapping
+        );
     }
 
     protected function router(): Router

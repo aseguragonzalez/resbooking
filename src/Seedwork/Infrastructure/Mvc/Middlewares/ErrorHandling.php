@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc\Middlewares;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\ErrorMapping;
+use Seedwork\Infrastructure\Mvc\ErrorSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
-use Seedwork\Infrastructure\Mvc\ErrorMapping;
-use Seedwork\Infrastructure\Mvc\Settings;
 
 final class ErrorHandling extends Middleware
 {
     public function __construct(
-        private readonly Settings $settings,
+        private readonly ErrorSettings $settings,
         private readonly Logger $logger,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ViewEngine $viewEngine,
