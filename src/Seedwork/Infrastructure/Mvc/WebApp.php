@@ -29,8 +29,12 @@ abstract class WebApp
      * @param Container $container
      * @param array<class-string<Middleware>> $middlewares
      */
-    protected function __construct(protected readonly Container $container, private array $middlewares = [])
-    {
+    protected function __construct(
+        protected readonly Container $container,
+        private array $middlewares = [],
+        private bool $requireAuthentication = false,
+        private bool $requireAuthorization = false,
+    ) {
     }
 
     abstract protected function configure(): void;
@@ -61,18 +65,28 @@ abstract class WebApp
         }, $lastMiddleware);
 
         // Configure fixed middlewares: Authorization, Authentication, Localization, ErrorHandling
-        /** @var Authorization $authorizationMiddleware */
-        $authorizationMiddleware = $this->container->get(Authorization::class);
-        $authorizationMiddleware->setNext($lastMiddleware);
-        /** @var Authentication $authenticationMiddleware */
-        $authenticationMiddleware = $this->container->get(Authentication::class);
-        $authenticationMiddleware->setNext($authorizationMiddleware);
+        if ($this->requireAuthorization && $this->requireAuthentication) {
+            /** @var Authorization $authorizationMiddleware */
+            $authorizationMiddleware = $this->container->get(Authorization::class);
+            $authorizationMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $authorizationMiddleware;
+        }
+
+        if ($this->requireAuthentication) {
+            /** @var Authentication $authenticationMiddleware */
+            $authenticationMiddleware = $this->container->get(Authentication::class);
+            $authenticationMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $authenticationMiddleware;
+        }
+
         /** @var Localization $localizationMiddleware */
         $localizationMiddleware = $this->container->get(Localization::class);
-        $localizationMiddleware->setNext($authenticationMiddleware);
+        $localizationMiddleware->setNext($lastMiddleware);
+        $lastMiddleware = $localizationMiddleware;
+
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);
-        $errorMiddleware->setNext($localizationMiddleware);
+        $errorMiddleware->setNext($lastMiddleware);
         $this->container->set(Middleware::class, $errorMiddleware);
     }
 
@@ -124,5 +138,15 @@ abstract class WebApp
             }
         }
         echo $response->getBody();
+    }
+
+    protected function useAuthentication(): void
+    {
+        $this->requireAuthentication = true;
+    }
+
+    protected function useAuthorization(): void
+    {
+        $this->requireAuthorization = true;
     }
 }

@@ -35,6 +35,8 @@ final class App extends WebApp
 
         // configure middlewares
         $this->addMiddleware(RestaurantContext::class);
+        $this->useAuthentication();
+        $this->useAuthorization();
     }
 
     protected function configureSettings(): void
