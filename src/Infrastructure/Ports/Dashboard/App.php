@@ -30,7 +30,6 @@ use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
 use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
@@ -48,9 +47,9 @@ use Seedwork\Infrastructure\Mvc\WebApp;
 
 final class App extends WebApp
 {
-    public function __construct(Container $container, DashboardSettings $settings)
+    public function __construct(Container $container)
     {
-        parent::__construct($settings, $container);
+        parent::__construct($container);
     }
 
     protected function configure(): void

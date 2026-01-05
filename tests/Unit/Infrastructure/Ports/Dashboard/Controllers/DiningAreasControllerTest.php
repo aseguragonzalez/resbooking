@@ -57,7 +57,7 @@ final class DiningAreasControllerTest extends TestCase
         $this->removeDiningArea = $this->createMock(RemoveDiningArea::class);
         $this->updateDiningArea = $this->createMock(UpdateDiningArea::class);
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new DiningAreasController(
             $this->addDiningArea,
             $this->removeDiningArea,

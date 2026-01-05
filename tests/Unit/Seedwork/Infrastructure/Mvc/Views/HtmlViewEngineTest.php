@@ -8,12 +8,12 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
 use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Security\Identity;
-use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
@@ -34,7 +34,7 @@ final class HtmlViewEngineTest extends TestCase
             $this->fileManager,
             new BranchesReplacer(new ModelReplacer())
         );
-        $settings = new Settings(basePath: __DIR__, viewPath: "/Files");
+        $settings = new HtmlViewEngineSettings(basePath: __DIR__, viewPath: "/Files");
         $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $i18nReplacer);
     }
 

@@ -45,7 +45,7 @@ final class SettingsControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->updateSettings = $this->createMock(UpdateSettings::class);
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new SettingsController(
             $this->updateSettings,
             $this->getRestaurantById,

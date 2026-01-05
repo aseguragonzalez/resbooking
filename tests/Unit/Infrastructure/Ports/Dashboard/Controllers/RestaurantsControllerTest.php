@@ -40,7 +40,7 @@ final class RestaurantsControllerTest extends TestCase
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new RestaurantsController(
             $this->restaurantRepository,
             $this->settings,

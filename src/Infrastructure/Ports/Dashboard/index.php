@@ -9,9 +9,11 @@ use Infrastructure\Ports\Dashboard\App;
 use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Seedwork\Infrastructure\Logging\LoggerSettings;
 use Seedwork\Infrastructure\Mvc\AuthSettings;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
 use Seedwork\Infrastructure\Mvc\LanguageSettings;
 
 $container = new Container();
+$container->set(DashboardSettings::class, new DashboardSettings());
 $container->set(
     AuthSettings::class,
     new AuthSettings(
@@ -25,6 +27,8 @@ $container->set(
         i18nPath: __DIR__ . '/assets/i18n'
     )
 );
+$container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: __DIR__));
+
 $loggerSettings = new LoggerSettings(
     environment: getenv('ENVIRONMENT') ?: 'local',
     serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
@@ -34,9 +38,6 @@ $loggerSettings = new LoggerSettings(
 );
 $container->set(LoggerSettings::class, $loggerSettings);
 
-$settings = new DashboardSettings(basePath: __DIR__);
-$container->set(DashboardSettings::class, $settings);
-
-$app = new App($container, $settings);
+$app = new App($container);
 
 $app->handleRequest();

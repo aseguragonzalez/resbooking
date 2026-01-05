@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Mvc\Views;
 
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Settings;
 
-final class HtmlViewEngine implements ViewEngine
+final readonly class HtmlViewEngine implements ViewEngine
 {
-    public function __construct(
-        private readonly Settings $settings,
-        private readonly I18nReplacer $contentReplacer
-    ) {
+    public function __construct(private HtmlViewEngineSettings $settings, private I18nReplacer $contentReplacer)
+    {
     }
 
     public function render(View $view, RequestContext $context): string
     {
-        $viewPath = "{$this->settings->viewPath}/{$view->viewPath}.html";
+        $viewPath = "{$this->settings->path}/{$view->viewPath}.html";
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
@@ -47,7 +45,7 @@ final class HtmlViewEngine implements ViewEngine
         preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
         if ($matches) {
             $layoutFilename = $matches[1];
-            $layoutPath = "{$this->settings->viewPath}/{$layoutFilename}.html";
+            $layoutPath = "{$this->settings->path}/{$layoutFilename}.html";
             if (!file_exists($layoutPath)) {
                 throw new \RuntimeException("Layout not found: {$layoutFilename}");
             }

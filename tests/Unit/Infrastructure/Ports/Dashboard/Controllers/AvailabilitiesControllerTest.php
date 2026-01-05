@@ -49,7 +49,7 @@ final class AvailabilitiesControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
         $this->updateAvailabilities = $this->createMock(UpdateAvailabilities::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new AvailabilitiesController(
             $this->getRestaurantById,
             $this->updateAvailabilities,

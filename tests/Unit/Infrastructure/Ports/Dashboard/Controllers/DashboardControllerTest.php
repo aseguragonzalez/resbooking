@@ -20,7 +20,7 @@ final class DashboardControllerTest extends TestCase
     protected function setUp(): void
     {
         $this->requestContext = new RequestContext();
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new DashboardController(
             $this->requestContext,
             $this->settings,

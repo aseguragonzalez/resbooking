@@ -20,22 +20,17 @@ use Seedwork\Infrastructure\Mvc\Middlewares\RequestHandling;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 abstract class WebApp
 {
     /**
-     * @param Settings $settings
      * @param Container $container
      * @param array<class-string<Middleware>> $middlewares
      */
-    protected function __construct(
-        protected readonly Settings $settings,
-        protected readonly Container $container = new Container(),
-        private array $middlewares = [],
-    ) {
+    protected function __construct(protected readonly Container $container, private array $middlewares = [])
+    {
     }
 
     abstract protected function configure(): void;
@@ -83,8 +78,6 @@ abstract class WebApp
 
     private function configureMvc(): void
     {
-        $this->container->set(Settings::class, $this->settings);
-
         $psr17Factory = new Psr17Factory();
         $this->container->set(Psr17Factory::class, $psr17Factory);
         $this->container->set(ResponseFactoryInterface::class, $psr17Factory);

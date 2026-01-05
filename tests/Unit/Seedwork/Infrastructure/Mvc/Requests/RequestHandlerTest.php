@@ -12,6 +12,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
 use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
@@ -36,7 +37,7 @@ final class RequestHandlerTest extends TestCase
     private Psr17Factory $requestFactory;
     private ResponseFactoryInterface $responseFactory;
     private Router $router;
-    private Settings $settings;
+    private HtmlViewEngineSettings $settings;
     private ViewEngine $viewEngine;
     private RequestHandler $requestHandler;
 
@@ -81,7 +82,7 @@ final class RequestHandlerTest extends TestCase
                 'getFromRequest'
             ),
         ]);
-        $this->settings = new Settings(basePath: __DIR__);
+        $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
         $i18nReplacer = new I18nReplacer(
             new LanguageSettings(i18nPath: __DIR__ . '/assets/i18n'),
             $this->createMock(FileManager::class),

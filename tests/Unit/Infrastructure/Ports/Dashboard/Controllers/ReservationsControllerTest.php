@@ -35,7 +35,7 @@ final class ReservationsControllerTest extends TestCase
         $this->restaurantId = uniqid();
         $this->requestContext->set('restaurantId', $this->restaurantId);
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new DashboardSettings();
         $this->controller = new ReservationsController(
             $this->requestContext,
             $this->settings,

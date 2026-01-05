@@ -26,12 +26,7 @@ final class RestaurantContextTest extends TestCase
     protected function setUp(): void
     {
         $this->psrFactory = new Psr17Factory();
-        $this->settings = new DashboardSettings(
-            basePath: __DIR__,
-            restaurantCookieName: 'restaurant',
-            restaurantSelectionUrl: '/restaurants/select',
-            restaurantIdContextKey: 'restaurantId',
-        );
+        $this->settings = new DashboardSettings();
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
         $this->next = $this->createMock(Middleware::class);
     }
