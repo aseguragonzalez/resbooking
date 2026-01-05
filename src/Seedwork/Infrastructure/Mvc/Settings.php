@@ -20,9 +20,6 @@ class Settings
             templateName: 'Shared/500',
             pageTitle: '{{internalServerError.title}}'
         ),
-        public readonly string $environment = 'local',
-        public readonly string $serviceName = 'my-app',
-        public readonly string $serviceVersion = '1.0.0',
         string $viewPath = '/Views',
         public readonly array $errorsMapping = [],
     ) {

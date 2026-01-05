@@ -32,9 +32,6 @@ use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
 use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
 use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
-use Monolog\Formatter\JsonFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\{Logger as MonoLogger, Level};
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
@@ -53,21 +50,8 @@ final class App extends WebApp
 
     protected function configure(): void
     {
-        // configure logger
-        $context = [
-            "service.name" => $this->settings->serviceName,
-            "service.version" => $this->settings->serviceVersion,
-            "environment" => $this->settings->environment,
-        ];
-        $logger = new MonoLogger($context["service.name"]);
-        $handler = new StreamHandler('php://stdout', Level::Debug);
-        $handler->setFormatter(new JsonFormatter());
-        $logger->pushHandler($handler);
-        $loggerAdapter = new MonoLoggerAdapter($logger, $context);
-        $this->container->set(Logger::class, $loggerAdapter);
-
-        // configure settings
-        $this->container->set(DashboardSettings::class, $this->settings);
+        // configure app logger
+        $this->container->set(Logger::class, $this->container->get(MonoLoggerAdapter::class));
 
         // configure security: IdentityManager, IdentityStore and ChallengeNotificator
         $this->container->set(ChallengeNotificator::class, $this->container->get(ConsoleChallengeNotificator::class));

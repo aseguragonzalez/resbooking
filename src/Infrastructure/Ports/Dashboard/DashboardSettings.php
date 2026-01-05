@@ -14,18 +14,14 @@ final class DashboardSettings extends Settings
 {
     public function __construct(
         string $basePath,
-        string $environment = 'local',
         public readonly string $restaurantCookieName = 'restaurant',
         public readonly string $restaurantSelectionUrl = '/restaurants/select',
         public readonly string $restaurantIdContextKey = 'restaurantId',
     ) {
         parent::__construct(
             basePath: $basePath,
-            environment: $environment,
             errorsMappingDefaultValue: $this->getDefaultErrorsMapping(),
             errorsMapping: $this->getErrorsMapping(),
-            serviceName: 'dashboard',
-            serviceVersion: '1.0.0',
         );
     }
 

@@ -4,20 +4,30 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Seedwork\Infrastructure\Logging;
 
-use PHPUnit\Framework\TestCase;
 use Monolog\Logger as MonoLogger;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Seedwork\Infrastructure\Logging\LoggerSettings;
 use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
+use Seedwork\Infrastructure\Logging\MonoLoggerBuilder;
 
 class MonoLoggerAdapterTest extends TestCase
 {
     private MonoLogger&MockObject $monoLogger;
     private MonoLoggerAdapter $adapter;
+    private LoggerSettings $settings;
 
     protected function setUp(): void
     {
         $this->monoLogger = $this->createMock(MonoLogger::class);
-        $this->adapter = new MonoLoggerAdapter($this->monoLogger, ['foo' => 'bar']);
+        $this->settings = new LoggerSettings(
+            environment: 'local',
+            serviceName: 'test',
+            serviceVersion: '1.0.0',
+        );
+        $monoLoggerBuilder = $this->createMock(MonoLoggerBuilder::class);
+        $monoLoggerBuilder->method('build')->willReturn($this->monoLogger);
+        $this->adapter = new MonoLoggerAdapter($monoLoggerBuilder, $this->settings);
     }
 
     public function testCriticalLogsWithException(): void
@@ -25,7 +35,12 @@ class MonoLoggerAdapterTest extends TestCase
         $exception = new \Exception('fail');
         $this->monoLogger->expects($this->once())
             ->method('critical')
-            ->with('critical message', ['foo' => 'bar', 'exception' => $exception]);
+            ->with('critical message', [
+                'service.name' => 'test',
+                'service.version' => '1.0.0',
+                'environment' => 'local',
+                'exception' => $exception,
+            ]);
         $this->adapter->critical('critical message', $exception);
     }
 
@@ -33,7 +48,11 @@ class MonoLoggerAdapterTest extends TestCase
     {
         $this->monoLogger->expects($this->once())
             ->method('debug')
-            ->with('debug message', ['foo' => 'bar']);
+            ->with('debug message', [
+                'service.name' => 'test',
+                'service.version' => '1.0.0',
+                'environment' => 'local',
+            ]);
         $this->adapter->debug('debug message');
     }
 
@@ -42,7 +61,12 @@ class MonoLoggerAdapterTest extends TestCase
         $exception = new \Exception('error');
         $this->monoLogger->expects($this->once())
             ->method('error')
-            ->with('error message', ['foo' => 'bar', 'exception' => $exception]);
+            ->with('error message', [
+                'service.name' => 'test',
+                'service.version' => '1.0.0',
+                'environment' => 'local',
+                'exception' => $exception
+            ]);
         $this->adapter->error('error message', $exception);
     }
 
@@ -50,7 +74,11 @@ class MonoLoggerAdapterTest extends TestCase
     {
         $this->monoLogger->expects($this->once())
             ->method('info')
-            ->with('info message', ['foo' => 'bar']);
+            ->with('info message', [
+                'service.name' => 'test',
+                'service.version' => '1.0.0',
+                'environment' => 'local',
+            ]);
         $this->adapter->info('info message');
     }
 
@@ -59,7 +87,12 @@ class MonoLoggerAdapterTest extends TestCase
         $exception = new \Exception('warn');
         $this->monoLogger->expects($this->once())
             ->method('warning')
-            ->with('warning message', ['foo' => 'bar', 'exception' => $exception]);
+            ->with('warning message', [
+                'service.name' => 'test',
+                'service.version' => '1.0.0',
+                'environment' => 'local',
+                'exception' => $exception
+            ]);
         $this->adapter->warning('warning message', $exception);
     }
 }
