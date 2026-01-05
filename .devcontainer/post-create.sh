@@ -11,6 +11,7 @@ apt-get update -qq
 # Note: git is installed via devcontainer feature, so it's available at container startup
 echo "📦 Installing zsh, pipx, and build dependencies..."
 apt-get install -y --no-install-recommends \
+    vim \
     zsh \
     pipx \
     build-essential \
