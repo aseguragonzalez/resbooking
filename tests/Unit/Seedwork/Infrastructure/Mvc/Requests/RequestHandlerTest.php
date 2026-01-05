@@ -84,7 +84,7 @@ final class RequestHandlerTest extends TestCase
         ]);
         $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
         $i18nReplacer = new I18nReplacer(
-            new LanguageSettings(i18nPath: __DIR__ . '/assets/i18n'),
+            new LanguageSettings(basePath: __DIR__),
             $this->createMock(FileManager::class),
             new BranchesReplacer(new ModelReplacer())
         );

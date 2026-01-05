@@ -21,7 +21,7 @@ final class I18nReplacerTest extends TestCase
 
     protected function setUp(): void
     {
-        $settings = new LanguageSettings(i18nPath: './');
+        $settings = new LanguageSettings(basePath: __DIR__);
         $branchesReplacer = new BranchesReplacer(new ModelReplacer());
         $this->fileManager = $this->createMock(FileManager::class);
         $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);

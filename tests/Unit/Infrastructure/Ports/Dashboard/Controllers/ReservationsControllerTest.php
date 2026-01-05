@@ -7,7 +7,7 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Reservations\Pages\Reservations;
 use Infrastructure\Ports\Dashboard\Models\Reservations\Requests\UpdateReservationRequest;
 use Infrastructure\Ports\Dashboard\Models\Reservations\Requests\UpdateStatusRequest;
@@ -23,7 +23,7 @@ use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 final class ReservationsControllerTest extends TestCase
 {
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private ReservationsController $controller;
     private Generator $faker;
     private string $restaurantId;
@@ -35,7 +35,7 @@ final class ReservationsControllerTest extends TestCase
         $this->restaurantId = uniqid();
         $this->requestContext->set('restaurantId', $this->restaurantId);
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->settings = new DashboardSettings();
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new ReservationsController(
             $this->requestContext,
             $this->settings,

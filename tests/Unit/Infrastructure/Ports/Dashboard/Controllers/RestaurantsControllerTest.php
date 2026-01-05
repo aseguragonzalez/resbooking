@@ -13,7 +13,7 @@ use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,7 +29,7 @@ use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 final class RestaurantsControllerTest extends TestCase
 {
     private RestaurantRepository&MockObject $restaurantRepository;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private RestaurantsController $controller;
     private Generator $faker;
     private ServerRequestInterface&MockObject $serverRequest;
@@ -40,7 +40,7 @@ final class RestaurantsControllerTest extends TestCase
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->settings = new DashboardSettings();
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new RestaurantsController(
             $this->restaurantRepository,
             $this->settings,
@@ -122,13 +122,13 @@ final class RestaurantsControllerTest extends TestCase
         $setCookieHeaders = array_filter(
             $response->headers,
             fn ($header) => $header instanceof SetCookie
-                && str_contains($header->value, $this->settings->restaurantCookieName)
+                && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         /** @var SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString(
-            $this->settings->restaurantCookieName . '=' . $restaurantId,
+            $this->settings->cookieName . '=' . $restaurantId,
             $setCookie->value
         );
     }
@@ -235,13 +235,13 @@ final class RestaurantsControllerTest extends TestCase
         $setCookieHeaders = array_filter(
             $response->headers,
             fn ($header) => $header instanceof SetCookie
-                && str_contains($header->value, $this->settings->restaurantCookieName)
+                && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         /** @var SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString(
-            $this->settings->restaurantCookieName . '=' . $restaurantId,
+            $this->settings->cookieName . '=' . $restaurantId,
             $setCookie->value
         );
     }

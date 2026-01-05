@@ -6,7 +6,7 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Middlewares;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
@@ -19,14 +19,14 @@ use Seedwork\Infrastructure\Mvc\Security\Identity;
 final class RestaurantContextTest extends TestCase
 {
     private Psr17Factory $psrFactory;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private MockObject&RestaurantRepository $restaurantRepository;
     private MockObject&Middleware $next;
 
     protected function setUp(): void
     {
         $this->psrFactory = new Psr17Factory();
-        $this->settings = new DashboardSettings();
+        $this->settings = new RestaurantContextSettings();
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
         $this->next = $this->createMock(Middleware::class);
     }
@@ -99,7 +99,7 @@ final class RestaurantContextTest extends TestCase
         $context = new RequestContext();
         $context->setIdentity($identity);
         $expectedResponse = $this->psrFactory->createResponse(200);
-        $request = (new ServerRequest('GET', $this->settings->restaurantSelectionUrl))
+        $request = (new ServerRequest('GET', $this->settings->selectionPath))
             ->withAttribute(RequestContext::class, $context);
 
         $this->next
@@ -136,7 +136,7 @@ final class RestaurantContextTest extends TestCase
         $context->setIdentity($identity);
         $expectedResponse = $this->psrFactory->createResponse(200);
         $request = (new ServerRequest('GET', '/dashboard'))
-            ->withCookieParams([$this->settings->restaurantCookieName => $restaurantId])
+            ->withCookieParams([$this->settings->cookieName => $restaurantId])
             ->withAttribute(RequestContext::class, $context);
 
         $this->restaurantRepository
@@ -154,7 +154,7 @@ final class RestaurantContextTest extends TestCase
         $response = $middleware->handleRequest($request);
 
         $this->assertSame($expectedResponse, $response);
-        $this->assertSame($restaurantId, $context->get($this->settings->restaurantIdContextKey));
+        $this->assertSame($restaurantId, $context->get($this->settings->contextKey));
     }
 
     public function testHandleRequestRedirectsWhenCookieIsInvalid(): void
@@ -175,7 +175,7 @@ final class RestaurantContextTest extends TestCase
         $context = new RequestContext();
         $context->setIdentity($identity);
         $request = (new ServerRequest('GET', '/dashboard'))
-            ->withCookieParams([$this->settings->restaurantCookieName => $invalidRestaurantId])
+            ->withCookieParams([$this->settings->cookieName => $invalidRestaurantId])
             ->withAttribute(RequestContext::class, $context);
 
         $this->restaurantRepository
@@ -191,7 +191,7 @@ final class RestaurantContextTest extends TestCase
         $response = $middleware->handleRequest($request);
 
         $this->assertEquals(303, $response->getStatusCode());
-        $selectionUrl = $this->settings->restaurantSelectionUrl;
+        $selectionUrl = $this->settings->selectionPath;
         assert($selectionUrl !== '');
         $this->assertStringStartsWith($selectionUrl, $response->getHeaderLine('Location'));
     }
@@ -226,7 +226,7 @@ final class RestaurantContextTest extends TestCase
         $response = $middleware->handleRequest($request);
 
         $this->assertEquals(303, $response->getStatusCode());
-        $selectionUrl = $this->settings->restaurantSelectionUrl;
+        $selectionUrl = $this->settings->selectionPath;
         assert($selectionUrl !== '');
         $this->assertStringStartsWith($selectionUrl, $response->getHeaderLine('Location'));
     }
@@ -263,7 +263,7 @@ final class RestaurantContextTest extends TestCase
 
         $this->assertEquals(303, $response->getStatusCode());
         $location = $response->getHeaderLine('Location');
-        $selectionUrl = $this->settings->restaurantSelectionUrl;
+        $selectionUrl = $this->settings->selectionPath;
         assert($selectionUrl !== '');
         $this->assertStringStartsWith($selectionUrl, $location);
         $this->assertStringContainsString('backUrl=', $location);

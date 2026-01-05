@@ -30,11 +30,16 @@ use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
 use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Seedwork\Application\Logging\Logger;
+use Seedwork\Infrastructure\Logging\LoggerSettings;
 use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\ErrorMapping;
 use Seedwork\Infrastructure\Mvc\ErrorSettings;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Routes\AccessDeniedException;
 use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
 use Seedwork\Infrastructure\Mvc\Routes\RouteDoesNotFoundException;
@@ -47,7 +52,7 @@ use Seedwork\Infrastructure\Mvc\WebApp;
 
 final class App extends WebApp
 {
-    public function __construct(Container $container)
+    public function __construct(Container $container, private readonly string $basePath)
     {
         parent::__construct($container);
     }
@@ -76,7 +81,25 @@ final class App extends WebApp
         $this->addMiddleware(RestaurantContext::class);
     }
 
-    protected function getErrorSettings(): ErrorSettings
+    protected function configureSettings(): void
+    {
+        $this->container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
+        $this->container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
+        $this->container->set(ErrorSettings::class, $this->getErrorSettings());
+        $this->container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $this->basePath));
+        $this->container->set(LanguageSettings::class, new LanguageSettings(basePath: $this->basePath));
+
+        $loggerSettings = new LoggerSettings(
+            environment: getenv('ENVIRONMENT') ?: 'local',
+            serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
+            serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
+            logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
+            stream: getenv('DASHBOARD_LOG_STREAM') ?: 'php://stdout',
+        );
+        $this->container->set(LoggerSettings::class, $loggerSettings);
+    }
+
+    private function getErrorSettings(): ErrorSettings
     {
         $errorsMapping = [
             RouteDoesNotFoundException::class => new ErrorMapping(

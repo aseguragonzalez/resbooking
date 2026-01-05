@@ -30,7 +30,7 @@ final class HtmlViewEngineTest extends TestCase
     {
         $this->fileManager = $this->createMock(FileManager::class);
         $i18nReplacer = new I18nReplacer(
-            new LanguageSettings(i18nPath: __DIR__ . '/assets/i18n'),
+            new LanguageSettings(basePath: __DIR__),
             $this->fileManager,
             new BranchesReplacer(new ModelReplacer())
         );

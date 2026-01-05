@@ -11,13 +11,7 @@ final readonly class ErrorSettings
     /**
      * @param array<class-string<\Throwable>, ErrorMapping> $errorsMapping
      */
-    public function __construct(
-        public array $errorsMapping = [],
-        public ErrorMapping $errorsMappingDefaultValue = new ErrorMapping(
-            statusCode: 500,
-            templateName: 'Shared/500',
-            pageTitle: '{{internalServerError.title}}'
-        ),
-    ) {
+    public function __construct(public array $errorsMapping, public ErrorMapping $errorsMappingDefaultValue)
+    {
     }
 }

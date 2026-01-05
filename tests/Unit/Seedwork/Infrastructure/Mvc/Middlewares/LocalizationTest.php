@@ -29,7 +29,8 @@ class LocalizationTest extends TestCase
         $mock->method('handleRequest')->willReturn($this->requestFactory->createResponse(200));
         $this->middleware = new Localization(
             settings: new LanguageSettings(
-                i18nPath: __DIR__ . '/assets/i18n',
+                basePath: __DIR__,
+                assetsPath: 'assets/i18n',
                 languages: ['en', 'es', 'fr'],
                 cookieName: $this->cookieName,
                 defaultValue: $this->defaultValue,
@@ -165,7 +166,8 @@ class LocalizationTest extends TestCase
         $this->expectExceptionMessage('No middleware to handle the request');
         $middleware = new Localization(
             settings: new LanguageSettings(
-                i18nPath: __DIR__ . '/assets/i18n',
+                basePath: __DIR__,
+                assetsPath: 'assets/i18n',
                 languages: ['en', 'es', 'fr'],
                 cookieName: $this->cookieName,
                 defaultValue: $this->defaultValue,

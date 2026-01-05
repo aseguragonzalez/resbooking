@@ -8,7 +8,7 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -23,7 +23,7 @@ final class AvailabilitiesController extends RestaurantBaseController
     public function __construct(
         private readonly GetRestaurantById $getRestaurantById,
         private readonly UpdateAvailabilities $updateAvailabilities,
-        DashboardSettings $settings,
+        RestaurantContextSettings $settings,
         RequestContext $requestContext,
     ) {
         parent::__construct($requestContext, $settings);
