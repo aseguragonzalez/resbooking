@@ -19,7 +19,7 @@ use Domain\Shared\TimeSlot;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\AvailabilitiesController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +35,7 @@ final class AvailabilitiesControllerTest extends TestCase
     private GetRestaurantById&MockObject $getRestaurantById;
     private UpdateAvailabilities&MockObject $updateAvailabilities;
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private AvailabilitiesController $controller;
     private Generator $faker;
     private string $restaurantId;
@@ -49,7 +49,7 @@ final class AvailabilitiesControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
         $this->updateAvailabilities = $this->createMock(UpdateAvailabilities::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new AvailabilitiesController(
             $this->getRestaurantById,
             $this->updateAvailabilities,

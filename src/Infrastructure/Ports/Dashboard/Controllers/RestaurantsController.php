@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ final class RestaurantsController extends Controller
 {
     public function __construct(
         private readonly RestaurantRepository $restaurantRepository,
-        private readonly DashboardSettings $settings,
+        private readonly RestaurantContextSettings $settings,
     ) {
     }
 
@@ -74,7 +74,7 @@ final class RestaurantsController extends Controller
     private function setRestaurantCookie(string $restaurantId): void
     {
         $setCookieHeader = SetCookie::createSecureCookie(
-            cookieName: $this->settings->restaurantCookieName,
+            cookieName: $this->settings->cookieName,
             cookieValue: $restaurantId,
             expires: -1,
         );

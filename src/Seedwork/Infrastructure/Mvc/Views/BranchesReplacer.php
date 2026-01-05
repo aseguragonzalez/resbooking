@@ -8,7 +8,7 @@ use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 
 final class BranchesReplacer extends ContentReplacerBase
 {
-    public function __construct(?ContentReplacer $nextReplacer = null)
+    public function __construct(ModelReplacer $nextReplacer)
     {
         parent::__construct($nextReplacer);
     }

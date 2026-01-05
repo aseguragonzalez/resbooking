@@ -8,7 +8,6 @@ use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
@@ -19,9 +18,12 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Security\Challenge;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
@@ -35,7 +37,7 @@ final class AccountsControllerTest extends TestCase
     private CreateNewRestaurant&MockObject $createNewRestaurant;
     private IdentityManager&MockObject $identityManager;
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private AuthSettings $settings;
     private AccountsController $controller;
     private Generator $faker;
 
@@ -45,7 +47,10 @@ final class AccountsControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new AuthSettings(
+            signInPath: '/accounts/sign-in',
+            signOutPath: '/accounts/sign-out',
+        );
         $this->controller = new AccountsController(
             $this->createNewRestaurant,
             $this->identityManager,
@@ -559,18 +564,18 @@ final class AccountsControllerTest extends TestCase
         $setCookieHeaders = array_filter(
             $response->headers,
             fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
-                && str_contains($header->value, $this->settings->authCookieName)
+                && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
-        $this->assertStringContainsString($this->settings->authCookieName . '=' . $token, $setCookie->value);
+        $this->assertStringContainsString($this->settings->cookieName . '=' . $token, $setCookie->value);
     }
 
     public function testSignOutRemovesAllCookies(): void
     {
         $token = $this->faker->uuid();
-        $request = $this->createMock(\Psr\Http\Message\ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')->willReturn(['auth' => $token]);
         $this->identityManager->expects($this->once())->method('signOut')->with($token);
 
@@ -579,25 +584,15 @@ final class AccountsControllerTest extends TestCase
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
         $setCookieHeaders = array_filter(
             $response->headers,
-            fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
+            fn ($header) => $header instanceof SetCookie
+                && str_contains($header->value, $this->settings->cookieName)
         );
-        $this->assertCount(3, $setCookieHeaders);
-        $cookieNames = [
-            $this->settings->authCookieName,
-            $this->settings->restaurantCookieName,
-            $this->settings->languageCookieName,
-        ];
-        foreach ($cookieNames as $cookieName) {
-            $found = false;
-            foreach ($setCookieHeaders as $header) {
-                /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $header */
-                if (str_contains($header->value, $cookieName . '=')) {
-                    $found = true;
-                    break;
-                }
-            }
-            $this->assertTrue($found, "Cookie removal header for {$cookieName} not found");
-        }
+        $this->assertCount(1, $setCookieHeaders);
+        $this->assertEquals('Set-Cookie', $setCookieHeaders[0]->name);
+        $this->assertStringContainsString('auth=', $setCookieHeaders[0]->value);
+        $this->assertStringContainsString('Expires=Thu, 01 Jan 1970 00:00:00 GMT', $setCookieHeaders[0]->value);
+        $this->assertStringContainsString('Max-Age=0', $setCookieHeaders[0]->value);
+        $this->assertStringContainsString('Path=/', $setCookieHeaders[0]->value);
     }
 
     public function testSignInUserWithRememberMeOn(): void

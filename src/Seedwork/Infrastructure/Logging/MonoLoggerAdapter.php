@@ -7,13 +7,22 @@ namespace Seedwork\Infrastructure\Logging;
 use Monolog\Logger as MonoLogger;
 use Seedwork\Application\Logging\Logger;
 
-final class MonoLoggerAdapter implements Logger
+final readonly class MonoLoggerAdapter implements Logger
 {
     /**
-     * @param array<string, mixed> $context
+     * @var array<string, string> $context
      */
-    public function __construct(private readonly MonoLogger $logger, private readonly array $context = [])
+    private array $context;
+    private MonoLogger $logger;
+
+    public function __construct(MonoLoggerBuilder $loggerBuilder, LoggerSettings $settings)
     {
+        $this->context = [
+            "service.name" => $settings->serviceName,
+            "service.version" => $settings->serviceVersion,
+            "environment" => $settings->environment,
+        ];
+        $this->logger = $loggerBuilder->build();
     }
 
     public function critical(string $message, \Exception|\Throwable $exception): void

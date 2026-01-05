@@ -16,7 +16,7 @@ use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,7 +32,7 @@ final class SettingsControllerTest extends TestCase
     private UpdateSettings&MockObject $updateSettings;
     private GetRestaurantById&MockObject $getRestaurantById;
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private SettingsController $controller;
     private Generator $faker;
     private string $restaurantId;
@@ -45,7 +45,7 @@ final class SettingsControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->updateSettings = $this->createMock(UpdateSettings::class);
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new SettingsController(
             $this->updateSettings,
             $this->getRestaurantById,

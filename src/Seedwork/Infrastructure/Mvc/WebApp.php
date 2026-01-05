@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Seedwork\Infrastructure\Files\DefaultFileManager;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authentication;
 use Seedwork\Infrastructure\Mvc\Middlewares\Authorization;
 use Seedwork\Infrastructure\Mvc\Middlewares\ErrorHandling;
@@ -21,28 +20,26 @@ use Seedwork\Infrastructure\Mvc\Middlewares\RequestHandling;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\Settings;
-use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
-use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
-use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 
 abstract class WebApp
 {
     /**
-     * @param Settings $settings
      * @param Container $container
      * @param array<class-string<Middleware>> $middlewares
      */
     protected function __construct(
-        protected readonly Settings $settings,
-        protected readonly Container $container = new Container(),
+        protected readonly Container $container,
         private array $middlewares = [],
+        private bool $requireAuthentication = false,
+        private bool $requireAuthorization = false,
     ) {
     }
 
     abstract protected function configure(): void;
+
+    abstract protected function configureSettings(): void;
 
     abstract protected function router(): Router;
 
@@ -68,18 +65,28 @@ abstract class WebApp
         }, $lastMiddleware);
 
         // Configure fixed middlewares: Authorization, Authentication, Localization, ErrorHandling
-        /** @var Authorization $authorizationMiddleware */
-        $authorizationMiddleware = $this->container->get(Authorization::class);
-        $authorizationMiddleware->setNext($lastMiddleware);
-        /** @var Authentication $authenticationMiddleware */
-        $authenticationMiddleware = $this->container->get(Authentication::class);
-        $authenticationMiddleware->setNext($authorizationMiddleware);
+        if ($this->requireAuthorization && $this->requireAuthentication) {
+            /** @var Authorization $authorizationMiddleware */
+            $authorizationMiddleware = $this->container->get(Authorization::class);
+            $authorizationMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $authorizationMiddleware;
+        }
+
+        if ($this->requireAuthentication) {
+            /** @var Authentication $authenticationMiddleware */
+            $authenticationMiddleware = $this->container->get(Authentication::class);
+            $authenticationMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $authenticationMiddleware;
+        }
+
         /** @var Localization $localizationMiddleware */
         $localizationMiddleware = $this->container->get(Localization::class);
-        $localizationMiddleware->setNext($authenticationMiddleware);
+        $localizationMiddleware->setNext($lastMiddleware);
+        $lastMiddleware = $localizationMiddleware;
+
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);
-        $errorMiddleware->setNext($localizationMiddleware);
+        $errorMiddleware->setNext($lastMiddleware);
         $this->container->set(Middleware::class, $errorMiddleware);
     }
 
@@ -94,14 +101,9 @@ abstract class WebApp
             $psr17Factory,
             $psr17Factory,
         ));
-        $this->container->set(ActionParameterBuilder::class, new ActionParameterBuilder());
-        $this->container->set(Settings::class, $this->settings);
         $this->container->set(Router::class, $this->router());
-
-        $fileManager = new DefaultFileManager();
-        $this->container->set(FileManager::class, $fileManager);
-        $i18nReplacer = new I18nReplacer($this->settings, $fileManager, new BranchesReplacer(new ModelReplacer()));
-        $this->container->set(ViewEngine::class, new HtmlViewEngine($this->settings, $i18nReplacer));
+        $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
+        $this->container->set(ViewEngine::class, $this->container->get(HtmlViewEngine::class));
         $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }
 
@@ -109,6 +111,7 @@ abstract class WebApp
     {
         $requestContext = new RequestContext();
         $this->container->set(RequestContext::class, $requestContext);
+        $this->configureSettings();
         $this->configure();
         $this->configureMvc();
         $this->buildMiddlewareChain();
@@ -135,5 +138,15 @@ abstract class WebApp
             }
         }
         echo $response->getBody();
+    }
+
+    protected function useAuthentication(): void
+    {
+        $this->requireAuthentication = true;
+    }
+
+    protected function useAuthorization(): void
+    {
+        $this->requireAuthorization = true;
     }
 }

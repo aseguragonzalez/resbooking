@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
-final class ErrorMapping
+final readonly class ErrorMapping
 {
     public function __construct(
-        public readonly int $statusCode,
-        public readonly string $templateName,
-        public readonly string $pageTitle
+        public int $statusCode,
+        public string $templateName,
+        public string $pageTitle
     ) {
     }
 }

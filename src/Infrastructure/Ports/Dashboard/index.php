@@ -6,9 +6,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
 use Infrastructure\Ports\Dashboard\App;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
 
-$settings = new DashboardSettings(basePath: __DIR__, environment: getenv('ENVIRONMENT') ?: 'local');
-$app = new App(new Container(), $settings);
+$app = new App(container: new Container(), basePath: __DIR__);
 
 $app->handleRequest();

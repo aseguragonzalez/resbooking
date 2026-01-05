@@ -7,19 +7,19 @@ namespace Seedwork\Infrastructure\Mvc\Middlewares;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Seedwork\Infrastructure\Mvc\AuthSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\Location;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SessionExpiredException;
 use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
-use Seedwork\Infrastructure\Mvc\Settings;
 
 final class Authentication extends Middleware
 {
     public function __construct(
+        private readonly AuthSettings $settings,
         private readonly IdentityManager $identityManager,
-        private readonly Settings $settings,
         private readonly ResponseFactoryInterface $responseFactory,
         ?Middleware $next = null
     ) {
@@ -31,9 +31,8 @@ final class Authentication extends Middleware
         if ($this->next === null) {
             throw new \RuntimeException('No middleware to handle the request');
         }
-        $cookies = $request->getCookieParams();
         /** @var string $token */
-        $token = $cookies[$this->settings->authCookieName] ?? '';
+        $token = $request->getCookieParams()[$this->settings->cookieName] ?? '';
         try {
             $identity = $this->identityManager->getIdentity($token);
             /** @var RequestContext $context */
@@ -42,8 +41,8 @@ final class Authentication extends Middleware
             $context->setIdentityToken($token);
             return $this->next->handleRequest($request);
         } catch (SessionExpiredException) {
-            $setCookieHeader = SetCookie::removeCookie($this->settings->authCookieName);
-            $locationHeader = Location::toInternalUrl($this->settings->authLoginUrl);
+            $setCookieHeader = SetCookie::removeCookie($this->settings->cookieName);
+            $locationHeader = Location::toInternalUrl($this->settings->signInPath);
             return $this->responseFactory
                 ->createResponse(StatusCode::SeeOther->value)
                 ->withHeader($locationHeader->name, $locationHeader->value)

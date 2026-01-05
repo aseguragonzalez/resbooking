@@ -21,7 +21,7 @@ use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
@@ -41,7 +41,7 @@ final class DiningAreasControllerTest extends TestCase
     private UpdateDiningArea&MockObject $updateDiningArea;
     private GetRestaurantById&MockObject $getRestaurantById;
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private DiningAreasController $controller;
     private Generator $faker;
     private string $restaurantId;
@@ -57,7 +57,7 @@ final class DiningAreasControllerTest extends TestCase
         $this->removeDiningArea = $this->createMock(RemoveDiningArea::class);
         $this->updateDiningArea = $this->createMock(UpdateDiningArea::class);
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new DiningAreasController(
             $this->addDiningArea,
             $this->removeDiningArea,

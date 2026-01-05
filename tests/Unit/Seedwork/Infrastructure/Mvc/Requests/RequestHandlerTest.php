@@ -10,16 +10,22 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
+use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
 use Seedwork\Infrastructure\Mvc\Routes\Path;
 use Seedwork\Infrastructure\Mvc\Routes\Route;
 use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Seedwork\Infrastructure\Mvc\Security\Identity;
 use Seedwork\Infrastructure\Mvc\Settings;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
 use Seedwork\Infrastructure\Mvc\Views\HtmlViewEngine;
+use Seedwork\Infrastructure\Mvc\Views\I18nReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ModelReplacer;
 use Seedwork\Infrastructure\Mvc\Views\ViewEngine;
 use Tests\Unit\Seedwork\Infrastructure\Mvc\Fixtures\Controllers\TestController;
@@ -31,7 +37,7 @@ final class RequestHandlerTest extends TestCase
     private Psr17Factory $requestFactory;
     private ResponseFactoryInterface $responseFactory;
     private Router $router;
-    private Settings $settings;
+    private HtmlViewEngineSettings $settings;
     private ViewEngine $viewEngine;
     private RequestHandler $requestHandler;
 
@@ -76,10 +82,13 @@ final class RequestHandlerTest extends TestCase
                 'getFromRequest'
             ),
         ]);
-        $this->settings = new Settings(basePath: __DIR__);
-        $branchesReplacer = new BranchesReplacer();
-        $branchesReplacer->setNext(new ModelReplacer());
-        $this->viewEngine = new HtmlViewEngine($this->settings, $branchesReplacer);
+        $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
+        $i18nReplacer = new I18nReplacer(
+            new LanguageSettings(basePath: __DIR__),
+            $this->createMock(FileManager::class),
+            new BranchesReplacer(new ModelReplacer())
+        );
+        $this->viewEngine = new HtmlViewEngine($this->settings, $i18nReplacer);
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,
@@ -383,7 +392,8 @@ final class RequestHandlerTest extends TestCase
     private function getRequestContext(): RequestContext
     {
         $requestContext = new RequestContext();
-        $identity = $this->createMock(\Seedwork\Infrastructure\Mvc\Security\Identity::class);
+        $requestContext->set(RequestContextKeys::Language->value, 'en');
+        $identity = $this->createMock(Identity::class);
         $identity->method('isAuthenticated')->willReturn(false);
         $identity->method('hasRole')->willReturn(false);
         $identity->method('username')->willReturn('anonymous');

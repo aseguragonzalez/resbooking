@@ -6,7 +6,7 @@ namespace Infrastructure\Ports\Dashboard\Middlewares;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,7 +17,7 @@ use Seedwork\Infrastructure\Mvc\Security\Identity;
 final class RestaurantContext extends Middleware
 {
     public function __construct(
-        private readonly DashboardSettings $settings,
+        private readonly RestaurantContextSettings $settings,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly RestaurantRepository $restaurantRepository,
         ?Middleware $next = null
@@ -39,20 +39,20 @@ final class RestaurantContext extends Middleware
         }
 
         $path = $request->getUri()->getPath();
-        if ($path === $this->settings->restaurantSelectionUrl) {
+        if ($path === $this->settings->selectionPath) {
             return $this->next->handleRequest($request);
         }
 
         $cookies = $request->getCookieParams();
         /** @var string $restaurantId */
-        $restaurantId = $cookies[$this->settings->restaurantCookieName] ?? '';
+        $restaurantId = $cookies[$this->settings->cookieName] ?? '';
         if ($restaurantId !== '' && $this->isRestaurantCookieValid($restaurantId, $identity)) {
-            $context->set($this->settings->restaurantIdContextKey, $restaurantId);
+            $context->set($this->settings->contextKey, $restaurantId);
             return $this->next->handleRequest($request);
         }
 
         $backUrl = (string)$request->getUri();
-        $selectionUrl = $this->settings->restaurantSelectionUrl . '?backUrl=' . urlencode($backUrl);
+        $selectionUrl = $this->settings->selectionPath . '?backUrl=' . urlencode($backUrl);
         return $this->responseFactory
             ->createResponse(303)
             ->withHeader('Location', $selectionUrl);

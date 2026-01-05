@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
@@ -14,13 +14,13 @@ use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
 final class DashboardControllerTest extends TestCase
 {
     private RequestContext $requestContext;
-    private DashboardSettings $settings;
+    private RestaurantContextSettings $settings;
     private DashboardController $controller;
 
     protected function setUp(): void
     {
         $this->requestContext = new RequestContext();
-        $this->settings = new DashboardSettings(basePath: '/');
+        $this->settings = new RestaurantContextSettings();
         $this->controller = new DashboardController(
             $this->requestContext,
             $this->settings,

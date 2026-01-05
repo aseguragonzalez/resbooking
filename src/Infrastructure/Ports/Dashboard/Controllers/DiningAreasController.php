@@ -12,7 +12,7 @@ use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\DiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
@@ -33,7 +33,7 @@ final class DiningAreasController extends RestaurantBaseController
         private readonly UpdateDiningArea $updateDiningArea,
         private readonly GetRestaurantById $getRestaurantById,
         RequestContext $requestContext,
-        DashboardSettings $settings,
+        RestaurantContextSettings $settings,
     ) {
         parent::__construct($requestContext, $settings);
     }

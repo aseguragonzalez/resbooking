@@ -8,7 +8,7 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
-use Infrastructure\Ports\Dashboard\DashboardSettings;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
@@ -23,7 +23,7 @@ final class SettingsController extends RestaurantBaseController
         private readonly UpdateSettings $updateSettings,
         private readonly GetRestaurantById $getRestaurantById,
         RequestContext $requestContext,
-        DashboardSettings $settings,
+        RestaurantContextSettings $settings,
     ) {
         parent::__construct($requestContext, $settings);
     }
