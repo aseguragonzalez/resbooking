@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\ActionParameterBuilder;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Requests\RequestHandler;
@@ -83,7 +83,7 @@ final class RequestHandlerTest extends TestCase
         ]);
         $this->settings = new Settings(basePath: __DIR__);
         $i18nReplacer = new I18nReplacer(
-            new LanguageSetting(i18nPath: __DIR__ . '/assets/i18n'),
+            new LanguageSettings(i18nPath: __DIR__ . '/assets/i18n'),
             $this->createMock(FileManager::class),
             new BranchesReplacer(new ModelReplacer())
         );

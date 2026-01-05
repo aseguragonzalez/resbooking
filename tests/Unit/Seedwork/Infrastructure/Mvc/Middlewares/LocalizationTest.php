@@ -7,7 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Middlewares;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Middlewares\Localization;
 use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
@@ -28,7 +28,7 @@ class LocalizationTest extends TestCase
         $mock = $this->createMock(Middleware::class);
         $mock->method('handleRequest')->willReturn($this->requestFactory->createResponse(200));
         $this->middleware = new Localization(
-            settings: new LanguageSetting(
+            settings: new LanguageSettings(
                 i18nPath: __DIR__ . '/assets/i18n',
                 languages: ['en', 'es', 'fr'],
                 cookieName: $this->cookieName,
@@ -164,7 +164,7 @@ class LocalizationTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No middleware to handle the request');
         $middleware = new Localization(
-            settings: new LanguageSetting(
+            settings: new LanguageSettings(
                 i18nPath: __DIR__ . '/assets/i18n',
                 languages: ['en', 'es', 'fr'],
                 cookieName: $this->cookieName,

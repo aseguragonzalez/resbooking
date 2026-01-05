@@ -7,7 +7,7 @@ namespace Seedwork\Infrastructure\Mvc\Middlewares;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Responses\Headers\ContentLanguage;
@@ -18,7 +18,7 @@ use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
 final class Localization extends Middleware
 {
     public function __construct(
-        private readonly LanguageSetting $settings,
+        private readonly LanguageSettings $settings,
         private readonly ResponseFactoryInterface $responseFactory,
         ?Middleware $next = null,
     ) {

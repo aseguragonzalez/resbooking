@@ -7,7 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Mvc\Views;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Views\BranchesReplacer;
@@ -21,7 +21,7 @@ final class I18nReplacerTest extends TestCase
 
     protected function setUp(): void
     {
-        $settings = new LanguageSetting(i18nPath: './');
+        $settings = new LanguageSettings(i18nPath: './');
         $branchesReplacer = new BranchesReplacer(new ModelReplacer());
         $this->fileManager = $this->createMock(FileManager::class);
         $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);

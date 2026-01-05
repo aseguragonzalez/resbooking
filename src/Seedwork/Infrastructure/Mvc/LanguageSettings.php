@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Seedwork\Infrastructure\Mvc;
 
-final readonly class LanguageSetting
+final readonly class LanguageSettings
 {
     /**
      * @param array<string> $languages

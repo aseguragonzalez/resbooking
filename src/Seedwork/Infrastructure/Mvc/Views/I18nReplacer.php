@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Mvc\Views;
 
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 
 final class I18nReplacer extends ContentReplacerBase
 {
     public function __construct(
-        private readonly LanguageSetting $settings,
+        private readonly LanguageSettings $settings,
         private readonly FileManager $fileManager,
         BranchesReplacer $nextReplacer
     ) {

@@ -8,7 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
 use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
-use Seedwork\Infrastructure\Mvc\LanguageSetting;
+use Seedwork\Infrastructure\Mvc\LanguageSettings;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
 use Seedwork\Infrastructure\Mvc\Requests\RequestContextKeys;
 use Seedwork\Infrastructure\Mvc\Responses\StatusCode;
@@ -30,7 +30,7 @@ final class HtmlViewEngineTest extends TestCase
     {
         $this->fileManager = $this->createMock(FileManager::class);
         $i18nReplacer = new I18nReplacer(
-            new LanguageSetting(i18nPath: __DIR__ . '/assets/i18n'),
+            new LanguageSettings(i18nPath: __DIR__ . '/assets/i18n'),
             $this->fileManager,
             new BranchesReplacer(new ModelReplacer())
         );
