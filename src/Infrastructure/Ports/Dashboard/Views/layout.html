@@ -4,9 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{pageTitle}}</title>
-        <link rel="stylesheet" type="text/css" href="/assets/styles/root.css" />
-        <link rel="stylesheet" type="text/css" href="/assets/styles/layout.css" />
-        <link rel="stylesheet" type="text/css" href="/assets/styles/main.css" />
+        <link rel="stylesheet" type="text/css" href="/assets/styles/app.min.css?v={{assets->cssVersion}}" />
     </head>
     <body>
         <a href="#main-content" class="skip-to-content">{{layout.skipToContent}}</a>
@@ -41,6 +39,6 @@
         <footer class="footer">
             <p>{{layout.footer}}</p>
         </footer>
-        <script src="/assets/scripts/main.js"></script>
+        <script src="/assets/scripts/app.min.js?v={{assets->jsVersion}}"></script>
     </body>
 </html>
