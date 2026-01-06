@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch
 
 all: format lint static-analyse test
 
@@ -54,3 +54,26 @@ setup-ssl-all:
 	done
 	@echo ""
 	@echo "✅ SSL certificate generation complete!"
+
+# CSS Build
+css-build:
+	@php src/Infrastructure/Ports/Dashboard/build-css.php
+
+css-watch:
+	@php src/Infrastructure/Ports/Dashboard/build-css.php watch
+
+# JavaScript Build
+js-build:
+	@php src/Infrastructure/Ports/Dashboard/build-js.php
+
+js-watch:
+	@php src/Infrastructure/Ports/Dashboard/build-js.php watch
+
+# Combined watchers for development
+watch:
+	@echo "🚀 Starting CSS and JavaScript watchers..."
+	@echo "Press Ctrl+C to stop both watchers\n"
+	@trap 'kill 0' EXIT; \
+	make css-watch & \
+	make js-watch & \
+	wait

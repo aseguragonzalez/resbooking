@@ -8,3 +8,11 @@ inmemory_*.json
 .env
 /deployment/ssl/*.crt
 /deployment/ssl/*.key
+
+# Built CSS files
+/src/Infrastructure/Ports/Dashboard/assets/styles/app.css
+/src/Infrastructure/Ports/Dashboard/assets/styles/app.min.css
+
+# Built JavaScript files
+/src/Infrastructure/Ports/Dashboard/assets/scripts/app.js
+/src/Infrastructure/Ports/Dashboard/assets/scripts/app.min.js
