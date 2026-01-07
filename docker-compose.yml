@@ -11,3 +11,28 @@ services:
     - ./deployment/ssl:/etc/apache2/ssl:ro
     env_file:
     - .env
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb
+    restart: unless-stopped
+    ports:
+    - 3306:3306
+    env_file:
+    - deployment/database/.env
+    volumes:
+    - database_data:/var/lib/mysql
+    - ./deployment/database/init:/docker-entrypoint-initdb.d:ro
+    - ./deployment/database/healthcheck.sh:/usr/local/bin/healthcheck.sh:ro
+    healthcheck:
+      test: [CMD, bash, /usr/local/bin/healthcheck.sh]
+      interval: 0.5s
+      timeout: 1s
+      retries: 30
+      start_period: 0s
+
+volumes:
+  database_data:

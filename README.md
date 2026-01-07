@@ -32,7 +32,7 @@ the day and shift.~~
 ### Tech Stack
 
 - **Backend:** PHP 8.4 (upgraded from PHP 5.5) (MVC architecture over Apache)
-- **Database:** MySQL
+- **Database:** MariaDB
 - **Frontend:** Javascript, HTML5, CSS3
 
 ## Requirements
@@ -47,15 +47,26 @@ Before starting, you need to create a `.env` file with the environment variables
  for each application. You can use the `.env.example` file as a template.
 
 ```env
-DASHBOARD_DATABASE_HOST=mysql
+DASHBOARD_DATABASE_HOST=mariadb
 DASHBOARD_DATABASE_NAME=dashboard
-DASHBOARD_DATABASE_PASSWORD=********
+DASHBOARD_DATABASE_PASSWORD=user_password_here
 DASHBOARD_DATABASE_USER=dashboard
 DASHBOARD_DEFAULT_HOST=http://dashboard
 DASHBOARD_SERVICE_NAME=dashboard
 DASHBOARD_SERVICE_VERSION=0.1.0
 ENVIRONMENT=local
 XDEBUG_MODE=coverage,debug,develop
+```
+
+Also, you need to create a custom `.env` file for database credentials in the
+ `deployment/database` directory. You can use the `.env.example` file as a template.
+
+```env
+# MariaDB Configuration
+MARIADB_ROOT_PASSWORD=root_password_here
+MARIADB_DATABASE=dashboard
+MARIADB_USER=dashboard
+MARIADB_PASSWORD=user_password_here
 ```
 
 ## Host Configuration
@@ -247,6 +258,41 @@ or check the error logs:
 ```shell
 tail -f /var/log/apache2/<webapp-name>-error.log
 ```
+
+### How to manage the MariaDB service
+
+**Check MariaDB status:**
+
+```shell
+docker-compose ps mariadb
+```
+
+**View MariaDB logs:**
+
+```shell
+docker-compose logs mariadb
+```
+
+**Connect to MariaDB:**
+
+```shell
+docker-compose exec mariadb mysql -u dashboard -p dashboard
+```
+
+**Backup database:**
+
+```shell
+docker-compose exec mariadb mysqldump -u root -p dashboard > backup.sql
+```
+
+**Reset database (WARNING: deletes all data):**
+
+```shell
+docker-compose down -v
+docker-compose up -d mariadb
+```
+
+For more information, see [deployment/database/README.md](deployment/database/README.md).
 
 ### How to debug Xdebug
 
