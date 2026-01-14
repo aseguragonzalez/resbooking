@@ -7,7 +7,7 @@ MARIADB_HOST="${MARIADB_HOST:-localhost}"
 MARIADB_PORT="${MARIADB_PORT:-3306}"
 MARIADB_USER="${MARIADB_USER:-migrations}"
 MARIADB_PASSWORD="${MARIADB_PASSWORD:-}"
-MARIADB_DATABASE="${MARIADB_DATABASE:-migrations}"
+MARIADB_DATABASE="${MARIADB_DATABASE:-reservations}"
 
 if [ -z "$MARIADB_PASSWORD" ]; then
     echo "Error: MARIADB_PASSWORD environment variable is required" >&2

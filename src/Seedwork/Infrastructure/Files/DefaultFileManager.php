@@ -42,4 +42,70 @@ final class DefaultFileManager implements FileManager
 
         return $dictionary;
     }
+
+    /**
+     * @return array<string>
+     */
+    public function getFileNamesFromPath(
+        string $path,
+        array $extensions = [],
+        array $endsWith = []
+    ): array {
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        return array_filter(scandir($path), fn ($file) => self::isValidFile($path, $file, $extensions, $endsWith));
+    }
+
+    /**
+     * @param array<string> $extensions
+     * @param array<string> $notEndsWith
+     */
+    private static function isValidFile(
+        string $path,
+        string $fileName,
+        array $extensions = [],
+        array $notEndsWith = []
+    ): bool {
+        $filePath = "{$path}/{$fileName}";
+        if (!file_exists($filePath) || !is_file($filePath)) {
+            return false;
+        }
+
+        $fileInfo = pathinfo($fileName);
+
+        if (!empty($extensions) && !in_array($fileInfo['extension'] ?? '', $extensions)) {
+            return false;
+        }
+
+        if (empty($notEndsWith)) {
+            return true;
+        }
+
+        foreach ($notEndsWith as $endWith) {
+            if (str_ends_with($fileInfo['filename'], $endWith)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getFoldersFromPath(string $path): array
+    {
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        return array_filter(scandir($path), fn ($folder) => self::isValidFolder($path, $folder));
+    }
+
+    private static function isValidFolder(string $path, string $folder): bool
+    {
+        return $folder !== '.' && $folder !== '..' && is_dir($path . '/' . $folder);
+    }
 }

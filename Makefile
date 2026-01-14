@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status
 
 all: format lint static-analyse test
 
@@ -77,3 +77,7 @@ watch:
 	make css-watch & \
 	make js-watch & \
 	wait
+
+# Database Migrations
+migrate:
+	@php src/Infrastructure/Ports/Migrations/index.php

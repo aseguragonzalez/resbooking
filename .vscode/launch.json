@@ -35,6 +35,21 @@
       "program": "${workspaceFolder}/vendor/bin/phpunit",
       "request": "launch",
       "type": "php"
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "XDEBUG_SESSION": "VSCODE",
+        "XDEBUG_TRIGGER": "1"
+      },
+      "name": "Debug Migrations Application",
+      "pathMappings": {
+        "/var/www/html": "${workspaceFolder}"
+      },
+      "port": 9003,
+      "program": "${workspaceFolder}/src/Infrastructure/Ports/Migrations/index.php",
+      "request": "launch",
+      "type": "php"
     }
   ],
   "inputs": [
