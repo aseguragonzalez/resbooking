@@ -12,4 +12,20 @@ interface FileManager
     * @return array<string, string>
     */
     public function readKeyValueJson(string $path): array;
+
+    /**
+     * @param array<string> $extensions
+     * @param array<string> $notEndsWith
+     * @return array<string>
+     */
+    public function getFileNamesFromPath(
+        string $path,
+        array $extensions = [],
+        array $notEndsWith = []
+    ): array;
+
+    /**
+     * @return array<string>
+     */
+    public function getFoldersFromPath(string $path): array;
 }

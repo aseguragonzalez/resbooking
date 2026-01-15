@@ -16,6 +16,7 @@ apt-get install -y --no-install-recommends \
     pipx \
     build-essential \
     python3-dev \
+    mariadb-client \
     > /dev/null
 
 # Install oh-my-zsh (non-interactive)

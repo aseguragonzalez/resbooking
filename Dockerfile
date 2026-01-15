@@ -6,6 +6,7 @@ ENV LANG=C.UTF-8 \
 
 # Install system dependencies and Composer
 RUN apt-get update && apt-get install -y --no-install-recommends curl unzip $PHPIZE_DEPS openssl\
+    && docker-php-ext-install pdo_mysql\
     && pecl install xdebug\
     && docker-php-ext-enable xdebug\
     && apt-get purge -y -o APT::AutoRemove::RecommendsImportant=false $PHPIZE_DEPS\

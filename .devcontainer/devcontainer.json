@@ -11,7 +11,8 @@
         "recca0120.vscode-phpunit",
         "xdebug.php-debug",
         "redhat.vscode-xml",
-        "wongjn.php-sniffer"
+        "wongjn.php-sniffer",
+        "cweijan.vscode-mysql-client2"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh"
@@ -23,10 +24,15 @@
     "ghcr.io/devcontainers/features/git:1": {}
   },
   "forwardPorts": [
-    9003
+    9003,
+    3306
   ],
   "name": "PHP 8.4 with Apache",
   "portsAttributes": {
+    "3306": {
+      "label": "MariaDB",
+      "onAutoForward": "notify"
+    },
     "9003": {
       "label": "Xdebug",
       "onAutoForward": "notify"
