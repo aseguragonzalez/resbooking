@@ -8,14 +8,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Application\Logging\Logger;
 use Seedwork\Infrastructure\Migrations\Application\RunMigrationsService;
-use Seedwork\Infrastructure\Migrations\Domain\DbClient;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationException;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationExecutor;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationFileManager;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationRepository;
-use Seedwork\Infrastructure\Migrations\Domain\RollbackExecutor;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Clients\DbClient;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Exceptions\MigrationException;
+use Seedwork\Infrastructure\Migrations\Domain\Services\MigrationExecutor;
+use Seedwork\Infrastructure\Migrations\Domain\Services\MigrationFileManager;
+use Seedwork\Infrastructure\Migrations\Domain\Repositories\MigrationRepository;
+use Seedwork\Infrastructure\Migrations\Domain\Services\RollbackExecutor;
 
 final class RunMigrationsServiceTest extends TestCase
 {

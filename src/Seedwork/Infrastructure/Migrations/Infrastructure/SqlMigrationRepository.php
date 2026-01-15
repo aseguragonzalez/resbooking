@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Migrations\Infrastructure;
 
 use PDO;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationRepository;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Repositories\MigrationRepository;
 
 final readonly class SqlMigrationRepository implements MigrationRepository
 {

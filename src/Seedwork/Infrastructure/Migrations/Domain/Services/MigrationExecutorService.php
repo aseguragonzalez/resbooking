@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Migrations\Domain;
+namespace Seedwork\Infrastructure\Migrations\Domain\Services;
 
-use Seedwork\Infrastructure\Migrations\Domain\DbClient;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationException;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationRepository;
+use Seedwork\Infrastructure\Migrations\Domain\Clients\DbClient;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Exceptions\MigrationException;
+use Seedwork\Infrastructure\Migrations\Domain\Repositories\MigrationRepository;
 
 final readonly class MigrationExecutorService implements MigrationExecutor
 {

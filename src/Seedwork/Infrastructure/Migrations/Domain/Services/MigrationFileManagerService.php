@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Migrations\Domain;
+namespace Seedwork\Infrastructure\Migrations\Domain\Services;
 
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
 
 final readonly class MigrationFileManagerService implements MigrationFileManager
 {
@@ -30,5 +30,27 @@ final readonly class MigrationFileManagerService implements MigrationFileManager
             $scripts = array_map(fn ($script) => Script::fromFile($folderPath, $script, $this->fileManager), $files);
             return Migration::new(name: $folder, scripts: $scripts);
         }, $folders);
+    }
+
+    public function getMigrationByName(string $basePath, string $migrationName): ?Migration
+    {
+        $migrationPath = "{$basePath}/{$migrationName}";
+
+        if (!is_dir($migrationPath)) {
+            return null;
+        }
+
+        $files = $this->fileManager->getFileNamesFromPath(
+            path: $migrationPath,
+            extensions: ['sql'],
+            notEndsWith: ['rollback']
+        );
+
+        if (empty($files)) {
+            return null;
+        }
+
+        $scripts = array_map(fn ($script) => Script::fromFile($migrationPath, $script, $this->fileManager), $files);
+        return Migration::new(name: $migrationName, scripts: $scripts);
     }
 }

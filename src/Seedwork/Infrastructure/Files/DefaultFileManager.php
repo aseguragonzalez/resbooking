@@ -49,13 +49,13 @@ final class DefaultFileManager implements FileManager
     public function getFileNamesFromPath(
         string $path,
         array $extensions = [],
-        array $endsWith = []
+        array $notEndsWith = []
     ): array {
         if (!is_dir($path)) {
             return [];
         }
 
-        return array_filter(scandir($path), fn ($file) => self::isValidFile($path, $file, $extensions, $endsWith));
+        return array_filter(scandir($path), fn ($file) => self::isValidFile($path, $file, $extensions, $notEndsWith));
     }
 
     /**

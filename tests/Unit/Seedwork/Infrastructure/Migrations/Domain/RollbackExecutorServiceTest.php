@@ -7,9 +7,9 @@ namespace Tests\Unit\Seedwork\Infrastructure\Migrations\Domain;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Migrations\Domain\DbClient;
-use Seedwork\Infrastructure\Migrations\Domain\RollbackExecutorService;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Clients\DbClient;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Services\RollbackExecutorService;
 
 final class RollbackExecutorServiceTest extends TestCase
 {

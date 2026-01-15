@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Migrations\Infrastructure;
 
 use PDO;
-use Seedwork\Infrastructure\Migrations\Domain\DbClient;
+use Seedwork\Infrastructure\Migrations\Domain\Clients\DbClient;
 
 final readonly class SqlDbClient implements DbClient
 {

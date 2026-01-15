@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Infrastructure\Migrations\Domain;
+namespace Seedwork\Infrastructure\Migrations\Domain\Repositories;
+
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
 
 interface MigrationRepository
 {

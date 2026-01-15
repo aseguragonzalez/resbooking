@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file test-migration
 
 all: format lint static-analyse test
 
@@ -90,3 +90,15 @@ create-migration:
 #        make add-migration-file FOLDER=20260115081115 (uses specified folder)
 add-migration-file:
 	@bash deployment/scripts/add-migration-file.sh $(FOLDER)
+
+# Test a specific migration
+# Usage: make test-migration MIGRATION=<migration-name>
+#        make test-migration MIGRATION=20260115081115/0001_migration
+test-migration:
+	@if [ -z "$(MIGRATION)" ]; then \
+		echo "❌ Error: MIGRATION parameter is required"; \
+		echo "Usage: make test-migration MIGRATION=<migration-name>"; \
+		echo "Example: make test-migration MIGRATION=20260115081115/0001_migration"; \
+		exit 1; \
+	fi
+	@php src/Infrastructure/Ports/Migrations/index.php --test=$(MIGRATION)

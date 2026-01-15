@@ -7,9 +7,9 @@ namespace Tests\Unit\Seedwork\Infrastructure\Migrations\Domain;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationFileManagerService;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Services\MigrationFileManagerService;
 
 final class MigrationFileManagerServiceTest extends TestCase
 {

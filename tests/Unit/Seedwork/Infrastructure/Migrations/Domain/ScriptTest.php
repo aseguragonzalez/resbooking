@@ -7,7 +7,7 @@ namespace Tests\Unit\Seedwork\Infrastructure\Migrations\Domain;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Infrastructure\Files\FileManager;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
 
 final class ScriptTest extends TestCase
 {

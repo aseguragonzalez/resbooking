@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Infrastructure\Migrations\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationException;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Exceptions\MigrationException;
 
 final class MigrationExceptionTest extends TestCase
 {

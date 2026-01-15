@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Seedwork\Infrastructure\Migrations\Application;
 
 use Seedwork\Application\Logging\Logger;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationException;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationExecutor;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationFileManager;
-use Seedwork\Infrastructure\Migrations\Domain\MigrationRepository;
-use Seedwork\Infrastructure\Migrations\Domain\RollbackExecutor;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Exceptions\MigrationException;
+use Seedwork\Infrastructure\Migrations\Domain\Services\MigrationExecutor;
+use Seedwork\Infrastructure\Migrations\Domain\Services\MigrationFileManager;
+use Seedwork\Infrastructure\Migrations\Domain\Repositories\MigrationRepository;
+use Seedwork\Infrastructure\Migrations\Domain\Services\RollbackExecutor;
 
 final readonly class RunMigrationsService implements RunMigrations
 {

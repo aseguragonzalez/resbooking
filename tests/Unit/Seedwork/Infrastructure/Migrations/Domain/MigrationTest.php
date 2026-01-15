@@ -6,8 +6,8 @@ namespace Tests\Unit\Seedwork\Infrastructure\Migrations\Domain;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Migrations\Domain\Migration;
-use Seedwork\Infrastructure\Migrations\Domain\Script;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Migration;
+use Seedwork\Infrastructure\Migrations\Domain\Entities\Script;
 
 final class MigrationTest extends TestCase
 {

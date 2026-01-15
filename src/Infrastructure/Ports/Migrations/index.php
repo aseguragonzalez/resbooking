@@ -7,6 +7,8 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 use DI\Container;
 use Seedwork\Infrastructure\Logging\LoggerSettings;
 use Seedwork\Infrastructure\Migrations\Application\RunMigrations;
+use Seedwork\Infrastructure\Migrations\Application\TestMigration;
+use Seedwork\Infrastructure\Migrations\Application\TestMigrationCommand;
 use Seedwork\Infrastructure\Migrations\Dependencies;
 use Seedwork\Infrastructure\Migrations\Infrastructure\MigrationSettings;
 
@@ -31,7 +33,23 @@ $container->set(MigrationSettings::class, $migrationSettings);
 
 Dependencies::configure($container);
 
-// TODO: extract to MigrationApp
-/** @var RunMigrations $runMigrations */
-$runMigrations = $container->get(RunMigrations::class);
-$runMigrations->execute(basePath: __DIR__ . '/migrations');
+$basePath = __DIR__ . '/migrations';
+
+// Parse command line arguments
+$options = getopt('', ['test:']);
+$testMigrationName = $options['test'] ?? null;
+
+if ($testMigrationName !== null && $testMigrationName !== false && is_string($testMigrationName)) {
+    // Test a specific migration
+    /** @var TestMigration $testMigration */
+    $testMigration = $container->get(TestMigration::class);
+    $testMigration->execute(new TestMigrationCommand(
+        migrationName: $testMigrationName,
+        basePath: $basePath,
+    ));
+} else {
+    // Run all pending migrations
+    /** @var RunMigrations $runMigrations */
+    $runMigrations = $container->get(RunMigrations::class);
+    $runMigrations->execute(basePath: $basePath);
+}
