@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file
 
 all: format lint static-analyse test
 
@@ -81,3 +81,12 @@ watch:
 # Database Migrations
 migrate:
 	@php src/Infrastructure/Ports/Migrations/index.php
+
+create-migration:
+	@bash deployment/scripts/create-migration.sh
+
+# Add migration file to existing migration folder
+# Usage: make add-migration-file (uses latest folder)
+#        make add-migration-file FOLDER=20260115081115 (uses specified folder)
+add-migration-file:
+	@bash deployment/scripts/add-migration-file.sh $(FOLDER)
