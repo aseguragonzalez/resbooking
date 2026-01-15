@@ -18,8 +18,8 @@ final readonly class RollbackExecutorService implements RollbackExecutor
      */
     public function rollback(array $scripts): void
     {
-        $scripts_to_revert = array_reverse($scripts);
-        foreach ($scripts_to_revert as $script) {
+        $scriptsToRevert = array_reverse($scripts);
+        foreach ($scriptsToRevert as $script) {
             $this->dbClient->execute(statements: $script->getRollbackStatements());
         }
     }

@@ -1,5 +1,5 @@
 #!/bin/bash
-# deployment/scripts/mariadb-healthcheck.sh
+# deployment/database/healthcheck.sh
 
 set -e
 

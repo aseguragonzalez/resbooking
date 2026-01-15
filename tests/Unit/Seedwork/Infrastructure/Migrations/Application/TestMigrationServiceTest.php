@@ -25,7 +25,7 @@ final class TestMigrationServiceTest extends TestCase
     private MigrationFileManager&MockObject $migrationFileManager;
     private TestMigrationExecutor&MockObject $testMigrationExecutor;
     private RollbackExecutor&MockObject $rollbackExecutor;
-    private SchemaSnapshotExecutor&MockObject $SchemaSnapshotExecutor;
+    private SchemaSnapshotExecutor&MockObject $schemaSnapshotExecutor;
     private SchemaComparator&MockObject $schemaComparator;
     private DatabaseBackupManager&MockObject $databaseBackupService;
     private TestMigrationService $service;
@@ -36,7 +36,7 @@ final class TestMigrationServiceTest extends TestCase
         $this->migrationFileManager = $this->createMock(MigrationFileManager::class);
         $this->testMigrationExecutor = $this->createMock(TestMigrationExecutor::class);
         $this->rollbackExecutor = $this->createMock(RollbackExecutor::class);
-        $this->SchemaSnapshotExecutor = $this->createMock(SchemaSnapshotExecutor::class);
+        $this->schemaSnapshotExecutor = $this->createMock(SchemaSnapshotExecutor::class);
         $this->schemaComparator = $this->createMock(SchemaComparator::class);
         $this->databaseBackupService = $this->createMock(DatabaseBackupManager::class);
 
@@ -45,7 +45,7 @@ final class TestMigrationServiceTest extends TestCase
             $this->migrationFileManager,
             $this->testMigrationExecutor,
             $this->rollbackExecutor,
-            $this->SchemaSnapshotExecutor,
+            $this->schemaSnapshotExecutor,
             $this->schemaComparator,
             $this->databaseBackupService,
         );
@@ -82,7 +82,7 @@ final class TestMigrationServiceTest extends TestCase
             ->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->SchemaSnapshotExecutor->expects($this->exactly(2))
+        $this->schemaSnapshotExecutor->expects($this->exactly(2))
             ->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
 
@@ -126,7 +126,7 @@ final class TestMigrationServiceTest extends TestCase
             ->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->SchemaSnapshotExecutor->expects($this->exactly(2))
+        $this->schemaSnapshotExecutor->expects($this->exactly(2))
             ->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
 
@@ -171,7 +171,7 @@ final class TestMigrationServiceTest extends TestCase
             ->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->SchemaSnapshotExecutor->expects($this->once())
+        $this->schemaSnapshotExecutor->expects($this->once())
             ->method('capture')
             ->willThrowException(new \RuntimeException('Database error'));
 
@@ -204,7 +204,7 @@ final class TestMigrationServiceTest extends TestCase
             ->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->SchemaSnapshotExecutor->expects($this->once())
+        $this->schemaSnapshotExecutor->expects($this->once())
             ->method('capture')
             ->willReturn($initialSnapshot);
 

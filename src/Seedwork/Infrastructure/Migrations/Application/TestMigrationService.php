@@ -19,7 +19,7 @@ final readonly class TestMigrationService implements TestMigration
         private MigrationFileManager $migrationFileManager,
         private TestMigrationExecutor $testMigrationExecutor,
         private RollbackExecutor $rollbackExecutor,
-        private SchemaSnapshotExecutor $SchemaSnapshotExecutor,
+        private SchemaSnapshotExecutor $schemaSnapshotExecutor,
         private SchemaComparator $schemaComparator,
         private DatabaseBackupManager $databaseBackupService,
     ) {
@@ -46,7 +46,7 @@ final readonly class TestMigrationService implements TestMigration
 
             // Capture initial schema
             $this->logger->info("Capturing initial schema...");
-            $initialSnapshot = $this->SchemaSnapshotExecutor->capture();
+            $initialSnapshot = $this->schemaSnapshotExecutor->capture();
 
             // Run migration
             $this->logger->info("Running migration...");
@@ -58,7 +58,7 @@ final readonly class TestMigrationService implements TestMigration
 
             // Capture final schema
             $this->logger->info("Capturing final schema...");
-            $finalSnapshot = $this->SchemaSnapshotExecutor->capture();
+            $finalSnapshot = $this->schemaSnapshotExecutor->capture();
 
             // Compare schemas
             $this->logger->info("Comparing schemas...");
