@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Framework\Migrations\Infrastructure;
 
-use PDO;
 use Framework\Migrations\Domain\Clients\DbClient;
+use PDO;
 
 final readonly class SqlDbClient implements DbClient
 {
-    public function __construct(private readonly PDO $db)
+    public function __construct(private PDO $db)
     {
     }
 

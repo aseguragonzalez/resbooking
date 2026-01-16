@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Framework\Migrations\Infrastructure;
 
-use Framework\Logging\Logger;
 use Framework\Migrations\Domain\Services\DatabaseBackupManager;
 
 final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 {
-    public function __construct(
-        private MigrationSettings $settings,
-        private Logger $logger,
-    ) {
+    public function __construct(private MigrationSettings $settings)
+    {
     }
 
     public function backup(): string
@@ -30,13 +27,9 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
         exec($command, $output, $returnCode);
 
         if ($returnCode !== 0) {
-            $errorMessage = implode("\n", $output);
-            $exception = new \RuntimeException("Failed to create database backup: {$errorMessage}");
-            $this->logger->error("Failed to create database backup: {$errorMessage}", $exception);
-            throw $exception;
+            throw new \RuntimeException("Failed to create database backup: " . implode("\n", $output));
         }
 
-        $this->logger->info("Database backup created: {$backupFile}");
         return $backupFile;
     }
 
@@ -58,19 +51,9 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
         exec($command, $output, $returnCode);
 
         if ($returnCode !== 0) {
-            $errorMessage = implode("\n", $output);
-            $exception = new \RuntimeException("Failed to restore database from backup: {$errorMessage}");
-            $this->logger->error("Failed to restore database from backup: {$errorMessage}", $exception);
-            throw $exception;
+            throw new \RuntimeException("Failed to restore database from backup: " . implode("\n", $output));
         }
 
-        $this->logger->info("Database restored from backup: {$backupFilePath}");
-
-        // Clean up backup file
-        if (unlink($backupFilePath)) {
-            $this->logger->info("Backup file deleted: {$backupFilePath}");
-        } else {
-            $this->logger->info("Failed to delete backup file: {$backupFilePath}");
-        }
+        unlink($backupFilePath);
     }
 }

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Middlewares;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Framework\Logging\Logger;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\Middlewares\ErrorHandling;
@@ -16,11 +11,16 @@ use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\StatusCode;
 use Framework\Mvc\Views\ViewEngine;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class ErrorHandlingTest extends TestCase
 {
     private ErrorHandling $middleware;
-    private Logger $logger;
+    private LoggerInterface $logger;
     private ResponseFactoryInterface $responseFactory;
     private ViewEngine $viewEngine;
     private ErrorSettings $settings;
@@ -28,9 +28,7 @@ class ErrorHandlingTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger = $this->getMockBuilder(Logger::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->logger = $this->createMock(LoggerInterface::class);
         $this->responseFactory = new Psr17Factory();
         $this->viewEngine = $this->createMock(ViewEngine::class);
         $this->settings = new ErrorSettings(

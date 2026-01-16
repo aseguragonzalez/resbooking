@@ -20,22 +20,25 @@ use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
-use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
-use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
-use Framework\Logging\Logger;
-use Framework\Logging\MonoLoggerAdapter;
+use Framework\Logging\MonoLoggerBuilder;
 use Framework\Mvc\Security\ChallengeNotificator;
 use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\IdentityManager;
 use Framework\Mvc\Security\IdentityStore;
+use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
+use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
+use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
+use Psr\Log\LoggerInterface;
 
 final class Dependencies
 {
     public static function configure(Container $container): void
     {
+        // TODO: move to WebApp and App configuration
         // configure app logger
-        $container->set(Logger::class, $container->get(MonoLoggerAdapter::class));
+        /** @var MonoLoggerBuilder $loggerBuilder */
+        $loggerBuilder = $container->get(MonoLoggerBuilder::class);
+        $container->set(LoggerInterface::class, $loggerBuilder->build());
 
         // configure application services
         $container->set(RestaurantRepository::class, $container->get(InFileRestaurantRepository::class));

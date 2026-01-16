@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Migrations\Domain;
 
-use PHPUnit\Framework\TestCase;
 use Framework\Migrations\Domain\Services\SchemaComparatorHandler;
 use Framework\Migrations\Domain\ValueObjects\ColumnDefinition;
-use Framework\Migrations\Domain\ValueObjects\ForeignKeyDefinition;
 use Framework\Migrations\Domain\ValueObjects\IndexDefinition;
 use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
 use Framework\Migrations\Domain\ValueObjects\TableDefinition;
+use PHPUnit\Framework\TestCase;
 
-final class SchemaComparatorServiceTest extends TestCase
+final class SchemaComparatorHandlerTest extends TestCase
 {
     private SchemaComparatorHandler $comparator;
 

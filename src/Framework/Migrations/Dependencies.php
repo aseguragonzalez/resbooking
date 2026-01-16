@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Framework\Migrations;
 
 use DI\Container;
-use PDO;
-use Framework\Logging\Logger;
 use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
 use Framework\Logging\MonoLoggerAdapter;
+use Framework\Logging\MonoLoggerBuilder;
 use Framework\Migrations\Application\RunMigrations;
 use Framework\Migrations\Application\RunMigrationsHandler;
 use Framework\Migrations\Application\TestMigration;
@@ -28,11 +27,13 @@ use Framework\Migrations\Domain\Services\SchemaComparatorHandler;
 use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
-use Framework\Migrations\Infrastructure\SqlSchemaSnapshotExecutor;
 use Framework\Migrations\Infrastructure\MigrationSettings;
 use Framework\Migrations\Infrastructure\ShellDatabaseBackupManager;
 use Framework\Migrations\Infrastructure\SqlDbClient;
 use Framework\Migrations\Infrastructure\SqlMigrationRepository;
+use Framework\Migrations\Infrastructure\SqlSchemaSnapshotExecutor;
+use PDO;
+use Psr\Log\LoggerInterface;
 
 final class Dependencies
 {
@@ -51,8 +52,12 @@ final class Dependencies
         );
         $container->set(PDO::class, $connection);
 
+        // TODO: move to MigrationApp configuration
+        /** @var MonoLoggerBuilder $loggerBuilder */
+        $loggerBuilder = $container->get(MonoLoggerBuilder::class);
+        $container->set(LoggerInterface::class, $loggerBuilder->build());
+
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));
-        $container->set(Logger::class, $container->get(MonoLoggerAdapter::class));
         $container->set(MigrationRepository::class, $container->get(SqlMigrationRepository::class));
         $container->set(DbClient::class, $container->get(SqlDbClient::class));
         $container->set(MigrationExecutor::class, $container->get(MigrationExecutorHandler::class));

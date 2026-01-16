@@ -9,9 +9,9 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger as MonoLogger;
 
-class MonoLoggerBuilder
+final readonly class MonoLoggerBuilder
 {
-    public function __construct(private readonly LoggerSettings $loggerSettings)
+    public function __construct(private LoggerSettings $loggerSettings)
     {
     }
 

@@ -4,49 +4,66 @@ declare(strict_types=1);
 
 namespace Framework\Logging;
 
-use Monolog\Logger as MonoLogger;
-use Framework\Logging\Logger;
+use Psr\Log\LoggerInterface;
 
-final readonly class MonoLoggerAdapter implements Logger
+final readonly class MonoLoggerAdapter implements LoggerInterface
 {
     /**
      * @var array<string, string> $context
      */
     private array $context;
-    private MonoLogger $logger;
 
-    public function __construct(MonoLoggerBuilder $loggerBuilder, LoggerSettings $settings)
+    public function __construct(private LoggerInterface $logger, LoggerSettings $settings)
     {
         $this->context = [
             "service.name" => $settings->serviceName,
             "service.version" => $settings->serviceVersion,
             "environment" => $settings->environment,
         ];
-        $this->logger = $loggerBuilder->build();
     }
 
-    public function critical(string $message, \Exception|\Throwable $exception): void
+    public function critical(string|\Stringable $message, array $context = []): void
     {
-        $this->logger->critical($message, array_merge($this->context, ['exception' => $exception]));
+        $this->logger->critical($message, array_merge($this->context, $context));
     }
 
-    public function debug(string $message): void
+    public function debug(string|\Stringable $message, array $context = []): void
     {
-        $this->logger->debug($message, $this->context);
+        $this->logger->debug($message, array_merge($this->context, $context));
     }
 
-    public function error(string $message, \Exception|\Throwable $exception): void
+    public function error(string|\Stringable $message, array $context = []): void
     {
-        $this->logger->error($message, array_merge($this->context, ['exception' => $exception]));
+        $this->logger->error($message, array_merge($this->context, $context));
     }
 
-    public function info(string $message): void
+    public function info(string|\Stringable $message, array $context = []): void
     {
-        $this->logger->info($message, $this->context);
+        $this->logger->info($message, array_merge($this->context, $context));
     }
 
-    public function warning(string $message, \Exception|\Throwable $exception): void
+    public function warning(string|\Stringable $message, array $context = []): void
     {
-        $this->logger->warning($message, array_merge($this->context, ['exception' => $exception]));
+        $this->logger->warning($message, array_merge($this->context, $context));
+    }
+
+    public function emergency(string|\Stringable $message, array $context = []): void
+    {
+        $this->logger->emergency($message, array_merge($this->context, $context));
+    }
+
+    public function alert(string|\Stringable $message, array $context = []): void
+    {
+        $this->logger->alert($message, array_merge($this->context, $context));
+    }
+
+    public function notice(string|\Stringable $message, array $context = []): void
+    {
+        $this->logger->notice($message, array_merge($this->context, $context));
+    }
+
+    public function log(mixed $level, string|\Stringable $message, array $context = []): void
+    {
+        $this->logger->log($level, $message, array_merge($this->context, $context));
     }
 }
