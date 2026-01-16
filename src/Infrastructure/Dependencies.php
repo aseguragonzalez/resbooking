@@ -23,12 +23,12 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
 use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
-use Seedwork\Application\Logging\Logger;
-use Seedwork\Infrastructure\Logging\MonoLoggerAdapter;
-use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
-use Seedwork\Infrastructure\Mvc\Security\DefaultIdentityManager;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
-use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
+use Framework\Logging\Logger;
+use Framework\Logging\MonoLoggerAdapter;
+use Framework\Mvc\Security\ChallengeNotificator;
+use Framework\Mvc\Security\DefaultIdentityManager;
+use Framework\Mvc\Security\IdentityManager;
+use Framework\Mvc\Security\IdentityStore;
 
 final class Dependencies
 {

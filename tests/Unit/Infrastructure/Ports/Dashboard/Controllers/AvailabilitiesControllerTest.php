@@ -24,11 +24,11 @@ use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesLis
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\Mvc\Actions\Responses\LocalRedirectTo;
+use Framework\Mvc\Actions\Responses\View;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
 final class AvailabilitiesControllerTest extends TestCase
 {

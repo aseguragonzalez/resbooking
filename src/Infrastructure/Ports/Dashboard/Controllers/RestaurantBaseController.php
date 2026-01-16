@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
+use Framework\Mvc\Controllers\Controller;
+use Framework\Mvc\Requests\RequestContext;
 
 abstract class RestaurantBaseController extends Controller
 {

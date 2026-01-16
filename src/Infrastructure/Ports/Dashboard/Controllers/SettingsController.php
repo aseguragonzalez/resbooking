@@ -11,11 +11,11 @@ use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Routes\Route;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Routes\Path;
+use Framework\Mvc\Routes\Route;
+use Framework\Mvc\Routes\RouteMethod;
 
 final class SettingsController extends RestaurantBaseController
 {

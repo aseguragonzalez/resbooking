@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
-use Infrastructure\Build\JsBuilder;
+use Framework\Build\JsBuilder;
 
 // Dashboard-specific JavaScript configuration
 $baseDir = __DIR__;

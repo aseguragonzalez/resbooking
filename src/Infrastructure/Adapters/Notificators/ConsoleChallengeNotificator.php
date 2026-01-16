@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Adapters\Notificators;
 
-use Seedwork\Application\Logging\Logger;
-use Seedwork\Infrastructure\Mvc\Security\ChallengeNotificator;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
+use Framework\Logging\Logger;
+use Framework\Mvc\Security\ChallengeNotificator;
+use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 
 final class ConsoleChallengeNotificator implements ChallengeNotificator
 {

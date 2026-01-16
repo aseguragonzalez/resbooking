@@ -12,9 +12,9 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Security\Identity;
+use Framework\Mvc\Middlewares\Middleware;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Security\Identity;
 
 final class RestaurantContextTest extends TestCase
 {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
-use Seedwork\Infrastructure\Logging\LoggerSettings;
-use Seedwork\Infrastructure\Migrations\Infrastructure\MigrationSettings;
-use Seedwork\Infrastructure\Migrations\MigrationApp;
+use Framework\Logging\LoggerSettings;
+use Framework\Migrations\Infrastructure\MigrationSettings;
+use Framework\Migrations\MigrationApp;
 
 $container = new Container();
 

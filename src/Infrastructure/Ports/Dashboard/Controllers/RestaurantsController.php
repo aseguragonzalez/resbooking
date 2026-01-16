@@ -9,13 +9,13 @@ use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Routes\Route;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\Controllers\Controller;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Responses\Headers\SetCookie;
+use Framework\Mvc\Routes\Path;
+use Framework\Mvc\Routes\Route;
+use Framework\Mvc\Routes\RouteMethod;
 
 final class RestaurantsController extends Controller
 {

@@ -19,18 +19,18 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\LocalRedirectTo;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
-use Seedwork\Infrastructure\Mvc\AuthSettings;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
-use Seedwork\Infrastructure\Mvc\Security\Challenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
+use Framework\Mvc\Actions\Responses\LocalRedirectTo;
+use Framework\Mvc\Actions\Responses\View;
+use Framework\Mvc\AuthSettings;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Responses\Headers\SetCookie;
+use Framework\Mvc\Security\Challenge;
+use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
+use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
+use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
+use Framework\Mvc\Security\IdentityManager;
 
 final class AccountsControllerTest extends TestCase
 {
@@ -563,11 +563,11 @@ final class AccountsControllerTest extends TestCase
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
         $setCookieHeaders = array_filter(
             $response->headers,
-            fn ($header) => $header instanceof \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie
+            fn ($header) => $header instanceof \Framework\Mvc\Responses\Headers\SetCookie
                 && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
-        /** @var \Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie $setCookie */
+        /** @var \Framework\Mvc\Responses\Headers\SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString($this->settings->cookieName . '=' . $token, $setCookie->value);
     }
