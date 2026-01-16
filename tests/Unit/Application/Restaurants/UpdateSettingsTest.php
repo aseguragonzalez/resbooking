@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Restaurants\UpdateSettings;
 
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
-use Application\Restaurants\UpdateSettings\UpdateSettingsService;
+use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Restaurants\ValueObjects\Settings;
@@ -63,7 +63,7 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: 10,
             phone: $this->faker->phoneNumber
         );
-        $ApplicationService = new UpdateSettingsService($this->restaurantObtainer, $this->restaurantRepository);
+        $ApplicationService = new UpdateSettingsHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);
 

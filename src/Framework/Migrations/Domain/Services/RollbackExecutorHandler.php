@@ -7,7 +7,7 @@ namespace Framework\Migrations\Domain\Services;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Script;
 
-final readonly class RollbackExecutorService implements RollbackExecutor
+final readonly class RollbackExecutorHandler implements RollbackExecutor
 {
     public function __construct(private DbClient $dbClient)
     {

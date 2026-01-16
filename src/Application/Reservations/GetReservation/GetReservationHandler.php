@@ -7,7 +7,7 @@ namespace Application\Reservations\GetReservation;
 use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Services\ReservationObtainer;
 
-final readonly class GetReservationService implements GetReservation
+final readonly class GetReservationHandler implements GetReservation
 {
     public function __construct(
         private ReservationObtainer $reservationObtainer,

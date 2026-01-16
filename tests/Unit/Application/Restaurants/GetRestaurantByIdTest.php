@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Restaurants\GetRestaurantById;
 
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdService;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
@@ -37,7 +37,7 @@ final class GetRestaurantByIdTest extends TestCase
             ->with($restaurantId)
             ->willReturn($restaurant);
         $command = new GetRestaurantByIdCommand(id: $restaurantId);
-        $service = new GetRestaurantByIdService($this->restaurantObtainer);
+        $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
 
         // Act
         $result = $service->execute($command);

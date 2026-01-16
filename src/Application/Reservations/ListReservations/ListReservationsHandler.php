@@ -7,7 +7,7 @@ namespace Application\Reservations\ListReservations;
 use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Repositories\ReservationRepository;
 
-final readonly class ListReservationsService implements ListReservations
+final readonly class ListReservationsHandler implements ListReservations
 {
     public function __construct(private ReservationRepository $reservationRepository)
     {

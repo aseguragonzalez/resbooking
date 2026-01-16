@@ -11,20 +11,20 @@ use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Exceptions\MigrationException;
-use Framework\Migrations\Domain\Services\MigrationExecutorService;
+use Framework\Migrations\Domain\Services\MigrationExecutorHandler;
 use Framework\Migrations\Domain\Repositories\MigrationRepository;
 
 final class MigrationExecutorServiceTest extends TestCase
 {
     private MigrationRepository&MockObject $repository;
     private DbClient&MockObject $dbClient;
-    private MigrationExecutorService $executor;
+    private MigrationExecutorHandler $executor;
 
     protected function setUp(): void
     {
         $this->repository = $this->createMock(MigrationRepository::class);
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->executor = new MigrationExecutorService($this->repository, $this->dbClient);
+        $this->executor = new MigrationExecutorHandler($this->repository, $this->dbClient);
     }
 
     public function testExecuteRunsAllScriptsInMigration(): void

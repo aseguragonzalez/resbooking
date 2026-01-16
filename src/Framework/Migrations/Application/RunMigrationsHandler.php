@@ -12,7 +12,7 @@ use Framework\Migrations\Domain\Services\MigrationFileManager;
 use Framework\Migrations\Domain\Repositories\MigrationRepository;
 use Framework\Migrations\Domain\Services\RollbackExecutor;
 
-final readonly class RunMigrationsService implements RunMigrations
+final readonly class RunMigrationsHandler implements RunMigrations
 {
     public function __construct(
         private Logger $logger,

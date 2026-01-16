@@ -9,17 +9,17 @@ use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Services\RollbackExecutorService;
+use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
 
 final class RollbackExecutorServiceTest extends TestCase
 {
     private DbClient&MockObject $dbClient;
-    private RollbackExecutorService $rollbackExecutor;
+    private RollbackExecutorHandler $rollbackExecutor;
 
     protected function setUp(): void
     {
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->rollbackExecutor = new RollbackExecutorService($this->dbClient);
+        $this->rollbackExecutor = new RollbackExecutorHandler($this->dbClient);
     }
 
     public function testRollbackExecutesRollbackStatementsInReverseOrder(): void

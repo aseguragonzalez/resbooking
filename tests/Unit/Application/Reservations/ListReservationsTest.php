@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Reservations\ListReservations;
 
 use Application\Reservations\ListReservations\ListReservations;
 use Application\Reservations\ListReservations\ListReservationsCommand;
-use Application\Reservations\ListReservations\ListReservationsService;
+use Application\Reservations\ListReservations\ListReservationsHandler;
 use Domain\Reservations\Repositories\ReservationRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ final class ListReservationsTest extends TestCase
     protected function setUp(): void
     {
         $this->reservationRepository = $this->createMock(ReservationRepository::class);
-        $this->service = new ListReservationsService($this->reservationRepository);
+        $this->service = new ListReservationsHandler($this->reservationRepository);
     }
 
     public function testExecuteReturnsReservations(): void

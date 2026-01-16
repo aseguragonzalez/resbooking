@@ -9,7 +9,7 @@ use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 
-final readonly class UpdateReservationService implements UpdateReservation
+final readonly class UpdateReservationHandler implements UpdateReservation
 {
     public function __construct(
         private ReservationObtainer $reservationObtainer,

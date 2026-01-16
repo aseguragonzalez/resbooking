@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Restaurants\UpdateDiningArea;
 
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
-use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaService;
+use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaHandler;
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaModified;
 use Domain\Restaurants\Repositories\RestaurantRepository;
@@ -59,7 +59,7 @@ final class UpdateDiningAreaTest extends TestCase
             name: $newName,
             capacity: $newCapacity
         );
-        $applicationService = new UpdateDiningAreaService($this->restaurantObtainer, $this->restaurantRepository);
+        $applicationService = new UpdateDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $applicationService->execute($request);
 

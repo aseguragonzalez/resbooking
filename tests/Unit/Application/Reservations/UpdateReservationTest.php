@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Reservations\UpdateReservation;
 
 use Application\Reservations\UpdateReservation\UpdateReservation;
 use Application\Reservations\UpdateReservation\UpdateReservationCommand;
-use Application\Reservations\UpdateReservation\UpdateReservationService;
+use Application\Reservations\UpdateReservation\UpdateReservationHandler;
 use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Reservations\Services\ReservationObtainer;
@@ -27,7 +27,7 @@ final class UpdateReservationTest extends TestCase
     {
         $this->reservationObtainer = $this->createMock(ReservationObtainer::class);
         $this->reservationRepository = $this->createMock(ReservationRepository::class);
-        $this->service = new UpdateReservationService($this->reservationObtainer, $this->reservationRepository);
+        $this->service = new UpdateReservationHandler($this->reservationObtainer, $this->reservationRepository);
     }
 
     public function testExecuteUpdatesAndSavesReservation(): void

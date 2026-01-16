@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Infrastructure;
 
 use Application\Restaurants\AddDiningArea\AddDiningArea;
-use Application\Restaurants\AddDiningArea\AddDiningAreaService;
+use Application\Restaurants\AddDiningArea\AddDiningAreaHandler;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
-use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantService;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantHandler;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdService;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
-use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaService;
+use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaHandler;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
-use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesService;
+use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesHandler;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
-use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaService;
+use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaHandler;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
-use Application\Restaurants\UpdateSettings\UpdateSettingsService;
+use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
@@ -39,13 +39,13 @@ final class Dependencies
 
         // configure application services
         $container->set(RestaurantRepository::class, $container->get(InFileRestaurantRepository::class));
-        $container->set(CreateNewRestaurant::class, $container->get(CreateNewRestaurantService::class));
-        $container->set(UpdateSettings::class, $container->get(UpdateSettingsService::class));
-        $container->set(AddDiningArea::class, $container->get(AddDiningAreaService::class));
-        $container->set(RemoveDiningArea::class, $container->get(RemoveDiningAreaService::class));
-        $container->set(UpdateDiningArea::class, $container->get(UpdateDiningAreaService::class));
-        $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesService::class));
-        $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdService::class));
+        $container->set(CreateNewRestaurant::class, $container->get(CreateNewRestaurantHandler::class));
+        $container->set(UpdateSettings::class, $container->get(UpdateSettingsHandler::class));
+        $container->set(AddDiningArea::class, $container->get(AddDiningAreaHandler::class));
+        $container->set(RemoveDiningArea::class, $container->get(RemoveDiningAreaHandler::class));
+        $container->set(UpdateDiningArea::class, $container->get(UpdateDiningAreaHandler::class));
+        $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesHandler::class));
+        $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdHandler::class));
 
         // configure security: IdentityManager, IdentityStore and ChallengeNotificator
         $container->set(ChallengeNotificator::class, $container->get(ConsoleChallengeNotificator::class));

@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Restaurants\UpdateAvailabilities;
 
 use Application\Restaurants\UpdateAvailabilities\Availability;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
-use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesService;
+use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesHandler;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
@@ -48,7 +48,7 @@ final class UpdateAvailabilitiesTest extends TestCase
                 ),
             ],
         );
-        $service = new UpdateAvailabilitiesService($restaurantObtainer, $repository);
+        $service = new UpdateAvailabilitiesHandler($restaurantObtainer, $repository);
 
         $service->execute($command);
 

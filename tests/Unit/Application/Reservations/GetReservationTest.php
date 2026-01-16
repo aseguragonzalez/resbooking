@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Reservations\GetReservation;
 
 use Application\Reservations\GetReservation\GetReservation;
 use Application\Reservations\GetReservation\GetReservationCommand;
-use Application\Reservations\GetReservation\GetReservationService;
+use Application\Reservations\GetReservation\GetReservationHandler;
 use Domain\Reservations\Entities\Reservation;
 use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Shared\Capacity;
@@ -24,7 +24,7 @@ final class GetReservationTest extends TestCase
     protected function setUp(): void
     {
         $this->reservationObtainer = $this->createMock(ReservationObtainer::class);
-        $this->service = new GetReservationService($this->reservationObtainer);
+        $this->service = new GetReservationHandler($this->reservationObtainer);
     }
 
     public function testExecuteReturnsReservation(): void

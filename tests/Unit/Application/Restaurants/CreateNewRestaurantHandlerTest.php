@@ -6,13 +6,13 @@ namespace Tests\Unit\Application\Restaurants;
 
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
-use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantService;
+use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantHandler;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Entities\Restaurant;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class CreateNewRestaurantServiceTest extends TestCase
+final class CreateNewRestaurantHandlerTest extends TestCase
 {
     private MockObject&RestaurantRepository $restaurantRepository;
     private CreateNewRestaurant $service;
@@ -20,7 +20,7 @@ final class CreateNewRestaurantServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->service = new CreateNewRestaurantService($this->restaurantRepository);
+        $this->service = new CreateNewRestaurantHandler($this->restaurantRepository);
     }
 
     public function testExecuteCreatesAndSavesRestaurant(): void
