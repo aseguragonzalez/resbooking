@@ -7,7 +7,7 @@ namespace Framework\Migrations\Domain\Services;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 
-final readonly class TestMigrationExecutorService implements TestMigrationExecutor
+final readonly class TestMigrationExecutorHandler implements TestMigrationExecutor
 {
     public function __construct(private DbClient $dbClient)
     {

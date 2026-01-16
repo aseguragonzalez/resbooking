@@ -11,7 +11,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 
-final readonly class UpdateSettingsService implements UpdateSettings
+final readonly class UpdateSettingsHandler implements UpdateSettings
 {
     public function __construct(
         private RestaurantObtainer $restaurantObtainer,

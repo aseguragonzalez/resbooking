@@ -7,7 +7,7 @@ namespace Application\Restaurants\CreateNewRestaurant;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 
-final readonly class CreateNewRestaurantService implements CreateNewRestaurant
+final readonly class CreateNewRestaurantHandler implements CreateNewRestaurant
 {
     public function __construct(private RestaurantRepository $restaurantRepository)
     {

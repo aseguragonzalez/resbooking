@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Framework\Migrations\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Migrations\Domain\Services\SchemaComparatorService;
+use Framework\Migrations\Domain\Services\SchemaComparatorHandler;
 use Framework\Migrations\Domain\ValueObjects\ColumnDefinition;
 use Framework\Migrations\Domain\ValueObjects\ForeignKeyDefinition;
 use Framework\Migrations\Domain\ValueObjects\IndexDefinition;
@@ -14,11 +14,11 @@ use Framework\Migrations\Domain\ValueObjects\TableDefinition;
 
 final class SchemaComparatorServiceTest extends TestCase
 {
-    private SchemaComparatorService $comparator;
+    private SchemaComparatorHandler $comparator;
 
     protected function setUp(): void
     {
-        $this->comparator = new SchemaComparatorService();
+        $this->comparator = new SchemaComparatorHandler();
     }
 
     public function testItReturnsEqualWhenSchemasAreIdentical(): void

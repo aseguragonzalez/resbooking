@@ -11,7 +11,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
 
-final readonly class UpdateAvailabilitiesService implements UpdateAvailabilities
+final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
 {
     public function __construct(
         private RestaurantObtainer $restaurantObtainer,

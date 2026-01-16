@@ -7,7 +7,7 @@ namespace Application\Restaurants\GetRestaurantById;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
 
-final readonly class GetRestaurantByIdService implements GetRestaurantById
+final readonly class GetRestaurantByIdHandler implements GetRestaurantById
 {
     public function __construct(private RestaurantObtainer $restaurantObtainer)
     {

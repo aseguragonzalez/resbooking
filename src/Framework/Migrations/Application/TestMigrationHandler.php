@@ -12,7 +12,7 @@ use Framework\Migrations\Domain\Services\SchemaComparator;
 use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 
-final readonly class TestMigrationService implements TestMigration
+final readonly class TestMigrationHandler implements TestMigration
 {
     public function __construct(
         private Logger $logger,

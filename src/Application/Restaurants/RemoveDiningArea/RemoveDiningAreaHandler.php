@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Application\Restaurants\UpdateDiningArea;
+namespace Application\Restaurants\RemoveDiningArea;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
-use Domain\Shared\Capacity;
 
-final readonly class UpdateDiningAreaService implements UpdateDiningArea
+final readonly class RemoveDiningAreaHandler implements RemoveDiningArea
 {
     public function __construct(
         private RestaurantObtainer $restaurantObtainer,
@@ -17,15 +16,10 @@ final readonly class UpdateDiningAreaService implements UpdateDiningArea
     ) {
     }
 
-    public function execute(UpdateDiningAreaCommand $command): void
+    public function execute(RemoveDiningAreaCommand $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: $command->restaurantId);
-        $updatedDiningArea = DiningArea::build(
-            id: $command->diningAreaId,
-            capacity: new Capacity(value: $command->capacity),
-            name: $command->name
-        );
-        $restaurant->updateDiningArea(diningArea: $updatedDiningArea);
+        $restaurant->removeDiningAreasById(diningAreaId: $command->diningAreaId);
         $this->restaurantRepository->save($restaurant);
     }
 }

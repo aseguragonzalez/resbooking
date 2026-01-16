@@ -10,7 +10,7 @@ use Framework\Migrations\Domain\ValueObjects\IndexDefinition;
 use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
 use Framework\Migrations\Domain\ValueObjects\TableDefinition;
 
-final readonly class SchemaComparatorService implements SchemaComparator
+final readonly class SchemaComparatorHandler implements SchemaComparator
 {
     public function compare(SchemaSnapshot $initial, SchemaSnapshot $final): SchemaComparisonResult
     {

@@ -9,17 +9,17 @@ use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Services\MigrationFileManagerService;
+use Framework\Migrations\Domain\Services\MigrationFileManagerHandler;
 
 final class MigrationFileManagerServiceTest extends TestCase
 {
     private FileManager&MockObject $fileManager;
-    private MigrationFileManagerService $migrationFileManager;
+    private MigrationFileManagerHandler $migrationFileManager;
 
     protected function setUp(): void
     {
         $this->fileManager = $this->createMock(FileManager::class);
-        $this->migrationFileManager = new MigrationFileManagerService($this->fileManager);
+        $this->migrationFileManager = new MigrationFileManagerHandler($this->fileManager);
     }
 
     public function testGetMigrationsReturnsArrayOfMigrationObjects(): void

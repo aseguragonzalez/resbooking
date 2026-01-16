@@ -10,17 +10,17 @@ use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Services\TestMigrationExecutorService;
+use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
 
 final class TestMigrationExecutorServiceTest extends TestCase
 {
     private DbClient&MockObject $dbClient;
-    private TestMigrationExecutorService $executor;
+    private TestMigrationExecutorHandler $executor;
 
     protected function setUp(): void
     {
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->executor = new TestMigrationExecutorService($this->dbClient);
+        $this->executor = new TestMigrationExecutorHandler($this->dbClient);
     }
 
     public function testExecuteRunsAllScriptsInMigration(): void

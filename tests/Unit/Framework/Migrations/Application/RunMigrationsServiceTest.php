@@ -7,7 +7,7 @@ namespace Tests\Unit\Framework\Migrations\Application;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Framework\Logging\Logger;
-use Framework\Migrations\Application\RunMigrationsService;
+use Framework\Migrations\Application\RunMigrationsHandler;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
@@ -24,7 +24,7 @@ final class RunMigrationsServiceTest extends TestCase
     private MigrationFileManager&MockObject $migrationFileManager;
     private MigrationRepository&MockObject $migrationRepository;
     private RollbackExecutor&MockObject $rollbackExecutor;
-    private RunMigrationsService $service;
+    private RunMigrationsHandler $service;
 
     protected function setUp(): void
     {
@@ -33,7 +33,7 @@ final class RunMigrationsServiceTest extends TestCase
         $this->migrationFileManager = $this->createMock(MigrationFileManager::class);
         $this->migrationRepository = $this->createMock(MigrationRepository::class);
         $this->rollbackExecutor = $this->createMock(RollbackExecutor::class);
-        $this->service = new RunMigrationsService(
+        $this->service = new RunMigrationsHandler(
             $this->logger,
             $this->migrationExecutor,
             $this->migrationFileManager,

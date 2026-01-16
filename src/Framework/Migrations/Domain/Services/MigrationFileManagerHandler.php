@@ -8,7 +8,7 @@ use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
 
-final readonly class MigrationFileManagerService implements MigrationFileManager
+final readonly class MigrationFileManagerHandler implements MigrationFileManager
 {
     public function __construct(private FileManager $fileManager)
     {

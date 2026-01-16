@@ -11,7 +11,7 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\TimeSlot;
 
-final readonly class CreateReservationService implements CreateReservation
+final readonly class CreateReservationHandler implements CreateReservation
 {
     public function __construct(
         private ReservationRepository $reservationRepository

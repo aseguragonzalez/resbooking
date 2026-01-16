@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Restaurants\AddDiningArea;
 
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
-use Application\Restaurants\AddDiningArea\AddDiningAreaService;
+use Application\Restaurants\AddDiningArea\AddDiningAreaHandler;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
@@ -40,7 +40,7 @@ final class AddDiningAreaTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
-        $ApplicationService = new AddDiningAreaService($this->restaurantObtainer, $this->restaurantRepository);
+        $ApplicationService = new AddDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(
             restaurantId: $this->faker->uuid,
             name: $this->faker->name,

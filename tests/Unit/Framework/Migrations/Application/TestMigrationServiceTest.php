@@ -8,7 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Framework\Logging\Logger;
 use Framework\Migrations\Application\TestMigrationCommand;
-use Framework\Migrations\Application\TestMigrationService;
+use Framework\Migrations\Application\TestMigrationHandler;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Services\DatabaseBackupManager;
 use Framework\Migrations\Domain\Services\MigrationFileManager;
@@ -28,7 +28,7 @@ final class TestMigrationServiceTest extends TestCase
     private SchemaSnapshotExecutor&MockObject $schemaSnapshotExecutor;
     private SchemaComparator&MockObject $schemaComparator;
     private DatabaseBackupManager&MockObject $databaseBackupService;
-    private TestMigrationService $service;
+    private TestMigrationHandler $service;
 
     protected function setUp(): void
     {
@@ -40,7 +40,7 @@ final class TestMigrationServiceTest extends TestCase
         $this->schemaComparator = $this->createMock(SchemaComparator::class);
         $this->databaseBackupService = $this->createMock(DatabaseBackupManager::class);
 
-        $this->service = new TestMigrationService(
+        $this->service = new TestMigrationHandler(
             $this->logger,
             $this->migrationFileManager,
             $this->testMigrationExecutor,

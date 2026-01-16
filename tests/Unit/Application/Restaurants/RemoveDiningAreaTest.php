@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Restaurants\RemoveDiningArea;
 
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
-use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaService;
+use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaHandler;
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Repositories\RestaurantRepository;
@@ -49,7 +49,7 @@ final class RemoveDiningAreaTest extends TestCase
             ->method('save')
             ->with($restaurant);
         $request = new RemoveDiningAreaCommand(restaurantId: $this->faker->uuid, diningAreaId: $diningArea->id);
-        $ApplicationService = new RemoveDiningAreaService($this->restaurantObtainer, $this->restaurantRepository);
+        $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);
 

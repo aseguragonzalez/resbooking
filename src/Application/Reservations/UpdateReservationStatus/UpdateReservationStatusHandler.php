@@ -9,7 +9,7 @@ use Domain\Reservations\Repositories\ReservationRepository;
 use Domain\Reservations\Services\ReservationObtainer;
 use Domain\Reservations\ValueObjects\ReservationStatus;
 
-final readonly class UpdateReservationStatusService implements UpdateReservationStatus
+final readonly class UpdateReservationStatusHandler implements UpdateReservationStatus
 {
     public function __construct(
         private ReservationObtainer $reservationObtainer,

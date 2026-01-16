@@ -9,7 +9,7 @@ use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Exceptions\MigrationException;
 use Framework\Migrations\Domain\Repositories\MigrationRepository;
 
-final readonly class MigrationExecutorService implements MigrationExecutor
+final readonly class MigrationExecutorHandler implements MigrationExecutor
 {
     public function __construct(private MigrationRepository $repository, private DbClient $dbClient)
     {
