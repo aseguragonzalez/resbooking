@@ -7,9 +7,9 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\View;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Actions\Responses\View;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Routes\RouteMethod;
 
 final class DashboardControllerTest extends TestCase
 {

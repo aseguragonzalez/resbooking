@@ -91,7 +91,7 @@ Contains pure business logic organized by bounded context. Each bounded context
 | `DomainEvent` | `Seedwork\Domain\DomainEvent` | Base for domain events.|
 | `DomainException` | `Seedwork\Domain\Exceptions\DomainException` | Domain exceptions.|
 | `Repository` | `Seedwork\Domain\Repository` | Base interface for aggregate repositories.|
-| `Controller` | `Seedwork\Infrastructure\Ports\Mvc\Controllers\Controller` | Controllers.|
+| `Controller` | `Framework\Mvc\Controllers\Controller` | Controllers.|
 
 Always extend or implement these abstractions.
 Example patterns:

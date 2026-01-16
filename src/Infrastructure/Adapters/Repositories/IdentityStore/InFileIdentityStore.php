@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Infrastructure\Adapters\Repositories\IdentityStore;
 
-use Seedwork\Infrastructure\Mvc\Security\IdentityStore;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignInChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignInSession;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\Mvc\Security\IdentityStore;
+use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignInChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignInSession;
+use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
+use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
 final class InFileIdentityStore implements IdentityStore
 {

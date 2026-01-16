@@ -19,11 +19,11 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Routes\Route;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Routes\Path;
+use Framework\Mvc\Routes\Route;
+use Framework\Mvc\Routes\RouteMethod;
 
 final class DiningAreasController extends RestaurantBaseController
 {

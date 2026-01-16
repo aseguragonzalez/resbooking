@@ -10,9 +10,9 @@ use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Middlewares\Middleware;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Security\Identity;
+use Framework\Mvc\Middlewares\Middleware;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Security\Identity;
 
 final class RestaurantContext extends Middleware
 {

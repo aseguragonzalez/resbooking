@@ -9,17 +9,17 @@ use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Seedwork\Infrastructure\Logging\LoggerSettings;
-use Seedwork\Infrastructure\Mvc\AuthSettings;
-use Seedwork\Infrastructure\Mvc\ErrorMapping;
-use Seedwork\Infrastructure\Mvc\ErrorSettings;
-use Seedwork\Infrastructure\Mvc\HtmlViewEngineSettings;
-use Seedwork\Infrastructure\Mvc\LanguageSettings;
-use Seedwork\Infrastructure\Mvc\Routes\AccessDeniedException;
-use Seedwork\Infrastructure\Mvc\Routes\AuthenticationRequiredException;
-use Seedwork\Infrastructure\Mvc\Routes\RouteDoesNotFoundException;
-use Seedwork\Infrastructure\Mvc\Routes\Router;
-use Seedwork\Infrastructure\Mvc\WebApp;
+use Framework\Logging\LoggerSettings;
+use Framework\Mvc\AuthSettings;
+use Framework\Mvc\ErrorMapping;
+use Framework\Mvc\ErrorSettings;
+use Framework\Mvc\HtmlViewEngineSettings;
+use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\Routes\AccessDeniedException;
+use Framework\Mvc\Routes\AuthenticationRequiredException;
+use Framework\Mvc\Routes\RouteDoesNotFoundException;
+use Framework\Mvc\Routes\Router;
+use Framework\Mvc\WebApp;
 
 final class App extends WebApp
 {

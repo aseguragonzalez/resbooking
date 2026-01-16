@@ -15,19 +15,19 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest
 use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Infrastructure\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Infrastructure\Mvc\AuthSettings;
-use Seedwork\Infrastructure\Mvc\Controllers\Controller;
-use Seedwork\Infrastructure\Mvc\Requests\RequestContext;
-use Seedwork\Infrastructure\Mvc\Responses\Headers\SetCookie;
-use Seedwork\Infrastructure\Mvc\Routes\Path;
-use Seedwork\Infrastructure\Mvc\Routes\Route;
-use Seedwork\Infrastructure\Mvc\Routes\RouteMethod;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
-use Seedwork\Infrastructure\Mvc\Security\IdentityManager;
+use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\AuthSettings;
+use Framework\Mvc\Controllers\Controller;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Responses\Headers\SetCookie;
+use Framework\Mvc\Routes\Path;
+use Framework\Mvc\Routes\Route;
+use Framework\Mvc\Routes\RouteMethod;
+use Framework\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
+use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
+use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
+use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
+use Framework\Mvc\Security\IdentityManager;
 
 final class AccountsController extends Controller
 {

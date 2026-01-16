@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Infrastructure\Adapters\Repositories\IdentityStore;
 
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\CurrentIdentity;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignInChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignInSession;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\SignUpChallenge;
-use Seedwork\Infrastructure\Mvc\Security\Domain\Entities\UserIdentity;
-use Seedwork\Infrastructure\Mvc\Security\Identity;
-use Seedwork\Infrastructure\Mvc\Security\Challenge;
+use Framework\Mvc\Security\Domain\Entities\CurrentIdentity;
+use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignInChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignInSession;
+use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
+use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\Mvc\Security\Identity;
+use Framework\Mvc\Security\Challenge;
 
 final class IdentityStoreMapper
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
-use Infrastructure\Build\CssBuilder;
+use Framework\Build\CssBuilder;
 
 // Dashboard-specific CSS configuration
 $baseDir = __DIR__;

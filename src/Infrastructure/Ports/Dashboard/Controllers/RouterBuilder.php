@@ -11,7 +11,7 @@ use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
 use Infrastructure\Ports\Dashboard\Controllers\ReservationsController;
 use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
 use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
-use Seedwork\Infrastructure\Mvc\Routes\Router;
+use Framework\Mvc\Routes\Router;
 
 final class RouterBuilder
 {
