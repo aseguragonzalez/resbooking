@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Framework\Migrations\Infrastructure;
 
 use Framework\Migrations\Domain\Services\DatabaseBackupManager;
+use Framework\Migrations\MigrationSettings;
 
 final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 {

@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Framework\Mvc;
 
 use DI\Container;
-use Nyholm\Psr7Server\ServerRequestCreator;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Framework\Application;
 use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
 use Framework\Mvc\Middlewares\Authentication;
@@ -22,33 +19,78 @@ use Framework\Mvc\Requests\RequestHandler;
 use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\ViewEngine;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-abstract class WebApp
+/**
+ * The base class for all MVC Web applications.
+ */
+abstract class MvcWebApp extends Application
 {
     /**
-     * @param Container $container
-     * @param array<class-string<Middleware>> $middlewares
+     * @param Container $container The container instance.
+     * @param string $basePath The base path of the application.
+     * @param array<class-string<Middleware>> $middlewares The middlewares to use.
+     * @param bool $requireAuthentication Whether to require authentication.
+     * @param bool $requireAuthorization Whether to require authorization.
      */
     protected function __construct(
-        protected readonly Container $container,
+        Container $container,
+        string $basePath,
         private array $middlewares = [],
         private bool $requireAuthentication = false,
         private bool $requireAuthorization = false,
     ) {
+        parent::__construct($container, $basePath);
     }
 
-    abstract protected function configure(): void;
-
-    abstract protected function configureSettings(): void;
-
+    /**
+     * Configure the router for the application.
+     */
     abstract protected function router(): Router;
+
+    /**
+     * @param int|null $argc The number of arguments passed to the application. Default is null.
+     * @param array<string> $argv The arguments to pass to the application. Default is an empty array.
+     * @return int The exit code of the application.
+     */
+    public function run(?int $argc = null, array $argv = []): int
+    {
+        $requestContext = new RequestContext();
+        $this->container->set(RequestContext::class, $requestContext);
+        $this->configureSettings();
+        $this->configureLogging();
+        $this->configureDependencies();
+        $this->configureMvc();
+        $this->buildMiddlewareChain();
+        $this->handleRequest($requestContext);
+        return 0;
+    }
 
     /**
      * @param class-string<Middleware> $middleware
      */
-    protected function addMiddleware(string $middleware): void
+    public function addMiddleware(string $middleware): void
     {
         $this->middlewares[] = $middleware;
+    }
+
+    /**
+     * Require authentication for the application.
+     */
+    public function useAuthentication(): void
+    {
+        $this->requireAuthentication = true;
+    }
+
+    /**
+     * Require authorization for the application.
+     */
+    public function useAuthorization(): void
+    {
+        $this->requireAuthorization = true;
     }
 
     private function buildMiddlewareChain(): void
@@ -107,15 +149,8 @@ abstract class WebApp
         $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }
 
-    public function handleRequest(): void
+    private function handleRequest(RequestContext $requestContext): void
     {
-        $requestContext = new RequestContext();
-        $this->container->set(RequestContext::class, $requestContext);
-        $this->configureSettings();
-        $this->configure();
-        $this->configureMvc();
-        $this->buildMiddlewareChain();
-
         $requestCreator = $this->container->get(ServerRequestCreator::class);
         if (!$requestCreator instanceof ServerRequestCreator) {
             throw new \RuntimeException('ServerRequestCreator not found in container');
@@ -138,15 +173,5 @@ abstract class WebApp
             }
         }
         echo $response->getBody();
-    }
-
-    protected function useAuthentication(): void
-    {
-        $this->requireAuthentication = true;
-    }
-
-    protected function useAuthorization(): void
-    {
-        $this->requireAuthorization = true;
     }
 }

@@ -6,20 +6,17 @@ namespace Framework\Logging;
 
 use Psr\Log\LoggerInterface;
 
-final readonly class MonoLoggerAdapter implements LoggerInterface
+/**
+ * Adapter for the PSR-3 LoggerInterface to use with parametersizable context.
+ */
+final readonly class LoggerAdapter implements LoggerInterface
 {
     /**
-     * @var array<string, string> $context
+     * @param array<string, string> $context
+     * @param LoggerInterface $logger
      */
-    private array $context;
-
-    public function __construct(private LoggerInterface $logger, LoggerSettings $settings)
+    public function __construct(private LoggerInterface $logger, private array $context = [])
     {
-        $this->context = [
-            "service.name" => $settings->serviceName,
-            "service.version" => $settings->serviceVersion,
-            "environment" => $settings->environment,
-        ];
     }
 
     public function critical(string|\Stringable $message, array $context = []): void
