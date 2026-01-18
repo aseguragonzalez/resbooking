@@ -7,7 +7,7 @@ namespace Framework\Logging;
 use Psr\Log\LoggerInterface;
 
 /**
- * Adapter for the PSR-3 LoggerInterface to use with parametersizable context.
+ * Adapter for the PSR-3 LoggerInterface to use with parameterizable context.
  */
 final readonly class LoggerAdapter implements LoggerInterface
 {
