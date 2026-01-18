@@ -42,7 +42,25 @@
         "XDEBUG_SESSION": "VSCODE",
         "XDEBUG_TRIGGER": "1"
       },
-      "name": "Debug Migrations Application",
+      "name": "Debug Run Migrations",
+      "pathMappings": {
+        "/var/www/html": "${workspaceFolder}"
+      },
+      "port": 9003,
+      "program": "${workspaceFolder}/src/Infrastructure/Ports/Migrations/index.php",
+      "request": "launch",
+      "type": "php"
+    },
+    {
+      "args": [
+        "--test=${input:migrationName}"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "XDEBUG_SESSION": "VSCODE",
+        "XDEBUG_TRIGGER": "1"
+      },
+      "name": "Debug Test Migration",
       "pathMappings": {
         "/var/www/html": "${workspaceFolder}"
       },
@@ -56,6 +74,11 @@
     {
       "description": "Enter the test method name (e.g., testCreateNewReservation)",
       "id": "testMethodName",
+      "type": "promptString"
+    },
+    {
+      "description": "Enter the migration name (e.g., 20260101000000)",
+      "id": "migrationName",
       "type": "promptString"
     }
   ],

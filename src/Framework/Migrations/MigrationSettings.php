@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Infrastructure;
+namespace Framework\Migrations;
 
 final readonly class MigrationSettings
 {

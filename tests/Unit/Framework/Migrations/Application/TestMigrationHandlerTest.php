@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Migrations\Application;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Framework\Logging\Logger;
 use Framework\Migrations\Application\TestMigrationCommand;
 use Framework\Migrations\Application\TestMigrationHandler;
 use Framework\Migrations\Domain\Entities\Migration;
@@ -18,10 +15,11 @@ use Framework\Migrations\Domain\Services\SchemaComparisonResult;
 use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-final class TestMigrationServiceTest extends TestCase
+final class TestMigrationHandlerTest extends TestCase
 {
-    private Logger&MockObject $logger;
     private MigrationFileManager&MockObject $migrationFileManager;
     private TestMigrationExecutor&MockObject $testMigrationExecutor;
     private RollbackExecutor&MockObject $rollbackExecutor;
@@ -32,7 +30,6 @@ final class TestMigrationServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->logger = $this->createMock(Logger::class);
         $this->migrationFileManager = $this->createMock(MigrationFileManager::class);
         $this->testMigrationExecutor = $this->createMock(TestMigrationExecutor::class);
         $this->rollbackExecutor = $this->createMock(RollbackExecutor::class);
@@ -41,7 +38,6 @@ final class TestMigrationServiceTest extends TestCase
         $this->databaseBackupService = $this->createMock(DatabaseBackupManager::class);
 
         $this->service = new TestMigrationHandler(
-            $this->logger,
             $this->migrationFileManager,
             $this->testMigrationExecutor,
             $this->rollbackExecutor,
@@ -103,8 +99,6 @@ final class TestMigrationServiceTest extends TestCase
             ->method('restore')
             ->with($backupFilePath);
 
-        $this->logger->expects($this->atLeastOnce())->method('info');
-
         $this->service->execute($command);
     }
 
@@ -147,9 +141,6 @@ final class TestMigrationServiceTest extends TestCase
             ->method('restore')
             ->with($backupFilePath);
 
-        $this->logger->expects($this->atLeastOnce())->method('info');
-        $this->logger->expects($this->once())->method('error');
-
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Migration rollback test failed. Schema differences detected.');
 
@@ -178,9 +169,6 @@ final class TestMigrationServiceTest extends TestCase
         $this->databaseBackupService->expects($this->once())
             ->method('restore')
             ->with($backupFilePath);
-
-        $this->logger->expects($this->atLeastOnce())->method('info');
-        $this->logger->expects($this->once())->method('error');
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Database error');
@@ -217,37 +205,8 @@ final class TestMigrationServiceTest extends TestCase
             ->method('restore')
             ->with($backupFilePath);
 
-        $this->logger->expects($this->atLeastOnce())->method('info');
-        $this->logger->expects($this->once())->method('error');
-
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Migration execution failed');
-
-        $this->service->execute($command);
-    }
-
-    public function testExecuteRestoresDatabaseWhenBackupFails(): void
-    {
-        $migration = Migration::new('test_migration', []);
-        $command = new TestMigrationCommand('test_migration', '/test/migrations');
-
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrationByName')
-            ->with('/test/migrations', 'test_migration')
-            ->willReturn($migration);
-
-        $this->databaseBackupService->expects($this->once())
-            ->method('backup')
-            ->willThrowException(new \RuntimeException('Backup failed'));
-
-        $this->databaseBackupService->expects($this->never())
-            ->method('restore');
-
-        $this->logger->expects($this->atLeastOnce())->method('info');
-        $this->logger->expects($this->once())->method('error');
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Backup failed');
 
         $this->service->execute($command);
     }

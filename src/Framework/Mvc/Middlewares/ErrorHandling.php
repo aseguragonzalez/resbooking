@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Middlewares;
 
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Framework\Logging\Logger;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Views\ViewEngine;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 final class ErrorHandling extends Middleware
 {
     public function __construct(
         private readonly ErrorSettings $settings,
-        private readonly Logger $logger,
+        private readonly LoggerInterface $logger,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ViewEngine $viewEngine,
         ?Middleware $next = null
@@ -29,9 +29,7 @@ final class ErrorHandling extends Middleware
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         if ($this->next === null) {
-            $exception = new \RuntimeException('No middleware to handle the request');
-            $this->logger->error('Error handling middleware: no next middleware available', $exception);
-            throw $exception;
+            throw new \RuntimeException('No middleware to handle the request');
         }
 
         try {
@@ -49,7 +47,7 @@ final class ErrorHandling extends Middleware
         ServerRequestInterface $request,
         \Throwable $exception
     ): ResponseInterface {
-        $this->logger->error('Error handling middleware: ' . $errorMapping->templateName, $exception);
+        $this->logger->error('Error handling middleware: {message}', ['message' => $exception->getMessage()]);
         /** @var RequestContext $context */
         $context = $request->getAttribute(RequestContext::class);
         $responseBody = $this->viewEngine->render(new View($errorMapping->templateName, $errorMapping), $context);

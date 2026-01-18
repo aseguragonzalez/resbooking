@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Migrations\Domain;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-final class RollbackExecutorServiceTest extends TestCase
+final class RollbackExecutorHandlerTest extends TestCase
 {
     private DbClient&MockObject $dbClient;
     private RollbackExecutorHandler $rollbackExecutor;

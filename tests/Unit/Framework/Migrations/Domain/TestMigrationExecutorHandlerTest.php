@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Migrations\Domain;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-final class TestMigrationExecutorServiceTest extends TestCase
+final class TestMigrationExecutorHandlerTest extends TestCase
 {
     private DbClient&MockObject $dbClient;
     private TestMigrationExecutorHandler $executor;

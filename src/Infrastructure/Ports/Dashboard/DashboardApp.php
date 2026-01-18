@@ -5,38 +5,64 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
-use Infrastructure\Dependencies;
-use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Framework\Logging\LoggerAdapter;
 use Framework\Logging\LoggerSettings;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\HtmlViewEngineSettings;
 use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\MvcWebApp;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
 use Framework\Mvc\Routes\Router;
-use Framework\Mvc\WebApp;
+use Infrastructure\Dependencies;
+use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
+use Psr\Log\LoggerInterface;
 
-final class App extends WebApp
+final class DashboardApp extends MvcWebApp
 {
-    public function __construct(Container $container, private readonly string $basePath)
+    public function __construct(Container $container, string $basePath)
     {
-        parent::__construct($container);
+        parent::__construct($container, $basePath);
     }
 
-    protected function configure(): void
+    protected function configureDependencies(): void
     {
-        // configure application services
         Dependencies::configure($this->container);
+    }
 
-        // configure middlewares
-        $this->addMiddleware(RestaurantContext::class);
-        $this->useAuthentication();
-        $this->useAuthorization();
+    protected function configureLogging(): void
+    {
+        /** @var LoggerSettings $loggerSettings */
+        $loggerSettings = $this->container->get(LoggerSettings::class);
+
+        $handler = new RotatingFileHandler(
+            filename: "/var/log/apache2/dashboard.log",
+            maxFiles: 10,
+            level: $this->getLogLevel($loggerSettings)
+        );
+        $handler->setFormatter(new LineFormatter(
+            format: '[%datetime%] %level_name%: %message%',
+            dateFormat: 'Y-m-d H:i:s',
+            allowInlineLineBreaks: true,
+            ignoreEmptyContextAndExtra: true,
+            includeStacktraces: false,
+        ));
+
+        $logger = new Logger($loggerSettings->serviceName);
+        $logger->pushHandler($handler);
+        $logger->pushProcessor(new PsrLogMessageProcessor());
+
+        $loggerAdapter = new LoggerAdapter(logger: $logger);
+        $this->container->set(LoggerInterface::class, $loggerAdapter);
     }
 
     protected function configureSettings(): void
@@ -52,9 +78,13 @@ final class App extends WebApp
             serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
             serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
             logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
-            stream: getenv('DASHBOARD_LOG_STREAM') ?: 'php://stdout',
         );
         $this->container->set(LoggerSettings::class, $loggerSettings);
+    }
+
+    protected function router(): Router
+    {
+        return RouterBuilder::build();
     }
 
     private function getErrorSettings(): ErrorSettings
@@ -89,8 +119,13 @@ final class App extends WebApp
         );
     }
 
-    protected function router(): Router
+    private function getLogLevel(LoggerSettings $loggerSettings): Level
     {
-        return RouterBuilder::build();
+        $logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
+        $logLevel = strtolower($loggerSettings->logLevel);
+        if (!in_array($logLevel, $logLevels)) {
+            throw new \InvalidArgumentException("Invalid log level: {$loggerSettings->logLevel}");
+        }
+        return Level::fromName($logLevel);
     }
 }
