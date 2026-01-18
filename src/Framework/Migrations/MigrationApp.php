@@ -76,7 +76,7 @@ final class MigrationApp extends Application
         $loggerSettings = $this->container->get(LoggerSettings::class);
 
         $handler = new StreamHandler(
-            stream: $loggerSettings->stream,
+            stream: 'php://stdout',
             level: $this->getLogLevelFromSettings($loggerSettings)
         );
         $handler->setFormatter(new LineFormatter(
@@ -114,7 +114,6 @@ final class MigrationApp extends Application
                 serviceName: getenv('MIGRATIONS_SERVICE_NAME') ?: 'migrations',
                 serviceVersion: getenv('MIGRATIONS_SERVICE_VERSION') ?: '1.0.0',
                 logLevel: getenv('MIGRATIONS_LOG_LEVEL') ?: 'debug',
-                stream: getenv('MIGRATIONS_LOG_STREAM') ?: 'php://stdout',
             ),
         );
         $this->container->set(

@@ -47,14 +47,7 @@ final class ErrorHandling extends Middleware
         ServerRequestInterface $request,
         \Throwable $exception
     ): ResponseInterface {
-        $this->logger->error(
-            'Error handling middleware: {templateName}. Error: {errorMessage}',
-            [
-                'templateName' => $errorMapping->templateName,
-                'errorMessage' => $exception->getMessage(),
-                'exception' => $exception,
-            ]
-        );
+        $this->logger->error('Error handling middleware: {message}', ['message' => $exception->getMessage()]);
         /** @var RequestContext $context */
         $context = $request->getAttribute(RequestContext::class);
         $responseBody = $this->viewEngine->render(new View($errorMapping->templateName, $errorMapping), $context);

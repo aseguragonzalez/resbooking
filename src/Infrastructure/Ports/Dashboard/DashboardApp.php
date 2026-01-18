@@ -21,7 +21,7 @@ use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
@@ -44,7 +44,11 @@ final class DashboardApp extends MvcWebApp
         /** @var LoggerSettings $loggerSettings */
         $loggerSettings = $this->container->get(LoggerSettings::class);
 
-        $handler = new StreamHandler($loggerSettings->stream, $this->getLogLevel($loggerSettings));
+        $handler = new RotatingFileHandler(
+            filename: "/var/log/apache2/dashboard.log",
+            maxFiles: 10,
+            level: $this->getLogLevel($loggerSettings)
+        );
         $handler->setFormatter(new LineFormatter(
             format: '[%datetime%] %level_name%: %message%',
             dateFormat: 'Y-m-d H:i:s',
@@ -74,7 +78,6 @@ final class DashboardApp extends MvcWebApp
             serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
             serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
             logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
-            stream: getenv('DASHBOARD_LOG_STREAM') ?: 'php://stdout',
         );
         $this->container->set(LoggerSettings::class, $loggerSettings);
     }

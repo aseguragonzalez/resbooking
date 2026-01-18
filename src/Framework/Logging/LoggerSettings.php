@@ -11,7 +11,6 @@ final readonly class LoggerSettings
         public string $serviceName = 'my-app',
         public string $serviceVersion = '1.0.0',
         public string $logLevel = 'debug',
-        public string $stream = 'php://stdout',
     ) {
     }
 }
