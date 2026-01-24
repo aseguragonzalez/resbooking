@@ -12,12 +12,14 @@ use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\StatusCode;
 use Framework\Mvc\Views\ViewEngine;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class ErrorHandlingTest extends TestCase
+#[AllowMockObjectsWithoutExpectations]
+final class ErrorHandlingTest extends TestCase
 {
     private ErrorHandling $middleware;
     private LoggerInterface $logger;

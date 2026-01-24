@@ -12,9 +12,11 @@ use Framework\Migrations\Domain\Repositories\MigrationRepository;
 use Framework\Migrations\Domain\Services\MigrationExecutor;
 use Framework\Migrations\Domain\Services\MigrationFileManager;
 use Framework\Migrations\Domain\Services\RollbackExecutor;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RunMigrationsHandlerTest extends TestCase
 {
     private MigrationExecutor&MockObject $migrationExecutor;

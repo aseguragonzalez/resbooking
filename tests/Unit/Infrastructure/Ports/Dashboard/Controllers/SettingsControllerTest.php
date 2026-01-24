@@ -15,18 +15,20 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
-use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
-use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
+use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class SettingsControllerTest extends TestCase
 {
     private UpdateSettings&MockObject $updateSettings;

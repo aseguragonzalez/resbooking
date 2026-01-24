@@ -6,9 +6,11 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Models\Availabilities\Reques
 
 use Application\Restaurants\UpdateAvailabilities\Availability;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class UpdateAvailabilitiesRequestTest extends TestCase
 {
     public function testConstructorParsesValidRequestBody(): void

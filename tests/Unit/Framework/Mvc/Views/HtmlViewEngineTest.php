@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Views;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\HtmlViewEngineSettings;
@@ -18,8 +16,12 @@ use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Views\BranchModel;
 
+#[AllowMockObjectsWithoutExpectations]
 final class HtmlViewEngineTest extends TestCase
 {
     private string $basePath = __DIR__ . "/Files/";

@@ -8,9 +8,11 @@ use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RollbackExecutorHandlerTest extends TestCase
 {
     private DbClient&MockObject $dbClient;

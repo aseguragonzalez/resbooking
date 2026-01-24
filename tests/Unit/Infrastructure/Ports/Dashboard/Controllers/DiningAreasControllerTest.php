@@ -20,20 +20,22 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
+use Framework\Mvc\Actions\Responses\LocalRedirectTo;
+use Framework\Mvc\Actions\Responses\View;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Infrastructure\Ports\Dashboard\Controllers\DiningAreasController;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\Mvc\Actions\Responses\LocalRedirectTo;
-use Framework\Mvc\Actions\Responses\View;
-use Framework\Mvc\Requests\RequestContext;
-use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
+#[AllowMockObjectsWithoutExpectations]
 final class DiningAreasControllerTest extends TestCase
 {
     private AddDiningArea&MockObject $addDiningArea;

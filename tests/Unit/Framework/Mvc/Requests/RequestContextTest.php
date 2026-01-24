@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Requests;
 
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Requests\RequestContext;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RequestContextTest extends TestCase
 {
     public function testGetReturnsStringValue(): void

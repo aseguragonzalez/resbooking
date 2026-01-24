@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Middlewares;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\ServerRequest;
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Middleware;
@@ -18,8 +15,13 @@ use Framework\Mvc\Security\ChallengesExpirationTime;
 use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\IdentityStore;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\TestCase;
 
-class AuthenticationTest extends TestCase
+#[AllowMockObjectsWithoutExpectations]
+final class AuthenticationTest extends TestCase
 {
     private Psr17Factory $psrFactory;
     private AuthSettings $settings;

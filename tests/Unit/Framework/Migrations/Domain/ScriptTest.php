@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Migrations\Domain;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Entities\Script;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class ScriptTest extends TestCase
 {
     private FileManager&MockObject $fileManager;

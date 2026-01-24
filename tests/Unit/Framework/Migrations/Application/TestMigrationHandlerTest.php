@@ -15,9 +15,11 @@ use Framework\Migrations\Domain\Services\SchemaComparisonResult;
 use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class TestMigrationHandlerTest extends TestCase
 {
     private MigrationFileManager&MockObject $migrationFileManager;

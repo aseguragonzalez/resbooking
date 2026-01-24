@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Security\Domain\Entities;
 
-use PHPUnit\Framework\TestCase;
-use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Domain\Entities\SignInChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Identity;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\TestCase;
 
-class SignInSessionTest extends TestCase
+#[AllowMockObjectsWithoutExpectations]
+final class SignInSessionTest extends TestCase
 {
     private function makeIdentity(): Identity
     {
