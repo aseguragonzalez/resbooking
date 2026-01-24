@@ -1,4 +1,4 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file test-migration
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file test-migration create-user
 
 all: format lint static-analyse test
 
@@ -102,3 +102,14 @@ test-migration:
 		exit 1; \
 	fi
 	@php src/Infrastructure/Ports/Migrations/index.php --test=$(MIGRATION)
+
+# Create a new database user with read/write access to reservations database
+# Usage: make create-user USER=<username>
+create-user:
+	@if [ -z "$(USER)" ]; then \
+		echo "❌ Error: USER parameter is required"; \
+		echo "Usage: make create-user USER=<username>"; \
+		echo "Example: make create-user USER=myuser"; \
+		exit 1; \
+	fi
+	@bash deployment/scripts/create-user.sh $(USER)

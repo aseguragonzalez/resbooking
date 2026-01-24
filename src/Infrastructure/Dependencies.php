@@ -25,15 +25,15 @@ use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\IdentityManager;
 use Framework\Mvc\Security\IdentityStore;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
-use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
-use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
+use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
+use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 
 final class Dependencies
 {
     public static function configure(Container $container): void
     {
         // configure application services
-        $container->set(RestaurantRepository::class, $container->get(InFileRestaurantRepository::class));
+        $container->set(RestaurantRepository::class, $container->get(SqlRestaurantRepository::class));
         $container->set(CreateNewRestaurant::class, $container->get(CreateNewRestaurantHandler::class));
         $container->set(UpdateSettings::class, $container->get(UpdateSettingsHandler::class));
         $container->set(AddDiningArea::class, $container->get(AddDiningAreaHandler::class));
@@ -44,7 +44,7 @@ final class Dependencies
 
         // configure security: IdentityManager, IdentityStore and ChallengeNotificator
         $container->set(ChallengeNotificator::class, $container->get(ConsoleChallengeNotificator::class));
-        $container->set(IdentityStore::class, $container->get(InFileIdentityStore::class));
+        $container->set(IdentityStore::class, $container->get(SqlIdentityStore::class));
         $container->set(IdentityManager::class, $container->get(DefaultIdentityManager::class));
     }
 }

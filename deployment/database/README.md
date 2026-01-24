@@ -23,6 +23,8 @@ The MariaDB service uses the following environment variables (defined in your
 - `MARIADB_USER` - Migrations database user (default: `migrations`)
 - `MARIADB_PASSWORD` - Migrations database user password
 - `MARIADB_HOST` - Service hostname (default: `mariadb`)
+- `MARIADB_PORT` - Service port (default: `3306`)
+- `MARIADB_REMOTE_HOST` - Remote host (used by application) (default: `mariadb`)
 
 Migrations database is used to handle the applications database migrations.
 

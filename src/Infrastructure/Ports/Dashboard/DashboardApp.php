@@ -19,12 +19,14 @@ use Framework\Mvc\Routes\RouteDoesNotFoundException;
 use Framework\Mvc\Routes\Router;
 use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
+use Infrastructure\Ports\Dashboard\DashboardSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 final class DashboardApp extends MvcWebApp
@@ -36,6 +38,19 @@ final class DashboardApp extends MvcWebApp
 
     protected function configureDependencies(): void
     {
+        /** @var DashboardSettings $settings */
+        $settings = $this->container->get(DashboardSettings::class);
+        $connection = new PDO(
+            $settings->getDsn(),
+            $settings->user,
+            $settings->password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        );
+        $this->container->set(PDO::class, $connection);
+
         Dependencies::configure($this->container);
     }
 
@@ -73,13 +88,25 @@ final class DashboardApp extends MvcWebApp
         $this->container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $this->basePath));
         $this->container->set(LanguageSettings::class, new LanguageSettings(basePath: $this->basePath));
 
-        $loggerSettings = new LoggerSettings(
-            environment: getenv('ENVIRONMENT') ?: 'local',
-            serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
-            serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
-            logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
+        $this->container->set(
+            LoggerSettings::class,
+            new LoggerSettings(
+                environment: getenv('ENVIRONMENT') ?: 'local',
+                serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
+                serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
+                logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
+            )
         );
-        $this->container->set(LoggerSettings::class, $loggerSettings);
+
+        $this->container->set(
+            DashboardSettings::class,
+            new DashboardSettings(
+                host: getenv('DASHBOARD_DATABASE_HOST') ?: 'localhost',
+                database: getenv('DASHBOARD_DATABASE_NAME') ?: 'dashboard',
+                user: getenv('DASHBOARD_DATABASE_USER') ?: 'root',
+                password: getenv('DASHBOARD_DATABASE_PASSWORD') ?: '',
+            )
+        );
     }
 
     protected function router(): Router
