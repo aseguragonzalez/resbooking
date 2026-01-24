@@ -26,14 +26,14 @@ use Framework\Mvc\Security\IdentityManager;
 use Framework\Mvc\Security\IdentityStore;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
 use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
-use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
+use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 
 final class Dependencies
 {
     public static function configure(Container $container): void
     {
         // configure application services
-        $container->set(RestaurantRepository::class, $container->get(InFileRestaurantRepository::class));
+        $container->set(RestaurantRepository::class, $container->get(SqlRestaurantRepository::class));
         $container->set(CreateNewRestaurant::class, $container->get(CreateNewRestaurantHandler::class));
         $container->set(UpdateSettings::class, $container->get(UpdateSettingsHandler::class));
         $container->set(AddDiningArea::class, $container->get(AddDiningAreaHandler::class));
