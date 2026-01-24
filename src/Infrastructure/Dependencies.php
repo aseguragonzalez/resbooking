@@ -25,7 +25,7 @@ use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\IdentityManager;
 use Framework\Mvc\Security\IdentityStore;
 use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
-use Infrastructure\Adapters\Repositories\IdentityStore\InFileIdentityStore;
+use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
 use Infrastructure\Adapters\Repositories\Restaurants\InFileRestaurantRepository;
 
 final class Dependencies
@@ -44,7 +44,7 @@ final class Dependencies
 
         // configure security: IdentityManager, IdentityStore and ChallengeNotificator
         $container->set(ChallengeNotificator::class, $container->get(ConsoleChallengeNotificator::class));
-        $container->set(IdentityStore::class, $container->get(InFileIdentityStore::class));
+        $container->set(IdentityStore::class, $container->get(SqlIdentityStore::class));
         $container->set(IdentityManager::class, $container->get(DefaultIdentityManager::class));
     }
 }
