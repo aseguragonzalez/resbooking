@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 #[AllowMockObjectsWithoutExpectations]
-class LocalizationTest extends TestCase
+final class LocalizationTest extends TestCase
 {
     private Psr17Factory $requestFactory;
     private Localization $middleware;
