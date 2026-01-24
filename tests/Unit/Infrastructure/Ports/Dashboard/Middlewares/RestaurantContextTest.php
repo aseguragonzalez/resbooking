@@ -6,16 +6,18 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Middlewares;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\ServerRequest;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Security\Identity;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RestaurantContextTest extends TestCase
 {
     private Psr17Factory $psrFactory;

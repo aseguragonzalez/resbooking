@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Middlewares;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\Headers\SetCookie;
 use Framework\Mvc\Responses\StatusCode;
-use Framework\Mvc\Settings;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 class LocalizationTest extends TestCase
 {
     private Psr17Factory $requestFactory;

@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Middlewares;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Middlewares\Authorization;
 use Framework\Mvc\Middlewares\Middleware;
@@ -20,8 +14,16 @@ use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Security\Identity;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Tests\Unit\Framework\Mvc\Fixtures\Routes\Route\RouteController;
 
+#[AllowMockObjectsWithoutExpectations]
 final class AuthorizationTest extends TestCase
 {
     private Authorization $middleware;

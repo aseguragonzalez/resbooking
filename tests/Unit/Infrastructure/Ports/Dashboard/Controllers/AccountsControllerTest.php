@@ -7,18 +7,6 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Faker\Factory;
 use Faker\Generator;
-use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\AuthSettings;
@@ -31,7 +19,21 @@ use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
 use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
 use Framework\Mvc\Security\IdentityManager;
+use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class AccountsControllerTest extends TestCase
 {
     private CreateNewRestaurant&MockObject $createNewRestaurant;

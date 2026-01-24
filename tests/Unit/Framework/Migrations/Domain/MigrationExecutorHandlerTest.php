@@ -11,9 +11,11 @@ use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Exceptions\MigrationException;
 use Framework\Migrations\Domain\Repositories\MigrationRepository;
 use Framework\Migrations\Domain\Services\MigrationExecutorHandler;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class MigrationExecutorHandlerTest extends TestCase
 {
     private MigrationRepository&MockObject $repository;

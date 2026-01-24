@@ -12,20 +12,22 @@ use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
-use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\RedirectTo;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\Headers\SetCookie;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RestaurantsControllerTest extends TestCase
 {
     private RestaurantRepository&MockObject $restaurantRepository;

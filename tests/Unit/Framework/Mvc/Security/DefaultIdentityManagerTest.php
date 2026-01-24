@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Security;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Security\Challenge;
 use Framework\Mvc\Security\ChallengeNotificator;
 use Framework\Mvc\Security\ChallengesExpirationTime;
 use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignInSession;
+use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
 use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
@@ -22,8 +19,13 @@ use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
 use Framework\Mvc\Security\Domain\Exceptions\UserIsNotFoundException;
 use Framework\Mvc\Security\Identity;
 use Framework\Mvc\Security\IdentityStore;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class DefaultIdentityManagerTest extends TestCase
+#[AllowMockObjectsWithoutExpectations]
+final class DefaultIdentityManagerTest extends TestCase
 {
     private MockObject&IdentityStore $store;
     private MockObject&ChallengeNotificator $notificator;

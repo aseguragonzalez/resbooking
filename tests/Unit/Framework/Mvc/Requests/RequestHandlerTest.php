@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Requests;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
 use Framework\Files\FileManager;
 use Framework\Mvc\Actions\ActionParameterBuilder;
 use Framework\Mvc\HtmlViewEngineSettings;
@@ -22,14 +16,21 @@ use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Security\Identity;
-use Framework\Mvc\Settings;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
 use Framework\Mvc\Views\ViewEngine;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Tests\Unit\Framework\Mvc\Fixtures\Controllers\TestController;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RequestHandlerTest extends TestCase
 {
     private ActionParameterBuilder $actionParameterBuilder;

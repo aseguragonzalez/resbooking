@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Views;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Framework\Files\FileManager;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
@@ -13,7 +11,11 @@ use Framework\Mvc\Requests\RequestContextKeys;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
+#[AllowMockObjectsWithoutExpectations]
 final class I18nReplacerTest extends TestCase
 {
     private FileManager&MockObject $fileManager;

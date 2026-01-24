@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Routes;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\InvalidAction;
@@ -14,8 +12,12 @@ use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Security\Identity;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Routes\Route\RouteController;
 
+#[AllowMockObjectsWithoutExpectations]
 final class RouteTest extends TestCase
 {
     public function testEnsureAuthenticatedIsNotRequired(): void
