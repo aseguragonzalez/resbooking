@@ -6,8 +6,8 @@ namespace Tests\Unit;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
@@ -17,9 +17,9 @@ use Faker\Generator as Faker;
 final class RestaurantBuilder
 {
     /**
-     * @var array<DiningArea> $diningAreas
+     * @var array<DiningArea>|null $diningAreas
      */
-    private array $diningAreas;
+    private array|null $diningAreas;
 
     /**
      * @var array<User> $users
@@ -33,9 +33,9 @@ final class RestaurantBuilder
 
     private ?Settings $settings;
 
-    public function __construct(private readonly Faker $faker)
+    public function __construct(private Faker $faker)
     {
-        $this->diningAreas = [];
+        $this->diningAreas = null;
         $this->availabilities = [];
         $this->users = [];
         $this->settings = null;
@@ -46,7 +46,7 @@ final class RestaurantBuilder
         $settings = new Settings(
             email: new Email($this->faker->email),
             hasReminders: $this->faker->boolean,
-            name: $this->faker->name,
+            name: $this->faker->company(),
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),
             numberOfTables: new Capacity(25),
@@ -55,7 +55,7 @@ final class RestaurantBuilder
         return Restaurant::build(
             id: $this->faker->uuid,
             settings: $this->settings ?? $settings,
-            diningAreas: $this->diningAreas,
+            diningAreas: $this->diningAreas ?? [DiningArea::new(capacity: new Capacity(20), name: 'Area 1')],
             users: $this->users,
             availabilities: $this->availabilities,
         );

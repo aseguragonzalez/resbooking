@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
-use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Domain\Restaurants\ValueObjects\Settings;
-use Domain\Shared\Capacity;
-use Domain\Shared\Email;
-use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\RedirectTo;
@@ -22,12 +17,11 @@ use Infrastructure\Ports\Dashboard\Controllers\RestaurantsController;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
 use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tests\Unit\RestaurantBuilder;
 
-#[AllowMockObjectsWithoutExpectations]
 final class RestaurantsControllerTest extends TestCase
 {
     private RestaurantRepository&MockObject $restaurantRepository;
@@ -36,6 +30,7 @@ final class RestaurantsControllerTest extends TestCase
     private Generator $faker;
     private ServerRequestInterface&MockObject $serverRequest;
     private RequestContext $requestContext;
+    private RestaurantBuilder $restaurantBuilder;
 
     protected function setUp(): void
     {
@@ -49,24 +44,25 @@ final class RestaurantsControllerTest extends TestCase
         );
         $this->faker = Factory::create();
         $this->serverRequest = $this->createMock(ServerRequestInterface::class);
-        $this->serverRequest->method('getAttribute')
-            ->with(RequestContext::class)
-            ->willReturn($this->requestContext);
+        $this->restaurantBuilder = new RestaurantBuilder($this->faker);
     }
 
     public function testSelectWithNoRestaurants(): void
     {
-        $userEmail = $this->faker->email();
-        $identity = UserIdentity::new($userEmail, ['admin'], 'password')->activate();
+        $backUrl = $this->faker->url();
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $this->faker->password())->activate();
         $this->requestContext->setIdentity($identity);
-
-        $backUrl = 'http://localhost/dashboard';
-        $this->serverRequest->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('');
-
-        $this->restaurantRepository->expects($this->once())
+        $this->serverRequest->expects($this->once())->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->serverRequest
+            ->expects($this->once())
+            ->method('getAttribute')
+            ->with(RequestContext::class)
+            ->willReturn($this->requestContext);
+        $this->restaurantRepository
+            ->expects($this->once())
             ->method('findByUserEmail')
-            ->with($userEmail)
+            ->with($identity->username())
             ->willReturn([]);
 
         $response = $this->controller->select($this->serverRequest);
@@ -85,32 +81,21 @@ final class RestaurantsControllerTest extends TestCase
 
     public function testSelectWithOneRestaurant(): void
     {
-        $userEmail = $this->faker->email();
-        $identity = UserIdentity::new($userEmail, ['admin'], 'password')->activate();
+        $backUrl = $this->faker->url();
+        $restaurant = $this->restaurantBuilder->build();
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $this->faker->password())->activate();
         $this->requestContext->setIdentity($identity);
-
-        $restaurantId = uniqid();
-        $restaurantName = $this->faker->company();
-        $restaurant = Restaurant::build(
-            id: $restaurantId,
-            settings: new Settings(
-                email: new Email($userEmail),
-                hasReminders: true,
-                name: $restaurantName,
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            )
-        );
-
-        $backUrl = 'http://localhost/dashboard';
-        $this->serverRequest->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('');
-
-        $this->restaurantRepository->expects($this->once())
+        $this->serverRequest->expects($this->once())->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->serverRequest
+            ->expects($this->once())
+            ->method('getAttribute')
+            ->with(RequestContext::class)
+            ->willReturn($this->requestContext);
+        $this->restaurantRepository
+            ->expects($this->once())
             ->method('findByUserEmail')
-            ->with($userEmail)
+            ->with($identity->username())
             ->willReturn([$restaurant]);
 
         $response = $this->controller->select($this->serverRequest);
@@ -120,59 +105,37 @@ final class RestaurantsControllerTest extends TestCase
         $redirect = $response;
         $this->assertEquals($backUrl, $redirect->url);
         $this->assertEquals(302, $response->statusCode->value);
-
         $setCookieHeaders = array_filter(
             $response->headers,
-            fn ($header) => $header instanceof SetCookie
-                && str_contains($header->value, $this->settings->cookieName)
+            fn ($header) => $header instanceof SetCookie && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
         /** @var SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString(
-            $this->settings->cookieName . '=' . $restaurantId,
+            $this->settings->cookieName . '=' . $restaurant->getId(),
             $setCookie->value
         );
     }
 
     public function testSelectWithMultipleRestaurants(): void
     {
-        $userEmail = $this->faker->email();
-        $identity = UserIdentity::new($userEmail, ['admin'], 'password')->activate();
+        $backUrl = $this->faker->url();
+        $restaurant1 = $this->restaurantBuilder->build();
+        $restaurant2 = $this->restaurantBuilder->build();
+        $identity = UserIdentity::new($this->faker->email(), ['admin'], $this->faker->password())->activate();
         $this->requestContext->setIdentity($identity);
-
-        $restaurant1 = Restaurant::build(
-            id: uniqid(),
-            settings: new Settings(
-                email: new Email($userEmail),
-                hasReminders: true,
-                name: 'Restaurant 1',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            )
-        );
-        $restaurant2 = Restaurant::build(
-            id: uniqid(),
-            settings: new Settings(
-                email: new Email($userEmail),
-                hasReminders: true,
-                name: 'Restaurant 2',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            )
-        );
-
-        $backUrl = 'http://localhost/dashboard';
-        $this->serverRequest->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('');
-
-        $this->restaurantRepository->expects($this->once())
+        $this->serverRequest->expects($this->once())->method('getQueryParams')->willReturn(['backUrl' => $backUrl]);
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->serverRequest
+            ->expects($this->once())
+            ->method('getAttribute')
+            ->with(RequestContext::class)
+            ->willReturn($this->requestContext);
+        $this->restaurantRepository
+            ->expects($this->once())
             ->method('findByUserEmail')
-            ->with($userEmail)
+            ->with($identity->username())
             ->willReturn([$restaurant1, $restaurant2]);
 
         $response = $this->controller->select($this->serverRequest);
@@ -192,9 +155,15 @@ final class RestaurantsControllerTest extends TestCase
 
     public function testSetRestaurantWithValidationErrors(): void
     {
-        $request = new SelectRestaurantRequest(restaurantId: '', backUrl: 'http://localhost/dashboard');
-        $this->serverRequest->method('getQueryParams')->willReturn([]);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('http://localhost/dashboard');
+        $backUrl = $this->faker->url();
+        $request = new SelectRestaurantRequest(restaurantId: '', backUrl: $backUrl);
+        $this->restaurantRepository->expects($this->never())->method('findByUserEmail');
+        $this->serverRequest->expects($this->once())->method('getQueryParams')->willReturn([]);
+        $this->serverRequest
+            ->expects($this->once())
+            ->method('getHeaderLine')
+            ->with('Referer')
+            ->willReturn($backUrl);
 
         $response = $this->controller->setRestaurant($request, $this->serverRequest);
 
@@ -211,26 +180,25 @@ final class RestaurantsControllerTest extends TestCase
 
     public function testSetRestaurantSuccess(): void
     {
-        $restaurantId = uniqid();
-        $backUrl = 'http://localhost/dashboard';
-        $request = new SelectRestaurantRequest(restaurantId: $restaurantId, backUrl: $backUrl);
-
+        $request = new SelectRestaurantRequest(restaurantId: $this->faker->uuid(), backUrl: $this->faker->url());
+        $this->serverRequest->expects($this->never())->method('getQueryParams');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->restaurantRepository->expects($this->never())->method('findByUserEmail');
         $response = $this->controller->setRestaurant($request, $this->serverRequest);
 
         $this->assertInstanceOf(RedirectTo::class, $response);
         /** @var RedirectTo $redirect */
         $redirect = $response;
-        $this->assertEquals($backUrl, $redirect->url);
+        $this->assertEquals($request->backUrl, $redirect->url);
         $this->assertEquals(302, $response->statusCode->value);
     }
 
     public function testSetRestaurantSetsCookie(): void
     {
-        $restaurantId = uniqid();
-        $backUrl = 'http://localhost/dashboard';
-        $request = new SelectRestaurantRequest(restaurantId: $restaurantId, backUrl: $backUrl);
-        $this->serverRequest->method('getQueryParams')->willReturn([]);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('');
+        $request = new SelectRestaurantRequest(restaurantId: $this->faker->uuid(), backUrl: $this->faker->url());
+        $this->serverRequest->expects($this->never())->method('getQueryParams');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->restaurantRepository->expects($this->never())->method('findByUserEmail');
 
         $response = $this->controller->setRestaurant($request, $this->serverRequest);
 
@@ -243,13 +211,18 @@ final class RestaurantsControllerTest extends TestCase
         /** @var SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString(
-            $this->settings->cookieName . '=' . $restaurantId,
+            $this->settings->cookieName . '=' . $request->restaurantId,
             $setCookie->value
         );
     }
 
     public function testGetRoutesConfiguration(): void
     {
+        $this->restaurantRepository->expects($this->never())->method('findByUserEmail');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->serverRequest->expects($this->never())->method('getAttribute');
+        $this->serverRequest->expects($this->never())->method('getQueryParams');
+
         $routes = RestaurantsController::getRoutes();
 
         $this->assertCount(2, $routes);

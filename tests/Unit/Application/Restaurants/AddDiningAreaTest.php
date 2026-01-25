@@ -49,6 +49,6 @@ final class AddDiningAreaTest extends TestCase
 
         $ApplicationService->execute($request);
 
-        $this->assertSame(1, count($restaurant->getDiningAreas()));
+        $this->assertSame(2, count($restaurant->getDiningAreas()));
     }
 }

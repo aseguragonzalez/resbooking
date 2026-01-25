@@ -12,12 +12,6 @@ use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
-use Domain\Restaurants\Entities\DiningArea;
-use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Settings;
-use Domain\Shared\Capacity;
-use Domain\Shared\Email;
-use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -30,12 +24,11 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tests\Unit\RestaurantBuilder;
 
-#[AllowMockObjectsWithoutExpectations]
 final class DiningAreasControllerTest extends TestCase
 {
     private AddDiningArea&MockObject $addDiningArea;
@@ -46,14 +39,12 @@ final class DiningAreasControllerTest extends TestCase
     private RestaurantContextSettings $settings;
     private DiningAreasController $controller;
     private Generator $faker;
-    private string $restaurantId;
     private ServerRequestInterface&MockObject $serverRequest;
+    private RestaurantBuilder $restaurantBuilder;
 
     protected function setUp(): void
     {
         $this->requestContext = new RequestContext();
-        $this->restaurantId = uniqid();
-        $this->requestContext->set('restaurantId', $this->restaurantId);
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->addDiningArea = $this->createMock(AddDiningArea::class);
         $this->removeDiningArea = $this->createMock(RemoveDiningArea::class);
@@ -70,37 +61,22 @@ final class DiningAreasControllerTest extends TestCase
         );
         $this->faker = Factory::create();
         $this->serverRequest = $this->createMock(ServerRequestInterface::class);
+        $this->restaurantBuilder = new RestaurantBuilder($this->faker);
     }
 
     public function testIndexReturnsDiningAreasList(): void
     {
-        $diningArea1 = DiningArea::new(
-            capacity: new Capacity(20),
-            name: 'Area 1'
-        );
-        $diningArea2 = DiningArea::new(
-            capacity: new Capacity(15),
-            name: 'Area 2'
-        );
-
-        $restaurant = Restaurant::build(
-            id: $this->restaurantId,
-            settings: new Settings(
-                email: new Email($this->faker->email()),
-                hasReminders: true,
-                name: 'Test Restaurant',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            ),
-            diningAreas: [$diningArea1, $diningArea2]
-        );
-
-        $this->getRestaurantById->expects($this->once())
+        $restaurant = $this->restaurantBuilder->build();
+        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->getRestaurantById
+            ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) {
-                return $command->id === $this->restaurantId;
+            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
+                return $command->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 
@@ -114,14 +90,19 @@ final class DiningAreasControllerTest extends TestCase
         $this->assertInstanceOf(DiningAreasList::class, $view->data);
         /** @var DiningAreasList $page */
         $page = $view->data;
-        $this->assertCount(2, $page->diningAreas);
+        $this->assertCount(count($restaurant->getDiningAreas()), $page->diningAreas);
         $this->assertTrue($page->hasDiningAreas);
     }
 
     public function testCreateReturnsEditView(): void
     {
         $backUrl = '/dining-areas';
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
 
         $response = $this->controller->create($this->serverRequest);
 
@@ -141,7 +122,12 @@ final class DiningAreasControllerTest extends TestCase
     {
         $request = new AddDiningAreaRequest(name: '', capacity: 0);
         $backUrl = '/dining-areas';
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
 
         $response = $this->controller->store($request, $this->serverRequest);
 
@@ -159,12 +145,15 @@ final class DiningAreasControllerTest extends TestCase
     public function testStoreSuccess(): void
     {
         $request = new AddDiningAreaRequest(name: 'New Area', capacity: 20);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('/dining-areas');
-
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
         $this->addDiningArea->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (AddDiningAreaCommand $command) use ($request) {
-                return $command->restaurantId === $this->restaurantId
+                return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->name === $request->name
                     && $command->capacity === $request->capacity;
             }));
@@ -181,32 +170,20 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testEditReturnsEditView(): void
     {
-        $diningAreaId = uniqid();
-        $diningArea = DiningArea::build(
-            id: $diningAreaId,
-            capacity: new Capacity(20),
-            name: 'Test Area'
-        );
-
-        $restaurant = Restaurant::build(
-            id: $this->restaurantId,
-            settings: new Settings(
-                email: new Email($this->faker->email()),
-                hasReminders: true,
-                name: 'Test Restaurant',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            ),
-            diningAreas: [$diningArea]
-        );
-
+        $restaurant = $this->restaurantBuilder->build();
+        $diningAreaId = $restaurant->getDiningAreas()[0]->id;
         $backUrl = '/dining-areas';
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
-
-        $this->getRestaurantById->expects($this->once())
+        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById
+            ->expects($this->once())
             ->method('execute')
+            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
+                return $command->id === $restaurant->getId();
+            }))
             ->willReturn($restaurant);
 
         $response = $this->controller->edit($diningAreaId, $this->serverRequest);
@@ -225,23 +202,19 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testEditWithNonExistentDiningArea(): void
     {
-        $diningAreaId = uniqid();
-        $restaurant = Restaurant::build(
-            id: $this->restaurantId,
-            settings: new Settings(
-                email: new Email($this->faker->email()),
-                hasReminders: true,
-                name: 'Test Restaurant',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            ),
-            diningAreas: []
-        );
-
-        $this->getRestaurantById->expects($this->once())
+        $diningAreaId = $this->faker->uuid();
+        $restaurant = $this->restaurantBuilder->build();
+        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById
+            ->expects($this->once())
             ->method('execute')
+            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
+                return $command->id === $restaurant->getId();
+            }))
             ->willReturn($restaurant);
 
         $response = $this->controller->edit($diningAreaId, $this->serverRequest);
@@ -255,10 +228,14 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testUpdateWithValidationErrors(): void
     {
-        $diningAreaId = uniqid();
+        $diningAreaId = $this->faker->uuid();
         $request = new UpdateDiningAreaRequest(name: '', capacity: 0);
         $backUrl = '/dining-areas';
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
 
         $response = $this->controller->update($diningAreaId, $request, $this->serverRequest);
 
@@ -276,14 +253,18 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testUpdateSuccess(): void
     {
-        $diningAreaId = uniqid();
+        $diningAreaId = $this->faker->uuid();
         $request = new UpdateDiningAreaRequest(name: 'Updated Area', capacity: 25);
-        $this->serverRequest->method('getHeaderLine')->with('Referer')->willReturn('/dining-areas');
-
-        $this->updateDiningArea->expects($this->once())
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->updateDiningArea
+            ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateDiningAreaCommand $command) use ($request, $diningAreaId) {
-                return $command->restaurantId === $this->restaurantId
+                return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->diningAreaId === $diningAreaId
                     && $command->name === $request->name
                     && $command->capacity === $request->capacity;
@@ -301,12 +282,17 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testDeleteSuccess(): void
     {
-        $diningAreaId = uniqid();
-
-        $this->removeDiningArea->expects($this->once())
+        $diningAreaId = $this->faker->uuid();
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->removeDiningArea
+            ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (RemoveDiningAreaCommand $command) use ($diningAreaId) {
-                return $command->restaurantId === $this->restaurantId
+                return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->diningAreaId === $diningAreaId;
             }));
 
@@ -322,10 +308,15 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
+        $this->addDiningArea->expects($this->never())->method('execute');
+        $this->updateDiningArea->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getHeaderLine');
+        $this->removeDiningArea->expects($this->never())->method('execute');
+
         $routes = DiningAreasController::getRoutes();
 
         $this->assertCount(6, $routes);
-
         $routesData = [
             ['Get', '/dining-areas', 'index', true],
             ['Get', '/dining-areas/create', 'create', true],
@@ -334,7 +325,6 @@ final class DiningAreasControllerTest extends TestCase
             ['Post', '/dining-areas/{id}', 'update', true],
             ['Post', '/dining-areas/{id}/delete', 'delete', true],
         ];
-
         foreach ($routesData as $index => [$method, $path, $action, $authRequired]) {
             $route = $routes[$index];
             $this->assertEquals($method, $route->method->name);
