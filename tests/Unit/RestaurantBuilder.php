@@ -46,7 +46,7 @@ final class RestaurantBuilder
         $settings = new Settings(
             email: new Email($this->faker->email),
             hasReminders: $this->faker->boolean,
-            name: $this->faker->name,
+            name: $this->faker->company(),
             maxNumberOfDiners: new Capacity(8),
             minNumberOfDiners: new Capacity(1),
             numberOfTables: new Capacity(25),
