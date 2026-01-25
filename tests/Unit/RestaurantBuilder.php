@@ -6,8 +6,8 @@ namespace Tests\Unit;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
@@ -33,7 +33,7 @@ final class RestaurantBuilder
 
     private ?Settings $settings;
 
-    public function __construct(private readonly Faker $faker)
+    public function __construct(private Faker $faker)
     {
         $this->diningAreas = [];
         $this->availabilities = [];

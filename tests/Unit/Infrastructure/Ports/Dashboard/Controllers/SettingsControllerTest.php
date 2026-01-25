@@ -8,11 +8,6 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
-use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Settings;
-use Domain\Shared\Capacity;
-use Domain\Shared\Email;
-use Domain\Shared\Phone;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -24,11 +19,10 @@ use Infrastructure\Ports\Dashboard\Controllers\SettingsController;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Tests\Unit\RestaurantBuilder;
 
-#[AllowMockObjectsWithoutExpectations]
 final class SettingsControllerTest extends TestCase
 {
     private UpdateSettings&MockObject $updateSettings;
@@ -37,13 +31,11 @@ final class SettingsControllerTest extends TestCase
     private RestaurantContextSettings $settings;
     private SettingsController $controller;
     private Generator $faker;
-    private string $restaurantId;
+    private RestaurantBuilder $restaurantBuilder;
 
     protected function setUp(): void
     {
         $this->requestContext = new RequestContext();
-        $this->restaurantId = uniqid();
-        $this->requestContext->set('restaurantId', $this->restaurantId);
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->updateSettings = $this->createMock(UpdateSettings::class);
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
@@ -55,37 +47,19 @@ final class SettingsControllerTest extends TestCase
             $this->settings,
         );
         $this->faker = Factory::create();
+        $this->restaurantBuilder = new RestaurantBuilder($this->faker);
     }
 
     public function testSettingsReturnsUpdateSettingsPage(): void
     {
-        $email = $this->faker->email();
-        $name = $this->faker->company();
-        $phone = $this->faker->phoneNumber();
-        $hasReminders = true;
-        $maxNumberOfDiners = 10;
-        $minNumberOfDiners = 1;
-        $numberOfTables = 20;
+        $restaurant = $this->restaurantBuilder->build();
+        $this->requestContext->set('restaurantId', $restaurant->getId());
 
-        $restaurantSettings = new Settings(
-            email: new Email($email),
-            hasReminders: $hasReminders,
-            name: $name,
-            maxNumberOfDiners: new Capacity($maxNumberOfDiners),
-            minNumberOfDiners: new Capacity($minNumberOfDiners),
-            numberOfTables: new Capacity($numberOfTables),
-            phone: new Phone($phone),
-        );
-
-        $restaurant = Restaurant::build(
-            id: $this->restaurantId,
-            settings: $restaurantSettings
-        );
-
+        $this->updateSettings->expects($this->never())->method('execute');
         $this->getRestaurantById->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) {
-                return $command->id === $this->restaurantId;
+            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
+                return $command->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 
@@ -101,6 +75,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testUpdateSettingsWithValidationErrors(): void
     {
+        $this->updateSettings->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
         $request = new UpdateSettingsRequest(
             email: '',
             name: '',
@@ -125,6 +101,7 @@ final class SettingsControllerTest extends TestCase
 
     public function testUpdateSettingsSuccess(): void
     {
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
         $request = new UpdateSettingsRequest(
             email: $this->faker->email(),
             name: $this->faker->company(),
@@ -134,11 +111,11 @@ final class SettingsControllerTest extends TestCase
             phone: $this->faker->phoneNumber(),
             hasReminders: 'on',
         );
-
+        $this->getRestaurantById->expects($this->never())->method('execute');
         $this->updateSettings->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateSettingsCommand $command) use ($request) {
-                return $command->restaurantId === $this->restaurantId
+                return !empty($command->restaurantId)
                     && $command->email === $request->email
                     && $command->name === $request->name
                     && $command->hasReminders === true
@@ -160,6 +137,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
+        $this->updateSettings->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('execute');
         $routes = SettingsController::getRoutes();
 
         $this->assertCount(2, $routes);

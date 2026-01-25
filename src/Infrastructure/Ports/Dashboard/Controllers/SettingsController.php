@@ -8,20 +8,20 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
-use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
+use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 
 final class SettingsController extends RestaurantBaseController
 {
     public function __construct(
-        private readonly UpdateSettings $updateSettings,
-        private readonly GetRestaurantById $getRestaurantById,
+        private UpdateSettings $updateSettings,
+        private GetRestaurantById $getRestaurantById,
         RequestContext $requestContext,
         RestaurantContextSettings $settings,
     ) {
