@@ -12,16 +12,18 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\TimeSlot;
+use Faker\Factory as FakerFactory;
+use Faker\Generator as Faker;
 use Infrastructure\Adapters\Repositories\Restaurants\RestaurantsMapper;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 use PDO;
 use PDOStatement;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\RestaurantBuilder;
-use Faker\Factory as FakerFactory;
-use Faker\Generator as Faker;
 
+#[AllowMockObjectsWithoutExpectations]
 final class SqlRestaurantRepositoryTest extends TestCase
 {
     private PDO&MockObject $pdo;
@@ -136,6 +138,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
         );
         $restaurant = $this->restaurantBuilder
             ->withAvailabilities([$availability1, $availability2])
+            ->withDiningAreas([])
             ->build();
 
         // Mock all required statements
@@ -165,6 +168,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $user2 = new User(new Email('user2@example.com'));
         $restaurant = $this->restaurantBuilder
             ->withUsers([$user1, $user2])
+            ->withDiningAreas([])
             ->build();
 
         // Mock all required statements
