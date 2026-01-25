@@ -17,9 +17,9 @@ use Faker\Generator as Faker;
 final class RestaurantBuilder
 {
     /**
-     * @var array<DiningArea> $diningAreas
+     * @var array<DiningArea>|null $diningAreas
      */
-    private array $diningAreas;
+    private array|null $diningAreas;
 
     /**
      * @var array<User> $users
@@ -35,7 +35,7 @@ final class RestaurantBuilder
 
     public function __construct(private Faker $faker)
     {
-        $this->diningAreas = [];
+        $this->diningAreas = null;
         $this->availabilities = [];
         $this->users = [];
         $this->settings = null;
@@ -55,7 +55,7 @@ final class RestaurantBuilder
         return Restaurant::build(
             id: $this->faker->uuid,
             settings: $this->settings ?? $settings,
-            diningAreas: $this->diningAreas,
+            diningAreas: $this->diningAreas ?? [DiningArea::new(capacity: new Capacity(20), name: 'Area 1')],
             users: $this->users,
             availabilities: $this->availabilities,
         );
