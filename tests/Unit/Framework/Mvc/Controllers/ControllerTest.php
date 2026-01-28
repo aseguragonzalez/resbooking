@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Controllers;
 
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\Responses\Headers\AccessControlAllowMethods;
 use Framework\Mvc\Responses\Headers\ContentType;
 use Framework\Mvc\Responses\Headers\Location;
 use Framework\Mvc\Responses\StatusCode;
+use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Controllers\HomeController;
 use Tests\Unit\Framework\Mvc\Fixtures\Controllers\SubTestController;
 use Tests\Unit\Framework\Mvc\Fixtures\Controllers\TestController;

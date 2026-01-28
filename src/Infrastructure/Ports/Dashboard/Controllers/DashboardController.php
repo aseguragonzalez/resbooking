@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 
-class DashboardController extends RestaurantBaseController
+final class DashboardController extends RestaurantBaseController
 {
     public function __construct(
         RequestContext $requestContext,

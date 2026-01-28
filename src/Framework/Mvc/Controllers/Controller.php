@@ -14,9 +14,11 @@ use Framework\Mvc\Responses\StatusCode;
 abstract class Controller
 {
     /**
-     * @var array<Header> $headers
+     * @param array<Header> $headers
      */
-    private array $headers = [];
+    public function __construct(private array $headers = [])
+    {
+    }
 
     protected function addHeader(Header $header): void
     {

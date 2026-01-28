@@ -9,6 +9,11 @@ use Framework\Mvc\Controllers\Controller;
 
 final class RouteController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function get(): ActionResponse
     {
         return $this->view();

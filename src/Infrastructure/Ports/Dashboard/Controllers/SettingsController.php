@@ -20,8 +20,8 @@ use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsReques
 final class SettingsController extends RestaurantBaseController
 {
     public function __construct(
-        private UpdateSettings $updateSettings,
-        private GetRestaurantById $getRestaurantById,
+        private readonly UpdateSettings $updateSettings,
+        private readonly GetRestaurantById $getRestaurantById,
         RequestContext $requestContext,
         RestaurantContextSettings $settings,
     ) {

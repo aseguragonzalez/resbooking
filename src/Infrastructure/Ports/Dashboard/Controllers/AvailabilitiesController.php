@@ -8,15 +8,15 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
-use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
+use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class AvailabilitiesController extends RestaurantBaseController
 {

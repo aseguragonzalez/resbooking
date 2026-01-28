@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
-use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Requests\RequestContext;
@@ -16,6 +12,10 @@ use Framework\Mvc\Responses\Headers\SetCookie;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Pages\SelectRestaurant;
+use Infrastructure\Ports\Dashboard\Models\Restaurants\Requests\SelectRestaurantRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class RestaurantsController extends Controller
 {
@@ -23,6 +23,7 @@ final class RestaurantsController extends Controller
         private readonly RestaurantRepository $restaurantRepository,
         private readonly RestaurantContextSettings $settings,
     ) {
+        parent::__construct();
     }
 
     public function select(ServerRequestInterface $request): ActionResponse
