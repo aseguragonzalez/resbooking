@@ -12,6 +12,11 @@ use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
+use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Routes\Path;
+use Framework\Mvc\Routes\Route;
+use Framework\Mvc\Routes\RouteMethod;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\DiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;
@@ -19,11 +24,6 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\Mvc\Actions\Responses\ActionResponse;
-use Framework\Mvc\Requests\RequestContext;
-use Framework\Mvc\Routes\Path;
-use Framework\Mvc\Routes\Route;
-use Framework\Mvc\Routes\RouteMethod;
 
 final class DiningAreasController extends RestaurantBaseController
 {

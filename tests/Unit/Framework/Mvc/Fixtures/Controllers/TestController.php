@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Fixtures\Controllers;
 
-use Nyholm\Psr7\ServerRequest;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Responses\Headers\Header;
 use Framework\Mvc\Responses\StatusCode;
+use Psr\Http\Message\ServerRequestInterface;
 use Tests\Unit\Framework\Mvc\Fixtures\Requests\EditRequest;
 use Tests\Unit\Framework\Mvc\Fixtures\Requests\FindRequest;
 use Tests\Unit\Framework\Mvc\Fixtures\Requests\ListRequest;
@@ -17,6 +16,11 @@ use Tests\Unit\Framework\Mvc\Fixtures\Requests\SearchRequest;
 
 class TestController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index(): ActionResponse
     {
         return $this->view();

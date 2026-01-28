@@ -6,15 +6,6 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
-use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
-use Psr\Http\Message\ServerRequestInterface;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Controllers\Controller;
@@ -28,6 +19,15 @@ use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
 use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
 use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
 use Framework\Mvc\Security\IdentityManager;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignIn;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\SignUp;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ConfirmResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\ResetPasswordRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignInRequest;
+use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 final class AccountsController extends Controller
 {
@@ -37,6 +37,7 @@ final class AccountsController extends Controller
         private readonly AuthSettings $settings,
         private readonly RequestContext $requestContext,
     ) {
+        parent::__construct();
     }
 
     public function signIn(): ActionResponse

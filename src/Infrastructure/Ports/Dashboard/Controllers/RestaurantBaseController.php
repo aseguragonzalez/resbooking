@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Requests\RequestContext;
+use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 
 abstract class RestaurantBaseController extends Controller
 {
@@ -14,6 +14,7 @@ abstract class RestaurantBaseController extends Controller
         private readonly RequestContext $requestContext,
         private readonly RestaurantContextSettings $settings,
     ) {
+        parent::__construct();
     }
 
     protected function getRestaurantId(): string
