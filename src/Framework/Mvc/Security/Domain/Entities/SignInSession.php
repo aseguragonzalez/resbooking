@@ -7,9 +7,9 @@ namespace Framework\Mvc\Security\Domain\Entities;
 use Framework\Mvc\Security\Challenge;
 use Framework\Mvc\Security\Identity;
 
-final class SignInSession
+final readonly class SignInSession
 {
-    private function __construct(public readonly Challenge $challenge, public readonly Identity $identity)
+    private function __construct(public Challenge $challenge, public Identity $identity)
     {
     }
 
