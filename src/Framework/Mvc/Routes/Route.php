@@ -84,7 +84,10 @@ final class Route
         /** @var string $path */
         $path = preg_replace_callback(
             self::PARAM_PATTERN,
-            function ($matches) use ($args) {
+            /**
+             * @param array<int, string> $matches
+             */
+            function (array $matches) use ($args): string {
                 $name = $matches[2];
                 if (array_key_exists($name, $args)) {
                     return (string)$args[$name];
@@ -92,7 +95,7 @@ final class Route
                 return $matches[0];
             },
             $rawPath
-        );
+        ) ?? $rawPath;
 
         // Build query string for unused args
         $queryArgs = array_filter(
