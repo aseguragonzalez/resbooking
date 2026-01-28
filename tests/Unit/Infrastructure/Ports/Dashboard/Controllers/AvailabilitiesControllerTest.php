@@ -8,14 +8,6 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
-use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\ValueObjects\Availability;
-use Domain\Restaurants\ValueObjects\Settings;
-use Domain\Shared\Capacity;
-use Domain\Shared\DayOfWeek;
-use Domain\Shared\Email;
-use Domain\Shared\Phone;
-use Domain\Shared\TimeSlot;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -26,12 +18,11 @@ use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Infrastructure\Ports\Dashboard\Controllers\AvailabilitiesController;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Tests\Unit\RestaurantBuilder;
 
-#[AllowMockObjectsWithoutExpectations]
 final class AvailabilitiesControllerTest extends TestCase
 {
     private GetRestaurantById&MockObject $getRestaurantById;
@@ -40,17 +31,16 @@ final class AvailabilitiesControllerTest extends TestCase
     private RestaurantContextSettings $settings;
     private AvailabilitiesController $controller;
     private Generator $faker;
-    private string $restaurantId;
     private ServerRequestInterface&MockObject $serverRequest;
+    private RestaurantBuilder $restaurantBuilder;
 
     protected function setUp(): void
     {
         $this->requestContext = new RequestContext();
-        $this->restaurantId = uniqid();
-        $this->requestContext->set('restaurantId', $this->restaurantId);
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
         $this->updateAvailabilities = $this->createMock(UpdateAvailabilities::class);
+        $this->serverRequest = $this->createMock(ServerRequestInterface::class);
         $this->settings = new RestaurantContextSettings();
         $this->controller = new AvailabilitiesController(
             $this->getRestaurantById,
@@ -59,40 +49,20 @@ final class AvailabilitiesControllerTest extends TestCase
             $this->requestContext,
         );
         $this->faker = Factory::create();
-        $this->serverRequest = $this->createMock(ServerRequestInterface::class);
+        $this->restaurantBuilder = new RestaurantBuilder($this->faker);
     }
 
     public function testAvailabilitiesReturnsAvailabilitiesList(): void
     {
-        $availability1 = new Availability(
-            dayOfWeek: DayOfWeek::Monday,
-            capacity: new Capacity(20),
-            timeSlot: TimeSlot::H1200
-        );
-        $availability2 = new Availability(
-            dayOfWeek: DayOfWeek::Tuesday,
-            capacity: new Capacity(15),
-            timeSlot: TimeSlot::H1300
-        );
-
-        $restaurant = Restaurant::build(
-            id: $this->restaurantId,
-            settings: new Settings(
-                email: new Email($this->faker->email()),
-                hasReminders: true,
-                name: 'Test Restaurant',
-                maxNumberOfDiners: new Capacity(10),
-                minNumberOfDiners: new Capacity(1),
-                numberOfTables: new Capacity(20),
-                phone: new Phone('+34-555-0100'),
-            ),
-            availabilities: [$availability1, $availability2]
-        );
-
-        $this->getRestaurantById->expects($this->once())
+        $restaurant = $this->restaurantBuilder->build();
+        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->updateAvailabilities->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getParsedBody');
+        $this->getRestaurantById
+            ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) {
-                return $command->id === $this->restaurantId;
+            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
+                return $command->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 
@@ -106,7 +76,7 @@ final class AvailabilitiesControllerTest extends TestCase
         $this->assertInstanceOf(AvailabilitiesList::class, $view->data);
         /** @var AvailabilitiesList $page */
         $page = $view->data;
-        $this->assertCount(2, $page->availabilities);
+        $this->assertCount(count($restaurant->getAvailabilities()), $page->availabilities);
     }
 
     public function testUpdateAvailabilitiesSuccess(): void
@@ -115,12 +85,17 @@ final class AvailabilitiesControllerTest extends TestCase
             '1_2' => 20,  // timeSlotId_dayOfWeekId => capacity
             '2_3' => 15,
         ];
-        $this->serverRequest->method('getParsedBody')->willReturn($parsedBody);
-
-        $this->updateAvailabilities->expects($this->once())
+        $this->requestContext->set('restaurantId', $this->faker->uuid());
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->serverRequest
+            ->expects($this->once())
+            ->method('getParsedBody')
+            ->willReturn($parsedBody);
+        $this->updateAvailabilities
+            ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
-                return $command->restaurantId === $this->restaurantId
+                return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
             }));
 
@@ -136,6 +111,9 @@ final class AvailabilitiesControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
+        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->updateAvailabilities->expects($this->never())->method('execute');
+        $this->serverRequest->expects($this->never())->method('getParsedBody');
         $routes = AvailabilitiesController::getRoutes();
 
         $this->assertCount(2, $routes);

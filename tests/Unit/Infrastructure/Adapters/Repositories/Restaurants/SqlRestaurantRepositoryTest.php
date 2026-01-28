@@ -169,6 +169,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $restaurant = $this->restaurantBuilder
             ->withUsers([$user1, $user2])
             ->withDiningAreas([])
+            ->withAvailabilities([])
             ->build();
 
         // Mock all required statements
@@ -176,7 +177,8 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         // Mock user INSERT statement
         $insertUserStmt = $this->createMock(PDOStatement::class);
-        $insertUserStmt->expects($this->exactly(2))
+        $insertUserStmt
+            ->expects($this->exactly(2))
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
                 return $params['restaurant_id'] === $restaurant->getId()
