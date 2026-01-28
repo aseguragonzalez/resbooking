@@ -12,12 +12,10 @@ use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Security\Identity;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Routes\Route\RouteController;
 
-#[AllowMockObjectsWithoutExpectations]
 final class RouteTest extends TestCase
 {
     public function testEnsureAuthenticatedIsNotRequired(): void
@@ -32,6 +30,7 @@ final class RouteTest extends TestCase
             false,
             []
         );
+
         $route->ensureAuthenticated($identity);
     }
 
@@ -47,6 +46,7 @@ final class RouteTest extends TestCase
             true,
             []
         );
+
         $route->ensureAuthenticated($identity);
     }
 
@@ -63,6 +63,7 @@ final class RouteTest extends TestCase
             []
         );
         $this->expectException(AuthenticationRequiredException::class);
+
         $route->ensureAuthenticated($identity);
     }
 
@@ -78,13 +79,14 @@ final class RouteTest extends TestCase
             true,
             []
         );
+
         $route->ensureAuthorized($identity);
     }
 
     public function testEnsureAuthorizedFailsWhenIdentityHasNoRoles(): void
     {
         $identity = $this->createMock(Identity::class);
-        $identity->method('getRoles')->willReturn([]);
+        $identity->expects($this->once())->method('getRoles')->willReturn([]);
         $route = Route::create(
             RouteMethod::Get,
             Path::create('/foo'),
@@ -94,13 +96,14 @@ final class RouteTest extends TestCase
             ['admin', 'user']
         );
         $this->expectException(AccessDeniedException::class);
+
         $route->ensureAuthorized($identity);
     }
 
     public function testEnsureAuthorizedFailsWhenRolesMismatch(): void
     {
         $identity = $this->createMock(Identity::class);
-        $identity->method('getRoles')->willReturn(['guest']);
+        $identity->expects($this->once())->method('getRoles')->willReturn(['guest']);
         $route = Route::create(
             RouteMethod::Get,
             Path::create('/foo'),
@@ -110,6 +113,7 @@ final class RouteTest extends TestCase
             ['admin', 'user']
         );
         $this->expectException(AccessDeniedException::class);
+
         $route->ensureAuthorized($identity);
     }
 
@@ -125,6 +129,7 @@ final class RouteTest extends TestCase
             true,
             ['admin', 'user']
         );
+
         $route->ensureAuthorized($identity);
     }
 
@@ -137,6 +142,7 @@ final class RouteTest extends TestCase
     {
         $route = Route::create(RouteMethod::Get, Path::create($routePath), RouteController::class, 'get');
         $result = $route->getPathFromArgs($args);
+
         $this->assertSame($expectedPath, $result->value());
     }
 
@@ -183,6 +189,7 @@ final class RouteTest extends TestCase
     {
         $this->expectException(InvalidController::class);
         $this->expectExceptionMessage("Controller " . RouteTest::class . " is not a valid controller");
+
         Route::create(RouteMethod::Get, Path::create('/foo'), RouteTest::class, 'invalidAction');
     }
 
@@ -192,6 +199,7 @@ final class RouteTest extends TestCase
         $this->expectExceptionMessage(
             "Action 'invalidAction' is not a valid action for controller " . RouteController::class
         );
+
         Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'invalidAction');
     }
 

@@ -11,15 +11,14 @@ use Framework\Mvc\Requests\RequestContextKeys;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class I18nReplacerTest extends TestCase
 {
     private FileManager&MockObject $fileManager;
     private I18nReplacer $i18nReplacer;
+    private RequestContext $context;
 
     protected function setUp(): void
     {
@@ -27,41 +26,45 @@ final class I18nReplacerTest extends TestCase
         $branchesReplacer = new BranchesReplacer(new ModelReplacer());
         $this->fileManager = $this->createMock(FileManager::class);
         $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);
+        $this->context = new RequestContext([RequestContextKeys::Language->value => 'en']);
     }
 
     public function testReplacesKeysWithDictionaryValues(): void
     {
         $this->fileManager
+            ->expects($this->once())
             ->method('readKeyValueJson')
             ->willReturn([
                 'greeting' => 'Hello',
                 'name' => 'Peter',
             ]);
-        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
-        $template = '{{greeting}}, {{name}}!';
-        $result = $this->i18nReplacer->replace((object)[], $template, $context);
+
+        $result = $this->i18nReplacer->replace((object)[], '{{greeting}}, {{name}}!', $this->context);
+
         $this->assertSame('Hello, Peter!', $result);
     }
 
     public function testReplacesWithEmptyDictionary(): void
     {
         $this->fileManager
+            ->expects($this->once())
             ->method('readKeyValueJson')
             ->willReturn([]);
-        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
-        $template = 'No keys here. {{some-key}}';
-        $result = $this->i18nReplacer->replace((object)[], $template, $context);
+
+        $result = $this->i18nReplacer->replace((object)[], 'No keys here. {{some-key}}', $this->context);
+
         $this->assertSame('No keys here. {{some-key}}', $result);
     }
 
     public function testReplacesWithMissingKeysInDictionary(): void
     {
         $this->fileManager
+            ->expects($this->once())
             ->method('readKeyValueJson')
             ->willReturn(['greeting' => 'Hello']);
-        $context = new RequestContext([RequestContextKeys::Language->value => 'en']);
-        $template = '{{greeting}}, {{name}}!';
-        $result = $this->i18nReplacer->replace((object)[], $template, $context);
+
+        $result = $this->i18nReplacer->replace((object)[], '{{greeting}}, {{name}}!', $this->context);
+
         $this->assertSame('Hello, {{name}}!', $result);
     }
 }

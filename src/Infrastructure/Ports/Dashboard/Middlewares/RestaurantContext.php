@@ -6,13 +6,13 @@ namespace Infrastructure\Ports\Dashboard\Middlewares;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
+use Framework\Mvc\Middlewares\Middleware;
+use Framework\Mvc\Requests\RequestContext;
+use Framework\Mvc\Security\Identity;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\Mvc\Middlewares\Middleware;
-use Framework\Mvc\Requests\RequestContext;
-use Framework\Mvc\Security\Identity;
 
 final class RestaurantContext extends Middleware
 {
@@ -60,7 +60,8 @@ final class RestaurantContext extends Middleware
 
     private function isRestaurantCookieValid(string $restaurantId, Identity $identity): bool
     {
-        $restaurants = $this->restaurantRepository->findByUserEmail($identity->username());
+        $username = $identity->username();
+        $restaurants = $this->restaurantRepository->findByUserEmail($username);
         $matchedRestaurants = array_filter($restaurants, function (Restaurant $restaurant) use ($restaurantId) {
             return $restaurant->getId() === $restaurantId;
         });
