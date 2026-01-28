@@ -16,12 +16,10 @@ use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Views\BranchModel;
 
-#[AllowMockObjectsWithoutExpectations]
 final class HtmlViewEngineTest extends TestCase
 {
     private string $basePath = __DIR__ . "/Files/";
@@ -40,12 +38,9 @@ final class HtmlViewEngineTest extends TestCase
         $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $i18nReplacer);
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     public function testRenderFailWhenViewDoesNotExist(): void
     {
+        $this->fileManager->expects($this->never())->method('readKeyValueJson')->willReturn([]);
         $view = new View(
             viewPath: "fake_view",
             data: null,
@@ -60,6 +55,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithPrimitiveProperties(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $model = new \stdClass();
         $model->name = "Peter Parker";
         $model->age = 25;
@@ -84,6 +80,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderObjectProperties(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $address = new \stdClass();
         $address->street = "Elm Street";
         $address->number = 123;
@@ -113,6 +110,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderArrayOfObjects(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $user1 = new \stdClass();
         $user1->id = "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p";
         $user1->name = "Peter Parker";
@@ -140,6 +138,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderComplexModel(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $address = new \stdClass();
         $address->street = "Elm Street";
         $address->number = 123;
@@ -198,6 +197,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithBranchOptions(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $model = new BranchModel(
             name: "Peter Parker",
             description: "Friendly neighborhood Spider",
@@ -229,6 +229,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithLayout(): void
     {
+        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
         $model = new \stdClass();
         $model->name = "Peter Parker";
         $model->age = 25;
@@ -252,6 +253,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderFailWhenLayoutDoesNotExist(): void
     {
+        $this->fileManager->expects($this->never())->method('readKeyValueJson');
         $model = new \stdClass();
         $view = new View(
             viewPath: "view_without_layout",
@@ -270,9 +272,8 @@ final class HtmlViewEngineTest extends TestCase
         $requestContext = new RequestContext();
         $requestContext->set(RequestContextKeys::Language->value, 'en');
         $identity = $this->createMock(Identity::class);
-        $identity->method('isAuthenticated')->willReturn(false);
-        $identity->method('hasRole')->willReturn(false);
-        $identity->method('username')->willReturn('anonymous');
+        $identity->expects($this->once())->method('isAuthenticated')->willReturn(false);
+        $identity->expects($this->once())->method('username')->willReturn('anonymous');
         $requestContext->setIdentity($identity);
         return $requestContext;
     }
