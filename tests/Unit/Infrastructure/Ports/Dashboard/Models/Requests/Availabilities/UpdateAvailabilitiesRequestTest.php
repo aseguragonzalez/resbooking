@@ -6,11 +6,9 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Models\Availabilities\Reques
 
 use Application\Restaurants\UpdateAvailabilities\Availability;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-#[AllowMockObjectsWithoutExpectations]
 final class UpdateAvailabilitiesRequestTest extends TestCase
 {
     public function testConstructorParsesValidRequestBody(): void
@@ -22,7 +20,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         ];
 
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn($parsedBody);
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
 
         $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
 
@@ -40,7 +38,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         ];
 
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn($parsedBody);
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
 
         $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
 
@@ -58,7 +56,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         ];
 
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn($parsedBody);
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
 
         $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
 
@@ -70,7 +68,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
     public function testConstructorHandlesEmptyParsedBody(): void
     {
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn([]);
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn([]);
 
         $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
 
@@ -80,8 +78,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
     public function testConstructorThrowsExceptionForNonArrayParsedBody(): void
     {
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn('not an array');
-
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn('not an array');
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid request body');
 
@@ -91,8 +88,7 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
     public function testConstructorThrowsExceptionForNullParsedBody(): void
     {
         $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->method('getParsedBody')->willReturn(null);
-
+        $requestMock->expects($this->once())->method('getParsedBody')->willReturn(null);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid request body');
 
