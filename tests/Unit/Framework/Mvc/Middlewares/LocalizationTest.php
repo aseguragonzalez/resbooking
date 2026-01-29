@@ -11,11 +11,9 @@ use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\Headers\SetCookie;
 use Framework\Mvc\Responses\StatusCode;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
-#[AllowMockObjectsWithoutExpectations]
 final class LocalizationTest extends TestCase
 {
     private Psr17Factory $requestFactory;
@@ -26,7 +24,7 @@ final class LocalizationTest extends TestCase
     protected function setUp(): void
     {
         $this->requestFactory = new Psr17Factory();
-        $mock = $this->createMock(Middleware::class);
+        $mock = $this->createStub(Middleware::class);
         $mock->method('handleRequest')->willReturn($this->requestFactory->createResponse(200));
         $this->middleware = new Localization(
             settings: new LanguageSettings(
@@ -40,10 +38,6 @@ final class LocalizationTest extends TestCase
             responseFactory: new Psr17Factory(),
             next: $mock,
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     public function testHandleRequestSetsLanguageCookieOnPost(): void
