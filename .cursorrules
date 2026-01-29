@@ -468,9 +468,14 @@ interface ProjectRepository extends Repository
 - Mirror source structure under `/tests`.
 - Each class has a corresponding `*Test.php`.
 - Use **Arrange - Act - Assert (AAA)** structure.
+- Prefer **stubs** over mocks when the test only needs a dependency to return a
+ value (no need to verify call count or arguments). Use `createStub(Interface::class)`
+ and `->method('...')->willReturn(...)`; do **not** use `#[AllowMockObjectsWithoutExpectations]`.
+- Use **mocks** (e.g. `createMock()` with `expects($this->once())` or
+ `expects($this->never())`) only when the test must verify that a method was
+ called (or not called) or was called with specific arguments.
 - Prefer **mocks/test doubles** over real infrastructure.
 - Use **Faker** for generating test data.
-- Use **mocks** for testing dependencies.
 - Validate **domain invariants** and **emitted events**.
 
 Example:

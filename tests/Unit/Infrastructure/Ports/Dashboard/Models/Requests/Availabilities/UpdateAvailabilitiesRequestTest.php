@@ -19,10 +19,10 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
             '5_1' => '15',
         ];
 
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn($parsedBody);
 
-        $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
+        $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(3, $updateRequest->availabilities);
         $this->assertInstanceOf(Availability::class, $updateRequest->availabilities[0]);
@@ -37,10 +37,10 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
             '13_5' => '25',
         ];
 
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn($parsedBody);
 
-        $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
+        $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(1, $updateRequest->availabilities);
         $this->assertSame(13, $updateRequest->availabilities[0]->timeSlotId);
@@ -55,10 +55,10 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
             '3_4' => '',
         ];
 
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn($parsedBody);
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn($parsedBody);
 
-        $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
+        $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(2, $updateRequest->availabilities);
         $this->assertSame(0, $updateRequest->availabilities[0]->capacity);
@@ -67,31 +67,31 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
 
     public function testConstructorHandlesEmptyParsedBody(): void
     {
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn([]);
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn([]);
 
-        $updateRequest = new UpdateAvailabilitiesRequest($requestMock);
+        $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(0, $updateRequest->availabilities);
     }
 
     public function testConstructorThrowsExceptionForNonArrayParsedBody(): void
     {
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn('not an array');
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn('not an array');
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid request body');
 
-        new UpdateAvailabilitiesRequest($requestMock);
+        new UpdateAvailabilitiesRequest($requestStub);
     }
 
     public function testConstructorThrowsExceptionForNullParsedBody(): void
     {
-        $requestMock = $this->createMock(ServerRequestInterface::class);
-        $requestMock->expects($this->once())->method('getParsedBody')->willReturn(null);
+        $requestStub = $this->createStub(ServerRequestInterface::class);
+        $requestStub->method('getParsedBody')->willReturn(null);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid request body');
 
-        new UpdateAvailabilitiesRequest($requestMock);
+        new UpdateAvailabilitiesRequest($requestStub);
     }
 }

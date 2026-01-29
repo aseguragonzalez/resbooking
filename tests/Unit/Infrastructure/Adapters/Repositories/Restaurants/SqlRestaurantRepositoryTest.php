@@ -18,12 +18,10 @@ use Infrastructure\Adapters\Repositories\Restaurants\RestaurantsMapper;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 use PDO;
 use PDOStatement;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\RestaurantBuilder;
 
-#[AllowMockObjectsWithoutExpectations]
 final class SqlRestaurantRepositoryTest extends TestCase
 {
     private PDO&MockObject $pdo;
@@ -486,10 +484,10 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->method('prepare')
             ->willReturnCallback(function (string $sql): PDOStatement {
                 if (empty($this->prepareStatementQueue)) {
-                    $fallbackStmt = $this->createMock(PDOStatement::class);
-                    $fallbackStmt->expects($this->any())->method('execute');
-                    $fallbackStmt->expects($this->any())->method('fetch')->willReturn(false);
-                    $fallbackStmt->expects($this->any())->method('fetchAll')->willReturn([]);
+                    $fallbackStmt = $this->createStub(PDOStatement::class);
+                    $fallbackStmt->method('execute')->willReturn(true);
+                    $fallbackStmt->method('fetch')->willReturn(false);
+                    $fallbackStmt->method('fetchAll')->willReturn([]);
                     return $fallbackStmt;
                 }
 

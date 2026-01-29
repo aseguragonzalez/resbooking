@@ -9,11 +9,9 @@ use Framework\Migrations\Domain\Clients\DbClient;
 use Framework\Migrations\Domain\Entities\Migration;
 use Framework\Migrations\Domain\Entities\Script;
 use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class TestMigrationExecutorHandlerTest extends TestCase
 {
     private DbClient&MockObject $dbClient;
@@ -54,7 +52,7 @@ final class TestMigrationExecutorHandlerTest extends TestCase
 
     private function createScriptFromFile(string $fileName, string $content, ?string $rollbackContent = null): Script
     {
-        $fileManager = $this->createMock(FileManager::class);
+        $fileManager = $this->createStub(FileManager::class);
         $basePath = '/test/migrations';
 
         if ($rollbackContent !== null) {

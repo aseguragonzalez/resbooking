@@ -11,12 +11,12 @@ use Framework\Mvc\Requests\RequestContextKeys;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class I18nReplacerTest extends TestCase
 {
-    private FileManager&MockObject $fileManager;
+    private FileManager&Stub $fileManager;
     private I18nReplacer $i18nReplacer;
     private RequestContext $context;
 
@@ -24,7 +24,7 @@ final class I18nReplacerTest extends TestCase
     {
         $settings = new LanguageSettings(basePath: __DIR__);
         $branchesReplacer = new BranchesReplacer(new ModelReplacer());
-        $this->fileManager = $this->createMock(FileManager::class);
+        $this->fileManager = $this->createStub(FileManager::class);
         $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);
         $this->context = new RequestContext([RequestContextKeys::Language->value => 'en']);
     }
@@ -32,7 +32,6 @@ final class I18nReplacerTest extends TestCase
     public function testReplacesKeysWithDictionaryValues(): void
     {
         $this->fileManager
-            ->expects($this->once())
             ->method('readKeyValueJson')
             ->willReturn([
                 'greeting' => 'Hello',
@@ -46,10 +45,7 @@ final class I18nReplacerTest extends TestCase
 
     public function testReplacesWithEmptyDictionary(): void
     {
-        $this->fileManager
-            ->expects($this->once())
-            ->method('readKeyValueJson')
-            ->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
 
         $result = $this->i18nReplacer->replace((object)[], 'No keys here. {{some-key}}', $this->context);
 
@@ -58,10 +54,7 @@ final class I18nReplacerTest extends TestCase
 
     public function testReplacesWithMissingKeysInDictionary(): void
     {
-        $this->fileManager
-            ->expects($this->once())
-            ->method('readKeyValueJson')
-            ->willReturn(['greeting' => 'Hello']);
+        $this->fileManager->method('readKeyValueJson')->willReturn(['greeting' => 'Hello']);
 
         $result = $this->i18nReplacer->replace((object)[], '{{greeting}}, {{name}}!', $this->context);
 

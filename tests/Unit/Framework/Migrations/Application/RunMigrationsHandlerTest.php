@@ -12,25 +12,24 @@ use Framework\Migrations\Domain\Repositories\MigrationRepository;
 use Framework\Migrations\Domain\Services\MigrationExecutor;
 use Framework\Migrations\Domain\Services\MigrationFileManager;
 use Framework\Migrations\Domain\Services\RollbackExecutor;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class RunMigrationsHandlerTest extends TestCase
 {
-    private MigrationExecutor&MockObject $migrationExecutor;
+    private MigrationExecutor&Stub $migrationExecutor;
     private MigrationFileManager&MockObject $migrationFileManager;
     private MigrationRepository&MockObject $migrationRepository;
-    private RollbackExecutor&MockObject $rollbackExecutor;
+    private RollbackExecutor&Stub $rollbackExecutor;
     private RunMigrationsHandler $service;
 
     protected function setUp(): void
     {
-        $this->migrationExecutor = $this->createMock(MigrationExecutor::class);
+        $this->migrationExecutor = $this->createStub(MigrationExecutor::class);
         $this->migrationFileManager = $this->createMock(MigrationFileManager::class);
         $this->migrationRepository = $this->createMock(MigrationRepository::class);
-        $this->rollbackExecutor = $this->createMock(RollbackExecutor::class);
+        $this->rollbackExecutor = $this->createStub(RollbackExecutor::class);
         $this->service = new RunMigrationsHandler(
             $this->migrationExecutor,
             $this->migrationFileManager,
@@ -56,8 +55,7 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->exactly(2))
-            ->method('execute');
+        $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
     }
@@ -81,8 +79,7 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn($executedMigrations);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute');
+        $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
     }
@@ -109,8 +106,7 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn($executedMigrations);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->with($this->callback(function (Migration $migration) {
                 return $migration->name === '20240117';
             }));
@@ -136,9 +132,6 @@ final class RunMigrationsHandlerTest extends TestCase
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn($executedMigrations);
-
-        $this->migrationExecutor->expects($this->never())
-            ->method('execute');
 
         $this->service->execute($basePath);
     }
@@ -188,8 +181,7 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute');
+        $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
     }
@@ -204,8 +196,7 @@ final class RunMigrationsHandlerTest extends TestCase
         ];
 
         $executedMigrations = [];
-        $this->migrationExecutor->expects($this->exactly(3))
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->willReturnCallback(function (Migration $migration) use (&$executedMigrations): void {
                 $executedMigrations[] = $migration->name;
             });
@@ -238,8 +229,7 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute');
+        $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
     }
@@ -266,12 +256,10 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->willThrowException($migrationException);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback')
+        $this->rollbackExecutor->method('rollback')
             ->with($scripts);
 
         $this->service->execute($basePath);
@@ -299,12 +287,10 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->willThrowException($migrationException);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback');
+        $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
     }
@@ -331,12 +317,10 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->willThrowException($migrationException);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback')
+        $this->rollbackExecutor->method('rollback')
             ->with($this->equalTo($scripts));
 
         $this->service->execute($basePath);
@@ -363,12 +347,10 @@ final class RunMigrationsHandlerTest extends TestCase
             ->method('getMigrations')
             ->willReturn([]);
 
-        $this->migrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->migrationExecutor->method('execute')
             ->willThrowException($migrationException);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback');
+        $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
     }

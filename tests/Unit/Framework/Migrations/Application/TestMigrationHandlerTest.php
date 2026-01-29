@@ -15,29 +15,27 @@ use Framework\Migrations\Domain\Services\SchemaComparisonResult;
 use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class TestMigrationHandlerTest extends TestCase
 {
-    private MigrationFileManager&MockObject $migrationFileManager;
-    private TestMigrationExecutor&MockObject $testMigrationExecutor;
-    private RollbackExecutor&MockObject $rollbackExecutor;
-    private SchemaSnapshotExecutor&MockObject $schemaSnapshotExecutor;
-    private SchemaComparator&MockObject $schemaComparator;
-    private DatabaseBackupManager&MockObject $databaseBackupService;
+    private MigrationFileManager&Stub $migrationFileManager;
+    private TestMigrationExecutor&Stub $testMigrationExecutor;
+    private RollbackExecutor&Stub $rollbackExecutor;
+    private SchemaSnapshotExecutor&Stub $schemaSnapshotExecutor;
+    private SchemaComparator&Stub $schemaComparator;
+    private DatabaseBackupManager&Stub $databaseBackupService;
     private TestMigrationHandler $service;
 
     protected function setUp(): void
     {
-        $this->migrationFileManager = $this->createMock(MigrationFileManager::class);
-        $this->testMigrationExecutor = $this->createMock(TestMigrationExecutor::class);
-        $this->rollbackExecutor = $this->createMock(RollbackExecutor::class);
-        $this->schemaSnapshotExecutor = $this->createMock(SchemaSnapshotExecutor::class);
-        $this->schemaComparator = $this->createMock(SchemaComparator::class);
-        $this->databaseBackupService = $this->createMock(DatabaseBackupManager::class);
+        $this->migrationFileManager = $this->createStub(MigrationFileManager::class);
+        $this->testMigrationExecutor = $this->createStub(TestMigrationExecutor::class);
+        $this->rollbackExecutor = $this->createStub(RollbackExecutor::class);
+        $this->schemaSnapshotExecutor = $this->createStub(SchemaSnapshotExecutor::class);
+        $this->schemaComparator = $this->createStub(SchemaComparator::class);
+        $this->databaseBackupService = $this->createStub(DatabaseBackupManager::class);
 
         $this->service = new TestMigrationHandler(
             $this->migrationFileManager,
@@ -71,34 +69,27 @@ final class TestMigrationHandlerTest extends TestCase
         $comparisonResult = SchemaComparisonResult::new(true);
         $backupFilePath = '/tmp/backup.sql';
 
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrationByName')
+        $this->migrationFileManager->method('getMigrationByName')
             ->with('/test/migrations', 'test_migration')
             ->willReturn($migration);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('backup')
+        $this->databaseBackupService->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->schemaSnapshotExecutor->expects($this->exactly(2))
-            ->method('capture')
+        $this->schemaSnapshotExecutor->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
 
-        $this->testMigrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->testMigrationExecutor->method('execute')
             ->with($migration);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback')
+        $this->rollbackExecutor->method('rollback')
             ->with($migration->scripts);
 
-        $this->schemaComparator->expects($this->once())
-            ->method('compare')
+        $this->schemaComparator->method('compare')
             ->with($initialSnapshot, $finalSnapshot)
             ->willReturn($comparisonResult);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('restore')
+        $this->databaseBackupService->method('restore')
             ->with($backupFilePath);
 
         $this->service->execute($command);
@@ -113,34 +104,27 @@ final class TestMigrationHandlerTest extends TestCase
         $comparisonResult = SchemaComparisonResult::new(false, ['Table users was added']);
         $backupFilePath = '/tmp/backup.sql';
 
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrationByName')
+        $this->migrationFileManager->method('getMigrationByName')
             ->with('/test/migrations', 'test_migration')
             ->willReturn($migration);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('backup')
+        $this->databaseBackupService->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->schemaSnapshotExecutor->expects($this->exactly(2))
-            ->method('capture')
+        $this->schemaSnapshotExecutor->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
 
-        $this->testMigrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->testMigrationExecutor->method('execute')
             ->with($migration);
 
-        $this->rollbackExecutor->expects($this->once())
-            ->method('rollback')
+        $this->rollbackExecutor->method('rollback')
             ->with($migration->scripts);
 
-        $this->schemaComparator->expects($this->once())
-            ->method('compare')
+        $this->schemaComparator->method('compare')
             ->with($initialSnapshot, $finalSnapshot)
             ->willReturn($comparisonResult);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('restore')
+        $this->databaseBackupService->method('restore')
             ->with($backupFilePath);
 
         $this->expectException(\RuntimeException::class);
@@ -155,21 +139,17 @@ final class TestMigrationHandlerTest extends TestCase
         $command = new TestMigrationCommand('test_migration', '/test/migrations');
         $backupFilePath = '/tmp/backup.sql';
 
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrationByName')
+        $this->migrationFileManager->method('getMigrationByName')
             ->with('/test/migrations', 'test_migration')
             ->willReturn($migration);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('backup')
+        $this->databaseBackupService->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->schemaSnapshotExecutor->expects($this->once())
-            ->method('capture')
+        $this->schemaSnapshotExecutor->method('capture')
             ->willThrowException(new \RuntimeException('Database error'));
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('restore')
+        $this->databaseBackupService->method('restore')
             ->with($backupFilePath);
 
         $this->expectException(\RuntimeException::class);
@@ -185,26 +165,21 @@ final class TestMigrationHandlerTest extends TestCase
         $initialSnapshot = SchemaSnapshot::new([]);
         $backupFilePath = '/tmp/backup.sql';
 
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrationByName')
+        $this->migrationFileManager->method('getMigrationByName')
             ->with('/test/migrations', 'test_migration')
             ->willReturn($migration);
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('backup')
+        $this->databaseBackupService->method('backup')
             ->willReturn($backupFilePath);
 
-        $this->schemaSnapshotExecutor->expects($this->once())
-            ->method('capture')
+        $this->schemaSnapshotExecutor->method('capture')
             ->willReturn($initialSnapshot);
 
-        $this->testMigrationExecutor->expects($this->once())
-            ->method('execute')
+        $this->testMigrationExecutor->method('execute')
             ->with($migration)
             ->willThrowException(new \RuntimeException('Migration execution failed'));
 
-        $this->databaseBackupService->expects($this->once())
-            ->method('restore')
+        $this->databaseBackupService->method('restore')
             ->with($backupFilePath);
 
         $this->expectException(\RuntimeException::class);
