@@ -12,59 +12,57 @@ use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\StatusCode;
 use Framework\Mvc\Views\ViewEngine;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-#[AllowMockObjectsWithoutExpectations]
 final class ErrorHandlingTest extends TestCase
 {
     private ErrorHandling $middleware;
-    private LoggerInterface $logger;
-    private ResponseFactoryInterface $responseFactory;
-    private ViewEngine $viewEngine;
     private ErrorSettings $settings;
-    private Psr17Factory $psrFactory;
+    private LoggerInterface&MockObject $logger;
+    private ServerRequestInterface $request;
 
     protected function setUp(): void
     {
+        $psrFactory = new Psr17Factory();
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->responseFactory = new Psr17Factory();
-        $this->viewEngine = $this->createMock(ViewEngine::class);
         $this->settings = new ErrorSettings(
             errorsMapping: [\InvalidArgumentException::class => new ErrorMapping(400, 'custom_error', 'custom_error')],
             errorsMappingDefaultValue: new ErrorMapping(500, 'error', 'error')
         );
-        $this->psrFactory = new Psr17Factory();
+        $this->request = $psrFactory
+            ->createServerRequest('GET', '/')
+            ->withAttribute(RequestContext::class, new RequestContext());
         $this->middleware = new ErrorHandling(
             settings: $this->settings,
             logger: $this->logger,
-            responseFactory: $this->responseFactory,
-            viewEngine: $this->viewEngine
+            responseFactory: $psrFactory,
+            viewEngine: $this->createStub(ViewEngine::class)
         );
     }
 
     public function testThrowsIfNoNextMiddleware(): void
     {
-        $request = $this->psrFactory->createServerRequest('GET', '/')
-            ->withAttribute(RequestContext::class, new RequestContext());
-
+        $this->logger->expects($this->never())->method('error');
         $this->expectException(\RuntimeException::class);
-        $this->middleware->handleRequest($request);
+
+        $this->middleware->handleRequest($this->request);
     }
 
     public function testHandlesExceptionWithCustomMapping(): void
     {
-        $next = $this->createMock(Middleware::class);
-        $next->method('handleRequest')
-            ->willThrowException(new \InvalidArgumentException('Test'));
+        $this->logger
+            ->expects($this->once())
+            ->method('error')
+            ->with('Error handling middleware: {message}', ['message' => 'Test']);
+        $next = $this->createStub(Middleware::class);
+        $next->method('handleRequest')->willThrowException(new \InvalidArgumentException('Test'));
         $this->middleware->setNext($next);
-        $request = $this->psrFactory->createServerRequest('GET', '/')
-            ->withAttribute(RequestContext::class, new RequestContext());
 
-        $response = $this->middleware->handleRequest($request);
+        $response = $this->middleware->handleRequest($this->request);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::BadRequest->value, $response->getStatusCode());
@@ -72,15 +70,15 @@ final class ErrorHandlingTest extends TestCase
 
     public function testHandlesExceptionWithDefaultMapping(): void
     {
-        $next = $this->createMock(Middleware::class);
-        $next->method('handleRequest')
-            ->willThrowException(new \Exception('Test'));
+        $this->logger
+            ->expects($this->once())
+            ->method('error')
+            ->with('Error handling middleware: {message}', ['message' => 'Test']);
+        $next = $this->createStub(Middleware::class);
+        $next->method('handleRequest')->willThrowException(new \Exception('Test'));
         $this->middleware->setNext($next);
 
-        $request = $this->psrFactory->createServerRequest('GET', '/')
-            ->withAttribute(RequestContext::class, new RequestContext());
-
-        $response = $this->middleware->handleRequest($request);
+        $response = $this->middleware->handleRequest($this->request);
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::InternalServerError->value, $response->getStatusCode());
