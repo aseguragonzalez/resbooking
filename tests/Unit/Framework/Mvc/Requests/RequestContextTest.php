@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Tests\Unit\Framework\Mvc\Requests;
 
 use Framework\Mvc\Requests\RequestContext;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use Framework\Mvc\Security\Identity;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class RequestContextTest extends TestCase
 {
     public function testGetReturnsStringValue(): void
     {
         $context = new RequestContext(['foo' => 'bar']);
+
         $this->assertSame('bar', $context->get('foo'));
     }
 
@@ -22,6 +22,7 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext(['foo' => 'bar']);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Key 'baz' not found");
+
         $context->get('baz');
     }
 
@@ -30,6 +31,7 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext(['foo' => 123]);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Value for key 'foo' is not a string");
+
         $context->get('foo');
     }
 
@@ -37,7 +39,9 @@ final class RequestContextTest extends TestCase
     {
         $object = new \stdClass();
         $context = new RequestContext(['obj' => $object]);
+
         $result = $context->getAs('obj', \stdClass::class);
+
         $this->assertInstanceOf(\stdClass::class, $result);
         $this->assertSame($object, $result);
     }
@@ -47,6 +51,7 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext(['obj' => new \stdClass()]);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Value for key 'obj' is not of type 'DateTime'");
+
         $context->getAs('obj', \DateTime::class);
     }
 
@@ -55,6 +60,7 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext(['foo' => 'bar']);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Key 'baz' not found");
+
         $context->getAs('baz', \stdClass::class);
     }
 
@@ -70,9 +76,11 @@ final class RequestContextTest extends TestCase
 
     public function testSetIdentityAndGetIdentity(): void
     {
-        $identity = $this->createMock(\Framework\Mvc\Security\Identity::class);
+        $identity = $this->createStub(Identity::class);
         $context = new RequestContext();
+
         $context->setIdentity($identity);
+
         $this->assertSame($identity, $context->getIdentity());
     }
 
@@ -81,13 +89,16 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext();
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Key 'identity' not found");
+
         $context->getIdentity();
     }
 
     public function testSetIdentityTokenAndGetIdentityToken(): void
     {
         $context = new RequestContext();
+
         $context->setIdentityToken('token123');
+
         $this->assertSame('token123', $context->getIdentityToken());
     }
 
@@ -96,6 +107,7 @@ final class RequestContextTest extends TestCase
         $context = new RequestContext();
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Key 'identity_token' not found");
+
         $context->getIdentityToken();
     }
 
@@ -107,6 +119,7 @@ final class RequestContextTest extends TestCase
         $context->set('identity_token', 123);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Value for key 'identity_token' is not of type 'string'");
+
         $context->getIdentityToken();
     }
 }
