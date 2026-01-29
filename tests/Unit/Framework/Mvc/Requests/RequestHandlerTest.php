@@ -22,7 +22,6 @@ use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
 use Framework\Mvc\Views\ViewEngine;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
@@ -30,7 +29,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tests\Unit\Framework\Mvc\Fixtures\Controllers\TestController;
 
-#[AllowMockObjectsWithoutExpectations]
 final class RequestHandlerTest extends TestCase
 {
     private ActionParameterBuilder $actionParameterBuilder;
@@ -44,7 +42,7 @@ final class RequestHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $containerMock = $this->createMock(ContainerInterface::class);
+        $containerMock = $this->createStub(ContainerInterface::class);
         $containerMock->method('get')->willReturn(new TestController());
         $this->actionParameterBuilder = new ActionParameterBuilder();
         $this->container = $containerMock;
@@ -86,7 +84,7 @@ final class RequestHandlerTest extends TestCase
         $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
         $i18nReplacer = new I18nReplacer(
             new LanguageSettings(basePath: __DIR__),
-            $this->createMock(FileManager::class),
+            $this->createStub(FileManager::class),
             new BranchesReplacer(new ModelReplacer())
         );
         $this->viewEngine = new HtmlViewEngine($this->settings, $i18nReplacer);
@@ -97,10 +95,6 @@ final class RequestHandlerTest extends TestCase
             $this->router,
             $this->viewEngine
         );
-    }
-
-    protected function tearDown(): void
-    {
     }
 
     public function testHandleRequestWithRedirectTo(): void
@@ -394,7 +388,7 @@ final class RequestHandlerTest extends TestCase
     {
         $requestContext = new RequestContext();
         $requestContext->set(RequestContextKeys::Language->value, 'en');
-        $identity = $this->createMock(Identity::class);
+        $identity = $this->createStub(Identity::class);
         $identity->method('isAuthenticated')->willReturn(false);
         $identity->method('hasRole')->willReturn(false);
         $identity->method('username')->willReturn('anonymous');
