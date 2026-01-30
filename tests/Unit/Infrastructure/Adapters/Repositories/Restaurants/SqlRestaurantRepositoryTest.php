@@ -45,8 +45,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
     public function testSaveInsertsNewRestaurant(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-
-        // Mock restaurant INSERT statement
         $restaurantStmt = $this->createMock(PDOStatement::class);
         $restaurantStmt->expects($this->once())
             ->method('execute')
@@ -61,8 +59,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && $params['has_reminders'] === ($restaurant->getSettings()->hasReminders ? 1 : 0);
             }));
         $this->prepareStatementQueue[] = $restaurantStmt;
-
-        // Mock DELETE statements
         $deleteDiningAreasStmt = $this->createMock(PDOStatement::class);
         $deleteDiningAreasStmt->expects($this->once())
             ->method('execute')
@@ -80,7 +76,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->method('execute')
             ->with(['restaurant_id' => $restaurant->getId()]);
         $this->prepareStatementQueue[] = $deleteUsersStmt;
-
         $this->setupPrepareCallback();
 
         $this->repository->save($restaurant);
@@ -101,11 +96,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $restaurant = $this->restaurantBuilder
             ->withDiningAreas([$diningArea1, $diningArea2])
             ->build();
-
-        // Mock all required statements
         $this->mockSaveStatements($restaurant);
-
-        // Mock dining area INSERT statement
         $insertDiningAreaStmt = $this->createMock(PDOStatement::class);
         $insertDiningAreaStmt->expects($this->exactly(2))
             ->method('execute')
@@ -116,7 +107,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && $params['restaurant_id'] === $restaurant->getId();
             }));
         $this->prepareStatementQueue[] = $insertDiningAreaStmt;
-
         $this->setupPrepareCallback();
 
         $this->repository->save($restaurant);
@@ -138,11 +128,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->withAvailabilities([$availability1, $availability2])
             ->withDiningAreas([])
             ->build();
-
-        // Mock all required statements
         $this->mockSaveStatements($restaurant);
-
-        // Mock availability INSERT statement
         $insertAvailabilityStmt = $this->createMock(PDOStatement::class);
         $insertAvailabilityStmt->expects($this->exactly(2))
             ->method('execute')
@@ -154,7 +140,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && $params['restaurant_id'] === $restaurant->getId();
             }));
         $this->prepareStatementQueue[] = $insertAvailabilityStmt;
-
         $this->setupPrepareCallback();
 
         $this->repository->save($restaurant);
@@ -169,11 +154,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->withDiningAreas([])
             ->withAvailabilities([])
             ->build();
-
-        // Mock all required statements
         $this->mockSaveStatements($restaurant);
-
-        // Mock user INSERT statement
         $insertUserStmt = $this->createMock(PDOStatement::class);
         $insertUserStmt
             ->expects($this->exactly(2))
@@ -183,7 +164,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && isset($params['user_id']);
             }));
         $this->prepareStatementQueue[] = $insertUserStmt;
-
         $this->setupPrepareCallback();
 
         $this->repository->save($restaurant);
@@ -193,8 +173,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
     {
         $restaurantId = $this->faker->uuid;
         $email = $this->faker->email;
-
-        // Mock restaurant SELECT
         $restaurantStmt = $this->createMock(PDOStatement::class);
         $restaurantStmt->expects($this->once())
             ->method('execute')
@@ -213,8 +191,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
                 'has_reminders' => 1,
             ]);
         $this->prepareStatementQueue[] = $restaurantStmt;
-
-        // Mock dining areas SELECT
         $diningAreasStmt = $this->createMock(PDOStatement::class);
         $diningAreasStmt->expects($this->once())
             ->method('execute')
@@ -224,8 +200,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn([]);
         $this->prepareStatementQueue[] = $diningAreasStmt;
-
-        // Mock availabilities SELECT
         $availabilitiesStmt = $this->createMock(PDOStatement::class);
         $availabilitiesStmt->expects($this->once())
             ->method('execute')
@@ -235,8 +209,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn([]);
         $this->prepareStatementQueue[] = $availabilitiesStmt;
-
-        // Mock users SELECT
         $usersStmt = $this->createMock(PDOStatement::class);
         $usersStmt->expects($this->once())
             ->method('execute')
@@ -249,12 +221,13 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         $this->setupPrepareCallback();
 
+        /** @var Restaurant $result */
         $result = $this->repository->getById($restaurantId);
 
-        $this->assertInstanceOf(Restaurant::class, $result);
         $this->assertSame($restaurantId, $result->getId());
         $this->assertSame('Test Restaurant', $result->getSettings()->name);
         $this->assertSame($email, $result->getSettings()->email->value);
+        $this->assertInstanceOf(Restaurant::class, $result);
     }
 
     public function testGetByIdReturnsNullWhenNotExists(): void
@@ -360,8 +333,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $email = 'user@example.com';
         $restaurantId1 = $this->faker->uuid;
         $restaurantId2 = $this->faker->uuid;
-
-        // Mock restaurant IDs query
         $restaurantIdsStmt = $this->createMock(PDOStatement::class);
         $restaurantIdsStmt->expects($this->once())
             ->method('execute')
@@ -375,7 +346,6 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ]);
         $this->prepareStatementQueue[] = $restaurantIdsStmt;
 
-        // Mock getById calls (2 restaurants)
         for ($i = 0; $i < 2; $i++) {
             $restaurantId = $i === 0 ? $restaurantId1 : $restaurantId2;
 

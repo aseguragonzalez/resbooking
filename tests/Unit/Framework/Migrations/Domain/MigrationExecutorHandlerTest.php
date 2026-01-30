@@ -36,7 +36,6 @@ final class MigrationExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
         $this->dbClient->expects($this->exactly(2))->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository->expects($this->once())->method('save')->with($this->equalTo($migration));
@@ -50,22 +49,16 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
-        $this->dbClient->expects($this->once())
-            ->method('execute');
-
-        $this->dbClient->expects($this->once())
-            ->method('beginTransaction');
-
-        $this->repository->expects($this->once())
+        $this->dbClient->expects($this->once())->method('execute');
+        $this->dbClient->expects($this->once())->method('beginTransaction');
+        $this->repository
+            ->expects($this->once())
             ->method('save')
             ->with($this->callback(function ($savedMigration) use ($migration) {
                 return $savedMigration instanceof Migration &&
                     $savedMigration->name === $migration->name;
             }));
-
-        $this->dbClient->expects($this->once())
-            ->method('commit');
+        $this->dbClient->expects($this->once())->method('commit');
 
         $this->executor->execute($migration);
     }
@@ -75,18 +68,10 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
-        $this->dbClient->expects($this->once())
-            ->method('execute');
-
-        $this->dbClient->expects($this->once())
-            ->method('beginTransaction');
-
-        $this->repository->expects($this->once())
-            ->method('save');
-
-        $this->dbClient->expects($this->once())
-            ->method('commit');
+        $this->dbClient->expects($this->once())->method('execute');
+        $this->dbClient->expects($this->once())->method('beginTransaction');
+        $this->repository->expects($this->once())->method('save');
+        $this->dbClient->expects($this->once())->method('commit');
 
         $this->executor->execute($migration);
     }
@@ -96,21 +81,11 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
-        $this->dbClient->expects($this->once())
-            ->method('execute');
-
-        $this->dbClient->expects($this->once())
-            ->method('beginTransaction');
-
-        $this->repository->expects($this->once())
-            ->method('save');
-
-        $this->dbClient->expects($this->once())
-            ->method('commit');
-
-        $this->dbClient->expects($this->never())
-            ->method('rollBack');
+        $this->dbClient->expects($this->once())->method('execute');
+        $this->dbClient->expects($this->once())->method('beginTransaction');
+        $this->repository->expects($this->once())->method('save');
+        $this->dbClient->expects($this->once())->method('commit');
+        $this->dbClient->expects($this->never())->method('rollBack');
 
         $this->executor->execute($migration);
     }
@@ -120,24 +95,13 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
         $this->dbClient->expects($this->once())
             ->method('execute')
             ->willThrowException(new \RuntimeException('Database error'));
-
-        $this->dbClient->expects($this->once())
-            ->method('inTransaction')
-            ->willReturn(true);
-
-        $this->dbClient->expects($this->once())
-            ->method('rollBack');
-
-        $this->dbClient->expects($this->never())
-            ->method('beginTransaction');
-
-        $this->repository->expects($this->never())
-            ->method('save');
-
+        $this->dbClient->expects($this->once())->method('inTransaction')->willReturn(true);
+        $this->dbClient->expects($this->once())->method('rollBack');
+        $this->dbClient->expects($this->never())->method('beginTransaction');
+        $this->repository->expects($this->never())->method('save');
         $this->expectException(MigrationException::class);
 
         try {
@@ -169,14 +133,9 @@ final class MigrationExecutorHandlerTest extends TestCase
                 }
                 return null;
             });
-
-        $this->dbClient->expects($this->once())
-            ->method('inTransaction')
-            ->willReturn(true);
-
-        $this->dbClient->expects($this->once())
-            ->method('rollBack');
-
+        $this->repository->expects($this->never())->method('save');
+        $this->dbClient->expects($this->once())->method('inTransaction')->willReturn(true);
+        $this->dbClient->expects($this->once())->method('rollBack');
         $this->expectException(MigrationException::class);
         $this->expectExceptionMessage('Error on second script');
 
@@ -196,17 +155,13 @@ final class MigrationExecutorHandlerTest extends TestCase
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
 
-        $this->dbClient->expects($this->once())
+        $this->dbClient
+            ->expects($this->once())
             ->method('execute')
             ->willThrowException(new \RuntimeException('Database error'));
-
-        $this->dbClient->expects($this->once())
-            ->method('inTransaction')
-            ->willReturn(false);
-
-        $this->dbClient->expects($this->never())
-            ->method('rollBack');
-
+        $this->repository->expects($this->never())->method('save');
+        $this->dbClient->expects($this->once())->method('inTransaction')->willReturn(false);
+        $this->dbClient->expects($this->never())->method('rollBack');
         $this->expectException(MigrationException::class);
 
         try {
@@ -222,24 +177,14 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
-
-        $this->dbClient->expects($this->once())
-            ->method('execute');
-
-        $this->dbClient->expects($this->once())
-            ->method('beginTransaction');
-
-        $this->repository->expects($this->once())
+        $this->dbClient->expects($this->once())->method('execute');
+        $this->dbClient->expects($this->once())->method('beginTransaction');
+        $this->repository
+            ->expects($this->once())
             ->method('save')
             ->willThrowException(new \RuntimeException('Save failed'));
-
-        $this->dbClient->expects($this->once())
-            ->method('inTransaction')
-            ->willReturn(true);
-
-        $this->dbClient->expects($this->once())
-            ->method('rollBack');
-
+        $this->dbClient->expects($this->once())->method('inTransaction')->willReturn(true);
+        $this->dbClient->expects($this->once())->method('rollBack');
         $this->expectException(MigrationException::class);
         $this->expectExceptionMessage('Save failed');
 

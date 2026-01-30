@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Adapters\Repositories\IdentityStore;
 
-use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
 use Framework\Mvc\Security\Domain\Entities\CurrentIdentity;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignInChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,8 +41,6 @@ final class SqlIdentityStoreTest extends TestCase
             isBlocked: false,
             roles: ['ROLE_USER', 'ROLE_ADMIN']
         );
-
-        // Mock INSERT statement
         $insertStmt = $this->createMock(PDOStatement::class);
         $insertStmt->expects($this->once())
             ->method('execute')
@@ -55,15 +53,11 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'seed123',
             ]);
         $this->prepareStatementQueue[] = $insertStmt;
-
-        // Mock DELETE roles statement
         $deleteRolesStmt = $this->createMock(PDOStatement::class);
         $deleteRolesStmt->expects($this->once())
             ->method('execute')
             ->with(['user_id' => 'test@example.com']);
         $this->prepareStatementQueue[] = $deleteRolesStmt;
-
-        // Mock INSERT role statement (prepared once, executed multiple times)
         $insertRoleStmt = $this->createMock(PDOStatement::class);
         $expectedRoles = ['ROLE_USER', 'ROLE_ADMIN'];
         $calledRoles = [];
@@ -89,7 +83,6 @@ final class SqlIdentityStoreTest extends TestCase
 
         $this->store->saveUserIdentity($user);
 
-        // Verify both roles were called
         $this->assertCount(2, $calledRoles);
         $this->assertContains('ROLE_USER', $calledRoles);
         $this->assertContains('ROLE_ADMIN', $calledRoles);
@@ -106,8 +99,6 @@ final class SqlIdentityStoreTest extends TestCase
             isBlocked: true,
             roles: []
         );
-
-        // Mock INSERT/UPDATE statement (ON DUPLICATE KEY UPDATE)
         $insertStmt = $this->createMock(PDOStatement::class);
         $insertStmt->expects($this->once())
             ->method('execute')
@@ -120,14 +111,11 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'new_seed',
             ]);
         $this->prepareStatementQueue[] = $insertStmt;
-
-        // Mock DELETE roles statement
         $deleteRolesStmt = $this->createMock(PDOStatement::class);
         $deleteRolesStmt->expects($this->once())
             ->method('execute')
             ->with(['user_id' => 'test@example.com']);
         $this->prepareStatementQueue[] = $deleteRolesStmt;
-
         $this->setupPrepareCallback();
 
         $this->store->saveUserIdentity($user);
@@ -144,21 +132,15 @@ final class SqlIdentityStoreTest extends TestCase
             isBlocked: false,
             roles: ['ROLE_USER']
         );
-
-        // Mock INSERT statement
         $insertStmt = $this->createMock(PDOStatement::class);
         $insertStmt->expects($this->once())
             ->method('execute');
         $this->prepareStatementQueue[] = $insertStmt;
-
-        // Mock DELETE roles statement
         $deleteRolesStmt = $this->createMock(PDOStatement::class);
         $deleteRolesStmt->expects($this->once())
             ->method('execute')
             ->with(['user_id' => 'test@example.com']);
         $this->prepareStatementQueue[] = $deleteRolesStmt;
-
-        // Mock INSERT role statement (prepared once, executed once)
         $insertRoleStmt = $this->createMock(PDOStatement::class);
         $insertRoleStmt->expects($this->once())
             ->method('execute')
@@ -176,8 +158,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testGetUserIdentityByUsernameReturnsUserWithRoles(): void
     {
         $username = 'test@example.com';
-
-        // Mock SELECT user statement
         $userStmt = $this->createMock(PDOStatement::class);
         $userStmt->expects($this->once())
             ->method('execute')
@@ -194,8 +174,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'seed123',
             ]);
         $this->prepareStatementQueue[] = $userStmt;
-
-        // Mock SELECT roles statement
         $rolesStmt = $this->createMock(PDOStatement::class);
         $rolesStmt->expects($this->once())
             ->method('execute')
@@ -211,23 +189,22 @@ final class SqlIdentityStoreTest extends TestCase
 
         $this->setupPrepareCallback();
 
+        /** @var UserIdentity $result */
         $result = $this->store->getUserIdentityByUsername($username);
 
-        $this->assertInstanceOf(UserIdentity::class, $result);
         $this->assertSame($username, $result->username());
         $this->assertSame('hash1', $result->hash1);
         $this->assertSame('hash2', $result->hash2);
         $this->assertSame('seed123', $result->seed);
+        $this->assertSame(['ROLE_USER', 'ROLE_ADMIN'], $result->roles);
         $this->assertTrue($result->isActive);
         $this->assertFalse($result->isBlocked);
-        $this->assertSame(['ROLE_USER', 'ROLE_ADMIN'], $result->roles);
+        $this->assertInstanceOf(UserIdentity::class, $result);
     }
 
     public function testGetUserIdentityByUsernameReturnsNullWhenNotFound(): void
     {
         $username = 'nonexistent@example.com';
-
-        // Mock SELECT user statement
         $userStmt = $this->createMock(PDOStatement::class);
         $userStmt->expects($this->once())
             ->method('execute')
@@ -248,8 +225,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testGetUserIdentityByUsernameHandlesUserWithoutRoles(): void
     {
         $username = 'test@example.com';
-
-        // Mock SELECT user statement
         $userStmt = $this->createMock(PDOStatement::class);
         $userStmt->expects($this->once())
             ->method('execute')
@@ -266,8 +241,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'seed123',
             ]);
         $this->prepareStatementQueue[] = $userStmt;
-
-        // Mock SELECT roles statement (empty result)
         $rolesStmt = $this->createMock(PDOStatement::class);
         $rolesStmt->expects($this->once())
             ->method('execute')
@@ -277,20 +250,18 @@ final class SqlIdentityStoreTest extends TestCase
             ->with(PDO::FETCH_ASSOC)
             ->willReturn([]);
         $this->prepareStatementQueue[] = $rolesStmt;
-
         $this->setupPrepareCallback();
 
+        /** @var UserIdentity $result */
         $result = $this->store->getUserIdentityByUsername($username);
 
-        $this->assertInstanceOf(UserIdentity::class, $result);
         $this->assertSame([], $result->roles);
+        $this->assertInstanceOf(UserIdentity::class, $result);
     }
 
     public function testExistsUserIdentityByUsernameReturnsTrueWhenExists(): void
     {
         $username = 'test@example.com';
-
-        // Mock SELECT COUNT statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -311,8 +282,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testExistsUserIdentityByUsernameReturnsFalseWhenNotExists(): void
     {
         $username = 'nonexistent@example.com';
-
-        // Mock SELECT COUNT statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -343,8 +312,6 @@ final class SqlIdentityStoreTest extends TestCase
             username: $username
         );
         $session = SignInSession::build($challenge, $identity);
-
-        // Mock INSERT challenge statement
         $challengeStmt = $this->createMock(PDOStatement::class);
         $challengeStmt->expects($this->once())
             ->method('execute')
@@ -353,8 +320,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'expires_at' => $expiresAt->format('Y-m-d H:i:s'),
             ]);
         $this->prepareStatementQueue[] = $challengeStmt;
-
-        // Mock INSERT session statement
         $sessionStmt = $this->createMock(PDOStatement::class);
         $sessionStmt->expects($this->once())
             ->method('execute')
@@ -374,8 +339,6 @@ final class SqlIdentityStoreTest extends TestCase
         $token = 'session_token_123';
         $username = 'test@example.com';
         $expiresAt = new \DateTimeImmutable('+1 hour');
-
-        // Mock SELECT session statement
         $sessionStmt = $this->createMock(PDOStatement::class);
         $sessionStmt->expects($this->once())
             ->method('execute')
@@ -389,8 +352,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'user_id' => $username,
             ]);
         $this->prepareStatementQueue[] = $sessionStmt;
-
-        // Mock SELECT roles statement
         $rolesStmt = $this->createMock(PDOStatement::class);
         $rolesStmt->expects($this->once())
             ->method('execute')
@@ -406,21 +367,20 @@ final class SqlIdentityStoreTest extends TestCase
 
         $this->setupPrepareCallback();
 
+        /** @var SignInSession $result */
         $result = $this->store->getSignInSessionByToken($token);
 
-        $this->assertInstanceOf(SignInSession::class, $result);
         $this->assertSame($token, $result->challenge->getToken());
-        $this->assertInstanceOf(CurrentIdentity::class, $result->identity);
         $this->assertSame($username, $result->identity->username());
-        $this->assertTrue($result->identity->isAuthenticated());
         $this->assertSame(['ROLE_USER', 'ROLE_ADMIN'], $result->identity->getRoles());
+        $this->assertTrue($result->identity->isAuthenticated());
+        $this->assertInstanceOf(SignInSession::class, $result);
+        $this->assertInstanceOf(CurrentIdentity::class, $result->identity);
     }
 
     public function testGetSignInSessionByTokenReturnsNullWhenNotFound(): void
     {
         $token = 'nonexistent_token';
-
-        // Mock SELECT session statement
         $sessionStmt = $this->createMock(PDOStatement::class);
         $sessionStmt->expects($this->once())
             ->method('execute')
@@ -441,8 +401,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testDeleteSignInSessionByTokenDeletesSession(): void
     {
         $token = 'session_token_123';
-
-        // Mock DELETE statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -468,8 +426,6 @@ final class SqlIdentityStoreTest extends TestCase
             roles: []
         );
         $challenge = SignUpChallenge::build($token, $expiresAt, $user);
-
-        // Mock INSERT/UPDATE statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -479,7 +435,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'user_id' => 'test@example.com',
             ]);
         $this->prepareStatementQueue[] = $stmt;
-
         $this->setupPrepareCallback();
 
         $this->store->saveSignUpChallenge($challenge);
@@ -490,8 +445,6 @@ final class SqlIdentityStoreTest extends TestCase
         $token = 'signup_token_123';
         $username = 'test@example.com';
         $expiresAt = new \DateTimeImmutable('+1 hour');
-
-        // Mock SELECT challenge statement
         $challengeStmt = $this->createMock(PDOStatement::class);
         $challengeStmt->expects($this->once())
             ->method('execute')
@@ -510,8 +463,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'seed123',
             ]);
         $this->prepareStatementQueue[] = $challengeStmt;
-
-        // Mock SELECT roles statement
         $rolesStmt = $this->createMock(PDOStatement::class);
         $rolesStmt->expects($this->once())
             ->method('execute')
@@ -523,22 +474,20 @@ final class SqlIdentityStoreTest extends TestCase
                 ['role' => 'ROLE_USER'],
             ]);
         $this->prepareStatementQueue[] = $rolesStmt;
-
         $this->setupPrepareCallback();
 
+        /** @var SignUpChallenge $result */
         $result = $this->store->getSignUpChallengeByToken($token);
 
-        $this->assertInstanceOf(SignUpChallenge::class, $result);
         $this->assertSame($token, $result->getToken());
-        $this->assertInstanceOf(UserIdentity::class, $result->userIdentity);
         $this->assertSame($username, $result->userIdentity->username());
+        $this->assertInstanceOf(SignUpChallenge::class, $result);
+        $this->assertInstanceOf(UserIdentity::class, $result->userIdentity);
     }
 
     public function testGetSignUpChallengeByTokenReturnsNullWhenNotFound(): void
     {
         $token = 'nonexistent_token';
-
-        // Mock SELECT challenge statement
         $challengeStmt = $this->createMock(PDOStatement::class);
         $challengeStmt->expects($this->once())
             ->method('execute')
@@ -559,8 +508,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testDeleteSignUpChallengeByTokenDeletesChallenge(): void
     {
         $token = 'signup_token_123';
-
-        // Mock DELETE statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -586,8 +533,6 @@ final class SqlIdentityStoreTest extends TestCase
             roles: []
         );
         $challenge = ResetPasswordChallenge::build($token, $expiresAt, $user);
-
-        // Mock INSERT/UPDATE statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -597,7 +542,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'user_id' => 'test@example.com',
             ]);
         $this->prepareStatementQueue[] = $stmt;
-
         $this->setupPrepareCallback();
 
         $this->store->saveResetPasswordChallenge($challenge);
@@ -608,8 +552,6 @@ final class SqlIdentityStoreTest extends TestCase
         $token = 'reset_token_123';
         $username = 'test@example.com';
         $expiresAt = new \DateTimeImmutable('+1 hour');
-
-        // Mock SELECT challenge statement
         $challengeStmt = $this->createMock(PDOStatement::class);
         $challengeStmt->expects($this->once())
             ->method('execute')
@@ -628,8 +570,6 @@ final class SqlIdentityStoreTest extends TestCase
                 'seed' => 'seed123',
             ]);
         $this->prepareStatementQueue[] = $challengeStmt;
-
-        // Mock SELECT roles statement
         $rolesStmt = $this->createMock(PDOStatement::class);
         $rolesStmt->expects($this->once())
             ->method('execute')
@@ -641,22 +581,20 @@ final class SqlIdentityStoreTest extends TestCase
                 ['role' => 'ROLE_USER'],
             ]);
         $this->prepareStatementQueue[] = $rolesStmt;
-
         $this->setupPrepareCallback();
 
+        /** @var ResetPasswordChallenge $result */
         $result = $this->store->getResetPasswordChallengeByToken($token);
 
-        $this->assertInstanceOf(ResetPasswordChallenge::class, $result);
         $this->assertSame($token, $result->getToken());
-        $this->assertInstanceOf(UserIdentity::class, $result->userIdentity);
         $this->assertSame($username, $result->userIdentity->username());
+        $this->assertInstanceOf(ResetPasswordChallenge::class, $result);
+        $this->assertInstanceOf(UserIdentity::class, $result->userIdentity);
     }
 
     public function testGetResetPasswordChallengeByTokenReturnsNullWhenNotFound(): void
     {
         $token = 'nonexistent_token';
-
-        // Mock SELECT challenge statement
         $challengeStmt = $this->createMock(PDOStatement::class);
         $challengeStmt->expects($this->once())
             ->method('execute')
@@ -677,8 +615,6 @@ final class SqlIdentityStoreTest extends TestCase
     public function testDeleteResetPasswordChallengeByTokenDeletesChallenge(): void
     {
         $token = 'reset_token_123';
-
-        // Mock DELETE statement
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -719,7 +655,6 @@ final class SqlIdentityStoreTest extends TestCase
             ->method('prepare')
             ->willReturnCallback(function (string $sql): PDOStatement {
                 if (empty($this->prepareStatementQueue)) {
-                    // Fallback - return a mock that won't cause issues
                     $fallbackStmt = $this->createMock(PDOStatement::class);
                     $fallbackStmt->expects($this->any())->method('execute');
                     $fallbackStmt->expects($this->any())->method('fetch')->willReturn(false);
@@ -727,7 +662,6 @@ final class SqlIdentityStoreTest extends TestCase
                     return $fallbackStmt;
                 }
 
-                // Return statements in the order they were set up
                 return array_shift($this->prepareStatementQueue);
             });
     }

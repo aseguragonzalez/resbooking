@@ -39,10 +39,7 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
     public function testCaptureReturnsSchemaWithTablesColumnsIndexesAndForeignKeys(): void
     {
         $this->setupDatabaseName('test_db');
-        // getTables() returns tables sorted by TABLE_NAME, so we need to set up in that order
         $this->setupTables(['users', 'posts']);
-
-        // Setup posts table (processed first because getTables() returns sorted: posts, users)
         $this->setupColumns('posts', [
             [
                 'COLUMN_NAME' => 'id',
@@ -55,8 +52,6 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
         ]);
         $this->setupIndexes('posts', []);
         $this->setupForeignKeys('posts', []);
-
-        // Setup users table (processed second)
         $this->setupColumns('users', [
             [
                 'COLUMN_NAME' => 'id',
@@ -127,10 +122,7 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
     public function testCaptureSortsTablesIndexesAndForeignKeysByName(): void
     {
         $this->setupDatabaseName('test_db');
-        // getTables() returns tables sorted by TABLE_NAME, so we need to set up in that order
         $this->setupTables(['alpha', 'beta', 'zebra']);
-
-        // Setup alpha table (processed first because getTables() returns sorted)
         $this->setupColumns('alpha', []);
         $this->setupIndexes('alpha', [
             ['INDEX_NAME' => 'idx_z', 'COLUMN_NAME' => 'z', 'NON_UNIQUE' => '1'],
@@ -150,13 +142,9 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
                 'REFERENCED_COLUMN_NAME' => 'id',
             ],
         ]);
-
-        // Setup beta table (processed second)
         $this->setupColumns('beta', []);
         $this->setupIndexes('beta', []);
         $this->setupForeignKeys('beta', []);
-
-        // Setup zebra table (processed third)
         $this->setupColumns('zebra', []);
         $this->setupIndexes('zebra', []);
         $this->setupForeignKeys('zebra', []);
@@ -196,8 +184,6 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
         $tablesStmt->expects($this->once())
             ->method('execute')
             ->with(['database_name' => 'test_db']);
-
-        // getTables() returns tables sorted by TABLE_NAME, so we sort to match real behavior
         sort($tableNames);
         $tablesData = array_map(fn (string $name) => ['TABLE_NAME' => $name], $tableNames);
         $tablesStmt->expects($this->once())
@@ -274,7 +260,6 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
             ->method('prepare')
             ->willReturnCallback(function (string $sql): PDOStatement {
                 if (empty($this->prepareStatementQueue)) {
-                    // Fallback - return a mock that won't cause issues
                     $fallbackStmt = $this->createMock(PDOStatement::class);
                     $fallbackStmt->expects($this->any())->method('execute');
                     $fallbackStmt->expects($this->any())->method('fetch')->willReturn(false);
@@ -282,7 +267,6 @@ final class SqlSchemaSnapshotExecutorTest extends TestCase
                     return $fallbackStmt;
                 }
 
-                // Return statements in the order they were set up
                 return array_shift($this->prepareStatementQueue);
             });
     }

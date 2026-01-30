@@ -29,7 +29,6 @@ final class GetRestaurantByIdTest extends TestCase
 
     public function testItRetrievesRestaurantById(): void
     {
-        // Arrange
         $restaurantId = $this->faker->uuid;
         $restaurant = $this->restaurantBuilder->build();
         $this->restaurantObtainer->expects($this->once())
@@ -39,10 +38,8 @@ final class GetRestaurantByIdTest extends TestCase
         $command = new GetRestaurantByIdCommand(id: $restaurantId);
         $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
 
-        // Act
         $result = $service->execute($command);
 
-        // Assert
         $this->assertSame($restaurant, $result);
         $this->assertInstanceOf(Restaurant::class, $result);
     }
