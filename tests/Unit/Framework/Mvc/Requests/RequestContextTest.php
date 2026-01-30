@@ -115,7 +115,6 @@ final class RequestContextTest extends TestCase
     {
         $context = new RequestContext();
         $context->setIdentityToken('token123');
-        // Overwrite with non-string value
         $context->set('identity_token', 123);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Value for key 'identity_token' is not of type 'string'");

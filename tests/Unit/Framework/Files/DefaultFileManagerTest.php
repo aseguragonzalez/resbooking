@@ -100,7 +100,6 @@ class DefaultFileManagerTest extends TestCase
 
     public function testReadTextPlainThrowsIfFileUnreadable(): void
     {
-        // Use vfsStream to simulate unreadable file
         if (!class_exists('org\\bovigo\\vfs\\vfsStream')) {
             $this->markTestSkipped('vfsStream is required for this test');
         }
@@ -120,7 +119,6 @@ class DefaultFileManagerTest extends TestCase
 
     public function testReadKeyValueJsonThrowsIfFileUnreadable(): void
     {
-        // Use vfsStream to simulate unreadable file
         if (!class_exists('org\\bovigo\\vfs\\vfsStream')) {
             $this->markTestSkipped('vfsStream is required for this test');
         }

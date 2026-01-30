@@ -6,18 +6,16 @@ namespace Tests\Unit\Framework\Migrations\Domain;
 
 use Framework\Files\FileManager;
 use Framework\Migrations\Domain\Entities\Script;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class ScriptTest extends TestCase
 {
-    private FileManager&MockObject $fileManager;
+    private FileManager&Stub $fileManager;
 
     protected function setUp(): void
     {
-        $this->fileManager = $this->createMock(FileManager::class);
+        $this->fileManager = $this->createStub(FileManager::class);
     }
 
     public function testFromFileReadsContentAndRollbackContentUsingFileManager(): void
@@ -27,9 +25,7 @@ final class ScriptTest extends TestCase
         $content = "CREATE TABLE users (id INT);";
         $rollbackContent = "DROP TABLE users;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 
@@ -55,9 +51,7 @@ final class ScriptTest extends TestCase
         $fileName = '001_create_table.sql';
         $content = "CREATE TABLE users (id INT); CREATE TABLE posts (id INT);";
         $rollbackContent = "DROP TABLE users;";
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 
@@ -76,9 +70,7 @@ final class ScriptTest extends TestCase
             "-- This is a comment\nCREATE TABLE users (id INT);\n-- Another comment\nCREATE TABLE posts (id INT);";
         $rollbackContent = "DROP TABLE users;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 
@@ -108,9 +100,7 @@ final class ScriptTest extends TestCase
         $content = "CREATE TABLE users (id INT);";
         $rollbackContent = "DROP TABLE users; DROP TABLE posts;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
         $rollbackStatements = $script->getRollbackStatements();
@@ -127,9 +117,7 @@ final class ScriptTest extends TestCase
         $content = "CREATE TABLE users (id INT);";
         $rollbackContent = "DROP TABLE users;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 
@@ -151,9 +139,7 @@ final class ScriptTest extends TestCase
         $content = "CREATE TABLE users (id INT); INSERT INTO users VALUES (1); UPDATE users SET id = 2;";
         $rollbackContent = "DROP TABLE users;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 
@@ -172,9 +158,7 @@ final class ScriptTest extends TestCase
         $content = "CREATE TABLE users (id INT);";
         $rollbackContent = "-- Comment\nDROP TABLE users;\n-- Another comment\nDROP TABLE posts;";
 
-        $this->fileManager->expects($this->exactly(2))
-            ->method('readTextPlain')
-            ->willReturn($content, $rollbackContent);
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
 
         $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
 

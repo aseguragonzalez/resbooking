@@ -16,19 +16,19 @@ use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
     private string $basePath = __DIR__ . "/Files/";
-    private FileManager&MockObject $fileManager;
+    private FileManager&Stub $fileManager;
     private HtmlViewEngine $viewEngine;
 
     protected function setUp(): void
     {
-        $this->fileManager = $this->createMock(FileManager::class);
+        $this->fileManager = $this->createStub(FileManager::class);
         $i18nReplacer = new I18nReplacer(
             new LanguageSettings(basePath: __DIR__),
             $this->fileManager,
@@ -40,7 +40,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderFailWhenViewDoesNotExist(): void
     {
-        $this->fileManager->expects($this->never())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $view = new View(
             viewPath: "fake_view",
             data: null,
@@ -55,7 +55,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithPrimitiveProperties(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $model = new \stdClass();
         $model->name = "Peter Parker";
         $model->age = 25;
@@ -80,7 +80,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderObjectProperties(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $address = new \stdClass();
         $address->street = "Elm Street";
         $address->number = 123;
@@ -110,7 +110,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderArrayOfObjects(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $user1 = new \stdClass();
         $user1->id = "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p";
         $user1->name = "Peter Parker";
@@ -138,7 +138,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderComplexModel(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $address = new \stdClass();
         $address->street = "Elm Street";
         $address->number = 123;
@@ -197,7 +197,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithBranchOptions(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $model = new BranchModel(
             name: "Peter Parker",
             description: "Friendly neighborhood Spider",
@@ -229,7 +229,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderWithLayout(): void
     {
-        $this->fileManager->expects($this->once())->method('readKeyValueJson')->willReturn([]);
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $model = new \stdClass();
         $model->name = "Peter Parker";
         $model->age = 25;
@@ -253,7 +253,7 @@ final class HtmlViewEngineTest extends TestCase
 
     public function testRenderFailWhenLayoutDoesNotExist(): void
     {
-        $this->fileManager->expects($this->never())->method('readKeyValueJson');
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
         $model = new \stdClass();
         $view = new View(
             viewPath: "view_without_layout",
@@ -271,9 +271,9 @@ final class HtmlViewEngineTest extends TestCase
     {
         $requestContext = new RequestContext();
         $requestContext->set(RequestContextKeys::Language->value, 'en');
-        $identity = $this->createMock(Identity::class);
-        $identity->expects($this->once())->method('isAuthenticated')->willReturn(false);
-        $identity->expects($this->once())->method('username')->willReturn('anonymous');
+        $identity = $this->createStub(Identity::class);
+        $identity->method('isAuthenticated')->willReturn(false);
+        $identity->method('username')->willReturn('anonymous');
         $requestContext->setIdentity($identity);
         return $requestContext;
     }

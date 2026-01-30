@@ -17,10 +17,8 @@ use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\IdentityStore;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\TestCase;
 
-#[AllowMockObjectsWithoutExpectations]
 final class AuthenticationTest extends TestCase
 {
     private Psr17Factory $psrFactory;
@@ -38,28 +36,28 @@ final class AuthenticationTest extends TestCase
             signOutPath: '/logout',
         );
         $this->context = new RequestContext();
-        $store = $this->createMock(IdentityStore::class);
-        $notificator = $this->createMock(ChallengeNotificator::class);
+        $store = $this->createStub(IdentityStore::class);
+        $notificator = $this->createStub(ChallengeNotificator::class);
         $expiration = new ChallengesExpirationTime(10, 5, 20, 15, 30);
         $this->identityManager = new DefaultIdentityManager($notificator, $expiration, $store);
-        $mock = $this->createMock(Middleware::class);
-        $mock->method('handleRequest')->willReturn($this->psrFactory->createResponse(200));
-        $this->next = $mock;
+        $next = $this->createStub(Middleware::class);
+        $next->method('handleRequest')->willReturn($this->psrFactory->createResponse(200));
+        $this->next = $next;
     }
 
     public function testHandleRequestWithValidTokenSetsIdentityAndToken(): void
     {
         $user = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate();
         $token = 'valid_token';
-        $store = $this->createMock(IdentityStore::class);
+        $store = $this->createStub(IdentityStore::class);
         $store->method('getSignInSessionByToken')->willReturn(
             \Framework\Mvc\Security\Domain\Entities\SignInSession::build(
-                $this->createMock(Challenge::class),
+                $this->createStub(Challenge::class),
                 $user
             )
         );
         $identityManager = new DefaultIdentityManager(
-            $this->createMock(ChallengeNotificator::class),
+            $this->createStub(ChallengeNotificator::class),
             new ChallengesExpirationTime(10, 5, 20, 15, 30),
             $store
         );
@@ -83,10 +81,10 @@ final class AuthenticationTest extends TestCase
 
     public function testHandleRequestWithExpiredSessionRedirects(): void
     {
-        $store = $this->createMock(IdentityStore::class);
+        $store = $this->createStub(IdentityStore::class);
         $store->method('getSignInSessionByToken')->willReturn(null);
         $identityManager = new DefaultIdentityManager(
-            $this->createMock(ChallengeNotificator::class),
+            $this->createStub(ChallengeNotificator::class),
             new ChallengesExpirationTime(10, 5, 20, 15, 30),
             $store
         );
