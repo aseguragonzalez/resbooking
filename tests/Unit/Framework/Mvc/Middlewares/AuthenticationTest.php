@@ -9,12 +9,19 @@ use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\StatusCode;
+use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Mvc\Security\Application\DefaultIdentityManager;
+use Framework\Mvc\Security\Application\GetIdentity\GetIdentity;
+use Framework\Mvc\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
+use Framework\Mvc\Security\Application\RefreshSignInSession\RefreshSignInSession;
+use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPassword;
+use Framework\Mvc\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
+use Framework\Mvc\Security\Application\SignIn\SignIn;
+use Framework\Mvc\Security\Application\SignOut\SignOut;
+use Framework\Mvc\Security\Application\SignUp\SignUp;
 use Framework\Mvc\Security\Challenge;
-use Framework\Mvc\Security\ChallengeNotificator;
-use Framework\Mvc\Security\ChallengesExpirationTime;
-use Framework\Mvc\Security\DefaultIdentityManager;
+use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
-use Framework\Mvc\Security\IdentityStore;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -36,10 +43,17 @@ final class AuthenticationTest extends TestCase
             signOutPath: '/logout',
         );
         $this->context = new RequestContext();
-        $store = $this->createStub(IdentityStore::class);
-        $notificator = $this->createStub(ChallengeNotificator::class);
-        $expiration = new ChallengesExpirationTime(10, 5, 20, 15, 30);
-        $this->identityManager = new DefaultIdentityManager($notificator, $expiration, $store);
+        $this->identityManager = new DefaultIdentityManager(
+            $this->createStub(SignUp::class),
+            $this->createStub(ActivateUserIdentity::class),
+            $this->createStub(SignIn::class),
+            $this->createStub(GetIdentity::class),
+            $this->createStub(RefreshSignInSession::class),
+            $this->createStub(ModifyUserIdentityPassword::class),
+            $this->createStub(RequestResetPassword::class),
+            $this->createStub(ResetPasswordFromToken::class),
+            $this->createStub(SignOut::class)
+        );
         $next = $this->createStub(Middleware::class);
         $next->method('handleRequest')->willReturn($this->psrFactory->createResponse(200));
         $this->next = $next;
@@ -49,17 +63,20 @@ final class AuthenticationTest extends TestCase
     {
         $user = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate();
         $token = 'valid_token';
-        $store = $this->createStub(IdentityStore::class);
-        $store->method('getSignInSessionByToken')->willReturn(
-            \Framework\Mvc\Security\Domain\Entities\SignInSession::build(
-                $this->createStub(Challenge::class),
-                $user
-            )
+        $getIdentity = $this->createStub(GetIdentity::class);
+        $getIdentity->method('execute')->willReturn(
+            SignInSession::build($this->createStub(Challenge::class), $user)->identity
         );
         $identityManager = new DefaultIdentityManager(
-            $this->createStub(ChallengeNotificator::class),
-            new ChallengesExpirationTime(10, 5, 20, 15, 30),
-            $store
+            $this->createStub(SignUp::class),
+            $this->createStub(ActivateUserIdentity::class),
+            $this->createStub(SignIn::class),
+            $getIdentity,
+            $this->createStub(RefreshSignInSession::class),
+            $this->createStub(ModifyUserIdentityPassword::class),
+            $this->createStub(RequestResetPassword::class),
+            $this->createStub(ResetPasswordFromToken::class),
+            $this->createStub(SignOut::class)
         );
         $middleware = new Authentication(
             settings: $this->settings,
@@ -81,12 +98,20 @@ final class AuthenticationTest extends TestCase
 
     public function testHandleRequestWithExpiredSessionRedirects(): void
     {
-        $store = $this->createStub(IdentityStore::class);
-        $store->method('getSignInSessionByToken')->willReturn(null);
+        $getIdentity = $this->createStub(GetIdentity::class);
+        $getIdentity->method('execute')->willThrowException(
+            new \Framework\Mvc\Security\Domain\Exceptions\SessionExpiredException()
+        );
         $identityManager = new DefaultIdentityManager(
-            $this->createStub(ChallengeNotificator::class),
-            new ChallengesExpirationTime(10, 5, 20, 15, 30),
-            $store
+            $this->createStub(SignUp::class),
+            $this->createStub(ActivateUserIdentity::class),
+            $this->createStub(SignIn::class),
+            $getIdentity,
+            $this->createStub(RefreshSignInSession::class),
+            $this->createStub(ModifyUserIdentityPassword::class),
+            $this->createStub(RequestResetPassword::class),
+            $this->createStub(ResetPasswordFromToken::class),
+            $this->createStub(SignOut::class)
         );
         $middleware = new Authentication(
             settings: $this->settings,

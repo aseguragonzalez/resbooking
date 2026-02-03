@@ -20,12 +20,7 @@ use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Framework\Mvc\Security\ChallengeNotificator;
-use Framework\Mvc\Security\DefaultIdentityManager;
-use Framework\Mvc\Security\IdentityManager;
-use Framework\Mvc\Security\IdentityStore;
-use Infrastructure\Adapters\Notificators\ConsoleChallengeNotificator;
-use Infrastructure\Adapters\Repositories\IdentityStore\SqlIdentityStore;
+use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 
 final class Dependencies
@@ -42,9 +37,7 @@ final class Dependencies
         $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesHandler::class));
         $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdHandler::class));
 
-        // configure security: IdentityManager, IdentityStore and ChallengeNotificator
-        $container->set(ChallengeNotificator::class, $container->get(ConsoleChallengeNotificator::class));
-        $container->set(IdentityStore::class, $container->get(SqlIdentityStore::class));
-        $container->set(IdentityManager::class, $container->get(DefaultIdentityManager::class));
+        // configure security: IdentityManager, repositories, use cases and ChallengeNotificator
+        SecurityDependencies::configure($container);
     }
 }

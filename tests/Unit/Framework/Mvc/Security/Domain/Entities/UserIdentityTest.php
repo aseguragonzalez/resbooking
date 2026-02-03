@@ -11,7 +11,7 @@ use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
 use Framework\Mvc\Security\Domain\Exceptions\UserBlockedException;
 use Framework\Mvc\Security\Domain\Exceptions\UsernameIsNotEmailException;
 
-class UserIdentityTest extends TestCase
+final class UserIdentityTest extends TestCase
 {
     public function testNewCreatesIdentityWithCorrectUsernameAndRoles(): void
     {

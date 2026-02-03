@@ -113,7 +113,7 @@ interface MyAggregateRootRepository extends Repository { /* ... */ }
 
 interface CreateNewProject { /* ... */ }
 final class CreateNewProjectService implements CreateNewProject { /* ... */ }
-final class CreateNewProjectCommand { /* ... */ }
+final readonly class CreateNewProjectCommand { /* ... */ }
 
 ```
 
@@ -180,12 +180,12 @@ use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
 use Seedwork\Domain\Exceptions\ValueException;
 
-final class Place extends Entity
+final readonly class Place extends Entity
 {
     private function __construct(
         string $id,
-        public readonly Capacity $capacity,
-        public readonly string $name,
+        public Capacity $capacity,
+        public string $name,
     ) {
         parent::__construct(id: $id);
 
@@ -226,16 +226,16 @@ use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 
-final class Settings extends ValueObject
+final readonly class Settings extends ValueObject
 {
     public function __construct(
-        public readonly Email $email,
-        public readonly bool $hasReminders,
-        public readonly string $name,
-        public readonly Capacity $maxNumberOfDiners,
-        public readonly Capacity $minNumberOfDiners,
-        public readonly Capacity $numberOfTables,
-        public readonly Phone $phone,
+        public Email $email,
+        public bool $hasReminders,
+        public string $name,
+        public Capacity $maxNumberOfDiners,
+        public Capacity $minNumberOfDiners,
+        public Capacity $numberOfTables,
+        public Phone $phone,
     ) {
         $this->checkName();
         $this->checkMinMaxNumberOfDinners();
@@ -282,9 +282,9 @@ declare(strict_types=1);
 
 namespace Application\Projects\CreateNewProject;
 
-final class CreateNewProjectCommand
+final readonly class CreateNewProjectCommand
 {
-    public function __construct(public readonly string $email)
+    public function __construct(public string $email)
     {
     }
 }
@@ -302,9 +302,9 @@ namespace Application\Projects\CreateNewProject;
 use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Projects\Entities\Project;
 
-final class CreateNewProjectService implements CreateNewProject
+final readonly class CreateNewProjectService implements CreateNewProject
 {
-    public function __construct(private readonly ProjectRepository $projectRepository)
+    public function __construct(private ProjectRepository $projectRepository)
     {
     }
 
@@ -362,12 +362,12 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Accounts\Requests;
 
-final class SignInRequest
+final readonly class SignInRequest
 {
     public function __construct(
-        public readonly string $username,
-        public readonly string $password,
-        public readonly string $rememberMe = 'off',
+        public string $username,
+        public string $password,
+        public string $rememberMe = 'off',
     ) {
     }
 
@@ -411,7 +411,7 @@ final class SignInRequest
 Example:
 
 ```php
-final class ProjectCreated extends DomainEvent
+final readonly class ProjectCreated extends DomainEvent
 {
     public static function new(string $projectId, Project $project): self
     {
@@ -434,7 +434,7 @@ final class ProjectCreated extends DomainEvent
 Example:
 
 ```php
-final class ProjectDoesNotExist extends DomainException
+final readonly class ProjectDoesNotExist extends DomainException
 {
     public function __construct()
     {
@@ -486,12 +486,9 @@ final class ProjectTest extends TestCase
 {
     public function testItCreatesANewProject(): void
     {
-
         $email = 'test@example.com';
 
-
         $project = Project::new($email);
-
 
         $this->assertNotEmpty($project->getId());
         $this->assertCount(1, $project->getEvents());

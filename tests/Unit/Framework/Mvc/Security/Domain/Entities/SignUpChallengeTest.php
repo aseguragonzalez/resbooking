@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
-class SignUpChallengeTest extends TestCase
+final class SignUpChallengeTest extends TestCase
 {
     private UserIdentity $userIdentity;
 
