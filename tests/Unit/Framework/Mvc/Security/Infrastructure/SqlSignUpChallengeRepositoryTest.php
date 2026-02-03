@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Adapters\Repositories\Identity;
+namespace Tests\Unit\Framework\Mvc\Security\Infrastructure;
 
-use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
-use Infrastructure\Adapters\Repositories\Identity\SqlResetPasswordChallengeRepository;
+use Framework\Mvc\Security\Infrastructure\SqlSignUpChallengeRepository;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class SqlResetPasswordChallengeRepositoryTest extends TestCase
+final class SqlSignUpChallengeRepositoryTest extends TestCase
 {
     private PDO&MockObject $pdo;
-    private SqlResetPasswordChallengeRepository $repository;
+    private SqlSignUpChallengeRepository $repository;
     /** @var array<PDOStatement> */
     private array $prepareStatementQueue = [];
 
     protected function setUp(): void
     {
         $this->pdo = $this->createMock(PDO::class);
-        $this->repository = new SqlResetPasswordChallengeRepository($this->pdo);
+        $this->repository = new SqlSignUpChallengeRepository($this->pdo);
         $this->prepareStatementQueue = [];
     }
 
     public function testSaveSavesChallenge(): void
     {
-        $token = 'reset_token_123';
+        $token = 'signup_token_123';
         $expiresAt = new \DateTimeImmutable('+1 hour');
         $user = UserIdentity::build(
             hash1: 'hash1',
@@ -36,10 +36,10 @@ final class SqlResetPasswordChallengeRepositoryTest extends TestCase
             roles: [],
             seed: 'seed',
             username: 'test@example.com',
-            isActive: true,
+            isActive: false,
             isBlocked: false
         );
-        $challenge = ResetPasswordChallenge::build($token, $expiresAt, $user);
+        $challenge = SignUpChallenge::build($token, $expiresAt, $user);
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')
@@ -56,7 +56,7 @@ final class SqlResetPasswordChallengeRepositoryTest extends TestCase
 
     public function testGetByTokenReturnsChallengeWithUserIdentity(): void
     {
-        $token = 'reset_token_123';
+        $token = 'signup_token_123';
         $username = 'test@example.com';
         $expiresAt = new \DateTimeImmutable('+1 hour');
         $challengeStmt = $this->createMock(PDOStatement::class);
@@ -92,7 +92,7 @@ final class SqlResetPasswordChallengeRepositoryTest extends TestCase
 
         $result = $this->repository->getByToken($token);
 
-        $this->assertInstanceOf(ResetPasswordChallenge::class, $result);
+        $this->assertInstanceOf(SignUpChallenge::class, $result);
         $this->assertSame($token, $result->token);
         $this->assertSame($username, $result->userIdentity->username());
         $this->assertInstanceOf(UserIdentity::class, $result->userIdentity);
@@ -120,7 +120,7 @@ final class SqlResetPasswordChallengeRepositoryTest extends TestCase
 
     public function testDeleteByTokenDeletesChallenge(): void
     {
-        $token = 'reset_token_123';
+        $token = 'signup_token_123';
         $stmt = $this->createMock(PDOStatement::class);
         $stmt->expects($this->once())
             ->method('execute')

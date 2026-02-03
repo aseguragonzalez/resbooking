@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Mvc\Security;
+namespace Tests\Unit\Framework\Mvc\Security\Application;
 
 use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Mvc\Security\Application\DefaultIdentityManager;
 use Framework\Mvc\Security\Application\GetIdentity\GetIdentity;
 use Framework\Mvc\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
 use Framework\Mvc\Security\Application\RefreshSignInSession\RefreshSignInSession;
@@ -14,7 +15,6 @@ use Framework\Mvc\Security\Application\SignIn\SignIn;
 use Framework\Mvc\Security\Application\SignOut\SignOut;
 use Framework\Mvc\Security\Application\SignUp\SignUp;
 use Framework\Mvc\Security\Challenge;
-use Framework\Mvc\Security\DefaultIdentityManager;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;

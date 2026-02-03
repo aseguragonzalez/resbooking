@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Mvc\Security;
+namespace Framework\Mvc\Security\Application;
 
 use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
 use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
@@ -22,6 +22,9 @@ use Framework\Mvc\Security\Application\SignOut\SignOut;
 use Framework\Mvc\Security\Application\SignOut\SignOutCommand;
 use Framework\Mvc\Security\Application\SignUp\SignUp;
 use Framework\Mvc\Security\Application\SignUp\SignUpCommand;
+use Framework\Mvc\Security\Challenge;
+use Framework\Mvc\Security\Identity;
+use Framework\Mvc\Security\IdentityManager;
 
 final readonly class DefaultIdentityManager implements IdentityManager
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Adapters\Repositories\Identity;
+namespace Framework\Mvc\Security\Infrastructure;
 
 use Framework\Mvc\Security\Domain\Entities\CurrentIdentity;
 use Framework\Mvc\Security\Domain\Entities\SignInChallenge;

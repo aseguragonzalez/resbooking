@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Infrastructure\Adapters\Repositories\Identity;
+namespace Tests\Unit\Framework\Mvc\Security\Infrastructure;
 
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
-use Infrastructure\Adapters\Repositories\Identity\SqlUserIdentityRepository;
+use Framework\Mvc\Security\Infrastructure\SqlUserIdentityRepository;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;

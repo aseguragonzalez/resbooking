@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Adapters\Repositories\Identity;
+namespace Framework\Mvc\Security\Infrastructure;
 
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\Domain\Repositories\ResetPasswordChallengeRepository;
 use PDO;
 
-final class SqlResetPasswordChallengeRepository implements ResetPasswordChallengeRepository
+final readonly class SqlResetPasswordChallengeRepository implements ResetPasswordChallengeRepository
 {
-    public function __construct(
-        private readonly PDO $db,
-    ) {
+    public function __construct(private PDO $db)
+    {
     }
 
     public function save(ResetPasswordChallenge $challenge): void
