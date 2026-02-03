@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Security\Application\SignUp;
 
-use Framework\Mvc\Security\ChallengeNotificator;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\ChallengesExpirationTime;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;

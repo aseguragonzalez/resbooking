@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Mvc\Security;
+namespace Framework\Mvc\Security\Domain\Services;
 
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;

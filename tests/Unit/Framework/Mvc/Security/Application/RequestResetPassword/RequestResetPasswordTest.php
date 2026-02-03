@@ -6,7 +6,7 @@ namespace Tests\Unit\Framework\Mvc\Security\Application\RequestResetPassword;
 
 use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPasswordCommand;
 use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPasswordHandler;
-use Framework\Mvc\Security\ChallengeNotificator;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\ChallengesExpirationTime;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\Domain\Repositories\ResetPasswordChallengeRepository;

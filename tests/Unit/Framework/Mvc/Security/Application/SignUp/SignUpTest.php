@@ -6,7 +6,7 @@ namespace Tests\Unit\Framework\Mvc\Security\Application\SignUp;
 
 use Framework\Mvc\Security\Application\SignUp\SignUpCommand;
 use Framework\Mvc\Security\Application\SignUp\SignUpHandler;
-use Framework\Mvc\Security\ChallengeNotificator;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\ChallengesExpirationTime;
 use Framework\Mvc\Security\Domain\Repositories\SignUpChallengeRepository;
 use Framework\Mvc\Security\Domain\Repositories\UserIdentityRepository;

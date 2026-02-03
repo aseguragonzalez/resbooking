@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Adapters\Notificators;
+namespace Framework\Mvc\Security\Infrastructure;
 
-use Framework\Mvc\Security\ChallengeNotificator;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Psr\Log\LoggerInterface;
 
 final readonly class ConsoleChallengeNotificator implements ChallengeNotificator
