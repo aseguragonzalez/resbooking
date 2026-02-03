@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Security;
 
-final class ChallengesExpirationTime
+final readonly class ChallengesExpirationTime
 {
     public function __construct(
-        public readonly int $signUp = 60 * 24,
-        public readonly int $signIn = 60,
-        public readonly int $signInWithRememberMe = 60 * 24 * 30,
-        public readonly int $refresh = 60,
-        public readonly int $resetPasswordChallenge = 60 * 24,
+        public int $signUp = 60 * 24,
+        public int $signIn = 60,
+        public int $signInWithRememberMe = 60 * 24 * 30,
+        public int $refresh = 60,
+        public int $resetPasswordChallenge = 60 * 24,
     ) {
         if ($signUp <= 0) {
             throw new \InvalidArgumentException('signUp must be greater than 0');

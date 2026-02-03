@@ -7,7 +7,7 @@ namespace Tests\Unit\Framework\Mvc\Security;
 use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Security\ChallengesExpirationTime;
 
-class ChallengesExpirationTimeTest extends TestCase
+final class ChallengesExpirationTimeTest extends TestCase
 {
     public function testItCanBeCreatedWithValidExpirationTimes(): void
     {

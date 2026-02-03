@@ -4,22 +4,37 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Security;
 
-use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Mvc\Security\Domain\Entities\SignInSession;
-use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
-use Framework\Mvc\Security\Domain\Entities\UserIdentity;
-use Framework\Mvc\Security\Domain\Exceptions\InvalidCredentialsException;
-use Framework\Mvc\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Framework\Mvc\Security\Domain\Exceptions\SessionExpiredException;
-use Framework\Mvc\Security\Domain\Exceptions\SignUpChallengeException;
-use Framework\Mvc\Security\Domain\Exceptions\UserIsNotFoundException;
+use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
+use Framework\Mvc\Security\Application\GetIdentity\GetIdentity;
+use Framework\Mvc\Security\Application\GetIdentity\GetIdentityCommand;
+use Framework\Mvc\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
+use Framework\Mvc\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordCommand;
+use Framework\Mvc\Security\Application\RefreshSignInSession\RefreshSignInSession;
+use Framework\Mvc\Security\Application\RefreshSignInSession\RefreshSignInSessionCommand;
+use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPassword;
+use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPasswordCommand;
+use Framework\Mvc\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
+use Framework\Mvc\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenCommand;
+use Framework\Mvc\Security\Application\SignIn\SignIn;
+use Framework\Mvc\Security\Application\SignIn\SignInCommand;
+use Framework\Mvc\Security\Application\SignOut\SignOut;
+use Framework\Mvc\Security\Application\SignOut\SignOutCommand;
+use Framework\Mvc\Security\Application\SignUp\SignUp;
+use Framework\Mvc\Security\Application\SignUp\SignUpCommand;
 
-final class DefaultIdentityManager implements IdentityManager
+final readonly class DefaultIdentityManager implements IdentityManager
 {
     public function __construct(
-        private readonly ChallengeNotificator $notificator,
-        private readonly ChallengesExpirationTime $expirationTime,
-        private readonly IdentityStore $store,
+        private SignUp $signUp,
+        private ActivateUserIdentity $activateUserIdentity,
+        private SignIn $signIn,
+        private GetIdentity $getIdentity,
+        private RefreshSignInSession $refreshSignInSession,
+        private ModifyUserIdentityPassword $modifyUserIdentityPassword,
+        private RequestResetPassword $requestResetPassword,
+        private ResetPasswordFromToken $resetPasswordFromToken,
+        private SignOut $signOut,
     ) {
     }
 
@@ -28,137 +43,48 @@ final class DefaultIdentityManager implements IdentityManager
      */
     public function signUp(string $username, string $password, array $roles): void
     {
-        if ($this->store->existsUserIdentityByUsername($username)) {
-            return;
-        }
-
-        $user = UserIdentity::new($username, $roles, $password);
-        $this->store->saveUserIdentity($user);
-        $challenge = SignUpChallenge::new($this->expiresAt($this->expirationTime->signUp), $user);
-        $this->store->saveSignUpChallenge($challenge);
-        $this->notificator->sendSignUpChallenge($username, $challenge);
+        $this->signUp->execute(new SignUpCommand($username, $password, $roles));
     }
 
     public function activateUserIdentity(string $token): void
     {
-        $challenge = $this->store->getSignUpChallengeByToken($token);
-        if ($challenge === null) {
-            throw new SignUpChallengeException($token);
-        }
-
-        if ($challenge->isExpired()) {
-            $this->store->deleteSignUpChallengeByToken($token);
-            throw new SignUpChallengeException($token);
-        }
-
-        $this->store->saveUserIdentity($challenge->userIdentity->activate());
-        $this->store->deleteSignUpChallengeByToken($token);
+        $this->activateUserIdentity->execute(new ActivateUserIdentityCommand($token));
     }
 
     public function signIn(string $username, string $password, bool $keepMeSignedIn): Challenge
     {
-        $user = $this->store->getUserIdentityByUsername($username);
-        if ($user === null) {
-            throw new InvalidCredentialsException($username);
-        }
-
-        $authenticatedUser = $user->authenticate($password);
-
-        $expiresAt = $keepMeSignedIn
-            ? $this->expiresAt($this->expirationTime->signInWithRememberMe)
-            : $this->expiresAt($this->expirationTime->signIn);
-
-        $session = SignInSession::new($expiresAt, $authenticatedUser);
-        $this->store->saveSignInSession($session);
-        return $session->challenge;
+        return $this->signIn->execute(new SignInCommand($username, $password, $keepMeSignedIn));
     }
 
     public function getIdentity(?string $token): Identity
     {
-        if (!isset($token) || empty($token) || empty(trim($token))) {
-            return UserIdentity::anonymous();
-        }
-
-        $session = $this->getSignInSessionOrFail($token);
-        return $session->identity;
+        return $this->getIdentity->execute(new GetIdentityCommand($token));
     }
 
     public function refreshSignInSession(string $token): Challenge
     {
-        $session = $this->getSignInSessionOrFail($token);
-        $sessionUpdated = $session->refreshUntil($this->expiresAt($this->expirationTime->refresh));
-        $this->store->saveSignInSession($sessionUpdated);
-        return $sessionUpdated->challenge;
-    }
-
-    private function getSignInSessionOrFail(string $token): SignInSession
-    {
-        $session = $this->store->getSignInSessionByToken($token);
-        if ($session === null) {
-            throw new SessionExpiredException();
-        }
-
-        if ($session->isExpired()) {
-            $this->store->deleteSignInSessionByToken($token);
-            throw new SessionExpiredException();
-        }
-
-        return $session;
+        return $this->refreshSignInSession->execute(new RefreshSignInSessionCommand($token));
     }
 
     public function modifyUserIdentityPassword(string $token, string $currentPassword, string $newPassword): void
     {
-        $session = $this->getSignInSessionOrFail($token);
-        $user = $this->store->getUserIdentityByUsername($session->identity->username());
-        if ($user === null) {
-            throw new UserIsNotFoundException($session->identity->username());
-        }
-        $user->validatePassword($currentPassword);
-        $this->store->saveUserIdentity($user->updatePassword($newPassword));
+        $this->modifyUserIdentityPassword->execute(
+            new ModifyUserIdentityPasswordCommand($token, $currentPassword, $newPassword)
+        );
     }
 
     public function resetPasswordChallenge(string $username): void
     {
-        $user = $this->store->getUserIdentityByUsername($username);
-        if ($user === null) {
-            return;
-        }
-
-        $challenge = ResetPasswordChallenge::new(
-            $this->expiresAt($this->expirationTime->resetPasswordChallenge),
-            $user
-        );
-        $this->store->saveResetPasswordChallenge($challenge);
-        $this->notificator->sendResetPasswordChallenge($username, $challenge);
+        $this->requestResetPassword->execute(new RequestResetPasswordCommand($username));
     }
 
     public function resetPasswordFromToken(string $token, string $newPassword): void
     {
-        $resetPasswordChallenge = $this->store->getResetPasswordChallengeByToken($token);
-        if ($resetPasswordChallenge === null) {
-            return;
-        }
-
-        if ($resetPasswordChallenge->isExpired()) {
-            $this->store->deleteResetPasswordChallengeByToken($token);
-            throw new ResetPasswordChallengeException($token);
-        }
-
-        $user = $this->store->getUserIdentityByUsername($resetPasswordChallenge->userIdentity->username());
-        if ($user === null) {
-            return;
-        }
-
-        $this->store->saveUserIdentity($user->updatePassword($newPassword));
+        $this->resetPasswordFromToken->execute(new ResetPasswordFromTokenCommand($token, $newPassword));
     }
 
     public function signOut(string $token): void
     {
-        $this->store->deleteSignInSessionByToken($token);
-    }
-
-    private function expiresAt(int $minutes): \DateTimeImmutable
-    {
-        return (new \DateTimeImmutable())->modify("+{$minutes} minutes");
+        $this->signOut->execute(new SignOutCommand($token));
     }
 }

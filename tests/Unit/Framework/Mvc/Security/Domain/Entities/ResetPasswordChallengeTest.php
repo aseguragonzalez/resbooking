@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
-class ResetPasswordChallengeTest extends TestCase
+final class ResetPasswordChallengeTest extends TestCase
 {
     private function makeUserIdentity(): UserIdentity
     {

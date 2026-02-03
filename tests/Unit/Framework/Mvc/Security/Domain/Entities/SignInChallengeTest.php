@@ -7,7 +7,7 @@ namespace Tests\Unit\Framework\Mvc\Security\Domain\Entities;
 use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Security\Domain\Entities\SignInChallenge;
 
-class SignInChallengeTest extends TestCase
+final class SignInChallengeTest extends TestCase
 {
     public function testNewGeneratesValidTokenAndExpiration(): void
     {
