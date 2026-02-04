@@ -9,19 +9,9 @@ use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Responses\StatusCode;
-use Framework\Mvc\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
-use Framework\Mvc\Security\Application\DefaultIdentityManager;
-use Framework\Mvc\Security\Application\GetIdentity\GetIdentity;
-use Framework\Mvc\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
-use Framework\Mvc\Security\Application\RefreshSignInSession\RefreshSignInSession;
-use Framework\Mvc\Security\Application\RequestResetPassword\RequestResetPassword;
-use Framework\Mvc\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
-use Framework\Mvc\Security\Application\SignIn\SignIn;
-use Framework\Mvc\Security\Application\SignOut\SignOut;
-use Framework\Mvc\Security\Application\SignUp\SignUp;
-use Framework\Mvc\Security\Challenge;
-use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\Mvc\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Mvc\Security\IdentityManager;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +21,7 @@ final class AuthenticationTest extends TestCase
     private Psr17Factory $psrFactory;
     private AuthSettings $settings;
     private RequestContext $context;
-    private DefaultIdentityManager $identityManager;
+    private IdentityManager $identityManager;
     private Middleware $next;
 
     protected function setUp(): void
@@ -43,17 +33,7 @@ final class AuthenticationTest extends TestCase
             signOutPath: '/logout',
         );
         $this->context = new RequestContext();
-        $this->identityManager = new DefaultIdentityManager(
-            $this->createStub(SignUp::class),
-            $this->createStub(ActivateUserIdentity::class),
-            $this->createStub(SignIn::class),
-            $this->createStub(GetIdentity::class),
-            $this->createStub(RefreshSignInSession::class),
-            $this->createStub(ModifyUserIdentityPassword::class),
-            $this->createStub(RequestResetPassword::class),
-            $this->createStub(ResetPasswordFromToken::class),
-            $this->createStub(SignOut::class)
-        );
+        $this->identityManager = $this->createStub(IdentityManager::class);
         $next = $this->createStub(Middleware::class);
         $next->method('handleRequest')->willReturn($this->psrFactory->createResponse(200));
         $this->next = $next;
@@ -63,21 +43,8 @@ final class AuthenticationTest extends TestCase
     {
         $user = UserIdentity::new('user@domain.com', ['ROLE_USER'], 'password')->activate();
         $token = 'valid_token';
-        $getIdentity = $this->createStub(GetIdentity::class);
-        $getIdentity->method('execute')->willReturn(
-            SignInSession::build($this->createStub(Challenge::class), $user)->identity
-        );
-        $identityManager = new DefaultIdentityManager(
-            $this->createStub(SignUp::class),
-            $this->createStub(ActivateUserIdentity::class),
-            $this->createStub(SignIn::class),
-            $getIdentity,
-            $this->createStub(RefreshSignInSession::class),
-            $this->createStub(ModifyUserIdentityPassword::class),
-            $this->createStub(RequestResetPassword::class),
-            $this->createStub(ResetPasswordFromToken::class),
-            $this->createStub(SignOut::class)
-        );
+        $identityManager = $this->createStub(IdentityManager::class);
+        $identityManager->method('getIdentity')->willReturn($user);
         $middleware = new Authentication(
             settings: $this->settings,
             identityManager: $identityManager,
@@ -98,20 +65,9 @@ final class AuthenticationTest extends TestCase
 
     public function testHandleRequestWithExpiredSessionRedirects(): void
     {
-        $getIdentity = $this->createStub(GetIdentity::class);
-        $getIdentity->method('execute')->willThrowException(
-            new \Framework\Mvc\Security\Domain\Exceptions\SessionExpiredException()
-        );
-        $identityManager = new DefaultIdentityManager(
-            $this->createStub(SignUp::class),
-            $this->createStub(ActivateUserIdentity::class),
-            $this->createStub(SignIn::class),
-            $getIdentity,
-            $this->createStub(RefreshSignInSession::class),
-            $this->createStub(ModifyUserIdentityPassword::class),
-            $this->createStub(RequestResetPassword::class),
-            $this->createStub(ResetPasswordFromToken::class),
-            $this->createStub(SignOut::class)
+        $identityManager = $this->createStub(IdentityManager::class);
+        $identityManager->method('getIdentity')->willThrowException(
+            new SessionExpiredException()
         );
         $middleware = new Authentication(
             settings: $this->settings,
