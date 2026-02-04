@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Seedwork\Domain;
 
 /**
- * Base for domain events. Immutable; consumers must not mutate the payload array.
+ * Base for domain events.
  *
- * @param array<string, mixed> $payload Must not be mutated by consumers.
+ * Domain events expose an immutable payload array via the {@see $payload} property,
+ * which consumers must not mutate.
  */
 abstract readonly class DomainEvent
 {
