@@ -35,10 +35,10 @@ final class DiningAreaRemovedTest extends TestCase
 
         $event = DiningAreaRemoved::new(restaurantId: $restaurantId, diningArea: $diningArea);
 
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('DiningAreaRemoved', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
+        $this->assertNotEmpty($event->id);
+        $this->assertSame('DiningAreaRemoved', $event->type);
+        $this->assertSame('1.0', $event->version);
+        $payload = $event->payload;
         $this->assertSame($restaurantId, $payload['restaurantId']);
         $this->assertSame($diningArea, $payload['diningArea']);
     }

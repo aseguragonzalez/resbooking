@@ -58,7 +58,7 @@ final class RemoveDiningAreaTest extends TestCase
         $this->assertCount(1, $events);
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertSame($diningArea, $event->getPayload()['diningArea']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($diningArea, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
     }
 }
