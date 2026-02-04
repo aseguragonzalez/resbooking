@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Build;
 
-final class JsBuilder
+final readonly class JsBuilder
 {
     /**
      * @param array<string> $sourceFiles Array of source file paths (absolute or relative)
@@ -13,10 +13,10 @@ final class JsBuilder
      * @param string $outputMinFile Name of production output file (e.g., 'app.min.js')
      */
     public function __construct(
-        private readonly array $sourceFiles,
-        private readonly string $outputDir,
-        private readonly string $outputFile,
-        private readonly string $outputMinFile
+        private array $sourceFiles,
+        private string $outputDir,
+        private string $outputFile,
+        private string $outputMinFile
     ) {
     }
 

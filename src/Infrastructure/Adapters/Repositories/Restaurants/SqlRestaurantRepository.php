@@ -12,11 +12,11 @@ use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as Restau
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
 use PDO;
 
-final class SqlRestaurantRepository implements RestaurantRepository
+final readonly class SqlRestaurantRepository implements RestaurantRepository
 {
     public function __construct(
-        private readonly PDO $db,
-        private readonly RestaurantsMapper $mapper = new RestaurantsMapper(),
+        private PDO $db,
+        private RestaurantsMapper $mapper = new RestaurantsMapper(),
     ) {
     }
 

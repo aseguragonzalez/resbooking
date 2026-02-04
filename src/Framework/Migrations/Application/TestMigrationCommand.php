@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Framework\Migrations\Application;
 
-final class TestMigrationCommand
+final readonly class TestMigrationCommand
 {
     public function __construct(
-        public readonly string $migrationName,
-        public readonly string $basePath,
+        public string $migrationName,
+        public string $basePath,
     ) {
     }
 }
