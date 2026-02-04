@@ -14,6 +14,7 @@ use Framework\Mvc\Middlewares\ErrorHandling;
 use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
+use Framework\Mvc\Middlewares\Transaction;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestHandler;
 use Framework\Mvc\Routes\Router;
@@ -35,6 +36,7 @@ abstract class MvcWebApp extends Application
      * @param array<class-string<Middleware>> $middlewares The middlewares to use.
      * @param bool $requireAuthentication Whether to require authentication.
      * @param bool $requireAuthorization Whether to require authorization.
+     * @param bool $requireTransaction Whether to wrap POST requests in a database transaction.
      */
     protected function __construct(
         Container $container,
@@ -42,6 +44,7 @@ abstract class MvcWebApp extends Application
         private array $middlewares = [],
         private bool $requireAuthentication = false,
         private bool $requireAuthorization = false,
+        private bool $requireTransaction = false,
     ) {
         parent::__construct($container, $basePath);
     }
@@ -93,6 +96,14 @@ abstract class MvcWebApp extends Application
         $this->requireAuthorization = true;
     }
 
+    /**
+     * Wrap POST requests in a database transaction (commit on success, rollback on exception).
+     */
+    public function useTransaction(): void
+    {
+        $this->requireTransaction = true;
+    }
+
     private function buildMiddlewareChain(): void
     {
         /** @var RequestHandling $lastMiddleware */
@@ -119,6 +130,13 @@ abstract class MvcWebApp extends Application
             $authenticationMiddleware = $this->container->get(Authentication::class);
             $authenticationMiddleware->setNext($lastMiddleware);
             $lastMiddleware = $authenticationMiddleware;
+        }
+
+        if ($this->requireTransaction) {
+            /** @var Transaction $transactionMiddleware */
+            $transactionMiddleware = $this->container->get(Transaction::class);
+            $transactionMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $transactionMiddleware;
         }
 
         /** @var Localization $localizationMiddleware */
