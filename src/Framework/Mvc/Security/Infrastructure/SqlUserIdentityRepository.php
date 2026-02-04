@@ -8,11 +8,10 @@ use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\Domain\Repositories\UserIdentityRepository;
 use PDO;
 
-final class SqlUserIdentityRepository implements UserIdentityRepository
+final readonly class SqlUserIdentityRepository implements UserIdentityRepository
 {
-    public function __construct(
-        private readonly PDO $db,
-    ) {
+    public function __construct(private PDO $db)
+    {
     }
 
     public function save(UserIdentity $user): void
