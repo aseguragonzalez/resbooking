@@ -37,10 +37,10 @@ final class TimeSlotUnassignedTest extends TestCase
 
         $event = TimeSlotUnassigned::new(restaurantId: $restaurantId, availability: $availability);
 
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('TimeSlotUnassigned', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
+        $this->assertNotEmpty($event->id);
+        $this->assertSame('TimeSlotUnassigned', $event->type);
+        $this->assertSame('1.0', $event->version);
+        $payload = $event->payload;
         $this->assertSame($restaurantId, $payload['restaurantId']);
         $this->assertSame($availability, $payload['availability']);
     }

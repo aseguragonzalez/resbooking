@@ -31,10 +31,10 @@ final class UserCreatedTest extends TestCase
 
         $event = UserCreated::new(restaurantId: $restaurantId, user: $user);
 
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('UserCreated', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
+        $this->assertNotEmpty($event->id);
+        $this->assertSame('UserCreated', $event->type);
+        $this->assertSame('1.0', $event->version);
+        $payload = $event->payload;
         $this->assertSame($restaurantId, $payload['restaurantId']);
         $this->assertSame($user, $payload['user']);
     }

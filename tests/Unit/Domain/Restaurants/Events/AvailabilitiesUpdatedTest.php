@@ -44,10 +44,10 @@ final class AvailabilitiesUpdatedTest extends TestCase
 
         $event = AvailabilitiesUpdated::new(restaurantId: $restaurantId, availabilities: $availabilities);
 
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('AvailabilitiesUpdated', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
+        $this->assertNotEmpty($event->id);
+        $this->assertSame('AvailabilitiesUpdated', $event->type);
+        $this->assertSame('1.0', $event->version);
+        $payload = $event->payload;
         $this->assertSame($restaurantId, $payload['restaurantId']);
         $this->assertSame($availabilities, $payload['availabilities']);
     }

@@ -9,36 +9,36 @@ use Tests\Unit\Seedwork\Domain\Fixtures\DummyDomainEvent;
 
 class DomainEventTest extends TestCase
 {
-    public function testGetIdReturnsId(): void
+    public function testIdPropertyReturnsId(): void
     {
         $event = new DummyDomainEvent('my-id');
-        $this->assertSame('my-id', $event->getId());
+        $this->assertSame('my-id', $event->id);
     }
 
-    public function testGetTypeReturnsType(): void
+    public function testTypePropertyReturnsType(): void
     {
         $event = new DummyDomainEvent('id', 'MyType');
-        $this->assertSame('MyType', $event->getType());
+        $this->assertSame('MyType', $event->type);
     }
 
-    public function testGetVersionReturnsVersion(): void
+    public function testVersionPropertyReturnsVersion(): void
     {
         $event = new DummyDomainEvent('id', 'type', '3.0');
-        $this->assertSame('3.0', $event->getVersion());
+        $this->assertSame('3.0', $event->version);
     }
 
-    public function testGetPayloadReturnsPayload(): void
+    public function testPayloadPropertyReturnsPayload(): void
     {
         $payload = ['key' => 'value'];
         $event = new DummyDomainEvent('id', 'type', '1.0', $payload);
-        $this->assertSame($payload, $event->getPayload());
+        $this->assertSame($payload, $event->payload);
     }
 
-    public function testGetCreatedAtReturnsDateTime(): void
+    public function testCreatedAtPropertyReturnsDateTime(): void
     {
         $date = new \DateTimeImmutable('2022-10-05T12:00:00Z');
         $event = new DummyDomainEvent('id', 'type', '1.0', [], $date);
-        $this->assertEquals($date, $event->getCreatedAt());
+        $this->assertEquals($date, $event->createdAt);
     }
 
     public function testEqualsReturnsTrueForSameId(): void

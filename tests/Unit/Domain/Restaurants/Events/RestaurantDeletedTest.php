@@ -45,10 +45,10 @@ final class RestaurantDeletedTest extends TestCase
 
         $event = RestaurantDeleted::new(restaurantId: $restaurantId, restaurant: $restaurant);
 
-        $this->assertNotEmpty($event->getId());
-        $this->assertSame('RestaurantDeleted', $event->getType());
-        $this->assertSame('1.0', $event->getVersion());
-        $payload = $event->getPayload();
+        $this->assertNotEmpty($event->id);
+        $this->assertSame('RestaurantDeleted', $event->type);
+        $this->assertSame('1.0', $event->version);
+        $payload = $event->payload;
         $this->assertSame($restaurantId, $payload['restaurantId']);
         $this->assertSame($restaurant, $payload['restaurant']);
     }

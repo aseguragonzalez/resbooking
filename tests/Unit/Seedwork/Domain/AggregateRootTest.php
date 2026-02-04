@@ -44,7 +44,7 @@ class AggregateRootTest extends TestCase
         $events = $agg->getEvents();
         $this->assertCount(1, $events);
         $this->assertInstanceOf(DummyEvent::class, $events[0]);
-        $this->assertSame('event-1', $events[0]->getId());
+        $this->assertSame('event-1', $events[0]->id);
     }
 
     public function testGetEventsClearsEvents(): void
@@ -65,7 +65,7 @@ class AggregateRootTest extends TestCase
         $agg->addDomainEvent($event2);
         $events = $agg->getEvents();
         $this->assertCount(2, $events);
-        $this->assertSame('event-1', $events[0]->getId());
-        $this->assertSame('event-2', $events[1]->getId());
+        $this->assertSame('event-1', $events[0]->id);
+        $this->assertSame('event-2', $events[1]->id);
     }
 }

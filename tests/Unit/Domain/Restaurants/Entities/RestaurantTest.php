@@ -76,8 +76,8 @@ final class RestaurantTest extends TestCase
         $events = $restaurant->getEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($restaurant, $event->getPayload()['restaurant']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($restaurant, $event->payload['restaurant']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
         $this->assertInstanceOf(Restaurant::class, $restaurant);
         $this->assertInstanceOf(RestaurantCreated::class, $events[0]);
     }
@@ -93,8 +93,8 @@ final class RestaurantTest extends TestCase
         $events = $restaurant->getEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($diningArea, $event->getPayload()['diningArea']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($diningArea, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
         $this->assertInstanceOf(DiningAreaCreated::class, $events[0]);
     }
 
@@ -121,8 +121,8 @@ final class RestaurantTest extends TestCase
         $events = $restaurant->getEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($restaurant, $event->getPayload()['restaurant']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($restaurant, $event->payload['restaurant']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
         $this->assertInstanceOf(RestaurantModified::class, $events[0]);
     }
 
@@ -142,8 +142,8 @@ final class RestaurantTest extends TestCase
         $event = $events[0];
         $this->assertNotContains($diningAreaToRemove, $restaurant->getDiningAreas());
         $this->assertCount(1, $events);
-        $this->assertSame($diningAreaToRemove, $event->getPayload()['diningArea']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($diningAreaToRemove, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
     }
 
@@ -167,8 +167,8 @@ final class RestaurantTest extends TestCase
         $this->assertContains($updatedDiningArea, $restaurant->getDiningAreas());
         $this->assertNotContains($originalDiningArea, $restaurant->getDiningAreas());
         $this->assertCount(1, $events);
-        $this->assertSame($updatedDiningArea, $event->getPayload()['diningArea']);
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
+        $this->assertSame($updatedDiningArea, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
         $this->assertInstanceOf(DiningAreaModified::class, $events[0]);
     }
 
@@ -194,8 +194,8 @@ final class RestaurantTest extends TestCase
         $event = $events[0];
         $this->assertSame($newAvailabilities, $restaurant->getAvailabilities());
         $this->assertSame(1, count($events));
-        $this->assertSame($restaurant->getId(), $event->getPayload()['restaurantId']);
-        $this->assertSame($newAvailabilities, $event->getPayload()['availabilities']);
+        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
+        $this->assertSame($newAvailabilities, $event->payload['availabilities']);
         $this->assertInstanceOf(AvailabilitiesUpdated::class, $events[0]);
     }
 }
