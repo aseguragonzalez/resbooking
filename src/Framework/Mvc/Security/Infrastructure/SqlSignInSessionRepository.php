@@ -10,11 +10,10 @@ use Framework\Mvc\Security\Domain\Entities\SignInSession;
 use Framework\Mvc\Security\Domain\Repositories\SignInSessionRepository;
 use PDO;
 
-final class SqlSignInSessionRepository implements SignInSessionRepository
+final readonly class SqlSignInSessionRepository implements SignInSessionRepository
 {
-    public function __construct(
-        private readonly PDO $db,
-    ) {
+    public function __construct(private PDO $db)
+    {
     }
 
     public function save(SignInSession $session): void

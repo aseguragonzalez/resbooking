@@ -9,11 +9,10 @@ use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 use Framework\Mvc\Security\Domain\Repositories\SignUpChallengeRepository;
 use PDO;
 
-final class SqlSignUpChallengeRepository implements SignUpChallengeRepository
+final readonly class SqlSignUpChallengeRepository implements SignUpChallengeRepository
 {
-    public function __construct(
-        private readonly PDO $db,
-    ) {
+    public function __construct(private PDO $db)
+    {
     }
 
     public function save(SignUpChallenge $challenge): void
