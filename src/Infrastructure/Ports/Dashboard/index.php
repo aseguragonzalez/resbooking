@@ -12,4 +12,5 @@ $app = new DashboardApp(container: new Container(), basePath: __DIR__);
 $app->addMiddleware(RestaurantContext::class);
 $app->useAuthentication();
 $app->useAuthorization();
+$app->useTransaction();
 $app->run();
