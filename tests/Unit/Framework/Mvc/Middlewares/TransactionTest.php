@@ -71,7 +71,6 @@ final class TransactionTest extends TestCase
         $next = $this->createStub(Middleware::class);
         $next->method('handleRequest')->willThrowException($exception);
         $middleware = new Transaction($this->pdo, $next);
-        $middleware->setNext($next);
         $request = (new ServerRequest('POST', '/'))
             ->withAttribute(RequestContext::class, $this->context);
         $this->expectException(\RuntimeException::class);
