@@ -35,7 +35,6 @@ final class TransactionTest extends TestCase
         $next = $this->createStub(Middleware::class);
         $next->method('handleRequest')->willReturn($expectedResponse);
         $middleware = new Transaction($this->pdo, $next);
-        $middleware->setNext($next);
         $request = (new ServerRequest('GET', '/'))
             ->withAttribute(RequestContext::class, $this->context);
 
@@ -53,7 +52,6 @@ final class TransactionTest extends TestCase
         $next = $this->createStub(Middleware::class);
         $next->method('handleRequest')->willReturn($expectedResponse);
         $middleware = new Transaction($this->pdo, $next);
-        $middleware->setNext($next);
         $request = (new ServerRequest('POST', '/'))
             ->withAttribute(RequestContext::class, $this->context);
 
