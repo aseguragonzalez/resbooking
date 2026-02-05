@@ -6,6 +6,7 @@ namespace Tests\Unit\Seedwork\Application\Messaging;
 
 use PHPUnit\Framework\TestCase;
 use Seedwork\Application\Messaging\DeferredDomainEventsBus;
+use Tests\Unit\Seedwork\Application\Messaging\Fixtures\CallbackDomainEventHandler;
 use Tests\Unit\Seedwork\Domain\Fixtures\DummyDomainEvent;
 use Tests\Unit\Seedwork\Domain\Fixtures\DummyEvent;
 
@@ -27,9 +28,9 @@ final class DeferredDomainEventsBusTest extends TestCase
     {
         $event = new DummyDomainEvent();
         $received = [];
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$received) {
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$received) {
             $received[] = $e;
-        });
+        }));
 
         $this->bus->publish($event);
 
@@ -41,9 +42,9 @@ final class DeferredDomainEventsBusTest extends TestCase
         $event = new DummyDomainEvent(id: 'evt-1');
         $received = [];
 
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$received) {
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$received) {
             $received[] = $e;
-        });
+        }));
 
         $this->bus->publish($event);
         $this->bus->notify();
@@ -57,9 +58,9 @@ final class DeferredDomainEventsBusTest extends TestCase
         $event = new DummyDomainEvent();
         $callCount = 0;
 
-        $this->bus->subscribe(DummyDomainEvent::class, function () use (&$callCount) {
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function () use (&$callCount) {
             ++$callCount;
-        });
+        }));
 
         $this->bus->publish($event);
         $this->bus->notify();
@@ -74,12 +75,12 @@ final class DeferredDomainEventsBusTest extends TestCase
         $received1 = [];
         $received2 = [];
 
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$received1) {
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$received1) {
             $received1[] = $e;
-        });
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$received2) {
+        }));
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$received2) {
             $received2[] = $e;
-        });
+        }));
 
         $this->bus->publish($event);
         $this->bus->notify();
@@ -98,12 +99,18 @@ final class DeferredDomainEventsBusTest extends TestCase
         $receivedDummyDomain = [];
         $receivedDummy = [];
 
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$receivedDummyDomain) {
-            $receivedDummyDomain[] = $e;
-        });
-        $this->bus->subscribe(DummyEvent::class, function ($e) use (&$receivedDummy) {
-            $receivedDummy[] = $e;
-        });
+        $this->bus->subscribe(
+            DummyDomainEvent::class,
+            new CallbackDomainEventHandler(function ($e) use (&$receivedDummyDomain) {
+                $receivedDummyDomain[] = $e;
+            })
+        );
+        $this->bus->subscribe(
+            DummyEvent::class,
+            new CallbackDomainEventHandler(function ($e) use (&$receivedDummy) {
+                $receivedDummy[] = $e;
+            })
+        );
 
         $this->bus->publish($dummyDomainEvent);
         $this->bus->publish($dummyEvent);
@@ -132,9 +139,9 @@ final class DeferredDomainEventsBusTest extends TestCase
         $event2 = new DummyDomainEvent(id: 'second');
         $order = [];
 
-        $this->bus->subscribe(DummyDomainEvent::class, function ($e) use (&$order) {
+        $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$order) {
             $order[] = $e->id;
-        });
+        }));
 
         $this->bus->publish($event1);
         $this->bus->publish($event2);

@@ -17,7 +17,7 @@ final class DeferredDomainEventsBus implements DomainEventsBus
     private array $buffer = [];
 
     /**
-     * @var array<string, array<callable(DomainEvent): void>>
+     * @var array<string, array<DomainEventHandler>>
      */
     private array $handlers = [];
 
@@ -26,12 +26,12 @@ final class DeferredDomainEventsBus implements DomainEventsBus
         $this->buffer[] = $event;
     }
 
-    public function subscribe(string $eventType, callable $handler): void
+    public function subscribe(string $eventType, DomainEventHandler $domainEventHandler): void
     {
         if (!isset($this->handlers[$eventType])) {
             $this->handlers[$eventType] = [];
         }
-        $this->handlers[$eventType][] = $handler;
+        $this->handlers[$eventType][] = $domainEventHandler;
     }
 
     public function notify(): void
@@ -46,7 +46,7 @@ final class DeferredDomainEventsBus implements DomainEventsBus
             }
 
             foreach ($this->handlers[$eventType] as $handler) {
-                $handler($event);
+                $handler->execute($event);
             }
         }
     }
