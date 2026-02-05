@@ -180,7 +180,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $restaurant = Restaurant::new('test@example.com');
         $this->assertGreaterThan(
             0,
-            $restaurant->getEvents(),
+            count($restaurant->getEvents()),
             'Restaurant::new() should have raised at least one event'
         );
         $restaurantWithEvent = Restaurant::new('publish-test@example.com');
