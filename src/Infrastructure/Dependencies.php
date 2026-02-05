@@ -22,6 +22,8 @@ use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
+use Seedwork\Application\Messaging\DeferredDomainEventsBus;
+use Seedwork\Application\Messaging\DomainEventsBus;
 
 final class Dependencies
 {
@@ -36,6 +38,8 @@ final class Dependencies
         $container->set(UpdateDiningArea::class, $container->get(UpdateDiningAreaHandler::class));
         $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesHandler::class));
         $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdHandler::class));
+
+        $container->set(DomainEventsBus::class, $container->get(DeferredDomainEventsBus::class));
 
         // configure security: IdentityManager, repositories, use cases and ChallengeNotificator
         SecurityDependencies::configure($container);
