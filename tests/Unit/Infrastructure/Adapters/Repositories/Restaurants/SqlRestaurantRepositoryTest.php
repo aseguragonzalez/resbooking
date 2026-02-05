@@ -20,6 +20,8 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Domain\DomainEvent;
 use Tests\Unit\RestaurantBuilder;
 
 final class SqlRestaurantRepositoryTest extends TestCase
@@ -35,8 +37,11 @@ final class SqlRestaurantRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->pdo = $this->createMock(PDO::class);
+        $domainEventsBus = $this->createStub(DomainEventsBus::class);
+        $domainEventsBus->method('publish')->willReturnCallback(function (): void {
+        });
         $this->mapper = new RestaurantsMapper();
-        $this->repository = new SqlRestaurantRepository($this->pdo, $this->mapper);
+        $this->repository = new SqlRestaurantRepository($this->pdo, $domainEventsBus, $this->mapper);
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->prepareStatementQueue = [];
@@ -46,7 +51,8 @@ final class SqlRestaurantRepositoryTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $restaurantStmt = $this->createMock(PDOStatement::class);
-        $restaurantStmt->expects($this->once())
+        $restaurantStmt
+            ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
                 return $params['id'] === $restaurant->getId()
@@ -167,6 +173,27 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $this->setupPrepareCallback();
 
         $this->repository->save($restaurant);
+    }
+
+    public function testSavePublishesDomainEventsFromAggregate(): void
+    {
+        $restaurant = Restaurant::new('test@example.com');
+        $this->assertGreaterThan(
+            0,
+            $restaurant->getEvents(),
+            'Restaurant::new() should have raised at least one event'
+        );
+        $restaurantWithEvent = Restaurant::new('publish-test@example.com');
+        $domainEventsBus = $this->createMock(DomainEventsBus::class);
+        $domainEventsBus
+            ->expects($this->once())
+            ->method('publish')
+            ->with($this->isInstanceOf(DomainEvent::class));
+        $this->mockSaveStatements($restaurantWithEvent);
+        $this->setupPrepareCallback();
+        $repository = new SqlRestaurantRepository($this->pdo, $domainEventsBus, $this->mapper);
+
+        $repository->save($restaurantWithEvent);
     }
 
     public function testGetByIdReturnsRestaurantWhenExists(): void

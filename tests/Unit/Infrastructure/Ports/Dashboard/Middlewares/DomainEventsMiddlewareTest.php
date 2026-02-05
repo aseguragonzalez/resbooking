@@ -55,6 +55,7 @@ final class DomainEventsMiddlewareTest extends TestCase
             next: null
         );
         $this->domainEventsBus->expects($this->never())->method('notify');
+        $this->next->expects($this->never())->method('handleRequest');
         $request = new ServerRequest('GET', '/');
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No middleware to handle the request');

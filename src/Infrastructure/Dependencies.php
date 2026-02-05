@@ -29,6 +29,8 @@ final class Dependencies
 {
     public static function configure(Container $container): void
     {
+        $container->set(DomainEventsBus::class, $container->get(DeferredDomainEventsBus::class));
+
         // configure application services
         $container->set(RestaurantRepository::class, $container->get(SqlRestaurantRepository::class));
         $container->set(CreateNewRestaurant::class, $container->get(CreateNewRestaurantHandler::class));
@@ -38,9 +40,6 @@ final class Dependencies
         $container->set(UpdateDiningArea::class, $container->get(UpdateDiningAreaHandler::class));
         $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesHandler::class));
         $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdHandler::class));
-
-        $container->set(DomainEventsBus::class, $container->get(DeferredDomainEventsBus::class));
-
         // configure security: IdentityManager, repositories, use cases and ChallengeNotificator
         SecurityDependencies::configure($container);
     }

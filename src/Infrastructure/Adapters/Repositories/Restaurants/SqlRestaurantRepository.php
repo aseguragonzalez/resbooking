@@ -7,6 +7,7 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
+use Seedwork\Application\Messaging\DomainEventsBus;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
@@ -16,6 +17,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 {
     public function __construct(
         private PDO $db,
+        private DomainEventsBus $domainEventsBus,
         private RestaurantsMapper $mapper = new RestaurantsMapper(),
     ) {
     }
@@ -127,6 +129,10 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
                     'user_id' => $userEmail,
                 ]);
             }
+        }
+
+        foreach ($aggregateRoot->getEvents() as $event) {
+            $this->domainEventsBus->publish($event);
         }
     }
 
