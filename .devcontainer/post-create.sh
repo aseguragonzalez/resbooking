@@ -120,6 +120,7 @@ fi
 if [ -f "/var/www/html/.pre-commit-config.yaml" ]; then
     echo "✅ pre-commit configuration found"
     echo "   Note: Hook environments will download automatically on first 'pre-commit run'"
+    (cd /var/www/html && pre-commit install)
 fi
 
 echo "✅ pre-commit installed successfully"
