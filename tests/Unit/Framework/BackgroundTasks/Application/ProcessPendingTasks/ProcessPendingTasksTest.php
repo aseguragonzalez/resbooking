@@ -10,7 +10,9 @@ use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTask
 use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\BackgroundTasks\Domain\TaskBus;
+use Framework\BackgroundTasks\Domain\TransactionRunner;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -18,6 +20,7 @@ final class ProcessPendingTasksTest extends TestCase
 {
     private TaskRepository&MockObject $taskRepository;
     private TaskBus&MockObject $taskBus;
+    private TransactionRunner&Stub $transactionRunner;
     private LoggerInterface $logger;
     private ProcessPendingTasks $service;
 
@@ -25,10 +28,17 @@ final class ProcessPendingTasksTest extends TestCase
     {
         $this->taskRepository = $this->createMock(TaskRepository::class);
         $this->taskBus = $this->createMock(TaskBus::class);
+        $this->transactionRunner = $this->createStub(TransactionRunner::class);
+        $this->transactionRunner->method('runInTransaction')->willReturnCallback(
+            static function (\Closure $operation): void {
+                $operation();
+            }
+        );
         $this->logger = $this->createStub(LoggerInterface::class);
         $this->service = new ProcessPendingTasksHandler(
             $this->taskRepository,
             $this->taskBus,
+            $this->transactionRunner,
             $this->logger,
         );
     }
@@ -132,9 +142,16 @@ final class ProcessPendingTasksTest extends TestCase
                 }),
             );
 
+        $transactionRunner = $this->createStub(TransactionRunner::class);
+        $transactionRunner->method('runInTransaction')->willReturnCallback(
+            static function (\Closure $operation): void {
+                $operation();
+            }
+        );
         $service = new ProcessPendingTasksHandler(
             $this->taskRepository,
             $this->taskBus,
+            $transactionRunner,
             $logger,
         );
         $service->execute(new ProcessPendingTasksCommand(limit: 10));
