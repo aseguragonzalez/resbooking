@@ -140,4 +140,70 @@ final class SqlTaskRepositoryTest extends TestCase
 
         $this->repository->save($task);
     }
+
+    public function testFindPendingQueriesUnprocessedTasksOrderedByCreatedAt(): void
+    {
+        $this->pdo->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('WHERE processed = 0'))
+            ->willReturn($this->statement);
+        $this->statement->expects($this->once())
+            ->method('bindValue')
+            ->with('limit', 10, PDO::PARAM_INT);
+        $this->statement->expects($this->once())
+            ->method('execute');
+        $this->statement->expects($this->once())
+            ->method('fetchAll')
+            ->with(PDO::FETCH_ASSOC)
+            ->willReturn([
+                [
+                    'id' => 'task-1',
+                    'task_type' => 'send_email',
+                    'arguments' => '{"to":"user@example.com"}',
+                ],
+            ]);
+
+        $result = $this->repository->findPending(10);
+
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf(Task::class, $result[0]);
+        $this->assertSame('task-1', $result[0]->id);
+        $this->assertSame('send_email', $result[0]->taskType);
+        $this->assertSame(['to' => 'user@example.com'], $result[0]->arguments);
+        $this->assertFalse($result[0]->processed);
+    }
+
+    public function testFindPendingReturnsEmptyArrayWhenNoRows(): void
+    {
+        $this->pdo->expects($this->once())->method('prepare')->willReturn($this->statement);
+        $this->statement->expects($this->once())->method('bindValue');
+        $this->statement->expects($this->once())->method('execute');
+        $this->statement->expects($this->once())->method('fetchAll')->willReturn([]);
+
+        $result = $this->repository->findPending(5);
+
+        $this->assertSame([], $result);
+    }
+
+    public function testSaveProcessedTaskUpdatesRow(): void
+    {
+        $task = Task::build('task-123', 'dummy', [])->markAsProcessed();
+
+        $this->pdo->expects($this->once())
+            ->method('prepare')
+            ->with($this->stringContains('ON DUPLICATE KEY UPDATE'))
+            ->willReturn($this->statement);
+        $this->statement->expects($this->once())
+            ->method('execute')
+            ->with($this->callback(function (array $params): bool {
+                return $params['id'] === 'task-123'
+                    && isset($params['processed_at'])
+                    && is_string($params['processed_at'])
+                    && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $params['processed_at']) === 1
+                    && $params['processed'] === 1;
+            }))
+            ->willReturn(true);
+
+        $this->repository->save($task);
+    }
 }

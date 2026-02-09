@@ -9,4 +9,9 @@ use Framework\BackgroundTasks\Domain\Task;
 interface TaskRepository
 {
     public function save(Task $task): void;
+
+    /**
+     * @return array<Task>
+     */
+    public function findPending(int $limit): array;
 }

@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Framework\BackgroundTasks;
 
 use DI\Container;
+use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
+use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
 use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
 use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
 use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\BackgroundTasks\Domain\TaskBus;
 use Framework\BackgroundTasks\Infrastructure\SqlTaskRepository;
+use Framework\BackgroundTasks\Infrastructure\TaskBusHandler;
 
 final class Dependencies
 {
@@ -16,5 +20,7 @@ final class Dependencies
     {
         $container->set(TaskRepository::class, $container->get(SqlTaskRepository::class));
         $container->set(RegisterTask::class, $container->get(RegisterTaskHandler::class));
+        $container->set(TaskBus::class, $container->get(TaskBusHandler::class));
+        $container->set(ProcessPendingTasks::class, $container->get(ProcessPendingTasksHandler::class));
     }
 }

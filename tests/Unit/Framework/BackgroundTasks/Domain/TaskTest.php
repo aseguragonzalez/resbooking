@@ -66,4 +66,45 @@ final class TaskTest extends TestCase
 
         Task::new('task', ['' => 'value']);
     }
+
+    public function testNewGeneratesIdAndSetsProcessedFalse(): void
+    {
+        $task = Task::new('no_op', []);
+
+        $this->assertNotEmpty($task->id);
+        $this->assertFalse($task->processed);
+        $this->assertNull($task->processedAt);
+    }
+
+    public function testFromPersistenceCreatesTaskWithIdAndProcessedFalse(): void
+    {
+        $task = Task::build('id-123', 'send_email', ['to' => 'a@b.com']);
+
+        $this->assertSame('id-123', $task->id);
+        $this->assertSame('send_email', $task->taskType);
+        $this->assertSame(['to' => 'a@b.com'], $task->arguments);
+        $this->assertFalse($task->processed);
+        $this->assertNull($task->processedAt);
+    }
+
+    public function testMarkAsProcessedReturnsTaskWithProcessedTrueAndSameId(): void
+    {
+        $task = Task::build('id-42', 'send_email', []);
+
+        $processed = $task->markAsProcessed();
+
+        $this->assertSame('id-42', $processed->id);
+        $this->assertSame('send_email', $processed->taskType);
+        $this->assertTrue($processed->processed);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $processed->processedAt);
+    }
+
+    public function testMarkAsProcessedOnNewTaskPreservesGeneratedId(): void
+    {
+        $task = Task::new('no_op', []);
+        $processed = $task->markAsProcessed();
+
+        $this->assertSame($task->id, $processed->id);
+        $this->assertTrue($processed->processed);
+    }
 }

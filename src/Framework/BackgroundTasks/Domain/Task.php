@@ -12,8 +12,11 @@ final readonly class Task
      * @param array<string, mixed> $arguments
      */
     private function __construct(
+        public string $id,
         public string $taskType,
         public array $arguments = [],
+        public bool $processed = false,
+        public ?\DateTimeImmutable $processedAt = null,
     ) {
     }
 
@@ -27,7 +30,43 @@ final readonly class Task
         }
         self::validateArguments($arguments);
 
-        return new self(taskType: $taskType, arguments: $arguments);
+        return new self(
+            id: uniqid('', true),
+            taskType: $taskType,
+            arguments: $arguments,
+            processed: false,
+            processedAt: null,
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $arguments
+     */
+    public static function build(string $id, string $taskType, array $arguments): self
+    {
+        if ($taskType === '') {
+            throw new \InvalidArgumentException('Task type must not be empty');
+        }
+        self::validateArguments($arguments);
+
+        return new self(
+            id: $id,
+            taskType: $taskType,
+            arguments: $arguments,
+            processed: false,
+            processedAt: null,
+        );
+    }
+
+    public function markAsProcessed(): self
+    {
+        return new self(
+            id: $this->id,
+            taskType: $this->taskType,
+            arguments: $this->arguments,
+            processed: true,
+            processedAt: new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+        );
     }
 
     /**
