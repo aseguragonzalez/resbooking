@@ -22,12 +22,9 @@ final readonly class MigrationExecutorHandler implements MigrationExecutor
     {
         $scripts = [];
         try {
-            if ($migration->scripts !== []) {
-                $this->dbClient->useDatabase($this->databaseName);
-            }
-
             foreach ($migration->scripts as $script) {
                 $scripts[] = $script;
+                $this->dbClient->useDatabase($this->databaseName);
                 $this->dbClient->execute(statements: $script->getStatements());
             }
 
