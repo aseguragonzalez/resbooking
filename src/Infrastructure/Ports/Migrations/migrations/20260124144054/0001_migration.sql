@@ -1,6 +1,4 @@
 -- Migration file
-USE reservations;
-
 CREATE TABLE IF NOT EXISTS `restaurants` (
     `id` VARCHAR(255) NOT NULL PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,

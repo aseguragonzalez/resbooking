@@ -18,6 +18,7 @@ use Framework\Migrations\Domain\Services\MigrationExecutor;
 use Framework\Migrations\Domain\Services\MigrationExecutorHandler;
 use Framework\Migrations\Domain\Services\MigrationFileManager;
 use Framework\Migrations\Domain\Services\MigrationFileManagerHandler;
+use Framework\Migrations\Domain\Services\MigrationTestScopeFactory;
 use Framework\Migrations\Domain\Services\RollbackExecutor;
 use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
 use Framework\Migrations\Domain\Services\SchemaComparator;
@@ -26,11 +27,14 @@ use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
 use Framework\Migrations\MigrationSettings;
+use Framework\Migrations\Infrastructure\MigrationTestScopeFactoryHandler;
 use Framework\Migrations\Infrastructure\ShellDatabaseBackupManager;
 use Framework\Migrations\Infrastructure\SqlDbClient;
 use Framework\Migrations\Infrastructure\SqlMigrationRepository;
 use Framework\Migrations\Infrastructure\SqlSchemaSnapshotExecutor;
 use PDO;
+
+use function DI\factory;
 
 final class Dependencies
 {
@@ -53,14 +57,36 @@ final class Dependencies
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));
         $container->set(MigrationRepository::class, $container->get(SqlMigrationRepository::class));
         $container->set(DbClient::class, $container->get(SqlDbClient::class));
+        $container->set(
+            MigrationExecutorHandler::class,
+            factory(function (MigrationRepository $r, DbClient $c, MigrationSettings $s) {
+                return new MigrationExecutorHandler($r, $c, $s->database);
+            }),
+        );
         $container->set(MigrationExecutor::class, $container->get(MigrationExecutorHandler::class));
         $container->set(MigrationFileManager::class, $container->get(MigrationFileManagerHandler::class));
+        $container->set(
+            RollbackExecutorHandler::class,
+            factory(function (DbClient $c, MigrationSettings $s) {
+                return new RollbackExecutorHandler($c, $s->database);
+            }),
+        );
         $container->set(RollbackExecutor::class, $container->get(RollbackExecutorHandler::class));
         $container->set(RunMigrations::class, $container->get(RunMigrationsHandler::class));
         $container->set(SchemaSnapshotExecutor::class, $container->get(SqlSchemaSnapshotExecutor::class));
         $container->set(SchemaComparator::class, $container->get(SchemaComparatorHandler::class));
+        $container->set(
+            TestMigrationExecutorHandler::class,
+            factory(function (DbClient $c, MigrationSettings $s) {
+                return new TestMigrationExecutorHandler($c, $s->database);
+            }),
+        );
         $container->set(TestMigrationExecutor::class, $container->get(TestMigrationExecutorHandler::class));
         $container->set(DatabaseBackupManager::class, $container->get(ShellDatabaseBackupManager::class));
+        $container->set(
+            MigrationTestScopeFactory::class,
+            $container->get(MigrationTestScopeFactoryHandler::class),
+        );
         $container->set(TestMigration::class, $container->get(TestMigrationHandler::class));
     }
 }

@@ -57,4 +57,70 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 
         unlink($backupFilePath);
     }
+
+    public function createTestDatabaseFromBackup(string $backupFilePath): string
+    {
+        if (!file_exists($backupFilePath)) {
+            throw new \RuntimeException("Backup file does not exist: {$backupFilePath}");
+        }
+
+        $testDatabaseName = 'test_' . bin2hex(random_bytes(4));
+
+        $createDbCommand = sprintf(
+            'mysql -h %s -u %s -p%s -e "CREATE DATABASE %s CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci" 2>&1',
+            escapeshellarg($this->settings->host),
+            escapeshellarg($this->settings->user),
+            escapeshellarg($this->settings->password),
+            $this->escapeDatabaseName($testDatabaseName)
+        );
+
+        exec($createDbCommand, $output, $returnCode);
+        if ($returnCode !== 0) {
+            throw new \RuntimeException(
+                "Failed to create test database: " . implode("\n", $output)
+            );
+        }
+
+        $restoreCommand = sprintf(
+            'mysql -h %s -u %s -p%s %s < %s 2>&1',
+            escapeshellarg($this->settings->host),
+            escapeshellarg($this->settings->user),
+            escapeshellarg($this->settings->password),
+            escapeshellarg($testDatabaseName),
+            escapeshellarg($backupFilePath)
+        );
+
+        exec($restoreCommand, $restoreOutput, $restoreReturnCode);
+        if ($restoreReturnCode !== 0) {
+            $this->destroyTestDatabase($testDatabaseName);
+            throw new \RuntimeException(
+                "Failed to restore backup into test database: " . implode("\n", $restoreOutput)
+            );
+        }
+
+        return $testDatabaseName;
+    }
+
+    public function destroyTestDatabase(string $testDatabaseName): void
+    {
+        $command = sprintf(
+            'mysql -h %s -u %s -p%s -e "DROP DATABASE IF EXISTS %s" 2>&1',
+            escapeshellarg($this->settings->host),
+            escapeshellarg($this->settings->user),
+            escapeshellarg($this->settings->password),
+            $this->escapeDatabaseName($testDatabaseName)
+        );
+
+        exec($command, $output, $returnCode);
+        if ($returnCode !== 0) {
+            throw new \RuntimeException(
+                "Failed to destroy test database: " . implode("\n", $output)
+            );
+        }
+    }
+
+    private function escapeDatabaseName(string $name): string
+    {
+        return  str_replace('`', '``', $name);
+    }
 }

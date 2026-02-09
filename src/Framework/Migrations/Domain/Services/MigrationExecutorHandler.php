@@ -11,8 +11,11 @@ use Framework\Migrations\Domain\Repositories\MigrationRepository;
 
 final readonly class MigrationExecutorHandler implements MigrationExecutor
 {
-    public function __construct(private MigrationRepository $repository, private DbClient $dbClient)
-    {
+    public function __construct(
+        private MigrationRepository $repository,
+        private DbClient $dbClient,
+        private string $databaseName,
+    ) {
     }
 
     public function execute(Migration $migration): void
@@ -21,6 +24,7 @@ final readonly class MigrationExecutorHandler implements MigrationExecutor
         try {
             foreach ($migration->scripts as $script) {
                 $scripts[] = $script;
+                $this->dbClient->useDatabase($this->databaseName);
                 $this->dbClient->execute(statements: $script->getStatements());
             }
 

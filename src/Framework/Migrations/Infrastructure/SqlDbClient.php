@@ -42,4 +42,10 @@ final readonly class SqlDbClient implements DbClient
     {
         $this->db->rollBack();
     }
+
+    public function useDatabase(string $database): void
+    {
+        $escaped = '`' . str_replace('`', '``', $database) . '`';
+        $this->db->exec('USE ' . $escaped);
+    }
 }

@@ -17,10 +17,12 @@ final class TestMigrationExecutorHandlerTest extends TestCase
     private DbClient&MockObject $dbClient;
     private TestMigrationExecutorHandler $executor;
 
+    private const DATABASE_NAME = 'main_db';
+
     protected function setUp(): void
     {
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->executor = new TestMigrationExecutorHandler($this->dbClient);
+        $this->executor = new TestMigrationExecutorHandler($this->dbClient, self::DATABASE_NAME);
     }
 
     public function testExecuteRunsAllScriptsInMigration(): void
@@ -33,6 +35,7 @@ final class TestMigrationExecutorHandlerTest extends TestCase
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
 
+        $this->dbClient->expects($this->exactly(2))->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->exactly(2))->method('execute');
 
         $this->executor->execute($migration);
@@ -43,6 +46,7 @@ final class TestMigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $migration = Migration::new(name: 'test_migration', scripts: [$script]);
 
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())->method('execute');
         $this->dbClient->expects($this->never())->method('beginTransaction');
         $this->dbClient->expects($this->never())->method('commit');

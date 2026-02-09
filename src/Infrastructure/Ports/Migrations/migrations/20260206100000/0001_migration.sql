@@ -1,6 +1,4 @@
 -- Migration file
-USE reservations;
-
 CREATE TABLE IF NOT EXISTS `background_tasks` (
     `id` VARCHAR(255) NOT NULL PRIMARY KEY,
     `task_type` VARCHAR(255) NOT NULL,

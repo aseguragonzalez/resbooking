@@ -169,4 +169,73 @@ final class ScriptTest extends TestCase
         $this->assertSame('DROP TABLE posts;', $rollbackStatements[1]);
         $this->assertNotContains('-- Comment', $rollbackStatements);
     }
+
+    public function testGetStatementsFiltersOutUseStatement(): void
+    {
+        $basePath = '/migrations/20240115';
+        $fileName = '001_create_table.sql';
+        $content = "USE reservations;\nCREATE TABLE users (id INT);";
+        $rollbackContent = "DROP TABLE users;";
+
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
+
+        $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
+
+        $statements = $script->getStatements();
+
+        $this->assertCount(1, $statements);
+        $this->assertSame('CREATE TABLE users (id INT);', $statements[0]);
+        $this->assertNotContains('USE reservations;', $statements);
+    }
+
+    public function testGetStatementsFiltersOutUseStatementWithBackticks(): void
+    {
+        $basePath = '/migrations/20240115';
+        $fileName = '001_create_table.sql';
+        $content = "USE `reservations`;\nCREATE TABLE users (id INT);";
+        $rollbackContent = "DROP TABLE users;";
+
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
+
+        $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
+
+        $statements = $script->getStatements();
+
+        $this->assertCount(1, $statements);
+        $this->assertSame('CREATE TABLE users (id INT);', $statements[0]);
+    }
+
+    public function testGetRollbackStatementsFiltersOutUseStatement(): void
+    {
+        $basePath = '/migrations/20240115';
+        $fileName = '001_create_table.sql';
+        $content = "CREATE TABLE users (id INT);";
+        $rollbackContent = "USE reservations;\nDROP TABLE users;";
+
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
+
+        $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
+
+        $rollbackStatements = $script->getRollbackStatements();
+
+        $this->assertCount(1, $rollbackStatements);
+        $this->assertSame('DROP TABLE users;', $rollbackStatements[0]);
+        $this->assertNotContains('USE reservations;', $rollbackStatements);
+    }
+
+    public function testGetStatementsReturnsEmptyArrayWhenOnlyUseStatements(): void
+    {
+        $basePath = '/migrations/20240115';
+        $fileName = '001_create_table.sql';
+        $content = "USE reservations;";
+        $rollbackContent = "DROP TABLE users;";
+
+        $this->fileManager->method('readTextPlain')->willReturn($content, $rollbackContent);
+
+        $script = Script::fromFile(basePath: $basePath, fileName: $fileName, fileManager: $this->fileManager);
+
+        $statements = $script->getStatements();
+
+        $this->assertCount(0, $statements);
+    }
 }

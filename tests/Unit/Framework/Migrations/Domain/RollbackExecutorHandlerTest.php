@@ -13,13 +13,15 @@ use PHPUnit\Framework\TestCase;
 
 final class RollbackExecutorHandlerTest extends TestCase
 {
+    private const DATABASE_NAME = 'main_db';
+
     private DbClient&MockObject $dbClient;
     private RollbackExecutorHandler $rollbackExecutor;
 
     protected function setUp(): void
     {
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->rollbackExecutor = new RollbackExecutorHandler($this->dbClient);
+        $this->rollbackExecutor = new RollbackExecutorHandler($this->dbClient, self::DATABASE_NAME);
     }
 
     public function testRollbackExecutesRollbackStatementsInReverseOrder(): void
@@ -32,6 +34,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2];
 
+        $this->dbClient->expects($this->exactly(2))->method('useDatabase')->with(self::DATABASE_NAME);
         $callCount = 0;
         $this->dbClient->expects($this->exactly(2))
             ->method('execute')
@@ -57,6 +60,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2];
 
+        $this->dbClient->expects($this->exactly(2))->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->exactly(2))
             ->method('execute');
 
@@ -78,6 +82,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2, $script3];
 
+        $this->dbClient->expects($this->exactly(3))->method('useDatabase')->with(self::DATABASE_NAME);
         $callCount = 0;
         $this->dbClient->expects($this->exactly(3))
             ->method('execute')
@@ -110,6 +115,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2, $script3];
 
+        $this->dbClient->expects($this->exactly(3))->method('useDatabase')->with(self::DATABASE_NAME);
         $callOrder = [];
         $this->dbClient->expects($this->exactly(3))
             ->method('execute')
@@ -129,6 +135,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users;', 'DROP TABLE users;');
         $scripts = [$script];
 
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())
             ->method('execute')
             ->with($this->equalTo(['DROP TABLE users;']));
@@ -140,6 +147,7 @@ final class RollbackExecutorHandlerTest extends TestCase
     {
         $scripts = [];
 
+        $this->dbClient->expects($this->never())->method('useDatabase');
         $this->dbClient->expects($this->never())
             ->method('execute');
 
@@ -156,6 +164,7 @@ final class RollbackExecutorHandlerTest extends TestCase
         );
         $scripts = [$script];
 
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())
             ->method('execute')
             ->with($this->equalTo(['DROP TABLE users;', 'DROP TABLE posts;']));

@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
 
 final class MigrationExecutorHandlerTest extends TestCase
 {
+    private const DATABASE_NAME = 'main_db';
+
     private MigrationRepository&MockObject $repository;
     private DbClient&MockObject $dbClient;
     private MigrationExecutorHandler $executor;
@@ -24,7 +26,11 @@ final class MigrationExecutorHandlerTest extends TestCase
     {
         $this->repository = $this->createMock(MigrationRepository::class);
         $this->dbClient = $this->createMock(DbClient::class);
-        $this->executor = new MigrationExecutorHandler($this->repository, $this->dbClient);
+        $this->executor = new MigrationExecutorHandler(
+            $this->repository,
+            $this->dbClient,
+            self::DATABASE_NAME,
+        );
     }
 
     public function testExecuteRunsAllScriptsInMigration(): void
@@ -36,6 +42,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         );
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->exactly(2))->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->exactly(2))->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository->expects($this->once())->method('save')->with($this->equalTo($migration));
@@ -49,6 +56,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository
@@ -68,6 +76,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository->expects($this->once())->method('save');
@@ -81,6 +90,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository->expects($this->once())->method('save');
@@ -95,6 +105,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())
             ->method('execute')
             ->willThrowException(new \RuntimeException('Database error'));
@@ -123,6 +134,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
 
+        $this->dbClient->expects($this->exactly(2))->method('useDatabase')->with(self::DATABASE_NAME);
         $callCount = 0;
         $this->dbClient->expects($this->exactly(2))
             ->method('execute')
@@ -155,6 +167,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
 
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient
             ->expects($this->once())
             ->method('execute')
@@ -177,6 +190,7 @@ final class MigrationExecutorHandlerTest extends TestCase
         $script = $this->createScriptFromFile('001_create_table.sql', 'CREATE TABLE users (id INT);');
         $scripts = [$script];
         $migration = Migration::new(name: 'test_migration', scripts: $scripts);
+        $this->dbClient->expects($this->once())->method('useDatabase')->with(self::DATABASE_NAME);
         $this->dbClient->expects($this->once())->method('execute');
         $this->dbClient->expects($this->once())->method('beginTransaction');
         $this->repository

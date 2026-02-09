@@ -1,6 +1,4 @@
 -- Migration file
-USE reservations;
-
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY,
     hash1 VARCHAR(255) NOT NULL,

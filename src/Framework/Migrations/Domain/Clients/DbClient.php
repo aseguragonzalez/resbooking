@@ -15,4 +15,6 @@ interface DbClient
     public function execute(array $statements): void;
     public function inTransaction(): bool;
     public function rollBack(): void;
+
+    public function useDatabase(string $database): void;
 }

@@ -70,9 +70,16 @@ final readonly class Script
             fn ($line) => !empty($line) && !str_starts_with(trim($line), '--')
         );
         // Split the file content into statements separated by semicolons
-        $statements = array_filter(explode(';', implode('', $fileLines)), fn ($stmt) => !empty($stmt));
-        // Remove empty statements and return the statements with a semicolon at the end
-        return array_values(array_map(fn ($stmt) => trim($stmt) . ';', $statements));
+        $statements = array_filter(explode(';', implode('', $fileLines)), fn ($stmt) => !empty(trim($stmt)));
+        $trimmed = array_map(fn (string $stmt) => trim($stmt), $statements);
+        // Drop USE statements so scripts are environment-agnostic; the app runs USE before each script
+        $filtered = array_values(array_filter($trimmed, fn (string $stmt) => !$this->isUseStatement($stmt)));
+        return array_map(fn (string $stmt) => $stmt . ';', $filtered);
+    }
+
+    private function isUseStatement(string $stmt): bool
+    {
+        return (bool) preg_match('/^\s*USE\s+/i', trim($stmt));
     }
 
     private function isRollbackLoaded(): bool
