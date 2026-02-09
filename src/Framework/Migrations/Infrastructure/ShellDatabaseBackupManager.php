@@ -121,6 +121,8 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 
     private function escapeDatabaseName(string $name): string
     {
-        return  str_replace('`', '``', $name);
+        $escapedName = str_replace('`', '``', $name);
+
+        return sprintf('`%s`', $escapedName);
     }
 }
