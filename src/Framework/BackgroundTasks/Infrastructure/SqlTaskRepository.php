@@ -64,8 +64,15 @@ final readonly class SqlTaskRepository implements TaskRepository
             $raw = is_string($row['arguments'])
                 ? json_decode($row['arguments'], true, 512, JSON_THROW_ON_ERROR)
                 : $row['arguments'];
+            if (!is_array($raw)) {
+                throw new \RuntimeException(sprintf(
+                    'Invalid arguments payload for background task "%s" of type "%s". Expected JSON array or object.',
+                    $row['id'],
+                    $row['task_type']
+                ));
+            }
             /** @var array<string, mixed> $arguments */
-            $arguments = is_array($raw) ? $raw : [];
+            $arguments = $raw;
             $result[] = Task::build(
                 $row['id'],
                 $row['task_type'],
