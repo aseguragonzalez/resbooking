@@ -69,7 +69,17 @@ abstract class BackgroundTasksApp extends Application
         $registry = new MapTaskHandlerRegistry();
         foreach ($settings->handlerMap as $taskType => $handlerClass) {
             $handler = $this->container->get($handlerClass);
-            assert($handler instanceof TaskHandler);
+
+            if (! $handler instanceof TaskHandler) {
+                $resolvedType = \is_object($handler) ? \get_class($handler) : \gettype($handler);
+
+                throw new \RuntimeException(\sprintf(
+                    'Handler for task type "%s" must implement %s, got %s',
+                    (string) $taskType,
+                    TaskHandler::class,
+                    $resolvedType
+                ));
+            }
             $registry->register($taskType, $handler);
         }
         $this->container->set(TaskHandlerRegistry::class, $registry);
