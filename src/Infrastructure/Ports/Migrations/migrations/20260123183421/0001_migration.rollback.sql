@@ -1,6 +1,4 @@
 -- Rollback file
-USE reservations;
-
 DROP TABLE IF EXISTS sign_in_sessions;
 DROP TABLE IF EXISTS reset_password_challenges;
 DROP TABLE IF EXISTS sign_up_challenges;

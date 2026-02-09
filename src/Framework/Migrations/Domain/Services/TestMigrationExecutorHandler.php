@@ -9,13 +9,14 @@ use Framework\Migrations\Domain\Entities\Migration;
 
 final readonly class TestMigrationExecutorHandler implements TestMigrationExecutor
 {
-    public function __construct(private DbClient $dbClient)
+    public function __construct(private DbClient $dbClient, private string $databaseName)
     {
     }
 
     public function execute(Migration $migration): void
     {
         foreach ($migration->scripts as $script) {
+            $this->dbClient->useDatabase($this->databaseName);
             $this->dbClient->execute(statements: $script->getStatements());
         }
     }

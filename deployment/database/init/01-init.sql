@@ -8,6 +8,9 @@ CREATE DATABASE IF NOT EXISTS reservations CHARACTER SET utf8mb4 COLLATE utf8mb4
 -- Grant privileges to the application user
 GRANT ALL PRIVILEGES ON reservations.* TO 'migrations'@'%';
 
+-- Allow creating/dropping temporary databases and foreign keys for migration tests (e.g. test_xxxx)
+GRANT CREATE, DROP, REFERENCES ON *.* TO 'migrations'@'%';
+
 -- Flush privileges to apply changes
 FLUSH PRIVILEGES;
 
