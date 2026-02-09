@@ -21,7 +21,7 @@ final class ShellDatabaseBackupManagerTest extends TestCase
         $manager = new ShellDatabaseBackupManager($settings);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Backup file does not exist');
+        $this->expectExceptionMessageMatches('#^Backup file does not exist: /nonexistent/backup\.sql$#');
 
         $manager->createTestDatabaseFromBackup('/nonexistent/backup.sql');
     }
