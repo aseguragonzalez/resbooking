@@ -23,7 +23,6 @@ final readonly class BackgroundTaskChallengeNotificator implements ChallengeNoti
             taskType: 'send_sign_up_challenge_email',
             arguments: [
                 'email' => $email,
-                'type' => 'sign_up',
                 'token' => $challenge->getToken(),
                 'expiresAt' => $challenge->expiresAt->format('c'),
             ],
@@ -38,7 +37,6 @@ final readonly class BackgroundTaskChallengeNotificator implements ChallengeNoti
             taskType: 'send_reset_password_challenge_email',
             arguments: [
                 'email' => $email,
-                'type' => 'reset_password',
                 'token' => $challenge->getToken(),
                 'expiresAt' => $challenge->expiresAt->format('c'),
             ],
