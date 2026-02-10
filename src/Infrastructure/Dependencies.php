@@ -22,6 +22,8 @@ use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Framework\BackgroundTasks\Dependencies as BackgroundTasksDependencies;
 use Framework\Mvc\Security\Dependencies as SecurityDependencies;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
+use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 use Seedwork\Application\Messaging\DeferredDomainEventsBus;
 use Seedwork\Application\Messaging\DomainEventsBus;
@@ -42,7 +44,11 @@ final class Dependencies
         $container->set(UpdateAvailabilities::class, $container->get(UpdateAvailabilitiesHandler::class));
         $container->set(GetRestaurantById::class, $container->get(GetRestaurantByIdHandler::class));
         BackgroundTasksDependencies::configure($container);
-        // configure security: IdentityManager, repositories, use cases and ChallengeNotificator
+
+        // App Notification Services for Challenge Notifications (Using Background Tasks)
+        $container->set(ChallengeNotificator::class, $container->get(BackgroundTaskChallengeNotificator::class));
+
+        // Configure security: IdentityManager, repositories, use cases
         SecurityDependencies::configure($container);
     }
 }

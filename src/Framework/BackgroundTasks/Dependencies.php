@@ -11,7 +11,9 @@ use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
 use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
 use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
 use Framework\BackgroundTasks\Domain\TaskBus;
+use Framework\BackgroundTasks\Domain\TaskHandlerRegistry;
 use Framework\BackgroundTasks\Domain\TransactionRunner;
+use Framework\BackgroundTasks\Infrastructure\MapTaskHandlerRegistry;
 use Framework\BackgroundTasks\Infrastructure\PdoTransactionRunner;
 use Framework\BackgroundTasks\Infrastructure\SqlTaskRepository;
 use Framework\BackgroundTasks\Infrastructure\TaskBusHandler;
@@ -20,6 +22,7 @@ final class Dependencies
 {
     public static function configure(Container $container): void
     {
+        $container->set(TaskHandlerRegistry::class, $container->get(MapTaskHandlerRegistry::class));
         $container->set(TaskRepository::class, $container->get(SqlTaskRepository::class));
         $container->set(TransactionRunner::class, $container->get(PdoTransactionRunner::class));
         $container->set(RegisterTask::class, $container->get(RegisterTaskHandler::class));
