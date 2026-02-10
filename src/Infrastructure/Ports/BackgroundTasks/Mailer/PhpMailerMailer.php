@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks\Mailer;
 
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PhpMailerException;
+use PHPMailer\PHPMailer\PHPMailer;
 
-final class PhpMailerMailer implements MailerInterface
+final readonly class PhpMailerMailer implements MailerInterface
 {
-    public function __construct(
-        private readonly ChallengeEmailSettings $settings,
-    ) {
+    public function __construct(private ChallengeEmailSettings $settings)
+    {
     }
 
     public function send(string $to, string $subject, string $htmlBody): void
@@ -23,7 +22,7 @@ final class PhpMailerMailer implements MailerInterface
             $mailer->isSMTP();
             $mailer->Host = $this->settings->host;
             $mailer->Port = $this->settings->port;
-            $mailer->SMTPAuth = true;
+            $mailer->SMTPAuth = !empty($this->settings->username) && !empty($this->settings->password);
             $mailer->Username = $this->settings->username;
             $mailer->Password = $this->settings->password;
             if ($this->settings->encryption !== '') {

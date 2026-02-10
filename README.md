@@ -56,6 +56,15 @@ DASHBOARD_SERVICE_NAME=dashboard
 DASHBOARD_SERVICE_VERSION=0.1.0
 ENVIRONMENT=local
 XDEBUG_MODE=coverage,debug,develop
+SMTP_HOST=mailhog
+SMTP_PORT=1025
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_ENCRYPTION=
+MAIL_FROM_ADDRESS=no-reply@example.test
+MAIL_FROM_NAME=dashboard-dev
+EMAIL_TEMPLATES_PATH=/var/www/html/resources/email
+APP_BASE_URL=https://dashboard
 ```
 
 Also, you need to create a custom `.env` file for database credentials in the
@@ -85,6 +94,44 @@ After adding these entries, you can access:
 - Dashboard: `https://dashboard` (SSL is mandatory)
 - Coverage reports: `https://coverage` (SSL is mandatory, after running tests
   with coverage)
+
+## Email Testing with MailHog
+
+This project is configured to use [MailHog](https://github.com/mailhog/MailHog) as an
+SMTP server simulator in development. Docker Compose defines a `mailhog` service
+that listens on:
+
+- SMTP: `localhost:1025`
+- Web UI: `http://localhost:8025/`
+
+The `apache` container reads SMTP-related settings from the `.env` file
+(`SMTP_HOST`, `SMTP_PORT`, etc.). With the defaults shown above, the
+BackgroundTasks app and email handlers will send challenge emails to
+MailHog instead of a real SMTP server.
+
+To test email notifications end-to-end:
+
+1. Start the stack (from the project root):
+
+   ```bash
+   docker compose up apache mariadb mailhog
+   ```
+
+2. Trigger actions in the Dashboard that generate sign-up or reset-password
+   challenges (e.g. user sign-up or password reset).
+
+3. Run the BackgroundTasks app (from inside the `apache` container or another
+   container that shares the same code and environment) so it processes pending
+   background tasks.
+
+4. Open the MailHog web UI in your browser:
+
+   ```text
+   http://localhost:8025/
+   ```
+
+5. Verify that challenge emails appear with the expected recipient, subject, and
+   activation/reset links.
 
 ## SSL Certificate Setup (Required)
 

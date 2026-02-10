@@ -68,6 +68,21 @@
       "program": "${workspaceFolder}/src/Infrastructure/Ports/Migrations/index.php",
       "request": "launch",
       "type": "php"
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "XDEBUG_SESSION": "VSCODE",
+        "XDEBUG_TRIGGER": "1"
+      },
+      "name": "Debug Run Background Tasks",
+      "pathMappings": {
+        "/var/www/html": "${workspaceFolder}"
+      },
+      "port": 9003,
+      "program": "${workspaceFolder}/src/Infrastructure/Ports/BackgroundTasks/index.php",
+      "request": "launch",
+      "type": "php"
     }
   ],
   "inputs": [
