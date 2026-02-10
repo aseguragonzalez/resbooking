@@ -46,9 +46,14 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
             throw new \RuntimeException(sprintf('Failed to read email template at path "%s"', $templatePath));
         }
 
+        $escapedActivationLink = htmlspecialchars($activationLink, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedToken = htmlspecialchars($token, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedExpiresAt = htmlspecialchars($expiresAt, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedEmail = htmlspecialchars($email, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
         $body = str_replace(
             ['{{activationLink}}', '{{token}}', '{{expiresAt}}', '{{email}}'],
-            [$activationLink, $token, $expiresAt, $email],
+            [$escapedActivationLink, $escapedToken, $escapedExpiresAt, $escapedEmail],
             $template
         );
 
