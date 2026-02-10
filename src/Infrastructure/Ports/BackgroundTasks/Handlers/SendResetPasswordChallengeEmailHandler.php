@@ -23,14 +23,37 @@ final readonly class SendResetPasswordChallengeEmailHandler implements TaskHandl
         $token = $task->arguments['token'] ?? null;
         $expiresAt = $task->arguments['expiresAt'] ?? null;
 
-        if (!is_string($email) || $email === '' || !is_string($token) || $token === '') {
-            throw new \InvalidArgumentException('Invalid task arguments for reset-password challenge email');
+        $invalidArguments = [];
+
+        if (!is_string($email) || $email === '') {
+            $invalidArguments[] = 'email';
+        }
+
+        if (!is_string($token) || $token === '') {
+            $invalidArguments[] = 'token';
+        }
+
+        if ($invalidArguments !== []) {
+            $taskId = $task->id ?? 'n/a';
+            $taskType = $task->type ?? 'n/a';
+
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid task arguments for reset-password challenge email. Task id: "%s", type: "%s", invalid: %s',
+                (string) $taskId,
+                (string) $taskType,
+                implode(', ', $invalidArguments)
+            ));
         }
 
         if (!is_string($expiresAt) || $expiresAt === '') {
-            throw new \InvalidArgumentException(
-                'Missing expiresAt in task arguments for reset-password challenge email'
-            );
+            $taskId = $task->id ?? 'n/a';
+            $taskType = $task->type ?? 'n/a';
+
+            throw new \InvalidArgumentException(sprintf(
+                'Missing or invalid "expiresAt" in task arguments for reset-password challenge email. Task id: "%s", type: "%s"',
+                (string) $taskId,
+                (string) $taskType
+            ));
         }
 
         $resetLink = rtrim($this->settings->appBaseUrl, '/') .
