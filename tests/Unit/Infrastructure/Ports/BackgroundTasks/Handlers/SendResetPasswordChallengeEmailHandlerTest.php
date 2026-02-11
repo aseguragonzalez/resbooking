@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Handlers;
 
 use Framework\BackgroundTasks\Domain\Task;
+use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
@@ -14,15 +15,12 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
 {
     public function testHandleSendsEmailWithExpectedContent(): void
     {
+        $templateContent = 'Link: {{resetLink}}, Token: {{token}}, Expires: {{expiresAt}}, Email: {{email}}';
+
+        $fileManager = $this->createStub(FileManager::class);
+        $fileManager->method('readTextPlain')->willReturn($templateContent);
+
         $templateDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'email_templates_' . uniqid();
-        mkdir($templateDir);
-
-        $templatePath = $templateDir . DIRECTORY_SEPARATOR . 'reset_password_challenge.html';
-        file_put_contents(
-            $templatePath,
-            'Link: {{resetLink}}, Token: {{token}}, Expires: {{expiresAt}}, Email: {{email}}'
-        );
-
         $settings = new ChallengeEmailSettings(
             templateBasePath: $templateDir,
             host: 'localhost',
@@ -53,7 +51,7 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
                 })
             );
 
-        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer);
+        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer, $fileManager);
 
         $task = Task::build(
             id: 'task-2',
@@ -70,11 +68,10 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
 
     public function testHandleThrowsWhenTaskHasInvalidArguments(): void
     {
-        $templateDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'email_templates_' . uniqid();
-        mkdir($templateDir);
-        $templatePath = $templateDir . DIRECTORY_SEPARATOR . 'reset_password_challenge.html';
-        file_put_contents($templatePath, '{{email}}');
+        $fileManager = $this->createStub(FileManager::class);
+        $fileManager->method('readTextPlain')->willReturn('{{email}}');
 
+        $templateDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'email_templates_' . uniqid();
         $settings = new ChallengeEmailSettings(
             templateBasePath: $templateDir,
             host: 'localhost',
@@ -90,7 +87,7 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
         $mailer = $this->createMock(MailerInterface::class);
         $mailer->expects($this->never())->method('send');
 
-        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer);
+        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer, $fileManager);
 
         $task = Task::build(
             id: 'task-invalid',

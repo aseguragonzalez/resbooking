@@ -6,6 +6,8 @@ namespace Infrastructure\Ports\BackgroundTasks;
 
 use DI\Container;
 use Framework\BackgroundTasks\BaseBackgroundTasksApp;
+use Framework\Files\DefaultFileManager;
+use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendSignUpChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
@@ -36,6 +38,7 @@ final class BackgroundTasksApp extends BaseBackgroundTasksApp
             )
         );
 
+        $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
         $this->container->set(MailerInterface::class, $this->container->get(PhpMailerMailer::class));
     }
 

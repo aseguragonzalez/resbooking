@@ -6,6 +6,7 @@ namespace Infrastructure\Ports\BackgroundTasks\Handlers;
 
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\BackgroundTasks\Domain\TaskHandler;
+use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
 use Infrastructure\Ports\BackgroundTasks\Tasks\SignUpChallengeEmailTask;
@@ -15,6 +16,7 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
     public function __construct(
         private ChallengeEmailSettings $settings,
         private MailerInterface $mailer,
+        private FileManager $fileManager,
     ) {
     }
 
@@ -28,14 +30,7 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
         $templatePath = rtrim($this->settings->templateBasePath, DIRECTORY_SEPARATOR) .
             DIRECTORY_SEPARATOR . 'sign_up_challenge.html';
 
-        if (!is_file($templatePath)) {
-            throw new \RuntimeException(sprintf('Email template not found at path "%s"', $templatePath));
-        }
-
-        $template = file_get_contents($templatePath);
-        if ($template === false) {
-            throw new \RuntimeException(sprintf('Failed to read email template at path "%s"', $templatePath));
-        }
+        $template = $this->fileManager->readTextPlain($templatePath);
 
         $escapedActivationLink = htmlspecialchars($activationLink, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $escapedToken = htmlspecialchars($signUpTask->getToken(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
