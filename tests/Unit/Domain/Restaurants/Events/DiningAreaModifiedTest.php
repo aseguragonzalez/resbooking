@@ -20,10 +20,6 @@ final class DiningAreaModifiedTest extends TestCase
         $this->faker = FakerFactory::create();
     }
 
-    protected function tearDown(): void
-    {
-    }
-
     public function testCreateNewEvent(): void
     {
         $restaurantId = $this->faker->uuid;
