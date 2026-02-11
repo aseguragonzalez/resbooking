@@ -28,7 +28,6 @@ final class BackgroundTaskChallengeNotificatorTest extends TestCase
                 function (RegisterTaskCommand $command) use ($expiresAt): bool {
                     $this->assertSame('send_sign_up_challenge_email', $command->taskType);
                     $this->assertSame('user@example.com', $command->arguments['email']);
-                    $this->assertSame('sign_up', $command->arguments['type']);
                     $this->assertSame('sign-up-token', $command->arguments['token']);
                     $this->assertSame($expiresAt->format('c'), $command->arguments['expiresAt']);
 
@@ -55,7 +54,6 @@ final class BackgroundTaskChallengeNotificatorTest extends TestCase
                 function (RegisterTaskCommand $command) use ($expiresAt): bool {
                     $this->assertSame('send_reset_password_challenge_email', $command->taskType);
                     $this->assertSame('user@example.com', $command->arguments['email']);
-                    $this->assertSame('reset_password', $command->arguments['type']);
                     $this->assertSame('reset-token', $command->arguments['token']);
                     $this->assertSame($expiresAt->format('c'), $command->arguments['expiresAt']);
 

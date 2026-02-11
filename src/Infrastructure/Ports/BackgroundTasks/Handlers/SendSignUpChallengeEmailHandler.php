@@ -8,6 +8,7 @@ use Framework\BackgroundTasks\Domain\Task;
 use Framework\BackgroundTasks\Domain\TaskHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
+use Infrastructure\Ports\BackgroundTasks\Tasks\SignUpChallengeEmailTask;
 
 final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
 {
@@ -19,20 +20,10 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
 
     public function handle(Task $task): void
     {
-        $email = $task->arguments['email'] ?? null;
-        $token = $task->arguments['token'] ?? null;
-        $expiresAt = $task->arguments['expiresAt'] ?? null;
-
-        if (!is_string($email) || $email === '' || !is_string($token) || $token === '') {
-            throw new \InvalidArgumentException('Invalid task arguments for sign-up challenge email');
-        }
-
-        if (!is_string($expiresAt) || $expiresAt === '') {
-            throw new \InvalidArgumentException('Missing expiresAt in task arguments for sign-up challenge email');
-        }
+        $signUpTask = SignUpChallengeEmailTask::fromTask($task);
 
         $activationLink = rtrim($this->settings->appBaseUrl, '/') .
-            '/accounts/activate?token=' . urlencode($token);
+            '/accounts/activate?token=' . urlencode($signUpTask->getToken());
 
         $templatePath = rtrim($this->settings->templateBasePath, DIRECTORY_SEPARATOR) .
             DIRECTORY_SEPARATOR . 'sign_up_challenge.html';
@@ -47,9 +38,9 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
         }
 
         $escapedActivationLink = htmlspecialchars($activationLink, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedToken = htmlspecialchars($token, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedExpiresAt = htmlspecialchars($expiresAt, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedEmail = htmlspecialchars($email, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedToken = htmlspecialchars($signUpTask->getToken(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedExpiresAt = htmlspecialchars($signUpTask->getExpiresAt(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $escapedEmail = htmlspecialchars($signUpTask->getEmail(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
         $body = str_replace(
             ['{{activationLink}}', '{{token}}', '{{expiresAt}}', '{{email}}'],
@@ -59,6 +50,6 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
 
         $subject = 'Activate your account';
 
-        $this->mailer->send($email, $subject, $body);
+        $this->mailer->send($signUpTask->getEmail(), $subject, $body);
     }
 }
