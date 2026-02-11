@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Handlers;
 
+use Framework\BackgroundTasks\Domain\TemplateEngine;
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendSignUpChallengeEmailHandler;
@@ -48,7 +49,13 @@ final class SendSignUpChallengeEmailHandlerTest extends TestCase
                 })
             );
 
-        $handler = new SendSignUpChallengeEmailHandler($settings, $mailer, $fileManager);
+        $templateEngine = new TemplateEngine();
+        $handler = new SendSignUpChallengeEmailHandler(
+            $settings,
+            $mailer,
+            $fileManager,
+            $templateEngine
+        );
 
         $task = Task::build(
             id: 'task-1',
@@ -84,7 +91,13 @@ final class SendSignUpChallengeEmailHandlerTest extends TestCase
         $mailer = $this->createMock(MailerInterface::class);
         $mailer->expects($this->never())->method('send');
 
-        $handler = new SendSignUpChallengeEmailHandler($settings, $mailer, $fileManager);
+        $templateEngine = new TemplateEngine();
+        $handler = new SendSignUpChallengeEmailHandler(
+            $settings,
+            $mailer,
+            $fileManager,
+            $templateEngine
+        );
 
         $task = Task::build(
             id: 'task-invalid',

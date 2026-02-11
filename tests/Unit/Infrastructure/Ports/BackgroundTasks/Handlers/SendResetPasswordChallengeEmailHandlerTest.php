@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Handlers;
 
+use Framework\BackgroundTasks\Domain\TemplateEngine;
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
@@ -51,7 +52,13 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
                 })
             );
 
-        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer, $fileManager);
+        $templateEngine = new TemplateEngine();
+        $handler = new SendResetPasswordChallengeEmailHandler(
+            $settings,
+            $mailer,
+            $fileManager,
+            $templateEngine
+        );
 
         $task = Task::build(
             id: 'task-2',
@@ -87,7 +94,13 @@ final class SendResetPasswordChallengeEmailHandlerTest extends TestCase
         $mailer = $this->createMock(MailerInterface::class);
         $mailer->expects($this->never())->method('send');
 
-        $handler = new SendResetPasswordChallengeEmailHandler($settings, $mailer, $fileManager);
+        $templateEngine = new TemplateEngine();
+        $handler = new SendResetPasswordChallengeEmailHandler(
+            $settings,
+            $mailer,
+            $fileManager,
+            $templateEngine
+        );
 
         $task = Task::build(
             id: 'task-invalid',

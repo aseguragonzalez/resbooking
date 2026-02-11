@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks;
 
 use DI\Container;
+use Framework\BackgroundTasks\Domain\TemplateEngine;
 use Framework\BackgroundTasks\BaseBackgroundTasksApp;
 use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
@@ -39,6 +40,7 @@ final class BackgroundTasksApp extends BaseBackgroundTasksApp
         );
 
         $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
+        $this->container->set(TemplateEngine::class, new TemplateEngine());
         $this->container->set(MailerInterface::class, $this->container->get(PhpMailerMailer::class));
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\BackgroundTasks\Handlers;
 
+use Framework\BackgroundTasks\Domain\TemplateEngine;
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\BackgroundTasks\Domain\TaskHandler;
 use Framework\Files\FileManager;
@@ -17,6 +18,7 @@ final readonly class SendResetPasswordChallengeEmailHandler implements TaskHandl
         private ChallengeEmailSettings $settings,
         private MailerInterface $mailer,
         private FileManager $fileManager,
+        private TemplateEngine $templateEngine,
     ) {
     }
 
@@ -32,11 +34,13 @@ final readonly class SendResetPasswordChallengeEmailHandler implements TaskHandl
 
         $template = $this->fileManager->readTextPlain($templatePath);
 
-        $body = str_replace(
-            ['{{resetLink}}', '{{token}}', '{{expiresAt}}', '{{email}}'],
-            [$resetLink, $resetTask->getToken(), $resetTask->getExpiresAt(), $resetTask->getEmail()],
-            $template
-        );
+        $values = [
+            'resetLink' => $resetLink,
+            'token' => $resetTask->getToken(),
+            'expiresAt' => $resetTask->getExpiresAt(),
+            'email' => $resetTask->getEmail(),
+        ];
+        $body = $this->templateEngine->render($template, $values);
 
         $subject = 'Reset your password';
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\BackgroundTasks\Handlers;
 
+use Framework\BackgroundTasks\Domain\TemplateEngine;
 use Framework\BackgroundTasks\Domain\Task;
 use Framework\BackgroundTasks\Domain\TaskHandler;
 use Framework\Files\FileManager;
@@ -17,6 +18,7 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
         private ChallengeEmailSettings $settings,
         private MailerInterface $mailer,
         private FileManager $fileManager,
+        private TemplateEngine $templateEngine,
     ) {
     }
 
@@ -32,16 +34,13 @@ final readonly class SendSignUpChallengeEmailHandler implements TaskHandler
 
         $template = $this->fileManager->readTextPlain($templatePath);
 
-        $escapedActivationLink = htmlspecialchars($activationLink, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedToken = htmlspecialchars($signUpTask->getToken(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedExpiresAt = htmlspecialchars($signUpTask->getExpiresAt(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escapedEmail = htmlspecialchars($signUpTask->getEmail(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-
-        $body = str_replace(
-            ['{{activationLink}}', '{{token}}', '{{expiresAt}}', '{{email}}'],
-            [$escapedActivationLink, $escapedToken, $escapedExpiresAt, $escapedEmail],
-            $template
-        );
+        $values = [
+            'activationLink' => $activationLink,
+            'token' => $signUpTask->getToken(),
+            'expiresAt' => $signUpTask->getExpiresAt(),
+            'email' => $signUpTask->getEmail(),
+        ];
+        $body = $this->templateEngine->render($template, $values);
 
         $subject = 'Activate your account';
 
