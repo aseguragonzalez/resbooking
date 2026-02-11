@@ -21,7 +21,7 @@ use Monolog\Processor\PsrLogMessageProcessor;
 use PDO;
 use Psr\Log\LoggerInterface;
 
-abstract class BackgroundTasksApp extends Application
+abstract class BaseBackgroundTasksApp extends Application
 {
     public function __construct(Container $container, string $basePath)
     {
@@ -36,6 +36,7 @@ abstract class BackgroundTasksApp extends Application
     {
         $this->configureSettings();
         $this->configureLogging();
+        $this->configure();
         $this->configureDependencies();
 
         try {
@@ -66,7 +67,11 @@ abstract class BackgroundTasksApp extends Application
         );
         $this->container->set(PDO::class, $connection);
 
-        $registry = new MapTaskHandlerRegistry();
+        // configure background tasks dependencies
+        Dependencies::configure($this->container);
+
+        /** @var TaskHandlerRegistry $registry */
+        $registry = $this->container->get(TaskHandlerRegistry::class);
         foreach ($settings->handlerMap as $taskType => $handlerClass) {
             $handler = $this->container->get($handlerClass);
 
@@ -82,9 +87,6 @@ abstract class BackgroundTasksApp extends Application
             }
             $registry->register($taskType, $handler);
         }
-        $this->container->set(TaskHandlerRegistry::class, $registry);
-
-        Dependencies::configure($this->container);
     }
 
     protected function configureLogging(): void
@@ -141,6 +143,8 @@ abstract class BackgroundTasksApp extends Application
      * @return array<string, string>
      */
     abstract protected function getHandlerMap(): array;
+
+    abstract protected function configure(): void;
 
     private function getLogLevelFromSettings(LoggerSettings $loggerSettings): Level
     {

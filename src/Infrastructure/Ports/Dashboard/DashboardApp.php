@@ -17,6 +17,8 @@ use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
 use Framework\Mvc\Routes\Router;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
+use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 use Infrastructure\Ports\Dashboard\DashboardSettings;

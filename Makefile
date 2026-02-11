@@ -1,4 +1,10 @@
-.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file test-migration create-user
+.PHONY: all format lint static-analyse test setup-ssl setup-ssl-all css-build css-watch js-build js-watch watch migrate migrate-down migrate-status create-migration add-migration-file test-migration create-user background-tasks env
+
+# Load .env so all make targets (and their commands) get these variables in any terminal
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
 
 all: format lint static-analyse test
 
@@ -31,6 +37,10 @@ test:
 
 update-autoload:
 	@composer dump-autoload
+
+# Print export statements to refresh the current terminal only (run: eval $$(make env))
+env:
+	@grep -v '^#' .env 2>/dev/null | grep -v '^$$' | sed 's/^/export /'
 
 # Setup SSL certificate for a specific app (SSL is mandatory)
 # Usage: make setup-ssl APP=dashboard
@@ -77,6 +87,10 @@ watch:
 	make css-watch & \
 	make js-watch & \
 	wait
+
+# Run background tasks (processes pending email and other queued tasks)
+background-tasks:
+	@php src/Infrastructure/Ports/BackgroundTasks/index.php
 
 # Database Migrations
 migrate:

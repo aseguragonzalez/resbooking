@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Framework\BackgroundTasks\Domain;
 
-final readonly class Task
+readonly class Task
 {
     /**
      * Key-value dictionary; values are JSON-serializable (scalars, null, or nested associative arrays).
      *
      * @param array<string, mixed> $arguments
      */
-    private function __construct(
+    protected function __construct(
         public string $id,
         public string $taskType,
         public array $arguments = [],

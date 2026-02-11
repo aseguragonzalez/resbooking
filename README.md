@@ -56,6 +56,15 @@ DASHBOARD_SERVICE_NAME=dashboard
 DASHBOARD_SERVICE_VERSION=0.1.0
 ENVIRONMENT=local
 XDEBUG_MODE=coverage,debug,develop
+SMTP_HOST=smtp4dev
+SMTP_PORT=25
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_ENCRYPTION=
+MAIL_FROM_ADDRESS=no-reply@example.test
+MAIL_FROM_NAME=dashboard-dev
+EMAIL_TEMPLATES_PATH=/var/www/html/resources/email
+APP_BASE_URL=https://dashboard
 ```
 
 Also, you need to create a custom `.env` file for database credentials in the
@@ -85,6 +94,44 @@ After adding these entries, you can access:
 - Dashboard: `https://dashboard` (SSL is mandatory)
 - Coverage reports: `https://coverage` (SSL is mandatory, after running tests
   with coverage)
+
+## SMTP mock server (smtp4dev)
+
+This project uses [smtp4dev](https://github.com/rnwood/smtp4dev) as a local SMTP
+server for development and testing. Docker Compose defines an `smtp4dev` service
+that captures outgoing email instead of sending it to a real SMTP server.
+
+- **Web UI:** `http://localhost:8080/` — view and inspect captured messages.
+- **SMTP:** From other containers (e.g. `apache`), use hostname `smtp4dev` and
+  port `25` (no auth required in development).
+
+The `apache` container reads SMTP settings from the `.env` file
+(`SMTP_HOST`, `SMTP_PORT`, etc.). With the defaults above, the BackgroundTasks
+app and email handlers send challenge emails (sign-up, reset password) to
+smtp4dev instead of a real mail server.
+
+To test email notifications end-to-end:
+
+1. Start the stack (from the project root):
+
+   ```bash
+   docker compose up apache mariadb smtp4dev
+   ```
+
+2. Trigger actions in the Dashboard that generate sign-up or reset-password
+   challenges (e.g. user sign-up or password reset).
+
+3. Run the BackgroundTasks app so it processes pending tasks (e.g. from inside
+   the container: `make background-tasks`, or `docker compose exec apache make background-tasks`).
+
+4. Open the smtp4dev web UI in your browser:
+
+   ```text
+   http://localhost:8080/
+   ```
+
+5. Verify that challenge emails appear with the expected recipient, subject,
+   and activation/reset links.
 
 ## SSL Certificate Setup (Required)
 

@@ -28,8 +28,6 @@ use Framework\Mvc\Security\Domain\Repositories\ResetPasswordChallengeRepository;
 use Framework\Mvc\Security\Domain\Repositories\SignInSessionRepository;
 use Framework\Mvc\Security\Domain\Repositories\SignUpChallengeRepository;
 use Framework\Mvc\Security\Domain\Repositories\UserIdentityRepository;
-use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
-use Framework\Mvc\Security\Infrastructure\ConsoleChallengeNotificator;
 use Framework\Mvc\Security\Infrastructure\SqlResetPasswordChallengeRepository;
 use Framework\Mvc\Security\Infrastructure\SqlSignInSessionRepository;
 use Framework\Mvc\Security\Infrastructure\SqlSignUpChallengeRepository;
@@ -39,7 +37,6 @@ final class Dependencies
 {
     public static function configure(Container $container): void
     {
-        $container->set(ChallengeNotificator::class, $container->get(ConsoleChallengeNotificator::class));
         $container->set(UserIdentityRepository::class, $container->get(SqlUserIdentityRepository::class));
         $container->set(SignInSessionRepository::class, $container->get(SqlSignInSessionRepository::class));
         $container->set(SignUpChallengeRepository::class, $container->get(SqlSignUpChallengeRepository::class));

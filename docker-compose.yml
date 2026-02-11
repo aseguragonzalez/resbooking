@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: apache
     ports:
     - 80:80
     - 443:443
@@ -14,6 +15,13 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+
+  smtp4dev:
+    container_name: smtp4dev
+    image: rnwood/smtp4dev:latest
+    restart: unless-stopped
+    ports:
+    - 8080:80
 
   mariadb:
     image: mariadb:11
