@@ -41,14 +41,147 @@ the day and shift.~~
 - [VS Code][vscode]
 - [Dev Containers Extension][devcontainers]
 
+## Setup
+
+### Setup for Development
+
+First-time setup for contributors. Follow these steps in order.
+
+#### 1. Prerequisites
+
+- Docker, VS Code, and the [Dev Containers Extension][devcontainers] installed
+- [mkcert][mkcert] installed on your host machine (for locally-trusted SSL certificates):
+
+  ```bash
+  # macOS
+  brew install mkcert
+  brew install nss  # For Firefox support
+
+  # Linux
+  sudo apt install libnss3-tools
+  curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
+  chmod +x mkcert-v*-linux-amd64
+  sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
+
+  # Windows
+  choco install mkcert
+  ```
+
+#### 2. Host configuration
+
+Add the following entries to your local `/etc/hosts` file to map application
+domains to `127.0.0.1`:
+
+```text
+127.0.0.1    dashboard
+127.0.0.1    coverage
+```
+
+#### 3. Create .env files
+
+Create a root `.env` file (see [Environment Variables](#environment-variables)
+for the full template). You need:
+
+- Root `.env` — application and database credentials (use
+  `deployment/apps/dashboard/.env.example` and
+  `deployment/apps/background-tasks/.env.example` as references)
+- `deployment/database/.env` — MariaDB configuration (copy from
+  `deployment/database/.env.example`)
+
+Ensure `.env` files are not committed (they are gitignored). Copy from examples
+and update with your values.
+
+#### 4. Generate SSL certificates (on host, before starting the container)
+
+```bash
+make setup-ssl-all
+```
+
+Or for a specific app: `make setup-ssl APP=dashboard`. Certificates are stored
+in `deployment/ssl/`. SSL is mandatory — all sites require certificates to
+function.
+
+#### 5. Enable site (inside container)
+
+After the Dev Container has started:
+
+```bash
+bash deployment/scripts/enable-site.sh dashboard
+```
+
+The script verifies SSL certificates exist before enabling the site.
+
+#### 6. Create database users and update .env
+
+The database is created automatically on first MariaDB startup. Create the dashboard
+user:
+
+```bash
+make create-user USER=dashboard
+```
+
+The script prints a generated password. Update your root `.env` with
+`DASHBOARD_DATABASE_USER=dashboard` and
+`DASHBOARD_DATABASE_PASSWORD=<generated-password>`. Optionally create a
+`background_tasks` user: `make create-user USER=background_tasks` and set
+`BACKGROUND_TASKS_DATABASE_*` in `.env` accordingly.
+
+#### 7. Sync/persist .env
+
+Keep your `.env` files out of version control (they are gitignored). If you recreate
+the project or switch branches, copy again from the `.env.example` templates
+and re-apply your credentials.
+
+#### 8. Execute migrations
+
+```bash
+make migrate
+```
+
+#### 9. Open in Dev Container and install dependencies
+
+Open the project in VS Code or Cursor (with the Dev Containers extension). Wait
+for the Dev Container to build, then run:
+
+```bash
+make install
+```
+
+**Accessing applications:** Dashboard: `https://dashboard`; Coverage:
+`https://coverage` (after running tests with coverage)
+
+**Certificate details:** Certificates are in `deployment/ssl/`, valid 1 year
+(mkcert default), trusted by browsers. Each app: dashboard.crt, coverage.crt.
+
+### Setup for Demo
+
+For running a demo instance (showcase, internal testing) without the Dev Container
+workflow:
+
+- **Deployment:** `docker compose up -d apache mariadb smtp4dev`
+- **SSL:** Real certs (Let's Encrypt) or self-signed in `deployment/ssl/` as
+  `dashboard.crt` and `dashboard.key`. For internal demos, use mkcert.
+- **Host/DNS:** Resolve dashboard hostname to server IP or add `/etc/hosts`
+  entries on client machines.
+- **Environment:** Set `ENVIRONMENT=demo` in `.env`. Configure real SMTP for
+  actual emails, or keep `smtp4dev` for captured messages.
+- **Database:** Create `deployment/database/.env` and root `.env`, create users
+  (`make create-user USER=dashboard`), update `.env`, then `make migrate`.
+- **Enable site:** `bash deployment/scripts/enable-site.sh dashboard` (inside
+  apache container).
+
 ## Environment Variables
 
-Before starting, you need to create a `.env` file with the environment variables
- for each application. You can use the `.env.example` file as a template.
+Configure environment variables during [Setup for Development](#setup-for-development)
+or [Setup for Demo](#setup-for-demo). Create a root `.env` and `deployment/database/.env`
+from the examples below.
+
+**Root `.env`** (references: `deployment/apps/dashboard/.env.example`,
+`deployment/apps/background-tasks/.env.example`):
 
 ```env
 DASHBOARD_DATABASE_HOST=mariadb
-DASHBOARD_DATABASE_NAME=dashboard
+DASHBOARD_DATABASE_NAME=reservations
 DASHBOARD_DATABASE_PASSWORD=user_password_here
 DASHBOARD_DATABASE_USER=dashboard
 DASHBOARD_DEFAULT_HOST=http://dashboard
@@ -67,33 +200,14 @@ EMAIL_TEMPLATES_PATH=/var/www/html/resources/email
 APP_BASE_URL=https://dashboard
 ```
 
-Also, you need to create a custom `.env` file for database credentials in the
- `deployment/database` directory. You can use the `.env.example` file as a template.
+**`deployment/database/.env`** (MariaDB config; copy from `deployment/database/.env.example`):
 
 ```env
-# MariaDB Configuration
 MARIADB_ROOT_PASSWORD=root_password_here
-MARIADB_DATABASE=dashboard
-MARIADB_USER=dashboard
+MARIADB_DATABASE=reservations
+MARIADB_USER=migrations
 MARIADB_PASSWORD=user_password_here
 ```
-
-## Host Configuration
-
-Before accessing the dashboard and coverage reports, you need to configure your
- local `/etc/hosts` file to map the application domains to `127.0.0.1`. Add the
- following entries to your `/etc/hosts` file:
-
-```text
-127.0.0.1    dashboard
-127.0.0.1    coverage
-```
-
-After adding these entries, you can access:
-
-- Dashboard: `https://dashboard` (SSL is mandatory)
-- Coverage reports: `https://coverage` (SSL is mandatory, after running tests
-  with coverage)
 
 ## SMTP mock server (smtp4dev)
 
@@ -133,79 +247,10 @@ To test email notifications end-to-end:
 5. Verify that challenge emails appear with the expected recipient, subject,
    and activation/reset links.
 
-## SSL Certificate Setup (Required)
-
-This project requires SSL for all webapps. We use [mkcert][mkcert] to generate
-locally-trusted SSL certificates for development. These certificates are
-automatically trusted by your browser, so you won't see security warnings.
-
-**SSL is mandatory** - all sites require SSL certificates to function.
-
-### Initial Setup
-
-1. **Install mkcert** on your host machine:
-
-   ```bash
-   # macOS
-   brew install mkcert
-   brew install nss  # For Firefox support
-
-   # Linux
-   sudo apt install libnss3-tools
-   curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64"
-   chmod +x mkcert-v*-linux-amd64
-   sudo mv mkcert-v*-linux-amd64 /usr/local/bin/mkcert
-
-   # Windows
-   choco install mkcert
-   ```
-
-2. **Generate certificates**:
-
-   ```bash
-   # Generate certificates for all apps
-   make setup-ssl-all
-
-   # Or generate for a specific app
-   make setup-ssl APP=dashboard
-   ```
-
-   This will:
-   - Install mkcert's local CA (if not already installed)
-   - Generate browser-valid certificates for each app based on their ServerName/ServerAlias
-   - Store them in `deployment/ssl/`
-
-3. **Start your devcontainer** - certificates are automatically mounted
-
-4. **Enable the app** (inside container):
-
-   ```bash
-   bash deployment/scripts/enable-site.sh dashboard
-   ```
-
-   Note: The script will verify SSL certificates exist before enabling the site.
-
-### Accessing Applications
-
-After setup, you can access:
-
-- **Dashboard**: `https://dashboard` (port 443)
-- **Coverage**: `https://coverage` (port 443)
-
-HTTP requests are automatically redirected to HTTPS (production-like behavior).
-
-### Certificate Details
-
-- Certificates are stored in `deployment/ssl/`
-- They are valid for 1 year (mkcert default)
-- Automatically trusted by all browsers
-- Work exactly like production certificates
-- Each app has its own certificate (dashboard.crt, coverage.crt, etc.)
-
 ## Getting Started
 
-Open the project in VS Code or Cursor (with the Dev Containers extension) and
- wait for the Dev Container to build. Common tasks are automated using `Makefile`.
+After completing [Setup for Development](#setup-for-development), use the following
+commands for day-to-day development. Common tasks are automated using the `Makefile`.
 
 ### Make commands
 
@@ -323,13 +368,13 @@ docker-compose logs mariadb
 **Connect to MariaDB:**
 
 ```shell
-docker-compose exec mariadb mysql -u dashboard -p dashboard
+docker-compose exec mariadb mysql -u dashboard -p reservations
 ```
 
 **Backup database:**
 
 ```shell
-docker-compose exec mariadb mysqldump -u root -p dashboard > backup.sql
+docker-compose exec mariadb mysqldump -u root -p reservations > backup.sql
 ```
 
 **Reset database (WARNING: deletes all data):**
