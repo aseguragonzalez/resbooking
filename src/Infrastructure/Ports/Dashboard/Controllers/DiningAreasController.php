@@ -7,7 +7,7 @@ namespace Infrastructure\Ports\Dashboard\Controllers;
 use Application\Restaurants\AddDiningArea\AddDiningArea;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
@@ -40,8 +40,8 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function index(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($command);
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
+        $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = array_map(
             fn ($diningArea) => new DiningArea(
                 id: $diningArea->id,
@@ -81,8 +81,8 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($command);
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
+        $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = $restaurant->getDiningAreas();
         $diningArea = array_filter($diningAreas, fn ($da) => $da->id === $id);
         if (empty($diningArea)) {

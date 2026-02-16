@@ -13,8 +13,8 @@ final readonly class GetRestaurantByIdHandler implements GetRestaurantById
     {
     }
 
-    public function execute(GetRestaurantByIdCommand $command): Restaurant
+    public function execute(GetRestaurantByIdQuery $query): Restaurant
     {
-        return $this->restaurantObtainer->obtain($command->id);
+        return $this->restaurantObtainer->obtain($query->id);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
@@ -30,8 +30,8 @@ final class SettingsController extends RestaurantBaseController
 
     public function settings(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($command);
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
+        $restaurant = $this->getRestaurantById->execute($query);
         $settings = $restaurant->getSettings();
 
         $pageModel = UpdateSettingsPage::new(
