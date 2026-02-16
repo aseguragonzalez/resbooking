@@ -7,7 +7,7 @@ namespace Infrastructure\Ports\Dashboard\Middlewares;
 use Framework\Mvc\Middlewares\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Application\DomainEventsBus;
 
 final class DomainEventsMiddleware extends Middleware
 {

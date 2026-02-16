@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Application\Messaging;
+namespace Tests\Unit\Seedwork\Application;
 
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\Messaging\DeferredDomainEventsBus;
-use Tests\Unit\Seedwork\Application\Messaging\Fixtures\CallbackDomainEventHandler;
+use Seedwork\Application\DeferredDomainEventsBus;
+use Tests\Unit\Seedwork\Application\Fixtures\CallbackDomainEventHandler;
 use Tests\Unit\Seedwork\Domain\Fixtures\DummyDomainEvent;
 use Tests\Unit\Seedwork\Domain\Fixtures\DummyEvent;
 
