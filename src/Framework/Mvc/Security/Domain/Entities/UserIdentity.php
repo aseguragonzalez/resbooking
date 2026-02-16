@@ -10,20 +10,20 @@ use Framework\Mvc\Security\Domain\Exceptions\UserBlockedException;
 use Framework\Mvc\Security\Domain\Exceptions\UserIsNotActiveException;
 use Framework\Mvc\Security\Domain\Exceptions\UsernameIsNotEmailException;
 
-final class UserIdentity implements Identity
+final readonly class UserIdentity implements Identity
 {
     /**
      * @param array<string> $roles
      */
     private function __construct(
-        public readonly string $hash1,
-        public readonly string $hash2,
-        public readonly array $roles,
-        public readonly string $seed,
-        private readonly string $username,
-        public readonly bool $isActive = false,
-        public readonly bool $isAuthenticated = false,
-        public readonly bool $isBlocked = false
+        public string $hash1,
+        public string $hash2,
+        public array $roles,
+        public string $seed,
+        private string $username,
+        public bool $isActive = false,
+        public bool $isAuthenticated = false,
+        public bool $isBlocked = false
     ) {
         if (($this->username !== 'anonymous') && !filter_var($this->username, FILTER_VALIDATE_EMAIL)) {
             throw new UsernameIsNotEmailException($this->username);
