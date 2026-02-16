@@ -7,7 +7,7 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 use Application\Restaurants\AddDiningArea\AddDiningArea;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
@@ -75,8 +75,8 @@ final class DiningAreasControllerTest extends TestCase
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
-                return $command->id === $restaurant->getId();
+            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
+                return $query->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 
@@ -181,8 +181,8 @@ final class DiningAreasControllerTest extends TestCase
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
-                return $command->id === $restaurant->getId();
+            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
+                return $query->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 
@@ -212,8 +212,8 @@ final class DiningAreasControllerTest extends TestCase
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
-                return $command->id === $restaurant->getId();
+            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
+                return $query->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 

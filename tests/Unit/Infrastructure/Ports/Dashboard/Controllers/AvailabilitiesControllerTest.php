@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Faker\Factory;
@@ -61,8 +61,8 @@ final class AvailabilitiesControllerTest extends TestCase
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
-            ->with($this->callback(function (GetRestaurantByIdCommand $command) use ($restaurant) {
-                return $command->id === $restaurant->getId();
+            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
+                return $query->id === $restaurant->getId();
             }))
             ->willReturn($restaurant);
 

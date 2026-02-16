@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
@@ -31,8 +31,8 @@ final class AvailabilitiesController extends RestaurantBaseController
 
     public function availabilities(): ActionResponse
     {
-        $command = new GetRestaurantByIdCommand(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($command);
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
+        $restaurant = $this->getRestaurantById->execute($query);
         $availabilities = $restaurant->getAvailabilities();
         $pageModel = AvailabilitiesList::create(availabilities: $availabilities);
         return $this->view(model: $pageModel);

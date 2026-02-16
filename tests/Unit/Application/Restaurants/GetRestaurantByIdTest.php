@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Restaurants\GetRestaurantById;
 
-use Application\Restaurants\GetRestaurantById\GetRestaurantByIdCommand;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
@@ -35,10 +35,10 @@ final class GetRestaurantByIdTest extends TestCase
             ->method('obtain')
             ->with($restaurantId)
             ->willReturn($restaurant);
-        $command = new GetRestaurantByIdCommand(id: $restaurantId);
+        $query = new GetRestaurantByIdQuery(id: $restaurantId);
         $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
 
-        $result = $service->execute($command);
+        $result = $service->execute($query);
 
         $this->assertSame($restaurant, $result);
         $this->assertInstanceOf(Restaurant::class, $result);
