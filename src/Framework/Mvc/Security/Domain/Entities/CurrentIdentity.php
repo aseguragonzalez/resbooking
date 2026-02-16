@@ -6,15 +6,15 @@ namespace Framework\Mvc\Security\Domain\Entities;
 
 use Framework\Mvc\Security\Identity;
 
-final class CurrentIdentity implements Identity
+final readonly class CurrentIdentity implements Identity
 {
     /**
      * @param array<string> $roles
      */
     private function __construct(
-        public readonly bool $isAuthenticated,
-        public readonly array $roles,
-        public readonly string $username,
+        public bool $isAuthenticated,
+        public array $roles,
+        public string $username,
     ) {
     }
 

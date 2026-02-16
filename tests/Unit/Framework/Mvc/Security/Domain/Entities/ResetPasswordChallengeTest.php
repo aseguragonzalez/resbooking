@@ -10,16 +10,10 @@ use Framework\Mvc\Security\Domain\Entities\UserIdentity;
 
 final class ResetPasswordChallengeTest extends TestCase
 {
-    private function makeUserIdentity(): UserIdentity
-    {
-        $reflection = new \ReflectionClass(UserIdentity::class);
-        return $reflection->newInstanceWithoutConstructor();
-    }
-
     public function testNewGeneratesValidTokenAndExpirationAndUserIdentity(): void
     {
         $expiresAt = new \DateTimeImmutable('+1 hour');
-        $userIdentity = $this->makeUserIdentity();
+        $userIdentity = UserIdentity::anonymous();
         $challenge = ResetPasswordChallenge::new($expiresAt, $userIdentity);
         $this->assertInstanceOf(ResetPasswordChallenge::class, $challenge);
         $this->assertNotEmpty($challenge->getToken());
@@ -32,7 +26,7 @@ final class ResetPasswordChallengeTest extends TestCase
     {
         $token = 'testtoken';
         $expiresAt = new \DateTimeImmutable('+1 hour');
-        $userIdentity = $this->makeUserIdentity();
+        $userIdentity = UserIdentity::anonymous();
         $challenge = ResetPasswordChallenge::build($token, $expiresAt, $userIdentity);
         $this->assertInstanceOf(ResetPasswordChallenge::class, $challenge);
         $this->assertEquals($token, $challenge->getToken());
@@ -43,7 +37,7 @@ final class ResetPasswordChallengeTest extends TestCase
     public function testIsExpiredReturnsTrueIfExpired(): void
     {
         $expiresAt = new \DateTimeImmutable('-1 hour');
-        $userIdentity = $this->makeUserIdentity();
+        $userIdentity = UserIdentity::anonymous();
         $challenge = ResetPasswordChallenge::new($expiresAt, $userIdentity);
         $this->assertTrue($challenge->isExpired());
     }
@@ -51,7 +45,7 @@ final class ResetPasswordChallengeTest extends TestCase
     public function testRefreshUntilReturnsNewChallengeWithUpdatedExpiration(): void
     {
         $expiresAt = new \DateTimeImmutable('+1 hour');
-        $userIdentity = $this->makeUserIdentity();
+        $userIdentity = UserIdentity::anonymous();
         $challenge = ResetPasswordChallenge::new($expiresAt, $userIdentity);
         $newExpiresAt = new \DateTimeImmutable('+2 hours');
         $refreshed = $challenge->refreshUntil($newExpiresAt);
