@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Seedwork\Application\Messaging;
+namespace Seedwork\Application;
 
 use Seedwork\Domain\DomainEvent;
 

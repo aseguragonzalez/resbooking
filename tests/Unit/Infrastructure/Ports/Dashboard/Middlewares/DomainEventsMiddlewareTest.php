@@ -10,7 +10,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Application\DomainEventsBus;
 
 final class DomainEventsMiddlewareTest extends TestCase
 {

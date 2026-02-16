@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Seedwork\Application\Messaging\Fixtures;
+namespace Tests\Unit\Seedwork\Application\Fixtures;
 
-use Seedwork\Application\Messaging\DomainEventHandler;
+use Seedwork\Application\DomainEventHandler;
 use Seedwork\Domain\DomainEvent;
 
 /**

@@ -25,8 +25,8 @@ use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
-use Seedwork\Application\Messaging\DeferredDomainEventsBus;
-use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Application\DeferredDomainEventsBus;
+use Seedwork\Application\DomainEventsBus;
 
 final class Dependencies
 {

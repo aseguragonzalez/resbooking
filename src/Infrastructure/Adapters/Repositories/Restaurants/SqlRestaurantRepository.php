@@ -10,7 +10,7 @@ use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as Avai
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
-use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Application\DomainEventsBus;
 use PDO;
 
 final readonly class SqlRestaurantRepository implements RestaurantRepository

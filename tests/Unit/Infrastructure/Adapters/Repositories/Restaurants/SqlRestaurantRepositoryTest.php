@@ -20,7 +20,7 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\Messaging\DomainEventsBus;
+use Seedwork\Application\DomainEventsBus;
 use Seedwork\Domain\DomainEvent;
 use Tests\Unit\RestaurantBuilder;
 
