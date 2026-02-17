@@ -7,12 +7,12 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
-use Seedwork\Domain\EntityId;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
-use Seedwork\Application\DomainEventsBus;
 use PDO;
+use Seedwork\Application\DomainEventsBus;
+use Seedwork\Domain\EntityId;
 
 final readonly class SqlRestaurantRepository implements RestaurantRepository
 {

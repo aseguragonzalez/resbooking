@@ -14,7 +14,6 @@ use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Domain\EntityId;
-use Seedwork\Domain\EntityId;
 
 final class UpdateAvailabilitiesTest extends TestCase
 {

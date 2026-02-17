@@ -57,7 +57,6 @@ final class AvailabilitiesControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
         $this->updateAvailabilities->expects($this->never())->method('execute');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $this->getRestaurantById

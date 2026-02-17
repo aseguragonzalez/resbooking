@@ -13,7 +13,6 @@ use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Domain\EntityId;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class GetRestaurantByIdTest extends TestCase

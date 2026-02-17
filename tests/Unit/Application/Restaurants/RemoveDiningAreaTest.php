@@ -64,6 +64,5 @@ final class RemoveDiningAreaTest extends TestCase
         $event = $events[0];
         $this->assertSame($diningArea, $event->payload['diningArea']);
         $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
     }
 }
