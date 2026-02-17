@@ -33,7 +33,7 @@ Then run `composer update resbooking/seedwork`.
 
 ## Documentation
 
-See the [docs](docs/) folder or the main repository [docs/seedwork](https://github.com/vscode/workspace/tree/main/docs/seedwork) for architecture and usage.
+See the [docs](docs/) folder or the main repository [docs/seedwork](https://github.com/aseguragonzalez/resbooking/tree/main/docs/seedwork) for architecture and usage.
 
 ## Development
 
