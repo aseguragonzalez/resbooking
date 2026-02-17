@@ -36,6 +36,5 @@
     "docs": "https://github.com/aseguragonzalez/resbooking/tree/main/packages/seedwork/docs",
     "source": "https://github.com/aseguragonzalez/resbooking.git"
   },
-  "type": "library",
-  "version": "0.0.1"
+  "type": "library"
 }
