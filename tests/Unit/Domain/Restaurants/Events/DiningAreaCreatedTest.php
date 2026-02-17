@@ -8,6 +8,7 @@ use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaCreated;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
+use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 
@@ -33,9 +34,9 @@ final class DiningAreaCreatedTest extends TestCase
             name: $this->faker->name
         );
 
-        $event = DiningAreaCreated::new(restaurantId: $restaurantId, diningArea: $diningArea);
+        $event = DiningAreaCreated::new(restaurantId: EntityId::fromString($restaurantId), diningArea: $diningArea);
 
-        $this->assertNotEmpty($event->id);
+        $this->assertNotEmpty($event->id->value);
         $this->assertSame('DiningAreaCreated', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;

@@ -80,7 +80,7 @@ final class RestaurantsMapper
     public static function mapToModel(Restaurant $restaurant): RestaurantModel
     {
         return new RestaurantModel(
-            id: $restaurant->getId(),
+            id: $restaurant->getId()->value,
             settings: self::mapSettingsToModel($restaurant->getSettings()),
             diningAreas: self::mapDiningAreasToModel($restaurant->getDiningAreas()),
             availabilities: self::mapAvailabilitiesToModel($restaurant->getAvailabilities()),
@@ -109,7 +109,7 @@ final class RestaurantsMapper
     {
         return array_map(
             fn ($diningArea) => new DiningAreaModel(
-                id: $diningArea->id,
+                id: $diningArea->id->value,
                 capacity: $diningArea->capacity->value,
                 name: $diningArea->name,
             ),

@@ -9,6 +9,7 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
+use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +30,7 @@ final class GetRestaurantByIdTest extends TestCase
 
     public function testItRetrievesRestaurantById(): void
     {
-        $restaurantId = $this->faker->uuid;
+        $restaurantId = EntityId::fromString($this->faker->uuid);
         $restaurant = $this->restaurantBuilder->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')

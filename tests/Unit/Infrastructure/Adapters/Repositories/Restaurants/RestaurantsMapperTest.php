@@ -74,7 +74,7 @@ final class RestaurantsMapperTest extends TestCase
         $restaurant = RestaurantsMapper::mapToDomain($restaurantModel);
 
         $this->assertInstanceOf(Restaurant::class, $restaurant);
-        $this->assertSame($restaurantId, $restaurant->getId());
+        $this->assertSame($restaurantId, $restaurant->getId()->value);
         $this->assertSame($email, $restaurant->getSettings()->email->value);
         $this->assertSame($name, $restaurant->getSettings()->name);
         $this->assertSame($phone, $restaurant->getSettings()->phone->value);
@@ -91,7 +91,7 @@ final class RestaurantsMapperTest extends TestCase
         $model = RestaurantsMapper::mapToModel($restaurant);
 
         $this->assertInstanceOf(RestaurantModel::class, $model);
-        $this->assertSame($restaurant->getId(), $model->id);
+        $this->assertSame($restaurant->getId()->value, $model->id);
         $this->assertSame($restaurant->getSettings()->email->value, $model->settings->email);
         $this->assertSame($restaurant->getSettings()->name, $model->settings->name);
         $this->assertSame($restaurant->getSettings()->phone->value, $model->settings->phone);
@@ -122,7 +122,7 @@ final class RestaurantsMapperTest extends TestCase
 
         $restaurant = RestaurantsMapper::mapToDomain($restaurantModel);
 
-        $this->assertSame($restaurantId, $restaurant->getId());
+        $this->assertSame($restaurantId, $restaurant->getId()->value);
         $this->assertCount(0, $restaurant->getDiningAreas());
         $this->assertCount(0, $restaurant->getAvailabilities());
         $this->assertCount(0, $restaurant->getUsers());
@@ -148,7 +148,7 @@ final class RestaurantsMapperTest extends TestCase
         $model = RestaurantsMapper::mapToModel($restaurant);
         $roundTrip = RestaurantsMapper::mapToDomain($model);
 
-        $this->assertSame($restaurant->getId(), $roundTrip->getId());
+        $this->assertTrue($restaurant->getId()->equals($roundTrip->getId()));
         $this->assertSame($restaurant->getSettings()->email->value, $roundTrip->getSettings()->email->value);
         $this->assertSame($restaurant->getSettings()->name, $roundTrip->getSettings()->name);
         $this->assertCount(count($restaurant->getUsers()), $roundTrip->getUsers());

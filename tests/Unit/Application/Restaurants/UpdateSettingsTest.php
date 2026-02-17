@@ -12,6 +12,7 @@ use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
+use Seedwork\Domain\EntityId;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -45,16 +46,17 @@ final class UpdateSettingsTest extends TestCase
             phone: new Phone($this->faker->phoneNumber)
         );
         $restaurant = $this->restaurantBuilder->withSettings($settings)->build();
+        $restaurantId = EntityId::fromString($this->faker->uuid);
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($this->isString())
+            ->with($restaurantId)
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
         $request = new UpdateSettingsCommand(
-            restaurantId: $this->faker->uuid,
+            restaurantId: $restaurantId,
             email: $this->faker->email,
             hasReminders: $this->faker->boolean,
             name: $this->faker->name,

@@ -9,6 +9,7 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Faker\Factory;
+use Seedwork\Domain\EntityId;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
 use Framework\Mvc\Actions\Responses\View;
@@ -55,14 +56,14 @@ final class AvailabilitiesControllerTest extends TestCase
     public function testAvailabilitiesReturnsAvailabilitiesList(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
         $this->updateAvailabilities->expects($this->never())->method('execute');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId();
+                return $query->id->equals($restaurant->getId());
             }))
             ->willReturn($restaurant);
 
@@ -95,7 +96,7 @@ final class AvailabilitiesControllerTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
-                return $command->restaurantId === $this->requestContext->get('restaurantId')
+                return $command->restaurantId->value === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
             }));
 

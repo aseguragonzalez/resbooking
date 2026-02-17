@@ -6,12 +6,12 @@ namespace Seedwork\Domain;
 
 abstract readonly class Entity
 {
-    protected function __construct(public string $id)
+    protected function __construct(public EntityId $id)
     {
     }
 
     public function equals(Entity $other): bool
     {
-        return $this->id === $other->id;
+        return $this->id->equals($other->id);
     }
 }

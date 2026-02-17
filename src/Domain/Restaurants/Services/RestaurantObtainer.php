@@ -7,6 +7,7 @@ namespace Domain\Restaurants\Services;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Exceptions\RestaurantDoesNotExist;
 use Domain\Restaurants\Repositories\RestaurantRepository;
+use Seedwork\Domain\EntityId;
 
 readonly class RestaurantObtainer
 {
@@ -14,7 +15,7 @@ readonly class RestaurantObtainer
     {
     }
 
-    public function obtain(string $id): Restaurant
+    public function obtain(EntityId $id): Restaurant
     {
         $restaurant = $this->restaurantRepository->getById($id);
         if ($restaurant === null) {

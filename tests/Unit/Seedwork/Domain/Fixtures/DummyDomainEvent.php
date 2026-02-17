@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Domain\Fixtures;
 
 use Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\EntityId;
 
 final readonly class DummyDomainEvent extends DomainEvent
 {
     public function __construct(
-        string $id = 'event-id',
+        ?EntityId $id = null,
         string $type = 'DummyType',
         string $version = '2.0',
         array $payload = ['foo' => 'bar'],
         ?\DateTimeImmutable $createdAt = null
     ) {
         parent::__construct(
-            $id,
+            $id ?? EntityId::fromString('event-id'),
             $type,
             $version,
             $payload,

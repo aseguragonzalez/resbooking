@@ -12,6 +12,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\TimeSlot;
+use Seedwork\Domain\EntityId;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use Infrastructure\Adapters\Repositories\Restaurants\RestaurantsMapper;
@@ -55,7 +56,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
-                return $params['id'] === $restaurant->getId()
+                return $params['id'] === $restaurant->getId()->value
                     && $params['name'] === $restaurant->getSettings()->name
                     && $params['email'] === $restaurant->getSettings()->email->value
                     && $params['phone'] === $restaurant->getSettings()->phone->value
@@ -68,19 +69,19 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $deleteDiningAreasStmt = $this->createMock(PDOStatement::class);
         $deleteDiningAreasStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()]);
+            ->with(['restaurant_id' => $restaurant->getId()->value]);
         $this->prepareStatementQueue[] = $deleteDiningAreasStmt;
 
         $deleteAvailabilitiesStmt = $this->createMock(PDOStatement::class);
         $deleteAvailabilitiesStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()]);
+            ->with(['restaurant_id' => $restaurant->getId()->value]);
         $this->prepareStatementQueue[] = $deleteAvailabilitiesStmt;
 
         $deleteUsersStmt = $this->createMock(PDOStatement::class);
         $deleteUsersStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()]);
+            ->with(['restaurant_id' => $restaurant->getId()->value]);
         $this->prepareStatementQueue[] = $deleteUsersStmt;
         $this->setupPrepareCallback();
 
@@ -110,7 +111,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
                 return isset($params['id'])
                     && isset($params['name'])
                     && isset($params['capacity'])
-                    && $params['restaurant_id'] === $restaurant->getId();
+                    && $params['restaurant_id'] === $restaurant->getId()->value;
             }));
         $this->prepareStatementQueue[] = $insertDiningAreaStmt;
         $this->setupPrepareCallback();
@@ -143,7 +144,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && isset($params['day_of_week_id'])
                     && isset($params['time_slot_id'])
                     && isset($params['capacity'])
-                    && $params['restaurant_id'] === $restaurant->getId();
+                    && $params['restaurant_id'] === $restaurant->getId()->value;
             }));
         $this->prepareStatementQueue[] = $insertAvailabilityStmt;
         $this->setupPrepareCallback();
@@ -166,7 +167,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
-                return $params['restaurant_id'] === $restaurant->getId()
+                return $params['restaurant_id'] === $restaurant->getId()->value
                     && isset($params['user_id']);
             }));
         $this->prepareStatementQueue[] = $insertUserStmt;
@@ -249,9 +250,9 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $this->setupPrepareCallback();
 
         /** @var Restaurant $result */
-        $result = $this->repository->getById($restaurantId);
+        $result = $this->repository->getById(EntityId::fromString($restaurantId));
 
-        $this->assertSame($restaurantId, $result->getId());
+        $this->assertSame($restaurantId, $result->getId()->value);
         $this->assertSame('Test Restaurant', $result->getSettings()->name);
         $this->assertSame($email, $result->getSettings()->email->value);
         $this->assertInstanceOf(Restaurant::class, $result);
@@ -273,7 +274,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         $this->setupPrepareCallback();
 
-        $result = $this->repository->getById($restaurantId);
+        $result = $this->repository->getById(EntityId::fromString($restaurantId));
 
         $this->assertNull($result);
     }
@@ -345,12 +346,12 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         $this->setupPrepareCallback();
 
-        $result = $this->repository->getById($restaurantId);
+        $result = $this->repository->getById(EntityId::fromString($restaurantId));
 
         $this->assertInstanceOf(Restaurant::class, $result);
         $diningAreas = $result->getDiningAreas();
         $this->assertCount(2, $diningAreas);
-        $this->assertSame('area1', $diningAreas[0]->id);
+        $this->assertSame('area1', $diningAreas[0]->id->value);
         $this->assertSame('Area 1', $diningAreas[0]->name);
         $this->assertSame(10, $diningAreas[0]->capacity->value);
     }

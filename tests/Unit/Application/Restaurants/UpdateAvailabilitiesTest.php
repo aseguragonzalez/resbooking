@@ -12,14 +12,15 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
+use Seedwork\Domain\EntityId;
 use PHPUnit\Framework\TestCase;
 
 final class UpdateAvailabilitiesTest extends TestCase
 {
     public function testExecuteUpdatesAvailabilities(): void
     {
-        $restaurantId = 'test-restaurant-id';
-        $restaurant = Restaurant::new('test@example.com', $restaurantId);
+        $restaurantId = EntityId::fromString('test-restaurant-id');
+        $restaurant = Restaurant::new('test@example.com', 'test-restaurant-id');
         $repository = $this->createMock(RestaurantRepository::class);
         $restaurantObtainer = $this->createMock(RestaurantObtainer::class);
         $restaurantObtainer->expects($this->once())

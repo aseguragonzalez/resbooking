@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Application;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 use Seedwork\Application\DeferredDomainEventsBus;
 use Tests\Unit\Seedwork\Application\Fixtures\CallbackDomainEventHandler;
 use Tests\Unit\Seedwork\Domain\Fixtures\DummyDomainEvent;
@@ -39,7 +40,7 @@ final class DeferredDomainEventsBusTest extends TestCase
 
     public function testNotifyDeliversStoredEventsToHandlers(): void
     {
-        $event = new DummyDomainEvent(id: 'evt-1');
+        $event = new DummyDomainEvent(id: EntityId::fromString('evt-1'));
         $received = [];
 
         $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$received) {
@@ -50,7 +51,7 @@ final class DeferredDomainEventsBusTest extends TestCase
         $this->bus->notify();
 
         $this->assertCount(1, $received);
-        $this->assertSame('evt-1', $received[0]->id);
+        $this->assertSame('evt-1', $received[0]->id->value);
     }
 
     public function testBufferClearedAfterNotify(): void
@@ -87,14 +88,14 @@ final class DeferredDomainEventsBusTest extends TestCase
 
         $this->assertCount(1, $received1);
         $this->assertCount(1, $received2);
-        $this->assertSame($event->id, $received1[0]->id);
-        $this->assertSame($event->id, $received2[0]->id);
+        $this->assertTrue($event->id->equals($received1[0]->id));
+        $this->assertTrue($event->id->equals($received2[0]->id));
     }
 
     public function testEventTypeMatchingByFqcn(): void
     {
-        $dummyDomainEvent = new DummyDomainEvent(id: 'dd-1');
-        $dummyEvent = new DummyEvent(id: 'de-1');
+        $dummyDomainEvent = new DummyDomainEvent(id: EntityId::fromString('dd-1'));
+        $dummyEvent = new DummyEvent(id: EntityId::fromString('de-1'));
 
         $receivedDummyDomain = [];
         $receivedDummy = [];
@@ -117,10 +118,10 @@ final class DeferredDomainEventsBusTest extends TestCase
         $this->bus->notify();
 
         $this->assertCount(1, $receivedDummyDomain);
-        $this->assertSame('dd-1', $receivedDummyDomain[0]->id);
+        $this->assertSame('dd-1', $receivedDummyDomain[0]->id->value);
 
         $this->assertCount(1, $receivedDummy);
-        $this->assertSame('de-1', $receivedDummy[0]->id);
+        $this->assertSame('de-1', $receivedDummy[0]->id->value);
     }
 
     public function testEventsWithNoHandlersAreSkipped(): void
@@ -135,12 +136,12 @@ final class DeferredDomainEventsBusTest extends TestCase
 
     public function testEventsDeliveredInPublishOrder(): void
     {
-        $event1 = new DummyDomainEvent(id: 'first');
-        $event2 = new DummyDomainEvent(id: 'second');
+        $event1 = new DummyDomainEvent(id: EntityId::fromString('first'));
+        $event2 = new DummyDomainEvent(id: EntityId::fromString('second'));
         $order = [];
 
         $this->bus->subscribe(DummyDomainEvent::class, new CallbackDomainEventHandler(function ($e) use (&$order) {
-            $order[] = $e->id;
+            $order[] = $e->id->value;
         }));
 
         $this->bus->publish($event1);
