@@ -1,0 +1,47 @@
+name: Framework CI
+
+on:
+  pull_request:
+    paths:
+    - packages/framework/**
+    - .github/workflows/framework-*.yml
+  push:
+    branches:
+    - main
+    paths:
+    - packages/framework/**
+    - .github/workflows/framework-*.yml
+
+jobs:
+  validate:
+    name: Validate Framework Package
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up PHP 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install Framework dependencies
+      working-directory: packages/framework
+      run: composer install --no-progress
+
+    - name: Format check
+      working-directory: packages/framework
+      run: make format-check
+
+    - name: Lint
+      working-directory: packages/framework
+      run: make lint
+
+    - name: Static analysis
+      working-directory: packages/framework
+      run: make static-analyse
+
+    - name: Tests
+      working-directory: packages/framework
+      run: make test

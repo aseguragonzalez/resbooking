@@ -1,0 +1,16 @@
+# Dependencies
+vendor/
+
+# Build and packaging
+dist/
+
+# Test and coverage
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
+
+# Code style cache
+.php-cs-fixer.cache
+
+# Logs
+*.log
