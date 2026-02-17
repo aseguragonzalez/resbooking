@@ -31,7 +31,7 @@ final class GetRestaurantByIdTest extends TestCase
 
     public function testItRetrievesRestaurantById(): void
     {
-        $restaurantId = EntityId::fromString($this->faker->uuid);
+        $restaurantIdString = $this->faker->uuid;
         $restaurant = $this->restaurantBuilder->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')

@@ -64,7 +64,7 @@ final class AvailabilitiesControllerTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id->equals($restaurant->getId());
+                return $query->id === $restaurant->getId()->value;
             }))
             ->willReturn($restaurant);
 
@@ -97,7 +97,7 @@ final class AvailabilitiesControllerTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
-                return $command->restaurantId->value === $this->requestContext->get('restaurantId')
+                return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
             }));
 

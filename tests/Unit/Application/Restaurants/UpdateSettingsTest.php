@@ -47,17 +47,17 @@ final class UpdateSettingsTest extends TestCase
             phone: new Phone($this->faker->phoneNumber)
         );
         $restaurant = $this->restaurantBuilder->withSettings($settings)->build();
-        $restaurantId = EntityId::fromString($this->faker->uuid);
+        $restaurantIdString = $this->faker->uuid;
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurantId)
+            ->with(EntityId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
         $request = new UpdateSettingsCommand(
-            restaurantId: $restaurantId,
+            restaurantId: $restaurantIdString,
             email: $this->faker->email,
             hasReminders: $this->faker->boolean,
             name: $this->faker->name,

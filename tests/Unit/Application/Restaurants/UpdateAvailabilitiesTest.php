@@ -20,7 +20,7 @@ final class UpdateAvailabilitiesTest extends TestCase
 {
     public function testExecuteUpdatesAvailabilities(): void
     {
-        $restaurantId = EntityId::fromString('test-restaurant-id');
+        $restaurantIdString = 'test-restaurant-id';
         $restaurant = Restaurant::new('test@example.com', 'test-restaurant-id');
         $repository = $this->createMock(RestaurantRepository::class);
         $restaurantObtainer = $this->createMock(RestaurantObtainer::class);

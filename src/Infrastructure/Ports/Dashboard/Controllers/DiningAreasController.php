@@ -9,7 +9,6 @@ use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
-use Seedwork\Domain\EntityId;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
@@ -41,7 +40,7 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function index(): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: EntityId::fromString($this->getRestaurantId()));
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = array_map(
             fn ($diningArea) => new DiningArea(
@@ -72,7 +71,7 @@ final class DiningAreasController extends RestaurantBaseController
         }
 
         $this->addDiningArea->execute(new AddDiningAreaCommand(
-            restaurantId: EntityId::fromString($this->getRestaurantId()),
+            restaurantId: $this->getRestaurantId(),
             name: $request->name,
             capacity: $request->capacity
         ));
@@ -82,7 +81,7 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: EntityId::fromString($this->getRestaurantId()));
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = $restaurant->getDiningAreas();
         $diningArea = array_filter($diningAreas, fn ($da) => $da->id->value === $id);
@@ -114,8 +113,8 @@ final class DiningAreasController extends RestaurantBaseController
         }
 
         $this->updateDiningArea->execute(new UpdateDiningAreaCommand(
-            restaurantId: EntityId::fromString($this->getRestaurantId()),
-            diningAreaId: EntityId::fromString($id),
+            restaurantId: $this->getRestaurantId(),
+            diningAreaId: $id,
             name: $request->name,
             capacity: $request->capacity
         ));
@@ -126,8 +125,8 @@ final class DiningAreasController extends RestaurantBaseController
     public function delete(string $id): ActionResponse
     {
         $this->removeDiningArea->execute(new RemoveDiningAreaCommand(
-            restaurantId: EntityId::fromString($this->getRestaurantId()),
-            diningAreaId: EntityId::fromString($id)
+            restaurantId: $this->getRestaurantId(),
+            diningAreaId: $id
         ));
 
         return $this->redirectToAction('index', DiningAreasController::class);

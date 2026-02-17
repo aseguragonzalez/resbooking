@@ -9,7 +9,6 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Domain\EntityId;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
@@ -31,7 +30,7 @@ final class SettingsController extends RestaurantBaseController
 
     public function settings(): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: EntityId::fromString($this->getRestaurantId()));
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($query);
         $settings = $restaurant->getSettings();
 
@@ -56,7 +55,7 @@ final class SettingsController extends RestaurantBaseController
         }
 
         $this->updateSettings->execute(new UpdateSettingsCommand(
-            restaurantId: EntityId::fromString($this->getRestaurantId()),
+            restaurantId: $this->getRestaurantId(),
             email: $request->email,
             hasReminders: $request->hasRemindersChecked(),
             name: $request->name,

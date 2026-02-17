@@ -41,16 +41,18 @@ final class RemoveDiningAreaTest extends TestCase
             DiningArea::new(new Capacity(10), name: $this->faker->name),
         ];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
-        $restaurantId = EntityId::fromString($this->faker->uuid);
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurantId)
+            ->with($restaurant->getId())
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
-        $request = new RemoveDiningAreaCommand(restaurantId: $restaurantId, diningAreaId: $diningArea->id);
+        $request = new RemoveDiningAreaCommand(
+            restaurantId: $restaurant->getId()->value,
+            diningAreaId: $diningArea->id->value
+        );
         $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);

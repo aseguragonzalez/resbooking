@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\UpdateSettings;
 
-use Seedwork\Domain\EntityId;
-
 final readonly class UpdateSettingsCommand
 {
     public function __construct(
-        public EntityId $restaurantId,
+        public string $restaurantId,
         public string $email,
         public bool $hasReminders,
         public string $name,

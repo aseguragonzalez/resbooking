@@ -22,7 +22,7 @@ final readonly class UpdateDiningAreaHandler implements UpdateDiningArea
     {
         $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
         $updatedDiningArea = DiningArea::build(
-            id: $command->diningAreaId->value,
+            id: $command->diningAreaId,
             capacity: new Capacity(value: $command->capacity),
             name: $command->name
         );
