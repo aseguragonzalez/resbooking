@@ -9,6 +9,7 @@ use Application\Restaurants\AddDiningArea\AddDiningAreaHandler;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
+use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -32,9 +33,10 @@ final class AddDiningAreaTest extends TestCase
     public function testCreateNewDiningArea(): void
     {
         $restaurant = $this->restaurantBuilder->build();
+        $restaurantIdString = $this->faker->uuid;
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($this->isString())
+            ->with(EntityId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
@@ -42,7 +44,7 @@ final class AddDiningAreaTest extends TestCase
             ->with($restaurant);
         $ApplicationService = new AddDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(
-            restaurantId: $this->faker->uuid,
+            restaurantId: $restaurantIdString,
             name: $this->faker->name,
             capacity: $this->faker->randomNumber(2)
         );

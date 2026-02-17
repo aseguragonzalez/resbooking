@@ -31,12 +31,19 @@ Within `src/`, organize code into three main layers:
 
 **Application Layer** (`src/Application/`):
 Contains use cases organized by bounded context. Each bounded context folder
- contains a `UseCases/` subdirectory where each use case is implemented as
- three files:
+ contains use case folders (e.g. `Restaurants/CreateNewRestaurant/`,
+ `Restaurants/GetRestaurantById/`) where each use case is implemented as
+ three files. The use case interface extends either
+ `Seedwork\Application\CommandHandler<TCommand>` or
+ `Seedwork\Application\QueryHandler<TQuery, TResult>`; the implementation
+ class is always named `<UseCase>Handler` (in `<UseCase>Handler.php`), not
+ Service.
 
-- The use case interface (`<UseCase>.php`);
-- The application command class (`<UseCase>Command.php`);
-- The application service implementation (`<UseCase>Service.php`).
+- **Command use cases** (writes): use case interface (`<UseCase>.php`),
+  command DTO (`<UseCase>Command.php`), handler implementation
+  (`<UseCase>Handler.php`).
+- **Query use cases** (reads): use case interface (`<UseCase>.php`), query
+  DTO (`<UseCase>Query.php`), handler implementation (`<UseCase>Handler.php`).
 
 **Domain Layer** (`src/Domain/`):
 Contains pure business logic organized by bounded context. Each bounded context
@@ -65,7 +72,7 @@ Contains pure business logic organized by bounded context. Each bounded context
 
 **Tests** (`tests/Unit/`): Mirror the source structure exactly.
 
-- Under `Application/<BoundedContext>/UseCases/`:
+- Under `Application/<BoundedContext>/`:
   - `<UseCase>Test.php`.
 - Under `Domain/<BoundedContext>/`:
   - `Entities/` (`<AggregateRoot>Test.php`)
@@ -92,6 +99,8 @@ Contains pure business logic organized by bounded context. Each bounded context
 | `DomainEvent` | `Seedwork\Domain\DomainEvent` | Base for domain events.|
 | `DomainException` | `Seedwork\Domain\Exceptions\DomainException` | Domain exceptions.|
 | `Repository` | `Seedwork\Domain\Repository` | Base interface for aggregate repositories.|
+| `CommandHandler` | `Seedwork\Application\CommandHandler` | Marker for write use cases; interface extends it with `execute(Command): void`. |
+| `QueryHandler` | `Seedwork\Application\QueryHandler` | Marker for read use cases; interface extends it with `execute(Query): TResult`. |
 | `Controller` | `Seedwork\Infrastructure\Ports\Mvc\Controllers\Controller` | Controllers.|
 
 Always extend or implement these abstractions.
@@ -110,11 +119,19 @@ final class MyException extends DomainException { /* ... */ }
  */
 interface MyAggregateRootRepository extends Repository { /* ... */ }
 
-
-interface CreateNewProject { /* ... */ }
-final class CreateNewProjectService implements CreateNewProject { /* ... */ }
+/**
+ * @extends CommandHandler<CreateNewProjectCommand>
+ */
+interface CreateNewProject extends CommandHandler { /* ... */ }
+final readonly class CreateNewProjectHandler implements CreateNewProject { /* ... */ }
 final readonly class CreateNewProjectCommand { /* ... */ }
 
+/**
+ * @extends QueryHandler<GetRestaurantByIdQuery, Restaurant>
+ */
+interface GetRestaurantById extends QueryHandler { /* ... */ }
+final readonly class GetRestaurantByIdHandler implements GetRestaurantById { /* ... */ }
+final readonly class GetRestaurantByIdQuery { /* ... */ }
 ```
 
 ---
@@ -258,7 +275,12 @@ final readonly class Settings extends ValueObject
 
 ```
 
-### 5.4 Use case Implementation Style
+### 5.4 Use case interface (Command Handler and Query Handler)
+
+Use case interfaces must extend the appropriate Seedwork interface and
+ document the generic with `@extends`.
+
+**Command use case** (write; returns void):
 
 ```php
 <?php
@@ -267,13 +289,39 @@ declare(strict_types=1);
 
 namespace Application\Projects\CreateNewProject;
 
-interface CreateNewProject
+use Seedwork\Application\CommandHandler;
+
+/**
+ * @extends CommandHandler<CreateNewProjectCommand>
+ */
+interface CreateNewProject extends CommandHandler
 {
     public function execute(CreateNewProjectCommand $command): void;
 }
 ```
 
-### 5.5 Use case command Implementation Style
+**Query use case** (read; returns a result):
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Application\Restaurants\GetRestaurantById;
+
+use Domain\Restaurants\Entities\Restaurant;
+use Seedwork\Application\QueryHandler;
+
+/**
+ * @extends QueryHandler<GetRestaurantByIdQuery, Restaurant>
+ */
+interface GetRestaurantById extends QueryHandler
+{
+    public function execute(GetRestaurantByIdQuery $query): Restaurant;
+}
+```
+
+### 5.5 Use case command and query DTOs
 
 ```php
 <?php
@@ -290,7 +338,23 @@ final readonly class CreateNewProjectCommand
 }
 ```
 
-### 5.6 Use case application service Implementation Style
+**Commands and Queries — primitives only:** Commands and Queries are the
+ interface between ports (e.g. controllers) and the Application layer. They
+ **must use only primitive types** (`int`, `string`, `bool`, `float`) and
+ arrays of primitives or documented array shapes (e.g.
+ `array<int, array{capacity: int, dayOfWeekId: int, timeSlotId: int}>`). Do
+ **not** use domain types in command/query property types: no `EntityId`,
+ value objects, or entities. The **handler** is responsible for building
+ domain types (e.g. `EntityId::fromString($command->id)`) when calling
+ domain or repositories. Query use cases use a class `<UseCase>Query.php`
+ with the same primitives-only rule (no domain types in the query DTO).
+
+### 5.6 Use case handler implementation (Command Handler and Query Handler)
+
+Implementations live in `<UseCase>Handler.php` and implement the use case
+ interface (which extends `CommandHandler` or `QueryHandler`; see 5.4).
+
+**Command Handler** (write; returns void):
 
 ```php
 <?php
@@ -302,7 +366,7 @@ namespace Application\Projects\CreateNewProject;
 use Domain\Projects\Repositories\ProjectRepository;
 use Domain\Projects\Entities\Project;
 
-final readonly class CreateNewProjectService implements CreateNewProject
+final readonly class CreateNewProjectHandler implements CreateNewProject
 {
     public function __construct(private ProjectRepository $projectRepository)
     {
@@ -313,6 +377,32 @@ final readonly class CreateNewProjectService implements CreateNewProject
         $project = Project::new(email: $command->email);
 
         $this->projectRepository->save($project);
+    }
+}
+```
+
+**Query Handler** (read; returns a result):
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Application\Restaurants\GetRestaurantById;
+
+use Domain\Restaurants\Entities\Restaurant;
+use Domain\Restaurants\Services\RestaurantObtainer;
+use Seedwork\Domain\EntityId;
+
+final readonly class GetRestaurantByIdHandler implements GetRestaurantById
+{
+    public function __construct(private RestaurantObtainer $restaurantObtainer)
+    {
+    }
+
+    public function execute(GetRestaurantByIdQuery $query): Restaurant
+    {
+        return $this->restaurantObtainer->obtain(EntityId::fromString($query->id));
     }
 }
 ```
@@ -533,6 +623,7 @@ When generating or completing code, Copilot must:
 - ❌ Writing code without tests
 - ❌ Mixing domain and infrastructure logic
 - ❌ Violating PSR-12 formatting rules
+- ❌ Using domain types (e.g. `EntityId`, value objects, entities) in Command or Query class definitions
 
 ---
 
@@ -548,7 +639,7 @@ Controllers in `Infrastructure\Ports\<PortName>\Controllers` act as **adapters**
 ### ✅ Responsibilities
 
 - Receive and validate external requests (via `Request` models).
-- Invoke **Application commands or services** (use cases).
+- Invoke **Application use cases** (command handlers or query handlers).
 - Handle **domain and application exceptions** gracefully.
 - Map results to **Views** (`view()`) or **Redirects** (`redirectToAction()`).
 - Manage **headers and cookies** through `ActionResponse`.

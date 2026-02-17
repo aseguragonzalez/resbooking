@@ -42,13 +42,16 @@ final class RemoveDiningAreaTest extends TestCase
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($this->isString())
+            ->with($restaurant->getId())
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
-        $request = new RemoveDiningAreaCommand(restaurantId: $this->faker->uuid, diningAreaId: $diningArea->id);
+        $request = new RemoveDiningAreaCommand(
+            restaurantId: $restaurant->getId()->value,
+            diningAreaId: $diningArea->id->value
+        );
         $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);
@@ -59,6 +62,6 @@ final class RemoveDiningAreaTest extends TestCase
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
         $event = $events[0];
         $this->assertSame($diningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId(), $event->payload['restaurantId']);
+        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
     }
 }

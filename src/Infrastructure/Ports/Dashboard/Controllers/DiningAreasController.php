@@ -44,7 +44,7 @@ final class DiningAreasController extends RestaurantBaseController
         $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = array_map(
             fn ($diningArea) => new DiningArea(
-                id: $diningArea->id,
+                id: $diningArea->id->value,
                 name: $diningArea->name,
                 capacity: $diningArea->capacity->value
             ),
@@ -84,7 +84,7 @@ final class DiningAreasController extends RestaurantBaseController
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($query);
         $diningAreas = $restaurant->getDiningAreas();
-        $diningArea = array_filter($diningAreas, fn ($da) => $da->id === $id);
+        $diningArea = array_filter($diningAreas, fn ($da) => $da->id->value === $id);
         if (empty($diningArea)) {
             return $this->redirectToAction('index', DiningAreasController::class);
         }
@@ -92,7 +92,7 @@ final class DiningAreasController extends RestaurantBaseController
         $diningArea = array_values($diningArea)[0];
         $backUrl = $request->getHeaderLine('Referer') ?: '/dining-areas';
         $model = EditDiningArea::fromDiningArea(
-            diningAreaId: $diningArea->id,
+            diningAreaId: $diningArea->id->value,
             name: $diningArea->name,
             capacity: $diningArea->capacity->value,
             backUrl: $backUrl

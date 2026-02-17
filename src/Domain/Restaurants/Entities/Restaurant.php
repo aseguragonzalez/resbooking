@@ -20,6 +20,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
+use Seedwork\Domain\EntityId;
 use Domain\Shared\TimeSlot;
 use Seedwork\Domain\AggregateRoot;
 
@@ -38,7 +39,7 @@ final class Restaurant extends AggregateRoot
      * @param array<Availability> $availabilities
      */
     private function __construct(
-        string $id,
+        EntityId $id,
         private Settings $settings,
         private array $users = [],
         private array $diningAreas = [],
@@ -74,7 +75,7 @@ final class Restaurant extends AggregateRoot
         }
 
         $restaurant = new self(
-            id: $id ?? uniqid(),
+            id: $id !== null ? EntityId::fromString($id) : EntityId::new(),
             settings: $settings,
             users: [$user],
             diningAreas: [DiningArea::new(
@@ -100,7 +101,7 @@ final class Restaurant extends AggregateRoot
         array $availabilities = [],
     ): self {
         return new self(
-            id: $id,
+            id: EntityId::fromString($id),
             settings: $settings,
             users: $users,
             diningAreas: $diningAreas,
@@ -138,9 +139,9 @@ final class Restaurant extends AggregateRoot
         $this->addEvent(DiningAreaCreated::new(restaurantId: $this->getId(), diningArea: $diningArea));
     }
 
-    public function removeDiningAreasById(string $diningAreaId): void
+    public function removeDiningAreasById(EntityId $diningAreaId): void
     {
-        $filter = fn (DiningArea $diningArea) => $diningArea->id === $diningAreaId;
+        $filter = fn (DiningArea $diningArea) => $diningArea->id->equals($diningAreaId);
         $diningAreasToBeRemoved = array_filter($this->diningAreas, $filter);
         foreach ($diningAreasToBeRemoved as $diningArea) {
             $this->addEvent(DiningAreaRemoved::new(restaurantId: $this->getId(), diningArea: $diningArea));
@@ -152,14 +153,14 @@ final class Restaurant extends AggregateRoot
     {
         $existingDiningArea = array_filter(
             $this->diningAreas,
-            fn (DiningArea $existingDiningArea) => $existingDiningArea->id === $diningArea->id
+            fn (DiningArea $existingDiningArea) => $existingDiningArea->id->equals($diningArea->id)
         );
         if (empty($existingDiningArea)) {
             throw new DiningAreaNotFound(diningAreaId: $diningArea->id);
         }
 
         $this->diningAreas = array_map(
-            fn (DiningArea $s) => $s->id === $diningArea->id ? $diningArea : $s,
+            fn (DiningArea $s) => $s->id->equals($diningArea->id) ? $diningArea : $s,
             $this->diningAreas
         );
         $this->addEvent(DiningAreaModified::new(restaurantId: $this->getId(), diningArea: $diningArea));

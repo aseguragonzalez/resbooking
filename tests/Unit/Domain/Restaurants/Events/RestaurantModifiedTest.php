@@ -10,6 +10,7 @@ use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
+use Seedwork\Domain\EntityId;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
@@ -43,9 +44,9 @@ final class RestaurantModifiedTest extends TestCase
             )
         );
 
-        $event = RestaurantModified::new(restaurantId: $restaurantId, restaurant: $restaurant);
+        $event = RestaurantModified::new(restaurantId: EntityId::fromString($restaurantId), restaurant: $restaurant);
 
-        $this->assertNotEmpty($event->id);
+        $this->assertNotEmpty($event->id->value);
         $this->assertSame('RestaurantModified', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;

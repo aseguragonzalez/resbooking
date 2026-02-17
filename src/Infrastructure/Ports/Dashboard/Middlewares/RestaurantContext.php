@@ -63,7 +63,7 @@ final class RestaurantContext extends Middleware
         $username = $identity->username();
         $restaurants = $this->restaurantRepository->findByUserEmail($username);
         $matchedRestaurants = array_filter($restaurants, function (Restaurant $restaurant) use ($restaurantId) {
-            return $restaurant->getId() === $restaurantId;
+            return $restaurant->getId()->value === $restaurantId;
         });
         return count($matchedRestaurants) > 0;
     }

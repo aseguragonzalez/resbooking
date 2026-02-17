@@ -9,6 +9,7 @@ use Domain\Restaurants\ValueObjects\Availability;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
+use Seedwork\Domain\EntityId;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
@@ -42,9 +43,12 @@ final class AvailabilitiesUpdatedTest extends TestCase
             ),
         ];
 
-        $event = AvailabilitiesUpdated::new(restaurantId: $restaurantId, availabilities: $availabilities);
+        $event = AvailabilitiesUpdated::new(
+            restaurantId: EntityId::fromString($restaurantId),
+            availabilities: $availabilities
+        );
 
-        $this->assertNotEmpty($event->id);
+        $this->assertNotEmpty($event->id->value);
         $this->assertSame('AvailabilitiesUpdated', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;

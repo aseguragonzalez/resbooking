@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\RemoveDiningArea;
 
-use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
+use Seedwork\Domain\EntityId;
 
 final readonly class RemoveDiningAreaHandler implements RemoveDiningArea
 {
@@ -18,8 +18,8 @@ final readonly class RemoveDiningAreaHandler implements RemoveDiningArea
 
     public function execute(RemoveDiningAreaCommand $command): void
     {
-        $restaurant = $this->restaurantObtainer->obtain(id: $command->restaurantId);
-        $restaurant->removeDiningAreasById(diningAreaId: $command->diningAreaId);
+        $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
+        $restaurant->removeDiningAreasById(diningAreaId: EntityId::fromString($command->diningAreaId));
         $this->restaurantRepository->save($restaurant);
     }
 }

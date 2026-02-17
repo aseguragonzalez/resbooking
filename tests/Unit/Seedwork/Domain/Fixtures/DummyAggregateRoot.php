@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Domain\Fixtures;
 
 use Seedwork\Domain\AggregateRoot;
+use Seedwork\Domain\EntityId;
 use Seedwork\Domain\DomainEvent;
 
 class DummyAggregateRoot extends AggregateRoot
 {
-    public function __construct(string $id)
+    public function __construct(EntityId $id)
     {
         parent::__construct($id);
     }

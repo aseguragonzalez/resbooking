@@ -25,8 +25,8 @@ interface Repository
 
     /**
      * Retrieve an entity by its id.
-     * @param string $id AggreagateRoot id
+     * @param EntityId $id AggregateRoot id
      * @return T|null
      */
-    public function getById(string $id);
+    public function getById(EntityId $id);
 }

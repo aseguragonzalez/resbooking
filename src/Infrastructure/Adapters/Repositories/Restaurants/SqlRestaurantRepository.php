@@ -7,6 +7,7 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
+use Seedwork\Domain\EntityId;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
@@ -136,11 +137,11 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
         }
     }
 
-    public function getById(string $id): ?Restaurant
+    public function getById(EntityId $id): ?Restaurant
     {
         $restaurantSql = 'SELECT * FROM restaurants WHERE id = :id';
         $restaurantStmt = $this->db->prepare($restaurantSql);
-        $restaurantStmt->execute(['id' => $id]);
+        $restaurantStmt->execute(['id' => $id->value]);
 
         /** @var array{id: string, name: string, email: string, phone: string, max_number_of_diners: int, min_number_of_diners: int, number_of_tables: int, has_reminders: int|bool}|false $restaurantData */
         $restaurantData = $restaurantStmt->fetch(PDO::FETCH_ASSOC);
@@ -150,7 +151,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 
         $diningAreasSql = 'SELECT * FROM dining_areas WHERE restaurant_id = :restaurant_id';
         $diningAreasStmt = $this->db->prepare($diningAreasSql);
-        $diningAreasStmt->execute(['restaurant_id' => $id]);
+        $diningAreasStmt->execute(['restaurant_id' => $id->value]);
 
         /** @var array<int, array{id: string, name: string, capacity: int}> $diningAreasData */
         $diningAreasData = $diningAreasStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -165,7 +166,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 
         $availabilitiesSql = 'SELECT * FROM availabilities WHERE restaurant_id = :restaurant_id';
         $availabilitiesStmt = $this->db->prepare($availabilitiesSql);
-        $availabilitiesStmt->execute(['restaurant_id' => $id]);
+        $availabilitiesStmt->execute(['restaurant_id' => $id->value]);
 
         /** @var array<int, array{capacity: int, day_of_week_id: int, time_slot_id: int}> $availabilitiesData */
         $availabilitiesData = $availabilitiesStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -180,7 +181,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 
         $usersSql = 'SELECT user_id FROM restaurants_users WHERE restaurant_id = :restaurant_id';
         $usersStmt = $this->db->prepare($usersSql);
-        $usersStmt->execute(['restaurant_id' => $id]);
+        $usersStmt->execute(['restaurant_id' => $id->value]);
 
         /** @var array<int, array{user_id: string}> $usersData */
         $usersData = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
@@ -228,7 +229,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 
         $restaurants = [];
         foreach ($restaurantIds as $restaurantId) {
-            $restaurant = $this->getById($restaurantId);
+            $restaurant = $this->getById(EntityId::fromString($restaurantId));
             if ($restaurant !== null) {
                 $restaurants[] = $restaurant;
             }

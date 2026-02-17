@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Domain\Restaurants\Events;
 
 use Domain\Restaurants\ValueObjects\Availability;
+use Seedwork\Domain\EntityId;
 use Seedwork\Domain\DomainEvent;
 
 final readonly class AvailabilitiesUpdated extends DomainEvent
@@ -12,12 +13,12 @@ final readonly class AvailabilitiesUpdated extends DomainEvent
     /**
      * @param array<Availability> $availabilities
      */
-    public static function new(string $restaurantId, array $availabilities): self
+    public static function new(EntityId $restaurantId, array $availabilities): self
     {
         return new self(
-            id: uniqid(),
+            id: EntityId::new(),
             type: 'AvailabilitiesUpdated',
-            payload: ['restaurantId' => $restaurantId, 'availabilities' => $availabilities]
+            payload: ['restaurantId' => $restaurantId->value, 'availabilities' => $availabilities]
         );
     }
 }

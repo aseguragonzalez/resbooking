@@ -6,12 +6,13 @@ namespace Domain\Restaurants\Entities;
 
 use Domain\Shared\Capacity;
 use Seedwork\Domain\Entity;
+use Seedwork\Domain\EntityId;
 use Seedwork\Domain\Exceptions\ValueException;
 
 final readonly class DiningArea extends Entity
 {
     private function __construct(
-        string $id,
+        EntityId $id,
         public Capacity $capacity,
         public string $name,
     ) {
@@ -25,7 +26,7 @@ final readonly class DiningArea extends Entity
     public static function new(Capacity $capacity, string $name, ?string $id = null): self
     {
         return new self(
-            id: $id ?? uniqid(),
+            id: $id !== null ? EntityId::fromString($id) : EntityId::new(),
             capacity: $capacity,
             name: $name
         );
@@ -33,6 +34,6 @@ final readonly class DiningArea extends Entity
 
     public static function build(string $id, Capacity $capacity, string $name): self
     {
-        return new self($id, $capacity, $name);
+        return new self(EntityId::fromString($id), $capacity, $name);
     }
 }

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Domain\Restaurants\Events;
 
 use Domain\Restaurants\ValueObjects\Availability;
+use Seedwork\Domain\EntityId;
 use Seedwork\Domain\DomainEvent;
 
 final readonly class TimeSlotAssigned extends DomainEvent
 {
-    public static function new(string $restaurantId, Availability $availability): self
+    public static function new(EntityId $restaurantId, Availability $availability): self
     {
         return new self(
-            id: uniqid(),
+            id: EntityId::new(),
             type: 'TimeSlotAssigned',
-            payload: ['restaurantId' => $restaurantId, 'availability' => $availability]
+            payload: ['restaurantId' => $restaurantId->value, 'availability' => $availability]
         );
     }
 }

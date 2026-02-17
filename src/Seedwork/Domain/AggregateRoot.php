@@ -9,16 +9,16 @@ abstract class AggregateRoot
     /**
      * @param array<DomainEvent> $domainEvents
      */
-    public function __construct(private string $id, private array $domainEvents = [])
+    public function __construct(private EntityId $id, private array $domainEvents = [])
     {
     }
 
     public function equals(AggregateRoot $other): bool
     {
-        return $this->id === $other->getId();
+        return $this->id->equals($other->getId());
     }
 
-    public function getId(): string
+    public function getId(): EntityId
     {
         return $this->id;
     }

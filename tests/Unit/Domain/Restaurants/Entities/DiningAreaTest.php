@@ -33,7 +33,7 @@ final class DiningAreaTest extends TestCase
         $diningArea = DiningArea::new(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(DiningArea::class, $diningArea);
-        $this->assertSame($id, $diningArea->id);
+        $this->assertSame($id, $diningArea->id->value);
         $this->assertSame($capacity, $diningArea->capacity);
         $this->assertSame($name, $diningArea->name);
     }
@@ -47,7 +47,7 @@ final class DiningAreaTest extends TestCase
         $diningArea = DiningArea::build(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(DiningArea::class, $diningArea);
-        $this->assertSame($id, $diningArea->id);
+        $this->assertSame($id, $diningArea->id->value);
         $this->assertSame($capacity, $diningArea->capacity);
         $this->assertSame($name, $diningArea->name);
     }

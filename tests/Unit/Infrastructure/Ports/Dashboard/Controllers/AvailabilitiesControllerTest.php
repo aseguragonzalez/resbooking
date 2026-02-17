@@ -55,14 +55,14 @@ final class AvailabilitiesControllerTest extends TestCase
     public function testAvailabilitiesReturnsAvailabilitiesList(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId());
+        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
         $this->updateAvailabilities->expects($this->never())->method('execute');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId();
+                return $query->id === $restaurant->getId()->value;
             }))
             ->willReturn($restaurant);
 
