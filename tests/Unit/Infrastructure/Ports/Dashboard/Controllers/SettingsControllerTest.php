@@ -54,7 +54,6 @@ final class SettingsControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
-
         $this->updateSettings->expects($this->never())->method('execute');
         $this->getRestaurantById->expects($this->once())
             ->method('execute')

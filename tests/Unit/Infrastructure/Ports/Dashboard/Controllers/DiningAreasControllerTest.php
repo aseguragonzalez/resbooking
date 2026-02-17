@@ -27,6 +27,7 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaR
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class DiningAreasControllerTest extends TestCase

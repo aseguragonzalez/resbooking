@@ -21,6 +21,7 @@ use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesLis
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class AvailabilitiesControllerTest extends TestCase

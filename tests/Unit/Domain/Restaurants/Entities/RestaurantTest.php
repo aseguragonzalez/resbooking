@@ -19,11 +19,11 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Domain\EntityId;
 use Domain\Shared\TimeSlot;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class RestaurantTest extends TestCase

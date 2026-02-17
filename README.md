@@ -35,6 +35,10 @@ the day and shift.~~
 - **Database:** MariaDB
 - **Frontend:** Javascript, HTML5, CSS3
 
+### Documentation
+
+- **Seedwork (DDD building blocks):** [docs/seedwork/README.md](docs/seedwork/README.md) — goal, usage, and component reference for the in-repo Seedwork library.
+
 ## Requirements
 
 - [Docker][docker]

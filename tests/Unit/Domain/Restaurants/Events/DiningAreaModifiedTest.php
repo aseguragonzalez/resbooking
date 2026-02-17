@@ -8,9 +8,9 @@ use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaModified;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
-use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 
 final class DiningAreaModifiedTest extends TestCase
 {

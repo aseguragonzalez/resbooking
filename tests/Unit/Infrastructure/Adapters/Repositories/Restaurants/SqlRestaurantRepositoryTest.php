@@ -12,7 +12,6 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\TimeSlot;
-use Seedwork\Domain\EntityId;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use Infrastructure\Adapters\Repositories\Restaurants\RestaurantsMapper;
@@ -23,6 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Application\DomainEventsBus;
 use Seedwork\Domain\DomainEvent;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class SqlRestaurantRepositoryTest extends TestCase

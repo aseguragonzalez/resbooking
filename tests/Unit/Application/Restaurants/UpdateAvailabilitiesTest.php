@@ -12,8 +12,8 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
-use Seedwork\Domain\EntityId;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 
 final class UpdateAvailabilitiesTest extends TestCase
 {

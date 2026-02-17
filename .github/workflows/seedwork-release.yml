@@ -1,0 +1,78 @@
+name: Seedwork Release
+
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - packages/seedwork/**
+    - .github/workflows/seedwork-*.yml
+
+jobs:
+  release:
+    name: Build and Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Read version and check if tag exists
+      id: check
+      run: |
+        VERSION=$(cat packages/seedwork/VERSION | tr -d '[:space:]')
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        if git ls-remote --exit-code --tags origin "refs/tags/seedwork-v${VERSION}" 2>/dev/null; then
+          echo "tag_exists=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "tag_exists=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Set up PHP 8.4
+      if: steps.check.outputs.tag_exists != 'true'
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install Seedwork dependencies
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: composer install --no-progress
+
+    - name: Format check
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: make format-check
+
+    - name: Lint
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: make lint
+
+    - name: Static analysis
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: make static-analyse
+
+    - name: Tests
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: make test
+
+    - name: Build package
+      if: steps.check.outputs.tag_exists != 'true'
+      working-directory: packages/seedwork
+      run: make create-package
+
+    - name: Create GitHub Release
+      if: steps.check.outputs.tag_exists != 'true'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: seedwork-v${{ steps.check.outputs.version }}
+        files: packages/seedwork/dist/*.zip
+        generate_release_notes: true
+        name: seedwork v${{ steps.check.outputs.version }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

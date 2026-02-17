@@ -1,0 +1,47 @@
+name: Seedwork CI
+
+on:
+  pull_request:
+    paths:
+    - packages/seedwork/**
+    - .github/workflows/seedwork-*.yml
+  push:
+    branches:
+    - main
+    paths:
+    - packages/seedwork/**
+    - .github/workflows/seedwork-*.yml
+
+jobs:
+  validate:
+    name: Validate Seedwork Package
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up PHP 8.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+
+    - name: Install Seedwork dependencies
+      working-directory: packages/seedwork
+      run: composer install --no-progress
+
+    - name: Format check
+      working-directory: packages/seedwork
+      run: make format-check
+
+    - name: Lint
+      working-directory: packages/seedwork
+      run: make lint
+
+    - name: Static analysis
+      working-directory: packages/seedwork
+      run: make static-analyse
+
+    - name: Tests
+      working-directory: packages/seedwork
+      run: make test
