@@ -20,6 +20,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
+use Seedwork\Domain\EntityId;
 use Domain\Shared\TimeSlot;
 use Seedwork\Domain\AggregateRoot;
 use Seedwork\Domain\EntityId;

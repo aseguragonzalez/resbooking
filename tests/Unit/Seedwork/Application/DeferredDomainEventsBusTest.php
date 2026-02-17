@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Application;
 
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 use Seedwork\Application\DeferredDomainEventsBus;
 use Seedwork\Domain\EntityId;
 use Tests\Unit\Seedwork\Application\Fixtures\CallbackDomainEventHandler;

@@ -8,6 +8,7 @@ use Domain\Restaurants\Events\UserCreated;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Email;
 use Faker\Factory as FakerFactory;
+use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
 use Seedwork\Domain\EntityId;

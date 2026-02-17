@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Domain\Restaurants\Events;
 
 use Domain\Restaurants\ValueObjects\Availability;
+use Seedwork\Domain\EntityId;
 use Seedwork\Domain\DomainEvent;
 use Seedwork\Domain\EntityId;
 
