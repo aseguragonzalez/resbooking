@@ -1,4 +1,4 @@
-# vscode/seedwork
+# resbooking/seedwork
 
 DDD and Hexagonal Architecture building blocks (aggregates, entities, value objects, command/query handlers).
 
@@ -11,7 +11,7 @@ DDD and Hexagonal Architecture building blocks (aggregates, entities, value obje
 From [Packagist](https://packagist.org) (when published):
 
 ```bash
-composer require vscode/seedwork
+composer require resbooking/seedwork
 ```
 
 From the same repository (monorepo):
@@ -24,12 +24,12 @@ Add to your root `composer.json`:
         { "type": "path", "url": "./packages/seedwork" }
     ],
     "require": {
-        "vscode/seedwork": "@dev"
+        "resbooking/seedwork": "@dev"
     }
 }
 ```
 
-Then run `composer update vscode/seedwork`.
+Then run `composer update resbooking/seedwork`.
 
 ## Documentation
 
@@ -51,3 +51,10 @@ make all
 - `make static-analyse` — run PHPStan
 - `make clean` — remove vendor, coverage, caches
 - `make create-package` — build a zip archive in `dist/`
+
+## Releasing
+
+1. Edit `VERSION` in this directory with the new semantic version (e.g. `0.0.2`, `0.2.0-alpha`).
+2. Commit and push to `main`, or merge a pull request.
+3. The release workflow runs automatically. If the tag `seedwork-v{VERSION}` does not exist, it validates, builds, and publishes a GitHub Release with the zip artifact.
+4. No manual `git tag` or `git push --tags` is required.
