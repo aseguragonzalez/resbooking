@@ -19,13 +19,13 @@ final class UpdateAvailabilitiesTest extends TestCase
 {
     public function testExecuteUpdatesAvailabilities(): void
     {
-        $restaurantId = EntityId::fromString('test-restaurant-id');
+        $restaurantIdString = 'test-restaurant-id';
         $restaurant = Restaurant::new('test@example.com', 'test-restaurant-id');
         $repository = $this->createMock(RestaurantRepository::class);
         $restaurantObtainer = $this->createMock(RestaurantObtainer::class);
         $restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurantId)
+            ->with(EntityId::fromString($restaurantIdString))
             ->willReturn($restaurant);
 
         $repository->expects($this->once())
@@ -35,7 +35,7 @@ final class UpdateAvailabilitiesTest extends TestCase
             }));
 
         $command = new UpdateAvailabilitiesCommand(
-            restaurantId: $restaurantId,
+            restaurantId: $restaurantIdString,
             availabilities: [
                 new Availability(
                     dayOfWeekId: DayOfWeek::Monday->value,

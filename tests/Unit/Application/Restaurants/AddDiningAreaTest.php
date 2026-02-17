@@ -33,10 +33,10 @@ final class AddDiningAreaTest extends TestCase
     public function testCreateNewDiningArea(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $restaurantId = EntityId::fromString($this->faker->uuid);
+        $restaurantIdString = $this->faker->uuid;
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurantId)
+            ->with(EntityId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
@@ -44,7 +44,7 @@ final class AddDiningAreaTest extends TestCase
             ->with($restaurant);
         $ApplicationService = new AddDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(
-            restaurantId: $restaurantId,
+            restaurantId: $restaurantIdString,
             name: $this->faker->name,
             capacity: $this->faker->randomNumber(2)
         );

@@ -45,7 +45,7 @@ final class UpdateDiningAreaTest extends TestCase
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurant->getId())
+            ->with(EntityId::fromString($restaurant->getId()->value))
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
@@ -55,8 +55,8 @@ final class UpdateDiningAreaTest extends TestCase
         $newName = $this->faker->name();
         $newCapacity = 20;
         $request = new UpdateDiningAreaCommand(
-            restaurantId: $restaurant->getId(),
-            diningAreaId: EntityId::fromString($diningAreaId),
+            restaurantId: $restaurant->getId()->value,
+            diningAreaId: $diningAreaId,
             name: $newName,
             capacity: $newCapacity
         );

@@ -6,6 +6,7 @@ namespace Application\Restaurants\GetRestaurantById;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
+use Seedwork\Domain\EntityId;
 
 final readonly class GetRestaurantByIdHandler implements GetRestaurantById
 {
@@ -15,6 +16,6 @@ final readonly class GetRestaurantByIdHandler implements GetRestaurantById
 
     public function execute(GetRestaurantByIdQuery $query): Restaurant
     {
-        return $this->restaurantObtainer->obtain($query->id);
+        return $this->restaurantObtainer->obtain(EntityId::fromString($query->id));
     }
 }

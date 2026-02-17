@@ -9,7 +9,6 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
-use Seedwork\Domain\EntityId;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
@@ -32,7 +31,7 @@ final class AvailabilitiesController extends RestaurantBaseController
 
     public function availabilities(): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: EntityId::fromString($this->getRestaurantId()));
+        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         $restaurant = $this->getRestaurantById->execute($query);
         $availabilities = $restaurant->getAvailabilities();
         $pageModel = AvailabilitiesList::create(availabilities: $availabilities);
@@ -43,7 +42,7 @@ final class AvailabilitiesController extends RestaurantBaseController
     {
         $availabilityRequest = new UpdateAvailabilitiesRequest($request);
         $command = new UpdateAvailabilitiesCommand(
-            restaurantId: EntityId::fromString($this->getRestaurantId()),
+            restaurantId: $this->getRestaurantId(),
             availabilities: $availabilityRequest->availabilities
         );
         $this->updateAvailabilities->execute($command);
