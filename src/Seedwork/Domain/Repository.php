@@ -7,25 +7,33 @@ namespace Seedwork\Domain;
 use Seedwork\Domain\AggregateRoot;
 
 /**
- * Interface Repository
+ * Generic contract for persisting and loading aggregate roots.
  *
- * This interface defines the contract for a generic repository.
+ * Repositories are defined as interfaces in the domain; infrastructure
+ * implements them (e.g. SQL, in-memory). Application handlers depend on the
+ * interface. Only aggregate roots are saved and loaded through this contract.
  *
- * @package Seedwork\Domain
+ * Conventions:
+ * - Domain interfaces extend this with @extends Repository<YourAggregate> and
+ *   may add methods (e.g. findByUserEmail).
+ * - Infrastructure implements the domain interface; may call getEvents() on
+ *   the aggregate and publish to DomainEventsBus before or after persisting.
+ *
  * @template T of AggregateRoot
  */
 interface Repository
 {
     /**
-     * Save an entity to the repository.
+     * Persists the given aggregate root. Implementation may call getEvents()
+     * on the aggregate and publish events to the domain events bus.
+     *
      * @param T $aggregateRoot
-     * @return void
      */
     public function save($aggregateRoot): void;
 
     /**
-     * Retrieve an entity by its id.
-     * @param EntityId $id AggregateRoot id
+     * Returns the aggregate root with the given identity, or null if not found.
+     *
      * @return T|null
      */
     public function getById(EntityId $id);
