@@ -19,8 +19,9 @@
       "php": "8.4"
     }
   },
+  "description": "Resbooking application",
   "license": "MIT",
-  "name": "vscode/workspace",
+  "name": "resbooking/application",
   "require": {
     "monolog/monolog": "^3.10",
     "nyholm/psr7": "^1.8",
