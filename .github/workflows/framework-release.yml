@@ -12,6 +12,9 @@ jobs:
   release:
     name: Build and Publish Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allows the workflow to create a release
+      packages: write # Allows the workflow to create a package
 
     steps:
     - name: Checkout
