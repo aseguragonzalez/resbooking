@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Seedwork\Domain\Fixtures;
 
 use Seedwork\Domain\AggregateRoot;
-use Seedwork\Domain\EntityId;
 use Seedwork\Domain\DomainEvent;
 use Seedwork\Domain\EntityId;
 
