@@ -54,12 +54,13 @@ final class SettingsControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
 
         $this->updateSettings->expects($this->never())->method('execute');
         $this->getRestaurantById->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id->equals($restaurant->getId());
             }))
             ->willReturn($restaurant);
 
@@ -115,7 +116,7 @@ final class SettingsControllerTest extends TestCase
         $this->updateSettings->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateSettingsCommand $command) use ($request) {
-                return $command->restaurantId !== ''
+                return $command->restaurantId->value !== ''
                     && $command->email === $request->email
                     && $command->name === $request->name
                     && $command->hasReminders === true

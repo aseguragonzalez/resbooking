@@ -15,6 +15,7 @@ use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class RemoveDiningAreaTest extends TestCase
@@ -40,18 +41,16 @@ final class RemoveDiningAreaTest extends TestCase
             DiningArea::new(new Capacity(10), name: $this->faker->name),
         ];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
+        $restaurantId = EntityId::fromString($this->faker->uuid);
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurant->getId())
+            ->with($restaurantId)
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($restaurant);
-        $request = new RemoveDiningAreaCommand(
-            restaurantId: $restaurant->getId()->value,
-            diningAreaId: $diningArea->id->value
-        );
+        $request = new RemoveDiningAreaCommand(restaurantId: $restaurantId, diningAreaId: $diningArea->id);
         $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->execute($request);
@@ -62,6 +61,7 @@ final class RemoveDiningAreaTest extends TestCase
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
         $event = $events[0];
         $this->assertSame($diningArea, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
         $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
     }
 }

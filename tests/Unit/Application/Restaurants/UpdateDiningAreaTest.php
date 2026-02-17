@@ -12,10 +12,11 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
-use Seedwork\Domain\EntityId;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Seedwork\Domain\EntityId;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class UpdateDiningAreaTest extends TestCase
@@ -55,8 +56,8 @@ final class UpdateDiningAreaTest extends TestCase
         $newName = $this->faker->name();
         $newCapacity = 20;
         $request = new UpdateDiningAreaCommand(
-            restaurantId: $restaurant->getId()->value,
-            diningAreaId: $diningAreaId,
+            restaurantId: $restaurant->getId(),
+            diningAreaId: EntityId::fromString($diningAreaId),
             name: $newName,
             capacity: $newCapacity
         );
@@ -67,6 +68,7 @@ final class UpdateDiningAreaTest extends TestCase
         $this->assertSame(1, count($restaurant->getDiningAreas()));
         $updatedDiningArea = $restaurant->getDiningAreas()[0];
         $this->assertSame($diningAreaId, $updatedDiningArea->id->value);
+        $this->assertSame($diningAreaId, $updatedDiningArea->id->value);
         $this->assertSame($newName, $updatedDiningArea->name);
         $this->assertSame($newCapacity, $updatedDiningArea->capacity->value);
         $events = $restaurant->getEvents();
@@ -74,6 +76,7 @@ final class UpdateDiningAreaTest extends TestCase
         $this->assertInstanceOf(DiningAreaModified::class, $events[0]);
         $event = $events[0];
         $this->assertSame($updatedDiningArea, $event->payload['diningArea']);
+        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
         $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
     }
 }

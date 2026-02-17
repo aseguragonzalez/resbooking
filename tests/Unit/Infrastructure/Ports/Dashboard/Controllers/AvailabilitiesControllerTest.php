@@ -21,6 +21,7 @@ use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesLis
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class AvailabilitiesControllerTest extends TestCase
@@ -56,13 +57,14 @@ final class AvailabilitiesControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
         $this->updateAvailabilities->expects($this->never())->method('execute');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $this->getRestaurantById
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id->equals($restaurant->getId());
             }))
             ->willReturn($restaurant);
 
@@ -95,7 +97,7 @@ final class AvailabilitiesControllerTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
-                return $command->restaurantId === $this->requestContext->get('restaurantId')
+                return $command->restaurantId->value === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
             }));
 
