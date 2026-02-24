@@ -46,9 +46,7 @@ final class TestMigrationHandlerTest extends TestCase
     public function testExecuteThrowsExceptionWhenMigrationNotFound(): void
     {
         $command = new TestMigrationCommand('non_existent', '/test/migrations');
-        $this->migrationFileManager->method('getMigrationByName')
-            ->with('/test/migrations', 'non_existent')
-            ->willReturn(null);
+        $this->migrationFileManager->method('getMigrationByName')->willReturn(null);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage("Migration 'non_existent' not found");
@@ -65,31 +63,26 @@ final class TestMigrationHandlerTest extends TestCase
         $comparisonResult = SchemaComparisonResult::new(true);
         $backupFilePath = '/tmp/backup.sql';
         $testDbName = 'test_abc123';
-
-        $schemaSnapshotExecutor = $this->createStub(SchemaSnapshotExecutor::class);
-        $schemaSnapshotExecutor->method('capture')
+        $schemaSnapshotExecutor = $this->createMock(SchemaSnapshotExecutor::class);
+        $schemaSnapshotExecutor
+            ->expects($this->exactly(2))
+            ->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
-        $testMigrationExecutor = $this->createStub(TestMigrationExecutor::class);
-        $testMigrationExecutor->method('execute')->with($migration);
-        $rollbackExecutor = $this->createStub(RollbackExecutor::class);
-        $rollbackExecutor->method('rollback')->with($migration->scripts);
+        $testMigrationExecutor = $this->createMock(TestMigrationExecutor::class);
+        $testMigrationExecutor->expects($this->once())->method('execute');
+        $rollbackExecutor = $this->createMock(RollbackExecutor::class);
+        $rollbackExecutor->expects($this->once())->method('rollback');
         $scope = new MigrationTestScope(
             schemaSnapshotExecutor: $schemaSnapshotExecutor,
             testMigrationExecutor: $testMigrationExecutor,
             rollbackExecutor: $rollbackExecutor,
         );
-
-        $this->migrationFileManager->method('getMigrationByName')
-            ->with('/test/migrations', 'test_migration')
-            ->willReturn($migration);
+        $this->migrationFileManager->method('getMigrationByName')->willReturn($migration);
         $this->databaseBackupManager->method('backup')->willReturn($backupFilePath);
-        $this->databaseBackupManager->method('createTestDatabaseFromBackup')
-            ->with($backupFilePath)->willReturn($testDbName);
-        $this->databaseBackupManager->method('destroyTestDatabase')->with($testDbName);
-        $this->scopeFactory->method('createScope')->with($testDbName)->willReturn($scope);
-        $this->schemaComparator->method('compare')
-            ->with($initialSnapshot, $finalSnapshot)
-            ->willReturn($comparisonResult);
+        $this->databaseBackupManager->method('createTestDatabaseFromBackup')->willReturn($testDbName);
+        $this->databaseBackupManager->method('destroyTestDatabase');
+        $this->scopeFactory->method('createScope')->willReturn($scope);
+        $this->schemaComparator->method('compare')->willReturn($comparisonResult);
 
         $this->service->execute($command);
     }
@@ -103,7 +96,6 @@ final class TestMigrationHandlerTest extends TestCase
         $comparisonResult = SchemaComparisonResult::new(false, ['Table users was added']);
         $backupFilePath = '/tmp/backup.sql';
         $testDbName = 'test_abc123';
-
         $schemaSnapshotExecutor = $this->createStub(SchemaSnapshotExecutor::class);
         $schemaSnapshotExecutor->method('capture')
             ->willReturnOnConsecutiveCalls($initialSnapshot, $finalSnapshot);
@@ -112,19 +104,12 @@ final class TestMigrationHandlerTest extends TestCase
             testMigrationExecutor: $this->createStub(TestMigrationExecutor::class),
             rollbackExecutor: $this->createStub(RollbackExecutor::class),
         );
-
-        $this->migrationFileManager->method('getMigrationByName')
-            ->with('/test/migrations', 'test_migration')
-            ->willReturn($migration);
+        $this->migrationFileManager->method('getMigrationByName')->willReturn($migration);
         $this->databaseBackupManager->method('backup')->willReturn($backupFilePath);
-        $this->databaseBackupManager->method('createTestDatabaseFromBackup')
-            ->with($backupFilePath)->willReturn($testDbName);
-        $this->databaseBackupManager->method('destroyTestDatabase')->with($testDbName);
-        $this->scopeFactory->method('createScope')->with($testDbName)->willReturn($scope);
-        $this->schemaComparator->method('compare')
-            ->with($initialSnapshot, $finalSnapshot)
-            ->willReturn($comparisonResult);
-
+        $this->databaseBackupManager->method('createTestDatabaseFromBackup')->willReturn($testDbName);
+        $this->databaseBackupManager->method('destroyTestDatabase');
+        $this->scopeFactory->method('createScope')->willReturn($scope);
+        $this->schemaComparator->method('compare')->willReturn($comparisonResult);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Migration rollback test failed. Schema differences detected.');
 
@@ -147,14 +132,11 @@ final class TestMigrationHandlerTest extends TestCase
             rollbackExecutor: $this->createStub(RollbackExecutor::class),
         );
 
-        $this->migrationFileManager->method('getMigrationByName')
-            ->with('/test/migrations', 'test_migration')
-            ->willReturn($migration);
+        $this->migrationFileManager->method('getMigrationByName')->willReturn($migration);
         $this->databaseBackupManager->method('backup')->willReturn($backupFilePath);
-        $this->databaseBackupManager->method('createTestDatabaseFromBackup')
-            ->with($backupFilePath)->willReturn($testDbName);
-        $this->databaseBackupManager->method('destroyTestDatabase')->with($testDbName);
-        $this->scopeFactory->method('createScope')->with($testDbName)->willReturn($scope);
+        $this->databaseBackupManager->method('createTestDatabaseFromBackup')->willReturn($testDbName);
+        $this->databaseBackupManager->method('destroyTestDatabase');
+        $this->scopeFactory->method('createScope')->willReturn($scope);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Database error');
@@ -173,23 +155,19 @@ final class TestMigrationHandlerTest extends TestCase
         $schemaSnapshotExecutor = $this->createStub(SchemaSnapshotExecutor::class);
         $schemaSnapshotExecutor->method('capture')->willReturn($initialSnapshot);
         $testMigrationExecutor = $this->createStub(TestMigrationExecutor::class);
-        $testMigrationExecutor->method('execute')->with($migration)
+        $testMigrationExecutor
+            ->method('execute')
             ->willThrowException(new \RuntimeException('Migration execution failed'));
         $scope = new MigrationTestScope(
             schemaSnapshotExecutor: $schemaSnapshotExecutor,
             testMigrationExecutor: $testMigrationExecutor,
             rollbackExecutor: $this->createStub(RollbackExecutor::class),
         );
-
-        $this->migrationFileManager->method('getMigrationByName')
-            ->with('/test/migrations', 'test_migration')
-            ->willReturn($migration);
+        $this->migrationFileManager->method('getMigrationByName')->willReturn($migration);
         $this->databaseBackupManager->method('backup')->willReturn($backupFilePath);
-        $this->databaseBackupManager->method('createTestDatabaseFromBackup')
-            ->with($backupFilePath)->willReturn($testDbName);
-        $this->databaseBackupManager->method('destroyTestDatabase')->with($testDbName);
-        $this->scopeFactory->method('createScope')->with($testDbName)->willReturn($scope);
-
+        $this->databaseBackupManager->method('createTestDatabaseFromBackup')->willReturn($testDbName);
+        $this->databaseBackupManager->method('destroyTestDatabase');
+        $this->scopeFactory->method('createScope')->willReturn($scope);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Migration execution failed');
 

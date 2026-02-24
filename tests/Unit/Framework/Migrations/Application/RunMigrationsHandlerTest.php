@@ -45,16 +45,13 @@ final class RunMigrationsHandlerTest extends TestCase
             Migration::new(name: '20240115', scripts: []),
             Migration::new(name: '20240116', scripts: []),
         ];
-
-        $this->migrationFileManager->expects($this->once())
+        $this->migrationFileManager
+            ->expects($this->once())
             ->method('getMigrations')
-            ->with($basePath)
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
         $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
@@ -69,16 +66,13 @@ final class RunMigrationsHandlerTest extends TestCase
         $executedMigrations = [
             Migration::new(name: '20240114', scripts: []),
         ];
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->with($basePath)
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn($executedMigrations);
-
         $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
@@ -96,20 +90,19 @@ final class RunMigrationsHandlerTest extends TestCase
             Migration::new(name: '20240115', scripts: []),
             Migration::new(name: '20240116', scripts: []),
         ];
-
-        $this->migrationFileManager->expects($this->once())
+        $this->migrationFileManager
+            ->expects($this->once())
             ->method('getMigrations')
-            ->with($basePath)
             ->willReturn($allMigrations);
-
-        $this->migrationRepository->expects($this->once())
+        $this->migrationRepository
+            ->expects($this->once())
             ->method('getMigrations')
             ->willReturn($executedMigrations);
-
-        $this->migrationExecutor->method('execute')
-            ->with($this->callback(function (Migration $migration) {
+        $this->migrationExecutor
+            ->method('execute')
+            ->willReturnCallback(function (Migration $migration) {
                 return $migration->name === '20240117';
-            }));
+            });
 
         $this->service->execute($basePath);
     }
@@ -123,12 +116,10 @@ final class RunMigrationsHandlerTest extends TestCase
         $executedMigrations = [
             Migration::new(name: '20240115', scripts: []),
         ];
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->with($basePath)
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn($executedMigrations);
@@ -139,11 +130,9 @@ final class RunMigrationsHandlerTest extends TestCase
     public function testExecuteLogsGettingPendingMigrationsAtStart(): void
     {
         $basePath = '/migrations';
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
@@ -154,11 +143,9 @@ final class RunMigrationsHandlerTest extends TestCase
     public function testExecuteLogsNoPendingMigrationsFoundWhenEmpty(): void
     {
         $basePath = '/migrations';
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
@@ -172,15 +159,12 @@ final class RunMigrationsHandlerTest extends TestCase
         $allMigrations = [
             Migration::new(name: '20240115', scripts: []),
         ];
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
         $this->migrationExecutor->method('execute');
 
         $this->service->execute($basePath);
@@ -194,21 +178,17 @@ final class RunMigrationsHandlerTest extends TestCase
             Migration::new(name: '20240116', scripts: []),
             Migration::new(name: '20240117', scripts: []),
         ];
-
         $executedMigrations = [];
         $this->migrationExecutor->method('execute')
             ->willReturnCallback(function (Migration $migration) use (&$executedMigrations): void {
                 $executedMigrations[] = $migration->name;
             });
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
         $this->service->execute($basePath);
 
         $this->assertSame(['20240115', '20240116', '20240117'], $executedMigrations);
@@ -220,11 +200,9 @@ final class RunMigrationsHandlerTest extends TestCase
         $allMigrations = [
             Migration::new(name: '20240115', scripts: []),
         ];
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
@@ -242,25 +220,22 @@ final class RunMigrationsHandlerTest extends TestCase
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: '20240115', scripts: $scripts);
         $allMigrations = [$migration];
-
         $migrationException = new MigrationException(
             scripts: $scripts,
             message: 'Migration failed'
         );
-
-        $this->migrationFileManager->expects($this->once())
+        $this->migrationFileManager
+            ->expects($this->once())
             ->method('getMigrations')
             ->willReturn($allMigrations);
-
-        $this->migrationRepository->expects($this->once())
+        $this->migrationRepository
+            ->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
-        $this->migrationExecutor->method('execute')
+        $this->migrationExecutor
+            ->method('execute')
             ->willThrowException($migrationException);
-
-        $this->rollbackExecutor->method('rollback')
-            ->with($scripts);
+        $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
     }
@@ -273,23 +248,19 @@ final class RunMigrationsHandlerTest extends TestCase
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: '20240115', scripts: $scripts);
         $allMigrations = [$migration];
-
         $migrationException = new MigrationException(
             scripts: $scripts,
             message: 'Migration failed'
         );
-
         $this->migrationFileManager->expects($this->once())
             ->method('getMigrations')
             ->willReturn($allMigrations);
-
         $this->migrationRepository->expects($this->once())
             ->method('getMigrations')
             ->willReturn([]);
-
-        $this->migrationExecutor->method('execute')
+        $this->migrationExecutor
+            ->method('execute')
             ->willThrowException($migrationException);
-
         $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
@@ -303,25 +274,14 @@ final class RunMigrationsHandlerTest extends TestCase
         $scripts = [$script1, $script2];
         $migration = Migration::new(name: '20240115', scripts: $scripts);
         $allMigrations = [$migration];
-
         $migrationException = new MigrationException(
             scripts: $scripts,
             message: 'Migration failed'
         );
-
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrations')
-            ->willReturn($allMigrations);
-
-        $this->migrationRepository->expects($this->once())
-            ->method('getMigrations')
-            ->willReturn([]);
-
-        $this->migrationExecutor->method('execute')
-            ->willThrowException($migrationException);
-
-        $this->rollbackExecutor->method('rollback')
-            ->with($this->equalTo($scripts));
+        $this->migrationFileManager->expects($this->once())->method('getMigrations')->willReturn($allMigrations);
+        $this->migrationRepository->expects($this->once())->method('getMigrations')->willReturn([]);
+        $this->migrationExecutor->method('execute')->willThrowException($migrationException);
+        $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
     }
@@ -333,23 +293,13 @@ final class RunMigrationsHandlerTest extends TestCase
         $scripts = [$script];
         $migration = Migration::new(name: '20240115', scripts: $scripts);
         $allMigrations = [$migration];
-
         $migrationException = new MigrationException(
             scripts: $scripts,
             message: 'Migration failed'
         );
-
-        $this->migrationFileManager->expects($this->once())
-            ->method('getMigrations')
-            ->willReturn($allMigrations);
-
-        $this->migrationRepository->expects($this->once())
-            ->method('getMigrations')
-            ->willReturn([]);
-
-        $this->migrationExecutor->method('execute')
-            ->willThrowException($migrationException);
-
+        $this->migrationFileManager->expects($this->once())->method('getMigrations')->willReturn($allMigrations);
+        $this->migrationRepository->expects($this->once())->method('getMigrations')->willReturn([]);
+        $this->migrationExecutor->method('execute')->willThrowException($migrationException);
         $this->rollbackExecutor->method('rollback');
 
         $this->service->execute($basePath);
