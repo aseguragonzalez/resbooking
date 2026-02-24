@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Requests;
 
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Framework\Mvc\Actions\ActionParameterBuilder;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -19,6 +14,11 @@ use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Views\ViewEngine;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class RequestHandler implements RequestHandlerInterface
 {
@@ -137,6 +137,7 @@ final class RequestHandler implements RequestHandlerInterface
                 "Route not found for controller: {$actionResponse->controller}, action: {$actionResponse->action}"
             );
         }
+        /** @var array<string, float|int|string|null> $args */
         $args = array_map(
             fn ($v) => is_scalar($v) ? (string)$v : ($v === null ? null : ''),
             is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
