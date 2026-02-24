@@ -194,7 +194,7 @@ final class AuthorizationTest extends TestCase
         $request = $this->createStub(ServerRequestInterface::class);
         $request->method('getUri')->willReturn($uri);
         $request->method('getMethod')->willReturn('GET');
-        $request->method('getAttribute')->with(RequestContext::class)->willReturn($context);
+        $request->method('getAttribute')->willReturn($context);
         return $request;
     }
 }
