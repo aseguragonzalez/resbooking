@@ -6,6 +6,7 @@ namespace Application\Restaurants\CreateNewRestaurant;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
+use SeedWork\Application\Command;
 
 final readonly class CreateNewRestaurantHandler implements CreateNewRestaurant
 {
@@ -13,7 +14,10 @@ final readonly class CreateNewRestaurantHandler implements CreateNewRestaurant
     {
     }
 
-    public function execute(CreateNewRestaurantCommand $command): void
+    /**
+     * @param CreateNewRestaurantCommand $command
+     */
+    public function handle(Command $command): void
     {
         $restaurant = Restaurant::new(email: $command->email);
 

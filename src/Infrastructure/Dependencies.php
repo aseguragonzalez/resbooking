@@ -25,14 +25,14 @@ use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
-use Seedwork\Application\DeferredDomainEventsBus;
-use Seedwork\Application\DomainEventsBus;
+use SeedWork\Application\DomainEventBus;
+use SeedWork\Infrastructure\DeferredDomainEventBus;
 
 final class Dependencies
 {
     public static function configure(Container $container): void
     {
-        $container->set(DomainEventsBus::class, $container->get(DeferredDomainEventsBus::class));
+        $container->set(DomainEventBus::class, $container->get(DeferredDomainEventBus::class));
 
         // configure application services
         $container->set(RestaurantRepository::class, $container->get(SqlRestaurantRepository::class));

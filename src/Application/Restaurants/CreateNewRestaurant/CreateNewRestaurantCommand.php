@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\CreateNewRestaurant;
 
-final readonly class CreateNewRestaurantCommand
+use SeedWork\Application\Command;
+
+final readonly class CreateNewRestaurantCommand extends Command
 {
     public function __construct(public string $email)
     {
+        parent::__construct();
     }
 }

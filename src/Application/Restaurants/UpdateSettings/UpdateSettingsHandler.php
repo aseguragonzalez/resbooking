@@ -11,6 +11,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Seedwork\Domain\EntityId;
+use SeedWork\Application\Command;
 
 final readonly class UpdateSettingsHandler implements UpdateSettings
 {
@@ -20,7 +21,10 @@ final readonly class UpdateSettingsHandler implements UpdateSettings
     ) {
     }
 
-    public function execute(UpdateSettingsCommand $command): void
+    /**
+     * @param UpdateSettingsCommand $command
+     */
+    public function handle(Command $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
         $restaurant->updateSettings(new Settings(

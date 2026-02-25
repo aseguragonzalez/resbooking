@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\UpdateSettings;
 
-final readonly class UpdateSettingsCommand
+use SeedWork\Application\Command;
+
+final readonly class UpdateSettingsCommand extends Command
 {
     public function __construct(
         public string $restaurantId,
@@ -16,5 +18,6 @@ final readonly class UpdateSettingsCommand
         public int $numberOfTables,
         public string $phone,
     ) {
+        parent::__construct();
     }
 }

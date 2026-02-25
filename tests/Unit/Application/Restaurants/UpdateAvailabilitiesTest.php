@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Restaurants\UpdateAvailabilities;
 
-use Application\Restaurants\UpdateAvailabilities\Availability;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesHandler;
 use Domain\Restaurants\Entities\Restaurant;
@@ -17,7 +16,7 @@ use Seedwork\Domain\EntityId;
 
 final class UpdateAvailabilitiesTest extends TestCase
 {
-    public function testExecuteUpdatesAvailabilities(): void
+    public function testHandleUpdatesAvailabilities(): void
     {
         $restaurantIdString = 'test-restaurant-id';
         $restaurant = Restaurant::new('test@example.com', 'test-restaurant-id');
@@ -37,21 +36,21 @@ final class UpdateAvailabilitiesTest extends TestCase
         $command = new UpdateAvailabilitiesCommand(
             restaurantId: $restaurantIdString,
             availabilities: [
-                new Availability(
-                    dayOfWeekId: DayOfWeek::Monday->value,
-                    timeSlotId: TimeSlot::H1200->value,
-                    capacity: 15,
-                ),
-                new Availability(
-                    dayOfWeekId: DayOfWeek::Tuesday->value,
-                    timeSlotId: TimeSlot::H1230->value,
-                    capacity: 20,
-                ),
+                [
+                    'dayOfWeekId' => DayOfWeek::Monday->value,
+                    'timeSlotId' => TimeSlot::H1200->value,
+                    'capacity' => 15,
+                ],
+                [
+                    'dayOfWeekId' => DayOfWeek::Tuesday->value,
+                    'timeSlotId' => TimeSlot::H1230->value,
+                    'capacity' => 20,
+                ],
             ],
         );
         $service = new UpdateAvailabilitiesHandler($restaurantObtainer, $repository);
 
-        $service->execute($command);
+        $service->handle($command);
 
         $availabilities = $restaurant->getAvailabilities();
         $this->assertCount(2, $availabilities);

@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Restaurants;
 
-use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantHandler;
-use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Entities\Restaurant;
+use Domain\Restaurants\Repositories\RestaurantRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class CreateNewRestaurantHandlerTest extends TestCase
 {
     private MockObject&RestaurantRepository $restaurantRepository;
-    private CreateNewRestaurant $service;
+    private CreateNewRestaurantHandler $service;
 
     protected function setUp(): void
     {
@@ -32,6 +31,6 @@ final class CreateNewRestaurantHandlerTest extends TestCase
                 return $restaurant instanceof Restaurant;
             }));
 
-        $this->service->execute($command);
+        $this->service->handle($command);
     }
 }

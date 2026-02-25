@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
+use Application\Restaurants\GetRestaurantById\AvailabilityItem;
+use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Faker\Factory;
@@ -54,13 +57,41 @@ final class SettingsControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
-        $this->updateSettings->expects($this->never())->method('execute');
+        $settings = $restaurant->getSettings();
+        $result = new GetRestaurantByIdResult(
+            id: $restaurant->getId()->value,
+            email: $settings->email->value,
+            hasReminders: $settings->hasReminders,
+            name: $settings->name,
+            maxNumberOfDiners: $settings->maxNumberOfDiners->value,
+            minNumberOfDiners: $settings->minNumberOfDiners->value,
+            numberOfTables: $settings->numberOfTables->value,
+            phone: $settings->phone->value,
+            diningAreas: array_map(
+                fn ($da) => new DiningAreaItem(
+                    id: $da->id->value,
+                    name: $da->name,
+                    capacity: $da->capacity->value,
+                ),
+                $restaurant->getDiningAreas()
+            ),
+            availabilities: array_map(
+                fn ($a) => new AvailabilityItem(
+                    time: substr($a->timeSlot->toString(), 0, 5),
+                    dayOfWeekId: $a->dayOfWeek->value,
+                    timeSlotId: $a->timeSlot->value,
+                    capacity: $a->capacity->value,
+                ),
+                $restaurant->getAvailabilities()
+            ),
+        );
+        $this->updateSettings->expects($this->never())->method('handle');
         $this->getRestaurantById->expects($this->once())
-            ->method('execute')
+            ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->getId()->value;
             }))
-            ->willReturn($restaurant);
+            ->willReturn($result);
 
         $response = $this->controller->settings();
 
@@ -74,8 +105,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testUpdateSettingsWithValidationErrors(): void
     {
-        $this->updateSettings->expects($this->never())->method('execute');
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->updateSettings->expects($this->never())->method('handle');
+        $this->getRestaurantById->expects($this->never())->method('handle');
         $request = new UpdateSettingsRequest(
             email: '',
             name: '',
@@ -110,9 +141,9 @@ final class SettingsControllerTest extends TestCase
             phone: $this->faker->phoneNumber(),
             hasReminders: 'on',
         );
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('handle');
         $this->updateSettings->expects($this->once())
-            ->method('execute')
+            ->method('handle')
             ->with($this->callback(function (UpdateSettingsCommand $command) use ($request) {
                 return $command->restaurantId !== ''
                     && $command->email === $request->email
@@ -136,8 +167,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
-        $this->updateSettings->expects($this->never())->method('execute');
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->updateSettings->expects($this->never())->method('handle');
+        $this->getRestaurantById->expects($this->never())->method('handle');
         $routes = SettingsController::getRoutes();
 
         $this->assertCount(2, $routes);

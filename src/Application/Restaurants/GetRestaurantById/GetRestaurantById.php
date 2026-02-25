@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\GetRestaurantById;
 
-use Domain\Restaurants\Entities\Restaurant;
-use Seedwork\Application\QueryHandler;
+use SeedWork\Application\QueryHandler;
 
 /**
- * @extends QueryHandler<GetRestaurantByIdQuery, Restaurant>
+ * @extends QueryHandler<GetRestaurantByIdQuery, GetRestaurantByIdResult>
  */
 interface GetRestaurantById extends QueryHandler
 {
-    public function execute(GetRestaurantByIdQuery $query): Restaurant;
 }

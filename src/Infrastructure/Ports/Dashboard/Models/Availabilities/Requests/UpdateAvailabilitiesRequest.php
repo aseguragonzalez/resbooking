@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Availabilities\Requests;
 
-use Application\Restaurants\UpdateAvailabilities\Availability;
 use Psr\Http\Message\ServerRequestInterface;
 
 final readonly class UpdateAvailabilitiesRequest
 {
     /**
-     * @var array<Availability> $availabilities
+     * @var array<int, array{dayOfWeekId: int, timeSlotId: int, capacity: int}>
      */
     public array $availabilities;
 
@@ -25,13 +24,13 @@ final readonly class UpdateAvailabilitiesRequest
         $availabilities = [];
         foreach ($parsedBody as $key => $value) {
             $parts = explode('_', (string)$key);
-            $timeSlotId = intval($parts[0]);
-            $dayOfWeekId = intval($parts[1]);
-            $availabilities[] = new Availability(
-                timeSlotId: $timeSlotId,
-                dayOfWeekId: $dayOfWeekId,
-                capacity: is_numeric($value) ? intval($value) : 0
-            );
+            $timeSlotId = (int) $parts[0];
+            $dayOfWeekId = (int) $parts[1];
+            $availabilities[] = [
+                'dayOfWeekId' => $dayOfWeekId,
+                'timeSlotId' => $timeSlotId,
+                'capacity' => is_numeric($value) ? (int) $value : 0,
+            ];
         }
 
         $this->availabilities = $availabilities;

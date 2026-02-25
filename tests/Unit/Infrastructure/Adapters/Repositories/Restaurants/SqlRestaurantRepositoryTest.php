@@ -20,7 +20,7 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Application\DomainEventsBus;
+use SeedWork\Application\DomainEventBus;
 use Seedwork\Domain\DomainEvent;
 use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
@@ -38,11 +38,11 @@ final class SqlRestaurantRepositoryTest extends TestCase
     protected function setUp(): void
     {
         $this->pdo = $this->createMock(PDO::class);
-        $domainEventsBus = $this->createStub(DomainEventsBus::class);
-        $domainEventsBus->method('publish')->willReturnCallback(function (): void {
+        $domainEventBus = $this->createStub(DomainEventBus::class);
+        $domainEventBus->method('publish')->willReturnCallback(function (): void {
         });
         $this->mapper = new RestaurantsMapper();
-        $this->repository = new SqlRestaurantRepository($this->pdo, $domainEventsBus, $this->mapper);
+        $this->repository = new SqlRestaurantRepository($this->pdo, $domainEventBus, $this->mapper);
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->prepareStatementQueue = [];
@@ -185,14 +185,14 @@ final class SqlRestaurantRepositoryTest extends TestCase
             'Restaurant::new() should have raised at least one event'
         );
         $restaurantWithEvent = Restaurant::new('publish-test@example.com');
-        $domainEventsBus = $this->createMock(DomainEventsBus::class);
-        $domainEventsBus
+        $domainEventBus = $this->createMock(DomainEventBus::class);
+        $domainEventBus
             ->expects($this->once())
             ->method('publish')
-            ->with($this->isInstanceOf(DomainEvent::class));
+        ;
         $this->mockSaveStatements($restaurantWithEvent);
         $this->setupPrepareCallback();
-        $repository = new SqlRestaurantRepository($this->pdo, $domainEventsBus, $this->mapper);
+        $repository = new SqlRestaurantRepository($this->pdo, $domainEventBus, $this->mapper);
 
         $repository->save($restaurantWithEvent);
     }

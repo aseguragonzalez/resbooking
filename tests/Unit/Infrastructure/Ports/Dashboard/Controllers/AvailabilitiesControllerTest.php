@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
+use Application\Restaurants\GetRestaurantById\AvailabilityItem;
+use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Faker\Factory;
@@ -57,15 +60,43 @@ final class AvailabilitiesControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->getId()->value);
-        $this->updateAvailabilities->expects($this->never())->method('execute');
+        $settings = $restaurant->getSettings();
+        $result = new GetRestaurantByIdResult(
+            id: $restaurant->getId()->value,
+            email: $settings->email->value,
+            hasReminders: $settings->hasReminders,
+            name: $settings->name,
+            maxNumberOfDiners: $settings->maxNumberOfDiners->value,
+            minNumberOfDiners: $settings->minNumberOfDiners->value,
+            numberOfTables: $settings->numberOfTables->value,
+            phone: $settings->phone->value,
+            diningAreas: array_map(
+                fn ($da) => new DiningAreaItem(
+                    id: $da->id->value,
+                    name: $da->name,
+                    capacity: $da->capacity->value,
+                ),
+                $restaurant->getDiningAreas()
+            ),
+            availabilities: array_map(
+                fn ($a) => new AvailabilityItem(
+                    time: substr($a->timeSlot->toString(), 0, 5),
+                    dayOfWeekId: $a->dayOfWeek->value,
+                    timeSlotId: $a->timeSlot->value,
+                    capacity: $a->capacity->value,
+                ),
+                $restaurant->getAvailabilities()
+            ),
+        );
+        $this->updateAvailabilities->expects($this->never())->method('handle');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $this->getRestaurantById
             ->expects($this->once())
-            ->method('execute')
+            ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->getId()->value;
             }))
-            ->willReturn($restaurant);
+            ->willReturn($result);
 
         $response = $this->controller->availabilities();
 
@@ -87,14 +118,14 @@ final class AvailabilitiesControllerTest extends TestCase
             '2_3' => 15,
         ];
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('handle');
         $this->serverRequest
             ->expects($this->once())
             ->method('getParsedBody')
             ->willReturn($parsedBody);
         $this->updateAvailabilities
             ->expects($this->once())
-            ->method('execute')
+            ->method('handle')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
                 return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
@@ -112,8 +143,8 @@ final class AvailabilitiesControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
-        $this->getRestaurantById->expects($this->never())->method('execute');
-        $this->updateAvailabilities->expects($this->never())->method('execute');
+        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->updateAvailabilities->expects($this->never())->method('handle');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $routes = AvailabilitiesController::getRoutes();
 

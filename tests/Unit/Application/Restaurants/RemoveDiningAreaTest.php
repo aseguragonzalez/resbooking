@@ -55,7 +55,7 @@ final class RemoveDiningAreaTest extends TestCase
         );
         $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
-        $ApplicationService->execute($request);
+        $ApplicationService->handle($request);
 
         $this->assertSame(1, count($restaurant->getDiningAreas()));
         $events = $restaurant->getEvents();

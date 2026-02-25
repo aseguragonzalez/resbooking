@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Models\Availabilities\Pages;
 
-use PHPUnit\Framework\TestCase;
+use Application\Restaurants\GetRestaurantById\AvailabilityItem;
 use Domain\Restaurants\ValueObjects\Availability;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
-use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Availability as AvailabilityModel;
+use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesList;
+use PHPUnit\Framework\TestCase;
 
 final class AvailabilitiesListTest extends TestCase
 {
@@ -96,5 +97,35 @@ final class AvailabilitiesListTest extends TestCase
 
         $expectedId = TimeSlot::H2000->value . '_' . DayOfWeek::Saturday->value;
         $this->assertSame($expectedId, $list->availabilities[0]->id);
+    }
+
+    public function testCreateFromResultAvailabilitiesBuildsListFromAvailabilityItems(): void
+    {
+        $items = [
+            new AvailabilityItem(
+                time: '12:00',
+                dayOfWeekId: DayOfWeek::Monday->value,
+                timeSlotId: TimeSlot::H1200->value,
+                capacity: 10
+            ),
+            new AvailabilityItem(
+                time: '18:30',
+                dayOfWeekId: DayOfWeek::Friday->value,
+                timeSlotId: TimeSlot::H1830->value,
+                capacity: 5
+            ),
+        ];
+
+        $list = AvailabilitiesList::createFromResultAvailabilities($items);
+
+        $this->assertSame('{{availabilities.title}}', $list->pageTitle);
+        $this->assertCount(2, $list->availabilities);
+        $this->assertInstanceOf(AvailabilityModel::class, $list->availabilities[0]);
+        $this->assertSame('12:00', $list->availabilities[0]->time);
+        $this->assertSame(DayOfWeek::Monday->value, $list->availabilities[0]->dayOfWeekId);
+        $this->assertSame(TimeSlot::H1200->value, $list->availabilities[0]->timeSlotId);
+        $this->assertSame(10, $list->availabilities[0]->capacity);
+        $this->assertSame('18:30', $list->availabilities[1]->time);
+        $this->assertSame(5, $list->availabilities[1]->capacity);
     }
 }

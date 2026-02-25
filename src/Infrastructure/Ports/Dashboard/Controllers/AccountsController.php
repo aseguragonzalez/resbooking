@@ -118,7 +118,7 @@ final class AccountsController extends Controller
             ['admin']
         );
 
-        $this->createNewRestaurant->execute(new CreateNewRestaurantCommand(email: $request->username));
+        $this->createNewRestaurant->handle(new CreateNewRestaurantCommand(email: $request->username));
 
         return $this->redirectToAction("signIn");
     }

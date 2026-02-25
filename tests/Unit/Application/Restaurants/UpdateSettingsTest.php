@@ -67,7 +67,7 @@ final class UpdateSettingsTest extends TestCase
         );
         $ApplicationService = new UpdateSettingsHandler($this->restaurantObtainer, $this->restaurantRepository);
 
-        $ApplicationService->execute($request);
+        $ApplicationService->handle($request);
 
         $currentSettings = $restaurant->getSettings();
         $this->assertSame($request->email, $currentSettings->email->value);

@@ -10,7 +10,6 @@ use Infrastructure\Ports\Dashboard\Middlewares\DomainEventsMiddleware;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 
 $app = new DashboardApp(container: new Container(), basePath: __DIR__);
-$app->addMiddleware(DomainEventsMiddleware::class);
 $app->addMiddleware(RestaurantContext::class);
 $app->useAuthentication();
 $app->useAuthorization();

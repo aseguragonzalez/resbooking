@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Restaurants\GetRestaurantById;
 
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
-use Domain\Restaurants\Entities\Restaurant;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -28,7 +28,7 @@ final class GetRestaurantByIdTest extends TestCase
         $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
-    public function testItRetrievesRestaurantById(): void
+    public function testItRetrievesRestaurantByIdAndReturnsResult(): void
     {
         $restaurantIdString = $this->faker->uuid;
         $restaurant = $this->restaurantBuilder->build();
@@ -39,9 +39,17 @@ final class GetRestaurantByIdTest extends TestCase
         $query = new GetRestaurantByIdQuery(id: $restaurantIdString);
         $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
 
-        $result = $service->execute($query);
+        $result = $service->handle($query);
 
-        $this->assertSame($restaurant, $result);
-        $this->assertInstanceOf(Restaurant::class, $result);
+        $this->assertInstanceOf(GetRestaurantByIdResult::class, $result);
+        $settings = $restaurant->getSettings();
+        $this->assertSame($restaurant->getId()->value, $result->id);
+        $this->assertSame($settings->email->value, $result->email);
+        $this->assertSame($settings->hasReminders, $result->hasReminders);
+        $this->assertSame($settings->name, $result->name);
+        $this->assertSame($settings->maxNumberOfDiners->value, $result->maxNumberOfDiners);
+        $this->assertSame($settings->minNumberOfDiners->value, $result->minNumberOfDiners);
+        $this->assertSame($settings->numberOfTables->value, $result->numberOfTables);
+        $this->assertSame($settings->phone->value, $result->phone);
     }
 }

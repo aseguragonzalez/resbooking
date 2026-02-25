@@ -11,6 +11,7 @@ use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
 use Seedwork\Domain\EntityId;
+use SeedWork\Application\Command;
 
 final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
 {
@@ -20,16 +21,19 @@ final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
     ) {
     }
 
-    public function execute(UpdateAvailabilitiesCommand $command): void
+    /**
+     * @param UpdateAvailabilitiesCommand $command
+     */
+    public function handle(Command $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
 
         /** @var array<Availability> */
         $availabilities = array_map(
-            fn ($availabilityData) => new Availability(
-                capacity: new Capacity($availabilityData->capacity),
-                dayOfWeek: DayOfWeek::getById($availabilityData->dayOfWeekId),
-                timeSlot: TimeSlot::getById($availabilityData->timeSlotId),
+            fn (array $a) => new Availability(
+                capacity: new Capacity($a['capacity']),
+                dayOfWeek: DayOfWeek::getById($a['dayOfWeekId']),
+                timeSlot: TimeSlot::getById($a['timeSlotId']),
             ),
             $command->availabilities
         );

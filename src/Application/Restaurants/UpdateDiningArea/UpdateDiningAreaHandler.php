@@ -9,6 +9,7 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Shared\Capacity;
 use Seedwork\Domain\EntityId;
+use SeedWork\Application\Command;
 
 final readonly class UpdateDiningAreaHandler implements UpdateDiningArea
 {
@@ -18,7 +19,10 @@ final readonly class UpdateDiningAreaHandler implements UpdateDiningArea
     ) {
     }
 
-    public function execute(UpdateDiningAreaCommand $command): void
+    /**
+     * @param UpdateDiningAreaCommand $command
+     */
+    public function handle(Command $command): void
     {
         $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
         $updatedDiningArea = DiningArea::build(

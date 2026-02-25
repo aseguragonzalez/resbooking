@@ -62,7 +62,7 @@ final class UpdateDiningAreaTest extends TestCase
         );
         $applicationService = new UpdateDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
-        $applicationService->execute($request);
+        $applicationService->handle($request);
 
         $this->assertSame(1, count($restaurant->getDiningAreas()));
         $updatedDiningArea = $restaurant->getDiningAreas()[0];

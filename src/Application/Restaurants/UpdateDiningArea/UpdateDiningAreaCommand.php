@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Restaurants\UpdateDiningArea;
 
-final readonly class UpdateDiningAreaCommand
+use SeedWork\Application\Command;
+
+final readonly class UpdateDiningAreaCommand extends Command
 {
     public function __construct(
         public string $restaurantId,
@@ -12,5 +14,6 @@ final readonly class UpdateDiningAreaCommand
         public string $name,
         public int $capacity
     ) {
+        parent::__construct();
     }
 }

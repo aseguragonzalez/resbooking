@@ -11,14 +11,14 @@ use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as Dining
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
 use PDO;
-use Seedwork\Application\DomainEventsBus;
+use SeedWork\Application\DomainEventBus;
 use Seedwork\Domain\EntityId;
 
 final readonly class SqlRestaurantRepository implements RestaurantRepository
 {
     public function __construct(
         private PDO $db,
-        private DomainEventsBus $domainEventsBus,
+        private DomainEventBus $domainEventBus,
         private RestaurantsMapper $mapper = new RestaurantsMapper(),
     ) {
     }
@@ -132,9 +132,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
             }
         }
 
-        foreach ($aggregateRoot->getEvents() as $event) {
-            $this->domainEventsBus->publish($event);
-        }
+        $this->domainEventBus->publish($aggregateRoot->getEvents());
     }
 
     public function getById(EntityId $id): ?Restaurant

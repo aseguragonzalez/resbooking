@@ -49,7 +49,7 @@ final class AddDiningAreaTest extends TestCase
             capacity: $this->faker->randomNumber(2)
         );
 
-        $ApplicationService->execute($request);
+        $ApplicationService->handle($request);
 
         $this->assertSame(2, count($restaurant->getDiningAreas()));
     }
