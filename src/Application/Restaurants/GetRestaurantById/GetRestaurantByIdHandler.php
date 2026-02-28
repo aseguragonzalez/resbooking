@@ -6,9 +6,9 @@ namespace Application\Restaurants\GetRestaurantById;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Services\RestaurantObtainer;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use SeedWork\Application\Query;
 use SeedWork\Application\QueryResult;
-use Seedwork\Domain\EntityId;
 
 final readonly class GetRestaurantByIdHandler implements GetRestaurantById
 {
@@ -22,7 +22,7 @@ final readonly class GetRestaurantByIdHandler implements GetRestaurantById
      */
     public function handle(Query $query): QueryResult
     {
-        $restaurant = $this->restaurantObtainer->obtain(EntityId::fromString($query->id));
+        $restaurant = $this->restaurantObtainer->obtain(RestaurantId::fromString($query->id));
 
         return $this->mapToResult($restaurant);
     }
@@ -49,7 +49,7 @@ final readonly class GetRestaurantByIdHandler implements GetRestaurantById
         );
 
         return new GetRestaurantByIdResult(
-            id: $restaurant->getId()->value,
+            id: $restaurant->id->value,
             email: $settings->email->value,
             hasReminders: $settings->hasReminders,
             name: $settings->name,

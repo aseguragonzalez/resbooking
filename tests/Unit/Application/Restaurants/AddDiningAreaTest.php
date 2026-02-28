@@ -6,13 +6,14 @@ namespace Tests\Unit\Application\Restaurants\AddDiningArea;
 
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\AddDiningArea\AddDiningAreaHandler;
+use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class AddDiningAreaTest extends TestCase
@@ -36,12 +37,12 @@ final class AddDiningAreaTest extends TestCase
         $restaurantIdString = $this->faker->uuid;
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with(EntityId::fromString($restaurantIdString))
+            ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($restaurant);
+            ->with($this->callback(fn (Restaurant $r) => count($r->diningAreas) === 2));
         $ApplicationService = new AddDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(
             restaurantId: $restaurantIdString,
@@ -50,7 +51,5 @@ final class AddDiningAreaTest extends TestCase
         );
 
         $ApplicationService->handle($request);
-
-        $this->assertSame(2, count($restaurant->getDiningAreas()));
     }
 }

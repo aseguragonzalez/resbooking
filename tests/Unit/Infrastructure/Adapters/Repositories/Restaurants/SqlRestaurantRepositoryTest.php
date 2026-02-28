@@ -21,8 +21,8 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SeedWork\Application\DomainEventBus;
-use Seedwork\Domain\DomainEvent;
-use Seedwork\Domain\EntityId;
+use Domain\Restaurants\ValueObjects\RestaurantId;
+use SeedWork\Domain\DomainEvent;
 use Tests\Unit\RestaurantBuilder;
 
 final class SqlRestaurantRepositoryTest extends TestCase
@@ -56,7 +56,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
-                return $params['id'] === $restaurant->getId()->value
+                return $params['id'] === $restaurant->id->value
                     && $params['name'] === $restaurant->getSettings()->name
                     && $params['email'] === $restaurant->getSettings()->email->value
                     && $params['phone'] === $restaurant->getSettings()->phone->value
@@ -69,19 +69,19 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $deleteDiningAreasStmt = $this->createMock(PDOStatement::class);
         $deleteDiningAreasStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()->value]);
+            ->with(['restaurant_id' => $restaurant->id->value]);
         $this->prepareStatementQueue[] = $deleteDiningAreasStmt;
 
         $deleteAvailabilitiesStmt = $this->createMock(PDOStatement::class);
         $deleteAvailabilitiesStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()->value]);
+            ->with(['restaurant_id' => $restaurant->id->value]);
         $this->prepareStatementQueue[] = $deleteAvailabilitiesStmt;
 
         $deleteUsersStmt = $this->createMock(PDOStatement::class);
         $deleteUsersStmt->expects($this->once())
             ->method('execute')
-            ->with(['restaurant_id' => $restaurant->getId()->value]);
+            ->with(['restaurant_id' => $restaurant->id->value]);
         $this->prepareStatementQueue[] = $deleteUsersStmt;
         $this->setupPrepareCallback();
 
@@ -111,7 +111,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
                 return isset($params['id'])
                     && isset($params['name'])
                     && isset($params['capacity'])
-                    && $params['restaurant_id'] === $restaurant->getId()->value;
+                    && $params['restaurant_id'] === $restaurant->id->value;
             }));
         $this->prepareStatementQueue[] = $insertDiningAreaStmt;
         $this->setupPrepareCallback();
@@ -144,7 +144,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
                     && isset($params['day_of_week_id'])
                     && isset($params['time_slot_id'])
                     && isset($params['capacity'])
-                    && $params['restaurant_id'] === $restaurant->getId()->value;
+                    && $params['restaurant_id'] === $restaurant->id->value;
             }));
         $this->prepareStatementQueue[] = $insertAvailabilityStmt;
         $this->setupPrepareCallback();
@@ -167,7 +167,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
-                return $params['restaurant_id'] === $restaurant->getId()->value
+                return $params['restaurant_id'] === $restaurant->id->value
                     && isset($params['user_id']);
             }));
         $this->prepareStatementQueue[] = $insertUserStmt;
@@ -178,13 +178,13 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
     public function testSavePublishesDomainEventsFromAggregate(): void
     {
-        $restaurant = Restaurant::new('test@example.com');
+        $restaurant = Restaurant::create('test@example.com');
         $this->assertGreaterThan(
             0,
-            count($restaurant->getEvents()),
-            'Restaurant::new() should have raised at least one event'
+            count($restaurant->collectEvents()),
+            'Restaurant::create() should have raised at least one event'
         );
-        $restaurantWithEvent = Restaurant::new('publish-test@example.com');
+        $restaurantWithEvent = Restaurant::create('publish-test@example.com');
         $domainEventBus = $this->createMock(DomainEventBus::class);
         $domainEventBus
             ->expects($this->once())
@@ -250,9 +250,9 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $this->setupPrepareCallback();
 
         /** @var Restaurant $result */
-        $result = $this->repository->getById(EntityId::fromString($restaurantId));
+        $result = $this->repository->findBy(RestaurantId::fromString($restaurantId));
 
-        $this->assertSame($restaurantId, $result->getId()->value);
+        $this->assertSame($restaurantId, $result->id->value);
         $this->assertSame('Test Restaurant', $result->getSettings()->name);
         $this->assertSame($email, $result->getSettings()->email->value);
         $this->assertInstanceOf(Restaurant::class, $result);
@@ -274,7 +274,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         $this->setupPrepareCallback();
 
-        $result = $this->repository->getById(EntityId::fromString($restaurantId));
+        $result = $this->repository->findBy(RestaurantId::fromString($restaurantId));
 
         $this->assertNull($result);
     }
@@ -346,7 +346,7 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
         $this->setupPrepareCallback();
 
-        $result = $this->repository->getById(EntityId::fromString($restaurantId));
+        $result = $this->repository->findBy(RestaurantId::fromString($restaurantId));
 
         $this->assertInstanceOf(Restaurant::class, $result);
         $diningAreas = $result->getDiningAreas();

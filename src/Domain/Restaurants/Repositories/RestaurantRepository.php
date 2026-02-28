@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Domain\Restaurants\Repositories;
 
 use Domain\Restaurants\Entities\Restaurant;
-use Seedwork\Domain\Repository;
+use SeedWork\Domain\Repository;
 
 /**
  * @extends Repository<Restaurant>

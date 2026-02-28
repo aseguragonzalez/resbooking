@@ -15,7 +15,6 @@ use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class RemoveDiningAreaTest extends TestCase
@@ -43,26 +42,31 @@ final class RemoveDiningAreaTest extends TestCase
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with($restaurant->getId())
+            ->with($restaurant->id)
             ->willReturn($restaurant);
+        $savedRestaurant = null;
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($restaurant);
+            ->with($this->callback(function ($r) use (&$savedRestaurant) {
+                $savedRestaurant = $r;
+                return true;
+            }));
         $request = new RemoveDiningAreaCommand(
-            restaurantId: $restaurant->getId()->value,
+            restaurantId: $restaurant->id->value,
             diningAreaId: $diningArea->id->value
         );
         $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->handle($request);
 
-        $this->assertSame(1, count($restaurant->getDiningAreas()));
-        $events = $restaurant->getEvents();
+        $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
+        $this->assertSame(1, count($savedRestaurant->getDiningAreas()));
+        $events = $savedRestaurant->collectEvents();
         $this->assertCount(1, $events);
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertSame($diningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($diningArea->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
     }
 }

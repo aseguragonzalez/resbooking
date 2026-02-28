@@ -7,8 +7,8 @@ namespace Domain\Restaurants\ValueObjects;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Domain\Exceptions\ValueException;
-use Seedwork\Domain\ValueObject;
+use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
 
 final readonly class Settings extends ValueObject
 {
@@ -21,19 +21,15 @@ final readonly class Settings extends ValueObject
         public Capacity $numberOfTables,
         public Phone $phone,
     ) {
-        $this->checkName();
-        $this->checkMinMaxNumberOfDinners();
+        parent::__construct();
     }
 
-    private function checkName(): void
+    protected function validate(): void
     {
         if (empty($this->name)) {
             throw new ValueException('Name is required');
         }
-    }
 
-    private function checkMinMaxNumberOfDinners(): void
-    {
         if ($this->minNumberOfDiners->value > $this->maxNumberOfDiners->value) {
             throw new ValueException('Min number of diners must be less than or equal to max number of diners');
         }

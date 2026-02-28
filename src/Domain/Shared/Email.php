@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-final readonly class Email
+use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
+
+final readonly class Email extends ValueObject
 {
     public function __construct(public string $value)
     {
-        if (trim($value) === '') {
-            throw new \InvalidArgumentException('Email address is required');
-        }
-
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email address');
-        }
+        parent::__construct();
     }
 
     public function __toString(): string
@@ -22,8 +19,22 @@ final readonly class Email
         return $this->value;
     }
 
-    public function equals(Email $email): bool
+    public function equals(ValueObject $other): bool
     {
-        return $this->value === $email->value;
+        if (!$other instanceof self) {
+            return false;
+        }
+        return $this->value === $other->value;
+    }
+
+    protected function validate(): void
+    {
+        if (trim($this->value) === '') {
+            throw new ValueException('Email address is required');
+        }
+
+        if (!filter_var($this->value, FILTER_VALIDATE_EMAIL)) {
+            throw new ValueException('Invalid email address');
+        }
     }
 }

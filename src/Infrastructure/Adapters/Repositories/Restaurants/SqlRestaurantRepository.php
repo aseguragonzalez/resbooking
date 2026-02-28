@@ -6,13 +6,14 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Availability as AvailabilityModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\DiningArea as DiningAreaModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Restaurant as RestaurantModel;
 use Infrastructure\Adapters\Repositories\Restaurants\Models\Settings as SettingsModel;
 use PDO;
 use SeedWork\Application\DomainEventBus;
-use Seedwork\Domain\EntityId;
+use SeedWork\Domain\EntityId as EntityIdInterface;
 
 final readonly class SqlRestaurantRepository implements RestaurantRepository
 {
@@ -132,10 +133,19 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
             }
         }
 
-        $this->domainEventBus->publish($aggregateRoot->getEvents());
+        $this->domainEventBus->publish($aggregateRoot->collectEvents());
     }
 
-    public function getById(EntityId $id): ?Restaurant
+    public function deleteBy(EntityIdInterface $id): void
+    {
+        $v = $id->value;
+        $this->db->prepare('DELETE FROM dining_areas WHERE restaurant_id = ?')->execute([$v]);
+        $this->db->prepare('DELETE FROM availabilities WHERE restaurant_id = ?')->execute([$v]);
+        $this->db->prepare('DELETE FROM restaurants_users WHERE restaurant_id = ?')->execute([$v]);
+        $this->db->prepare('DELETE FROM restaurants WHERE id = ?')->execute([$v]);
+    }
+
+    public function findBy(EntityIdInterface $id): ?Restaurant
     {
         $restaurantSql = 'SELECT * FROM restaurants WHERE id = :id';
         $restaurantStmt = $this->db->prepare($restaurantSql);
@@ -227,7 +237,7 @@ final readonly class SqlRestaurantRepository implements RestaurantRepository
 
         $restaurants = [];
         foreach ($restaurantIds as $restaurantId) {
-            $restaurant = $this->getById(EntityId::fromString($restaurantId));
+            $restaurant = $this->findBy(RestaurantId::fromString($restaurantId));
             if ($restaurant !== null) {
                 $restaurants[] = $restaurant;
             }

@@ -33,7 +33,7 @@ final class CapacityTest extends TestCase
 
     public function testCreateInstanceFailWhenValueIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\ValueException::class);
 
         new Capacity($this->faker->numberBetween(-100, -1));
     }

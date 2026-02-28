@@ -80,7 +80,7 @@ final class RestaurantsMapper
     public static function mapToModel(Restaurant $restaurant): RestaurantModel
     {
         return new RestaurantModel(
-            id: $restaurant->getId()->value,
+            id: $restaurant->id->value,
             settings: self::mapSettingsToModel($restaurant->getSettings()),
             diningAreas: self::mapDiningAreasToModel($restaurant->getDiningAreas()),
             availabilities: self::mapAvailabilitiesToModel($restaurant->getAvailabilities()),

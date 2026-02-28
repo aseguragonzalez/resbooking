@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace Domain\Restaurants\Entities;
 
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use Domain\Shared\Capacity;
-use Seedwork\Domain\Entity;
-use Seedwork\Domain\EntityId;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Entity;
+use SeedWork\Domain\Exceptions\ValueException;
 
+/**
+ * @extends Entity<DiningAreaId>
+ */
 final readonly class DiningArea extends Entity
 {
     private function __construct(
-        EntityId $id,
+        DiningAreaId $id,
         public Capacity $capacity,
         public string $name,
     ) {
         parent::__construct(id: $id);
+    }
 
-        if (empty($name)) {
+    protected function validate(): void
+    {
+        if (empty($this->name)) {
             throw new ValueException('Name is required');
         }
     }
@@ -26,7 +32,7 @@ final readonly class DiningArea extends Entity
     public static function new(Capacity $capacity, string $name, ?string $id = null): self
     {
         return new self(
-            id: $id !== null ? EntityId::fromString($id) : EntityId::new(),
+            id: $id !== null ? DiningAreaId::fromString($id) : DiningAreaId::create(),
             capacity: $capacity,
             name: $name
         );
@@ -34,6 +40,6 @@ final readonly class DiningArea extends Entity
 
     public static function build(string $id, Capacity $capacity, string $name): self
     {
-        return new self(EntityId::fromString($id), $capacity, $name);
+        return new self(DiningAreaId::fromString($id), $capacity, $name);
     }
 }

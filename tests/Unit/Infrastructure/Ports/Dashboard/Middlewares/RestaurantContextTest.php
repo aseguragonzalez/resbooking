@@ -98,7 +98,7 @@ final class RestaurantContextTest extends TestCase
     {
         $restaurantId = $this->faker->uuid;
         $username = $this->faker->email;
-        $restaurant = Restaurant::new($username, $restaurantId);
+        $restaurant = Restaurant::create($username, $restaurantId);
         $this->identity->expects($this->once())->method('isAuthenticated')->willReturn(true);
         $this->identity->expects($this->once())->method('username')->willReturn($username);
         $this->context->setIdentity($this->identity);
@@ -119,7 +119,7 @@ final class RestaurantContextTest extends TestCase
     public function testHandleRequestRedirectsWhenCookieIsInvalid(): void
     {
         $email = $this->faker->email;
-        $restaurant = Restaurant::new($email);
+        $restaurant = Restaurant::create($email);
         $this->next->expects($this->never())->method('handleRequest');
         $this->identity->expects($this->once())->method('isAuthenticated')->willReturn(true);
         $this->identity->expects($this->once())->method('username')->willReturn($email);

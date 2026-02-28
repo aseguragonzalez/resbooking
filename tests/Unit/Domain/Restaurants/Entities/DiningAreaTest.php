@@ -9,7 +9,7 @@ use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\ValueException;
 
 final class DiningAreaTest extends TestCase
 {

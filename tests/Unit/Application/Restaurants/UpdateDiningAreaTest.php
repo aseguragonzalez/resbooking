@@ -10,12 +10,12 @@ use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaModified;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class UpdateDiningAreaTest extends TestCase
@@ -45,17 +45,21 @@ final class UpdateDiningAreaTest extends TestCase
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with(EntityId::fromString($restaurant->getId()->value))
+            ->with($restaurant->id)
             ->willReturn($restaurant);
+        $savedRestaurant = null;
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($restaurant);
+            ->with($this->callback(function ($r) use (&$savedRestaurant) {
+                $savedRestaurant = $r;
+                return true;
+            }));
 
         $newName = $this->faker->name();
         $newCapacity = 20;
         $request = new UpdateDiningAreaCommand(
-            restaurantId: $restaurant->getId()->value,
+            restaurantId: $restaurant->id->value,
             diningAreaId: $diningAreaId,
             name: $newName,
             capacity: $newCapacity
@@ -64,16 +68,17 @@ final class UpdateDiningAreaTest extends TestCase
 
         $applicationService->handle($request);
 
-        $this->assertSame(1, count($restaurant->getDiningAreas()));
-        $updatedDiningArea = $restaurant->getDiningAreas()[0];
+        $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
+        $this->assertSame(1, count($savedRestaurant->getDiningAreas()));
+        $updatedDiningArea = $savedRestaurant->getDiningAreas()[0];
         $this->assertSame($diningAreaId, $updatedDiningArea->id->value);
         $this->assertSame($newName, $updatedDiningArea->name);
         $this->assertSame($newCapacity, $updatedDiningArea->capacity->value);
-        $events = $restaurant->getEvents();
+        $events = $savedRestaurant->collectEvents();
         $this->assertCount(1, $events);
         $this->assertInstanceOf(DiningAreaModified::class, $events[0]);
         $event = $events[0];
-        $this->assertSame($updatedDiningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($updatedDiningArea->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
     }
 }

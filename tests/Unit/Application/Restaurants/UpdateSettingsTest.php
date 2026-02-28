@@ -10,13 +10,13 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class UpdateSettingsTest extends TestCase
@@ -49,12 +49,16 @@ final class UpdateSettingsTest extends TestCase
         $restaurantIdString = $this->faker->uuid;
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with(EntityId::fromString($restaurantIdString))
+            ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
+        $savedRestaurant = null;
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($restaurant);
+            ->with($this->callback(function ($r) use (&$savedRestaurant) {
+                $savedRestaurant = $r;
+                return true;
+            }));
         $request = new UpdateSettingsCommand(
             restaurantId: $restaurantIdString,
             email: $this->faker->email,
@@ -69,7 +73,8 @@ final class UpdateSettingsTest extends TestCase
 
         $ApplicationService->handle($request);
 
-        $currentSettings = $restaurant->getSettings();
+        $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
+        $currentSettings = $savedRestaurant->getSettings();
         $this->assertSame($request->email, $currentSettings->email->value);
         $this->assertSame($request->hasReminders, $currentSettings->hasReminders);
         $this->assertSame($request->name, $currentSettings->name);

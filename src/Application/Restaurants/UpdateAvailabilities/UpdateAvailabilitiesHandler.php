@@ -9,8 +9,8 @@ use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Restaurants\ValueObjects\Availability;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\TimeSlot;
-use Seedwork\Domain\EntityId;
 use SeedWork\Application\Command;
 
 final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
@@ -26,8 +26,6 @@ final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
      */
     public function handle(Command $command): void
     {
-        $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
-
         /** @var array<Availability> */
         $availabilities = array_map(
             fn (array $a) => new Availability(
@@ -37,8 +35,8 @@ final readonly class UpdateAvailabilitiesHandler implements UpdateAvailabilities
             ),
             $command->availabilities
         );
-
-        $restaurant->updateAvailabilities($availabilities);
+        $restaurantId = RestaurantId::fromString($command->restaurantId);
+        $restaurant = $this->restaurantObtainer->obtain(id: $restaurantId)->updateAvailabilities($availabilities);
         $this->restaurantRepository->save($restaurant);
     }
 }

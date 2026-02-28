@@ -8,9 +8,9 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Domain\EntityId;
 use SeedWork\Application\Command;
 
 final readonly class UpdateSettingsHandler implements UpdateSettings
@@ -26,8 +26,7 @@ final readonly class UpdateSettingsHandler implements UpdateSettings
      */
     public function handle(Command $command): void
     {
-        $restaurant = $this->restaurantObtainer->obtain(id: EntityId::fromString($command->restaurantId));
-        $restaurant->updateSettings(new Settings(
+        $settings = new Settings(
             email: new Email($command->email),
             hasReminders: $command->hasReminders,
             name: $command->name,
@@ -35,7 +34,9 @@ final readonly class UpdateSettingsHandler implements UpdateSettings
             minNumberOfDiners: new Capacity($command->minNumberOfDiners),
             numberOfTables: new Capacity($command->numberOfTables),
             phone: new Phone($command->phone)
-        ));
+        );
+        $restaurantId = RestaurantId::fromString($command->restaurantId);
+        $restaurant = $this->restaurantObtainer->obtain(id: $restaurantId)->updateSettings(settings: $settings);
         $this->restaurantRepository->save($restaurant);
     }
 }

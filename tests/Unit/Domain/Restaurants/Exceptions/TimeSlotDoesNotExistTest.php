@@ -20,6 +20,6 @@ final class TimeSlotDoesNotExistTest extends TestCase
     {
         $exception = new TimeSlotDoesNotExist();
 
-        $this->assertInstanceOf(\Seedwork\Domain\Exceptions\DomainException::class, $exception);
+        $this->assertInstanceOf(\SeedWork\Domain\Exceptions\DomainException::class, $exception);
     }
 }

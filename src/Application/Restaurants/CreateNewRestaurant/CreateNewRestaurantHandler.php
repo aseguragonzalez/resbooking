@@ -19,7 +19,7 @@ final readonly class CreateNewRestaurantHandler implements CreateNewRestaurant
      */
     public function handle(Command $command): void
     {
-        $restaurant = Restaurant::new(email: $command->email);
+        $restaurant = Restaurant::create($command->email);
 
         $this->restaurantRepository->save($restaurant);
     }

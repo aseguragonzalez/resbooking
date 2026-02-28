@@ -9,28 +9,30 @@ use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesHandler;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class UpdateAvailabilitiesTest extends TestCase
 {
     public function testHandleUpdatesAvailabilities(): void
     {
         $restaurantIdString = 'test-restaurant-id';
-        $restaurant = Restaurant::new('test@example.com', 'test-restaurant-id');
+        $restaurant = Restaurant::create('test@example.com', 'test-restaurant-id');
         $repository = $this->createMock(RestaurantRepository::class);
         $restaurantObtainer = $this->createMock(RestaurantObtainer::class);
         $restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with(EntityId::fromString($restaurantIdString))
+            ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
 
+        $savedRestaurant = null;
         $repository->expects($this->once())
             ->method('save')
-            ->with($this->callback(function (Restaurant $savedRestaurant) use ($restaurant) {
-                return $savedRestaurant === $restaurant;
+            ->with($this->callback(function (Restaurant $r) use (&$savedRestaurant) {
+                $savedRestaurant = $r;
+                return true;
             }));
 
         $command = new UpdateAvailabilitiesCommand(
@@ -52,7 +54,8 @@ final class UpdateAvailabilitiesTest extends TestCase
 
         $service->handle($command);
 
-        $availabilities = $restaurant->getAvailabilities();
+        $this->assertInstanceOf(Restaurant::class, $savedRestaurant);
+        $availabilities = $savedRestaurant->getAvailabilities();
         $this->assertCount(2, $availabilities);
         $this->assertSame(15, $availabilities[0]->capacity->value);
         $this->assertSame(DayOfWeek::Monday, $availabilities[0]->dayOfWeek);

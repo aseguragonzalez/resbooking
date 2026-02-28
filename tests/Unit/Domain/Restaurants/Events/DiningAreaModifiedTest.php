@@ -6,11 +6,11 @@ namespace Tests\Unit\Domain\Restaurants\Events;
 
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Events\DiningAreaModified;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\Capacity;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class DiningAreaModifiedTest extends TestCase
 {
@@ -23,20 +23,20 @@ final class DiningAreaModifiedTest extends TestCase
 
     public function testCreateNewEvent(): void
     {
-        $restaurantId = $this->faker->uuid;
+        $restaurantId = RestaurantId::fromString($this->faker->uuid);
         $diningArea = DiningArea::build(
             id: $this->faker->uuid,
             capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
             name: $this->faker->name
         );
 
-        $event = DiningAreaModified::new(restaurantId: EntityId::fromString($restaurantId), diningArea: $diningArea);
+        $event = DiningAreaModified::create($restaurantId, $diningArea);
 
         $this->assertNotEmpty($event->id->value);
-        $this->assertSame('DiningAreaModified', $event->type);
+        $this->assertSame('dining_area.modified', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;
-        $this->assertSame($restaurantId, $payload['restaurantId']);
-        $this->assertSame($diningArea, $payload['diningArea']);
+        $this->assertSame($restaurantId->value, $payload['restaurant_id']);
+        $this->assertSame($diningArea->id->value, $payload['dining_area_id']);
     }
 }

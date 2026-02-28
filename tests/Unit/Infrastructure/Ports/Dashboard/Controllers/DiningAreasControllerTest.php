@@ -31,7 +31,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Domain\Restaurants\Entities\Restaurant;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class DiningAreasControllerTest extends TestCase
@@ -72,7 +71,7 @@ final class DiningAreasControllerTest extends TestCase
     public function testIndexReturnsDiningAreasList(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->addDiningArea->expects($this->never())->method('handle');
         $this->removeDiningArea->expects($this->never())->method('handle');
         $this->updateDiningArea->expects($this->never())->method('handle');
@@ -81,7 +80,7 @@ final class DiningAreasControllerTest extends TestCase
             ->expects($this->once())
             ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id === $restaurant->id->value;
             }))
             ->willReturn($this->resultFromRestaurant($restaurant));
 
@@ -178,7 +177,7 @@ final class DiningAreasControllerTest extends TestCase
         $restaurant = $this->restaurantBuilder->build();
         $diningAreaId = $restaurant->getDiningAreas()[0]->id->value;
         $backUrl = '/dining-areas';
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
         $this->addDiningArea->expects($this->never())->method('handle');
         $this->removeDiningArea->expects($this->never())->method('handle');
@@ -187,7 +186,7 @@ final class DiningAreasControllerTest extends TestCase
             ->expects($this->once())
             ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id === $restaurant->id->value;
             }))
             ->willReturn($this->resultFromRestaurant($restaurant));
 
@@ -209,7 +208,7 @@ final class DiningAreasControllerTest extends TestCase
     {
         $diningAreaId = $this->faker->uuid();
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
         $this->addDiningArea->expects($this->never())->method('handle');
         $this->removeDiningArea->expects($this->never())->method('handle');
@@ -218,7 +217,7 @@ final class DiningAreasControllerTest extends TestCase
             ->expects($this->once())
             ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id === $restaurant->id->value;
             }))
             ->willReturn($this->resultFromRestaurant($restaurant));
 
@@ -343,7 +342,7 @@ final class DiningAreasControllerTest extends TestCase
     {
         $settings = $restaurant->getSettings();
         return new GetRestaurantByIdResult(
-            id: $restaurant->getId()->value,
+            id: $restaurant->id->value,
             email: $settings->email->value,
             hasReminders: $settings->hasReminders,
             name: $settings->name,

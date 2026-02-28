@@ -11,8 +11,8 @@ use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class GetRestaurantByIdTest extends TestCase
@@ -34,7 +34,7 @@ final class GetRestaurantByIdTest extends TestCase
         $restaurant = $this->restaurantBuilder->build();
         $this->restaurantObtainer->expects($this->once())
             ->method('obtain')
-            ->with(EntityId::fromString($restaurantIdString))
+            ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $query = new GetRestaurantByIdQuery(id: $restaurantIdString);
         $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
@@ -43,7 +43,7 @@ final class GetRestaurantByIdTest extends TestCase
 
         $this->assertInstanceOf(GetRestaurantByIdResult::class, $result);
         $settings = $restaurant->getSettings();
-        $this->assertSame($restaurant->getId()->value, $result->id);
+        $this->assertSame($restaurant->id->value, $result->id);
         $this->assertSame($settings->email->value, $result->email);
         $this->assertSame($settings->hasReminders, $result->hasReminders);
         $this->assertSame($settings->name, $result->name);

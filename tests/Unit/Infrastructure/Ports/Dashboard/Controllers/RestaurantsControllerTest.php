@@ -113,7 +113,7 @@ final class RestaurantsControllerTest extends TestCase
         /** @var SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString(
-            $this->settings->cookieName . '=' . $restaurant->getId(),
+            $this->settings->cookieName . '=' . $restaurant->id->value,
             $setCookie->value
         );
     }

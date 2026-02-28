@@ -24,7 +24,6 @@ use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesLis
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class AvailabilitiesControllerTest extends TestCase
@@ -59,10 +58,10 @@ final class AvailabilitiesControllerTest extends TestCase
     public function testAvailabilitiesReturnsAvailabilitiesList(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
+        $this->requestContext->set('restaurantId', $restaurant->id->value);
         $settings = $restaurant->getSettings();
         $result = new GetRestaurantByIdResult(
-            id: $restaurant->getId()->value,
+            id: $restaurant->id->value,
             email: $settings->email->value,
             hasReminders: $settings->hasReminders,
             name: $settings->name,
@@ -94,7 +93,7 @@ final class AvailabilitiesControllerTest extends TestCase
             ->expects($this->once())
             ->method('handle')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id === $restaurant->id->value;
             }))
             ->willReturn($result);
 
