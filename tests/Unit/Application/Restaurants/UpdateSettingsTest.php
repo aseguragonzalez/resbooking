@@ -24,14 +24,12 @@ final class UpdateSettingsTest extends TestCase
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
     private MockObject&RestaurantRepository $restaurantRepository;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testUpdateRestaurantSettings(): void
@@ -46,9 +44,9 @@ final class UpdateSettingsTest extends TestCase
             phone: new Phone($this->faker->phoneNumber)
         );
         $restaurant = $this->restaurantBuilder->withSettings($settings)->build();
-        $restaurantIdString = $this->faker->uuid;
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
+        $restaurantIdString = $restaurant->id->value;
+        $this->restaurantRepository->expects($this->once())
+            ->method('findBy')
             ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
         $savedRestaurant = null;
@@ -69,7 +67,8 @@ final class UpdateSettingsTest extends TestCase
             numberOfTables: 10,
             phone: $this->faker->phoneNumber
         );
-        $ApplicationService = new UpdateSettingsHandler($this->restaurantObtainer, $this->restaurantRepository);
+        $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
+        $ApplicationService = new UpdateSettingsHandler($restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->handle($request);
 

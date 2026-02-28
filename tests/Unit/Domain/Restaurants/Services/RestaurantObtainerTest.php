@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Restaurants\Services;
 
 use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\Exceptions\RestaurantDoesNotExist;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
@@ -50,7 +49,9 @@ final class RestaurantObtainerTest extends TestCase
             ->method('findBy')
             ->with($restaurantId)
             ->willReturn(null);
-        $this->expectException(RestaurantDoesNotExist::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\NotFoundResource::class);
+        $this->expectExceptionMessage('Restaurant');
+        $this->expectExceptionMessage($restaurantId->value);
 
         $this->restaurantObtainer->obtain($restaurantId);
     }

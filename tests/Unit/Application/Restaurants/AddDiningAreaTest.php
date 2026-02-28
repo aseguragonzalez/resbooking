@@ -21,29 +21,29 @@ final class AddDiningAreaTest extends TestCase
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
     private MockObject&RestaurantRepository $restaurantRepository;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testCreateNewDiningArea(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $restaurantIdString = $this->faker->uuid;
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
-            ->with(RestaurantId::fromString($restaurantIdString))
+        $restaurantIdString = $restaurant->id->value;
+        $restaurantId = RestaurantId::fromString($restaurantIdString);
+        $this->restaurantRepository->expects($this->once())
+            ->method('findBy')
+            ->with($restaurantId)
             ->willReturn($restaurant);
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(fn (Restaurant $r) => count($r->diningAreas) === 2));
-        $ApplicationService = new AddDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
+        $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
+        $ApplicationService = new AddDiningAreaHandler($restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(
             restaurantId: $restaurantIdString,
             name: $this->faker->name,

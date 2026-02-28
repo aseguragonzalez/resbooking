@@ -22,14 +22,12 @@ final class RemoveDiningAreaTest extends TestCase
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
     private MockObject&RestaurantRepository $restaurantRepository;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testDiningAreaFromRestaurant(): void
@@ -40,8 +38,8 @@ final class RemoveDiningAreaTest extends TestCase
             DiningArea::new(new Capacity(10), name: $this->faker->name),
         ];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
+        $this->restaurantRepository->expects($this->once())
+            ->method('findBy')
             ->with($restaurant->id)
             ->willReturn($restaurant);
         $savedRestaurant = null;
@@ -56,10 +54,12 @@ final class RemoveDiningAreaTest extends TestCase
             restaurantId: $restaurant->id->value,
             diningAreaId: $diningArea->id->value
         );
-        $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
+        $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
+        $ApplicationService = new RemoveDiningAreaHandler($restaurantObtainer, $this->restaurantRepository);
 
         $ApplicationService->handle($request);
 
+        /** @var \Domain\Restaurants\Entities\Restaurant $savedRestaurant */
         $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
         $this->assertSame(1, count($savedRestaurant->getDiningAreas()));
         $events = $savedRestaurant->collectEvents();

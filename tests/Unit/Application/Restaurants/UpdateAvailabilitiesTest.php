@@ -21,9 +21,8 @@ final class UpdateAvailabilitiesTest extends TestCase
         $restaurantIdString = 'test-restaurant-id';
         $restaurant = Restaurant::create('test@example.com', 'test-restaurant-id');
         $repository = $this->createMock(RestaurantRepository::class);
-        $restaurantObtainer = $this->createMock(RestaurantObtainer::class);
-        $restaurantObtainer->expects($this->once())
-            ->method('obtain')
+        $repository->expects($this->once())
+            ->method('findBy')
             ->with(RestaurantId::fromString($restaurantIdString))
             ->willReturn($restaurant);
 
@@ -50,6 +49,7 @@ final class UpdateAvailabilitiesTest extends TestCase
                 ],
             ],
         );
+        $restaurantObtainer = new RestaurantObtainer($repository);
         $service = new UpdateAvailabilitiesHandler($restaurantObtainer, $repository);
 
         $service->handle($command);

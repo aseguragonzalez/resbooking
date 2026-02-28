@@ -7,6 +7,7 @@ namespace Tests\Unit\Application\Restaurants\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
+use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -19,25 +20,26 @@ final class GetRestaurantByIdTest extends TestCase
 {
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testItRetrievesRestaurantByIdAndReturnsResult(): void
     {
-        $restaurantIdString = $this->faker->uuid;
         $restaurant = $this->restaurantBuilder->build();
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
-            ->with(RestaurantId::fromString($restaurantIdString))
+        $restaurantIdString = $restaurant->id->value;
+        $restaurantId = RestaurantId::fromString($restaurantIdString);
+        $repository = $this->createMock(RestaurantRepository::class);
+        $repository->expects($this->once())
+            ->method('findBy')
+            ->with($restaurantId)
             ->willReturn($restaurant);
+        $restaurantObtainer = new RestaurantObtainer($repository);
         $query = new GetRestaurantByIdQuery(id: $restaurantIdString);
-        $service = new GetRestaurantByIdHandler($this->restaurantObtainer);
+        $service = new GetRestaurantByIdHandler($restaurantObtainer);
 
         $result = $service->handle($query);
 

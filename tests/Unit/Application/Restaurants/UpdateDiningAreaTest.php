@@ -23,14 +23,12 @@ final class UpdateDiningAreaTest extends TestCase
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
     private MockObject&RestaurantRepository $restaurantRepository;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testUpdateDiningAreaInRestaurant(): void
@@ -43,8 +41,8 @@ final class UpdateDiningAreaTest extends TestCase
         );
         $diningAreas = [$originalDiningArea];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
+        $this->restaurantRepository->expects($this->once())
+            ->method('findBy')
             ->with($restaurant->id)
             ->willReturn($restaurant);
         $savedRestaurant = null;
@@ -64,7 +62,8 @@ final class UpdateDiningAreaTest extends TestCase
             name: $newName,
             capacity: $newCapacity
         );
-        $applicationService = new UpdateDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
+        $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
+        $applicationService = new UpdateDiningAreaHandler($restaurantObtainer, $this->restaurantRepository);
 
         $applicationService->handle($request);
 
