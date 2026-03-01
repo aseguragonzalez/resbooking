@@ -82,7 +82,7 @@ final class RestaurantsMapper
     {
         return new RestaurantModel(
             id: $restaurant->id->value,
-            settings: self::mapSettingsToModel($restaurant->getSettings()),
+            settings: self::mapSettingsToModel($restaurant->settings),
             diningAreas: self::mapDiningAreasToModel($restaurant->getDiningAreas()),
             availabilities: self::mapAvailabilitiesToModel($restaurant->getAvailabilities()),
             users: array_map(fn ($user) => $user->username->value, $restaurant->getUsers()),

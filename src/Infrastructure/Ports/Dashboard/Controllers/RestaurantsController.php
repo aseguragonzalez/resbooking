@@ -51,7 +51,7 @@ final class RestaurantsController extends Controller
         $restaurantsList = array_map(
             fn ($restaurant) => (object)[
                 'id' => $restaurant->id->value,
-                'name' => $restaurant->getSettings()->name,
+                'name' => $restaurant->settings->name,
             ],
             $restaurants
         );

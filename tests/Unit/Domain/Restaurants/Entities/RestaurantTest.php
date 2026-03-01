@@ -63,7 +63,7 @@ final class RestaurantTest extends TestCase
         $restaurant = Restaurant::create($settings->email->value, $id);
 
         $this->assertSame($id, $restaurant->id->value);
-        $restaurantSettings = $restaurant->getSettings();
+        $restaurantSettings = $restaurant->settings;
         $this->assertSame($settings->email->value, $restaurantSettings->email->value);
         $this->assertSame($settings->hasReminders, $restaurantSettings->hasReminders);
         $this->assertSame($settings->name, $restaurantSettings->name);
@@ -118,7 +118,7 @@ final class RestaurantTest extends TestCase
 
         $restaurant = $restaurant->updateSettings($settings);
 
-        $this->assertSame($settings, $restaurant->getSettings());
+        $this->assertSame($settings, $restaurant->settings);
         $events = $restaurant->collectEvents();
         $this->assertCount(1, $events);
         $event = $events[0];

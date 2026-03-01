@@ -46,9 +46,9 @@ final readonly class Restaurant extends AggregateRoot
      */
     private function __construct(
         RestaurantId $id,
-        private Settings $settings,
+        public Settings $settings,
         private array $users,
-        public array $diningAreas,
+        private array $diningAreas,
         private array $availabilities,
         array $domainEvents = [],
     ) {
@@ -132,7 +132,7 @@ final readonly class Restaurant extends AggregateRoot
      */
     public function getUsers(): array
     {
-        return $this->users;
+        return array_values([...$this->users]);
     }
 
     /**
@@ -140,7 +140,7 @@ final readonly class Restaurant extends AggregateRoot
      */
     public function getDiningAreas(): array
     {
-        return $this->diningAreas;
+        return array_values([...$this->diningAreas]);
     }
 
     public function getDiningAreaById(DiningAreaId $diningAreaId): DiningArea
@@ -230,12 +230,7 @@ final readonly class Restaurant extends AggregateRoot
      */
     public function getAvailabilities(): array
     {
-        return $this->availabilities;
-    }
-
-    public function getSettings(): Settings
-    {
-        return $this->settings;
+        return array_values([...$this->availabilities]);
     }
 
     public function updateSettings(Settings $settings): self

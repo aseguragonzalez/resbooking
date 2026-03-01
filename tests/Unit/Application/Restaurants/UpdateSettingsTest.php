@@ -73,7 +73,8 @@ final class UpdateSettingsTest extends TestCase
         $ApplicationService->handle($request);
 
         $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
-        $currentSettings = $savedRestaurant->getSettings();
+        /** @var \Domain\Restaurants\Entities\Restaurant $savedRestaurant */
+        $currentSettings = $savedRestaurant->settings;
         $this->assertSame($request->email, $currentSettings->email->value);
         $this->assertSame($request->hasReminders, $currentSettings->hasReminders);
         $this->assertSame($request->name, $currentSettings->name);

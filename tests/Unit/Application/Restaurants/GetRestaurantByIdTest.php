@@ -44,7 +44,7 @@ final class GetRestaurantByIdTest extends TestCase
         $result = $service->handle($query);
 
         $this->assertInstanceOf(GetRestaurantByIdResult::class, $result);
-        $settings = $restaurant->getSettings();
+        $settings = $restaurant->settings;
         $this->assertSame($restaurant->id->value, $result->id);
         $this->assertSame($settings->email->value, $result->email);
         $this->assertSame($settings->hasReminders, $result->hasReminders);

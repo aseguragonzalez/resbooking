@@ -41,7 +41,7 @@ final class AddDiningAreaTest extends TestCase
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($this->callback(fn (Restaurant $r) => count($r->diningAreas) === 2));
+            ->with($this->callback(fn (Restaurant $r) => count($r->getDiningAreas()) === 2));
         $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
         $ApplicationService = new AddDiningAreaHandler($restaurantObtainer, $this->restaurantRepository);
         $request = new AddDiningAreaCommand(

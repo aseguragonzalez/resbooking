@@ -59,7 +59,7 @@ final class AvailabilitiesControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->id->value);
-        $settings = $restaurant->getSettings();
+        $settings = $restaurant->settings;
         $result = new GetRestaurantByIdResult(
             id: $restaurant->id->value,
             email: $settings->email->value,

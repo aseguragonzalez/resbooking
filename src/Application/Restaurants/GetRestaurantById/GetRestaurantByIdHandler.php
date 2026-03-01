@@ -29,7 +29,7 @@ final readonly class GetRestaurantByIdHandler implements GetRestaurantById
 
     private function mapToResult(Restaurant $restaurant): GetRestaurantByIdResult
     {
-        $settings = $restaurant->getSettings();
+        $settings = $restaurant->settings;
         $diningAreas = array_map(
             fn ($da) => new DiningAreaItem(
                 id: $da->id->value,

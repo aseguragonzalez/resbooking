@@ -320,7 +320,7 @@ final class DiningAreasControllerTest extends TestCase
 
     private function resultFromRestaurant(Restaurant $restaurant): GetRestaurantByIdResult
     {
-        $settings = $restaurant->getSettings();
+        $settings = $restaurant->settings;
         return new GetRestaurantByIdResult(
             id: $restaurant->id->value,
             email: $settings->email->value,

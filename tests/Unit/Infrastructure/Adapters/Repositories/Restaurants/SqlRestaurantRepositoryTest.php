@@ -57,13 +57,13 @@ final class SqlRestaurantRepositoryTest extends TestCase
             ->method('execute')
             ->with($this->callback(function (array $params) use ($restaurant): bool {
                 return $params['id'] === $restaurant->id->value
-                    && $params['name'] === $restaurant->getSettings()->name
-                    && $params['email'] === $restaurant->getSettings()->email->value
-                    && $params['phone'] === $restaurant->getSettings()->phone->value
-                    && $params['max_number_of_diners'] === $restaurant->getSettings()->maxNumberOfDiners->value
-                    && $params['min_number_of_diners'] === $restaurant->getSettings()->minNumberOfDiners->value
-                    && $params['number_of_tables'] === $restaurant->getSettings()->numberOfTables->value
-                    && $params['has_reminders'] === ($restaurant->getSettings()->hasReminders ? 1 : 0);
+                    && $params['name'] === $restaurant->settings->name
+                    && $params['email'] === $restaurant->settings->email->value
+                    && $params['phone'] === $restaurant->settings->phone->value
+                    && $params['max_number_of_diners'] === $restaurant->settings->maxNumberOfDiners->value
+                    && $params['min_number_of_diners'] === $restaurant->settings->minNumberOfDiners->value
+                    && $params['number_of_tables'] === $restaurant->settings->numberOfTables->value
+                    && $params['has_reminders'] === ($restaurant->settings->hasReminders ? 1 : 0);
             }));
         $this->prepareStatementQueue[] = $restaurantStmt;
         $deleteDiningAreasStmt = $this->createMock(PDOStatement::class);
@@ -253,8 +253,8 @@ final class SqlRestaurantRepositoryTest extends TestCase
         $result = $this->repository->findBy(RestaurantId::fromString($restaurantId));
 
         $this->assertSame($restaurantId, $result->id->value);
-        $this->assertSame('Test Restaurant', $result->getSettings()->name);
-        $this->assertSame($email, $result->getSettings()->email->value);
+        $this->assertSame('Test Restaurant', $result->settings->name);
+        $this->assertSame($email, $result->settings->email->value);
         $this->assertInstanceOf(Restaurant::class, $result);
     }
 
