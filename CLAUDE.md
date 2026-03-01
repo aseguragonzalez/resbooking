@@ -3,7 +3,6 @@
 ## Project overview
 
 Restaurant reservation app built with PHP 8.4 and DDD and Hexagonal Architecture using the `aseguragonzalez/php-seedwork` package.
-`aseguragonzalez/php-seedwork` package.
 
 ## Commands
 
