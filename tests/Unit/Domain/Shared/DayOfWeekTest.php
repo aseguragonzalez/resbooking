@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Shared;
 
 use Domain\Shared\DayOfWeek;
+use Domain\Shared\Exceptions\InvalidDayOfWeek;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +34,7 @@ final class DayOfWeekTest extends TestCase
 
     public function testGetByIdFailWhenIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidDayOfWeek::class);
 
         DayOfWeek::getById(0);
     }
@@ -58,7 +59,7 @@ final class DayOfWeekTest extends TestCase
 
     public function testGetByNameFailWhenIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidDayOfWeek::class);
 
         DayOfWeek::getByName($this->faker->word());
     }
@@ -123,14 +124,14 @@ final class DayOfWeekTest extends TestCase
 
     public function testGetByIdFailWhenIdIsTooLarge(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidDayOfWeek::class);
 
         DayOfWeek::getById(8);
     }
 
     public function testGetByIdFailWhenIdIsNegative(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidDayOfWeek::class);
 
         DayOfWeek::getById(-1);
     }

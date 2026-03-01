@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Domain\Restaurants\Exceptions;
 
-use Seedwork\Domain\Exceptions\DomainException;
+use SeedWork\Domain\Exceptions\DomainException;
 
 final class DiningAreaAlreadyExist extends DomainException
 {

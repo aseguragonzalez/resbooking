@@ -7,12 +7,12 @@ namespace Tests\Unit\Domain\Restaurants\Events;
 use Domain\Restaurants\Events\AvailabilitiesUpdated;
 use Domain\Restaurants\ValueObjects\Availability;
 use Domain\Shared\Capacity;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class AvailabilitiesUpdatedTest extends TestCase
 {
@@ -29,7 +29,7 @@ final class AvailabilitiesUpdatedTest extends TestCase
 
     public function testCreateNewEvent(): void
     {
-        $restaurantId = $this->faker->uuid();
+        $restaurantId = RestaurantId::fromString($this->faker->uuid());
         $availabilities = [
             new Availability(
                 capacity: new Capacity(value: $this->faker->numberBetween(1, 100)),
@@ -43,16 +43,18 @@ final class AvailabilitiesUpdatedTest extends TestCase
             ),
         ];
 
-        $event = AvailabilitiesUpdated::new(
-            restaurantId: EntityId::fromString($restaurantId),
-            availabilities: $availabilities
-        );
+        $event = AvailabilitiesUpdated::create($restaurantId, $availabilities);
 
         $this->assertNotEmpty($event->id->value);
-        $this->assertSame('AvailabilitiesUpdated', $event->type);
+        $this->assertSame('availabilities.updated', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;
-        $this->assertSame($restaurantId, $payload['restaurantId']);
-        $this->assertSame($availabilities, $payload['availabilities']);
+        $this->assertSame($restaurantId->value, $payload['restaurant_id']);
+        $this->assertIsArray($payload['availabilities']);
+        $this->assertCount(2, $payload['availabilities']);
+        /** @var array<string, mixed> $availability */
+        $availability = $payload['availabilities'][0];
+        $this->assertSame(DayOfWeek::Monday->value, $availability['day_of_week_id']);
+        $this->assertSame(TimeSlot::H1200->value, $availability['time_slot_id']);
     }
 }

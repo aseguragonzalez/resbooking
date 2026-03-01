@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -31,10 +30,11 @@ use Infrastructure\Ports\Dashboard\Models\Accounts\Requests\SignUpRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use SeedWork\Application\CommandBus;
 
 final class AccountsControllerTest extends TestCase
 {
-    private CreateNewRestaurant&MockObject $createNewRestaurant;
+    private CommandBus&MockObject $commandBus;
     private IdentityManager&MockObject $identityManager;
     private RequestContext $requestContext;
     private AuthSettings $settings;
@@ -45,14 +45,14 @@ final class AccountsControllerTest extends TestCase
     {
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->createNewRestaurant = $this->createMock(CreateNewRestaurant::class);
+        $this->commandBus = $this->createMock(CommandBus::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
         $this->settings = new AuthSettings(
             signInPath: '/accounts/sign-in',
             signOutPath: '/accounts/sign-out',
         );
         $this->controller = new AccountsController(
-            $this->createNewRestaurant,
+            $this->commandBus,
             $this->identityManager,
             $this->settings,
             $this->requestContext,
@@ -62,7 +62,7 @@ final class AccountsControllerTest extends TestCase
 
     public function testSignInReturnsSignInView(): void
     {
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signIn');
 
         $response = $this->controller->signIn();
@@ -77,7 +77,7 @@ final class AccountsControllerTest extends TestCase
 
     public function testSignUpReturnsSignUpView(): void
     {
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signUp');
 
         $response = $this->controller->signUp();
@@ -92,7 +92,7 @@ final class AccountsControllerTest extends TestCase
 
     public function testResetPasswordReturnsResetPasswordView(): void
     {
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
 
         $response = $this->controller->resetPassword();
@@ -108,7 +108,7 @@ final class AccountsControllerTest extends TestCase
     public function testResetPasswordChallengeReturnsChallengeView(): void
     {
         $token = $this->faker->uuid();
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
 
         $response = $this->controller->resetPasswordChallenge($token);
@@ -129,7 +129,7 @@ final class AccountsControllerTest extends TestCase
             password: '',
             rememberMe: ''
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signIn');
 
         $response = $this->controller->signInUser($request);
@@ -152,7 +152,7 @@ final class AccountsControllerTest extends TestCase
             password: '@Home1234',
             rememberMe: 'off'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('signIn')
@@ -179,7 +179,7 @@ final class AccountsControllerTest extends TestCase
             password: '@Home1234',
             rememberMe: 'off'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $challenge = $this->createMock(Challenge::class);
         $challenge->expects($this->once())->method('getExpiresAt')->willReturn(new \DateTimeImmutable('+1 hour'));
         $challenge->expects($this->once())->method('getToken')->willReturn($this->faker->uuid());
@@ -203,7 +203,7 @@ final class AccountsControllerTest extends TestCase
             passwordConfirm: '',
             agree: ''
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signUp');
 
         $response = $this->controller->signUpUser($request);
@@ -229,7 +229,7 @@ final class AccountsControllerTest extends TestCase
             agree: 'on'
         );
         $this->identityManager->expects($this->once())->method('signUp');
-        $this->createNewRestaurant->expects($this->once())->method('execute');
+        $this->commandBus->expects($this->once())->method('dispatch');
 
         $response = $this->controller->signUpUser($request);
 
@@ -245,7 +245,7 @@ final class AccountsControllerTest extends TestCase
     {
         $token = $this->faker->uuid();
         $this->identityManager->expects($this->once())->method('activateUserIdentity');
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
 
         $response = $this->controller->activateUser($token);
 
@@ -259,7 +259,7 @@ final class AccountsControllerTest extends TestCase
     public function testActivateUserWithException(): void
     {
         $token = $this->faker->uuid();
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('activateUserIdentity')
@@ -276,7 +276,7 @@ final class AccountsControllerTest extends TestCase
     public function testSendResetPasswordEmailWithValidationErrors(): void
     {
         $request = new ResetPasswordRequest(username: '');
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
 
         $response = $this->controller->sendResetPasswordEmail($request);
@@ -295,7 +295,7 @@ final class AccountsControllerTest extends TestCase
     public function testSendResetPasswordEmail(): void
     {
         $request = new ResetPasswordRequest(username: $this->faker->email());
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('resetPasswordChallenge')
@@ -321,7 +321,7 @@ final class AccountsControllerTest extends TestCase
             token: $this->faker->uuid(),
             newPassword: '@Home1234'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('resetPasswordFromToken')
@@ -340,7 +340,7 @@ final class AccountsControllerTest extends TestCase
     public function testConfirmResetPasswordWithValidationErrors(): void
     {
         $request = new ConfirmResetPasswordRequest(token: '', newPassword: '');
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordFromToken');
 
         $response = $this->controller->confirmResetPassword($request);
@@ -359,7 +359,7 @@ final class AccountsControllerTest extends TestCase
     public function testConfirmResetPasswordWithChallengeException(): void
     {
         $request = new ConfirmResetPasswordRequest(token: $this->faker->uuid(), newPassword: '@Home1234');
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('resetPasswordFromToken')
@@ -382,7 +382,7 @@ final class AccountsControllerTest extends TestCase
     public function testGetRoutesConfiguration(): void
     {
         $routes = AccountsController::getRoutes();
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signIn');
         $this->identityManager->expects($this->never())->method('signUp');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
@@ -414,7 +414,7 @@ final class AccountsControllerTest extends TestCase
 
     public function testSignOutWithNoTokenRedirectsToSignIn(): void
     {
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signOut');
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->once())->method('getCookieParams')->willReturn([]);
@@ -435,7 +435,7 @@ final class AccountsControllerTest extends TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(['auth' => $token]);
         $this->identityManager->expects($this->once())->method('signOut')->with($token);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
 
         $response = $this->controller->signOut($request);
 
@@ -454,7 +454,7 @@ final class AccountsControllerTest extends TestCase
             password: '@WrongPassword',
             rememberMe: 'off'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('signIn')
@@ -482,7 +482,7 @@ final class AccountsControllerTest extends TestCase
             password: '@Home1234',
             rememberMe: 'off'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('signIn')
@@ -509,7 +509,7 @@ final class AccountsControllerTest extends TestCase
             token: $this->faker->uuid(),
             newPassword: '@Home1234'
         );
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('resetPasswordFromToken')
@@ -541,7 +541,7 @@ final class AccountsControllerTest extends TestCase
             ->activate()
             ->authenticate($password);
         $this->requestContext->setIdentity($identity);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signIn');
 
         $response = $this->controller->signIn();
@@ -564,7 +564,7 @@ final class AccountsControllerTest extends TestCase
             ->activate()
             ->authenticate($password);
         $this->requestContext->setIdentity($identity);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signUp');
 
         $response = $this->controller->signUp();
@@ -587,7 +587,7 @@ final class AccountsControllerTest extends TestCase
             ->activate()
             ->authenticate($password);
         $this->requestContext->setIdentity($identity);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
 
         $response = $this->controller->resetPassword();
@@ -611,7 +611,7 @@ final class AccountsControllerTest extends TestCase
             ->activate()
             ->authenticate($password);
         $this->requestContext->setIdentity($identity);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('resetPasswordChallenge');
 
         $response = $this->controller->resetPasswordChallenge($token);
@@ -640,7 +640,7 @@ final class AccountsControllerTest extends TestCase
         $challenge->expects($this->once())->method('getExpiresAt')->willReturn($expiresAt);
         $challenge->expects($this->once())->method('getToken')->willReturn($token);
         $this->identityManager->expects($this->once())->method('signIn')->willReturn($challenge);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
 
         $response = $this->controller->signInUser($request);
 
@@ -662,7 +662,7 @@ final class AccountsControllerTest extends TestCase
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(['auth' => $token]);
         $this->identityManager->expects($this->once())->method('signOut')->with($token);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
 
         $response = $this->controller->signOut($request);
 
@@ -690,7 +690,7 @@ final class AccountsControllerTest extends TestCase
         $challenge = $this->createMock(Challenge::class);
         $challenge->expects($this->once())->method('getExpiresAt')->willReturn(new \DateTimeImmutable('+1 hour'));
         $challenge->expects($this->once())->method('getToken')->willReturn($this->faker->uuid());
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager
             ->expects($this->once())
             ->method('signIn')
@@ -714,7 +714,7 @@ final class AccountsControllerTest extends TestCase
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->expects($this->once())->method('getCookieParams')->willReturn(['auth' => ['invalid' => 'array']]);
-        $this->createNewRestaurant->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signOut');
 
         $response = $this->controller->signOut($request);

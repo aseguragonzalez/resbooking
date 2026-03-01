@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\GetRestaurantById\GetRestaurantById;
+use Application\Restaurants\GetRestaurantById\AvailabilityItem;
+use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
-use Application\Restaurants\UpdateSettings\UpdateSettings;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Faker\Factory;
 use Faker\Generator;
@@ -21,12 +22,14 @@ use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as Updat
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
 use Tests\Unit\RestaurantBuilder;
 
 final class SettingsControllerTest extends TestCase
 {
-    private UpdateSettings&MockObject $updateSettings;
-    private GetRestaurantById&MockObject $getRestaurantById;
+    private CommandBus&MockObject $commandBus;
+    private QueryBus&MockObject $queryBus;
     private RequestContext $requestContext;
     private RestaurantContextSettings $settings;
     private SettingsController $controller;
@@ -37,12 +40,12 @@ final class SettingsControllerTest extends TestCase
     {
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->updateSettings = $this->createMock(UpdateSettings::class);
-        $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
+        $this->commandBus = $this->createMock(CommandBus::class);
+        $this->queryBus = $this->createMock(QueryBus::class);
         $this->settings = new RestaurantContextSettings();
         $this->controller = new SettingsController(
-            $this->updateSettings,
-            $this->getRestaurantById,
+            $this->commandBus,
+            $this->queryBus,
             $this->requestContext,
             $this->settings,
         );
@@ -53,14 +56,42 @@ final class SettingsControllerTest extends TestCase
     public function testSettingsReturnsUpdateSettingsPage(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $this->requestContext->set('restaurantId', $restaurant->getId()->value);
-        $this->updateSettings->expects($this->never())->method('execute');
-        $this->getRestaurantById->expects($this->once())
-            ->method('execute')
+        $this->requestContext->set('restaurantId', $restaurant->id->value);
+        $settings = $restaurant->settings;
+        $result = new GetRestaurantByIdResult(
+            id: $restaurant->id->value,
+            email: $settings->email->value,
+            hasReminders: $settings->hasReminders,
+            name: $settings->name,
+            maxNumberOfDiners: $settings->maxNumberOfDiners->value,
+            minNumberOfDiners: $settings->minNumberOfDiners->value,
+            numberOfTables: $settings->numberOfTables->value,
+            phone: $settings->phone->value,
+            diningAreas: array_map(
+                fn ($da) => new DiningAreaItem(
+                    id: $da->id->value,
+                    name: $da->name,
+                    capacity: $da->capacity->value,
+                ),
+                $restaurant->getDiningAreas()
+            ),
+            availabilities: array_map(
+                fn ($a) => new AvailabilityItem(
+                    time: substr($a->timeSlot->toString(), 0, 5),
+                    dayOfWeekId: $a->dayOfWeek->value,
+                    timeSlotId: $a->timeSlot->value,
+                    capacity: $a->capacity->value,
+                ),
+                $restaurant->getAvailabilities()
+            ),
+        );
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->once())
+            ->method('ask')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->getId()->value;
+                return $query->id === $restaurant->id->value;
             }))
-            ->willReturn($restaurant);
+            ->willReturn($result);
 
         $response = $this->controller->settings();
 
@@ -74,8 +105,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testUpdateSettingsWithValidationErrors(): void
     {
-        $this->updateSettings->expects($this->never())->method('execute');
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
         $request = new UpdateSettingsRequest(
             email: '',
             name: '',
@@ -110,9 +141,9 @@ final class SettingsControllerTest extends TestCase
             phone: $this->faker->phoneNumber(),
             hasReminders: 'on',
         );
-        $this->getRestaurantById->expects($this->never())->method('execute');
-        $this->updateSettings->expects($this->once())
-            ->method('execute')
+        $this->queryBus->expects($this->never())->method('ask');
+        $this->commandBus->expects($this->once())
+            ->method('dispatch')
             ->with($this->callback(function (UpdateSettingsCommand $command) use ($request) {
                 return $command->restaurantId !== ''
                     && $command->email === $request->email
@@ -136,8 +167,8 @@ final class SettingsControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
-        $this->updateSettings->expects($this->never())->method('execute');
-        $this->getRestaurantById->expects($this->never())->method('execute');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
         $routes = SettingsController::getRoutes();
 
         $this->assertCount(2, $routes);

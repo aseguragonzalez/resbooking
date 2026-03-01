@@ -15,7 +15,6 @@ use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class RemoveDiningAreaTest extends TestCase
@@ -23,46 +22,51 @@ final class RemoveDiningAreaTest extends TestCase
     private Faker $faker;
     private RestaurantBuilder $restaurantBuilder;
     private MockObject&RestaurantRepository $restaurantRepository;
-    private MockObject&RestaurantObtainer $restaurantObtainer;
 
     protected function setUp(): void
     {
         $this->faker = FakerFactory::create();
         $this->restaurantBuilder = new RestaurantBuilder($this->faker);
         $this->restaurantRepository = $this->createMock(RestaurantRepository::class);
-        $this->restaurantObtainer = $this->createMock(RestaurantObtainer::class);
     }
 
     public function testDiningAreaFromRestaurant(): void
     {
-        $diningArea = DiningArea::new(new Capacity(10), name: $this->faker->name);
+        $diningArea = DiningArea::create(new Capacity(10), name: $this->faker->name);
         $diningAreas = [
             $diningArea,
-            DiningArea::new(new Capacity(10), name: $this->faker->name),
+            DiningArea::create(new Capacity(10), name: $this->faker->name),
         ];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
-        $this->restaurantObtainer->expects($this->once())
-            ->method('obtain')
-            ->with($restaurant->getId())
+        $this->restaurantRepository->expects($this->once())
+            ->method('findBy')
+            ->with($restaurant->id)
             ->willReturn($restaurant);
+        $savedRestaurant = null;
         $this->restaurantRepository
             ->expects($this->once())
             ->method('save')
-            ->with($restaurant);
+            ->with($this->callback(function ($r) use (&$savedRestaurant) {
+                $savedRestaurant = $r;
+                return true;
+            }));
         $request = new RemoveDiningAreaCommand(
-            restaurantId: $restaurant->getId()->value,
+            restaurantId: $restaurant->id->value,
             diningAreaId: $diningArea->id->value
         );
-        $ApplicationService = new RemoveDiningAreaHandler($this->restaurantObtainer, $this->restaurantRepository);
+        $restaurantObtainer = new RestaurantObtainer($this->restaurantRepository);
+        $ApplicationService = new RemoveDiningAreaHandler($restaurantObtainer, $this->restaurantRepository);
 
-        $ApplicationService->execute($request);
+        $ApplicationService->handle($request);
 
-        $this->assertSame(1, count($restaurant->getDiningAreas()));
-        $events = $restaurant->getEvents();
+        /** @var \Domain\Restaurants\Entities\Restaurant $savedRestaurant */
+        $this->assertInstanceOf(\Domain\Restaurants\Entities\Restaurant::class, $savedRestaurant);
+        $this->assertSame(1, count($savedRestaurant->getDiningAreas()));
+        $events = $savedRestaurant->collectEvents();
         $this->assertCount(1, $events);
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
         $event = $events[0];
-        $this->assertSame($diningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($diningArea->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
     }
 }

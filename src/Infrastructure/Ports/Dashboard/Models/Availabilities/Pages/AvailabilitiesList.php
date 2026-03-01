@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Models\Availabilities\Pages;
 
+use Application\Restaurants\GetRestaurantById\AvailabilityItem;
 use Domain\Restaurants\ValueObjects\Availability;
-use Infrastructure\Ports\Dashboard\Models\PageModel;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Availability as AvailabilityModel;
+use Infrastructure\Ports\Dashboard\Models\PageModel;
 
 final readonly class AvailabilitiesList extends PageModel
 {
@@ -41,6 +42,30 @@ final readonly class AvailabilitiesList extends PageModel
             return $a->dayOfWeekId <=> $b->dayOfWeekId;
         });
 
+        return new AvailabilitiesList(availabilities: $availabilityModels);
+    }
+
+    /**
+     * @param array<AvailabilityItem> $availabilities
+     */
+    public static function createFromResultAvailabilities(array $availabilities): self
+    {
+        $availabilityModels = array_map(
+            fn (AvailabilityItem $a) => new AvailabilityModel(
+                time: $a->time,
+                dayOfWeekId: $a->dayOfWeekId,
+                timeSlotId: $a->timeSlotId,
+                capacity: $a->capacity,
+            ),
+            $availabilities
+        );
+        usort($availabilityModels, function (AvailabilityModel $a, AvailabilityModel $b): int {
+            $timeSlotComparison = $a->timeSlotId <=> $b->timeSlotId;
+            if ($timeSlotComparison !== 0) {
+                return $timeSlotComparison;
+            }
+            return $a->dayOfWeekId <=> $b->dayOfWeekId;
+        });
         return new AvailabilitiesList(availabilities: $availabilityModels);
     }
 }

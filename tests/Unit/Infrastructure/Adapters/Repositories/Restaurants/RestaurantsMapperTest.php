@@ -74,10 +74,10 @@ final class RestaurantsMapperTest extends TestCase
         $restaurant = RestaurantsMapper::mapToDomain($restaurantModel);
 
         $this->assertInstanceOf(Restaurant::class, $restaurant);
-        $this->assertSame($restaurantId, $restaurant->getId()->value);
-        $this->assertSame($email, $restaurant->getSettings()->email->value);
-        $this->assertSame($name, $restaurant->getSettings()->name);
-        $this->assertSame($phone, $restaurant->getSettings()->phone->value);
+        $this->assertSame($restaurantId, $restaurant->id->value);
+        $this->assertSame($email, $restaurant->settings->email->value);
+        $this->assertSame($name, $restaurant->settings->name);
+        $this->assertSame($phone, $restaurant->settings->phone->value);
         $this->assertCount(1, $restaurant->getDiningAreas());
         $this->assertSame($diningAreaModel->name, $restaurant->getDiningAreas()[0]->name);
         $this->assertCount(1, $restaurant->getAvailabilities());
@@ -91,10 +91,10 @@ final class RestaurantsMapperTest extends TestCase
         $model = RestaurantsMapper::mapToModel($restaurant);
 
         $this->assertInstanceOf(RestaurantModel::class, $model);
-        $this->assertSame($restaurant->getId()->value, $model->id);
-        $this->assertSame($restaurant->getSettings()->email->value, $model->settings->email);
-        $this->assertSame($restaurant->getSettings()->name, $model->settings->name);
-        $this->assertSame($restaurant->getSettings()->phone->value, $model->settings->phone);
+        $this->assertSame($restaurant->id->value, $model->id);
+        $this->assertSame($restaurant->settings->email->value, $model->settings->email);
+        $this->assertSame($restaurant->settings->name, $model->settings->name);
+        $this->assertSame($restaurant->settings->phone->value, $model->settings->phone);
         $this->assertCount(count($restaurant->getDiningAreas()), $model->diningAreas);
         $this->assertCount(count($restaurant->getAvailabilities()), $model->availabilities);
     }
@@ -122,7 +122,7 @@ final class RestaurantsMapperTest extends TestCase
 
         $restaurant = RestaurantsMapper::mapToDomain($restaurantModel);
 
-        $this->assertSame($restaurantId, $restaurant->getId()->value);
+        $this->assertSame($restaurantId, $restaurant->id->value);
         $this->assertCount(0, $restaurant->getDiningAreas());
         $this->assertCount(0, $restaurant->getAvailabilities());
         $this->assertCount(0, $restaurant->getUsers());
@@ -148,9 +148,9 @@ final class RestaurantsMapperTest extends TestCase
         $model = RestaurantsMapper::mapToModel($restaurant);
         $roundTrip = RestaurantsMapper::mapToDomain($model);
 
-        $this->assertTrue($restaurant->getId()->equals($roundTrip->getId()));
-        $this->assertSame($restaurant->getSettings()->email->value, $roundTrip->getSettings()->email->value);
-        $this->assertSame($restaurant->getSettings()->name, $roundTrip->getSettings()->name);
+        $this->assertTrue($restaurant->id->equals($roundTrip->id));
+        $this->assertSame($restaurant->settings->email->value, $roundTrip->settings->email->value);
+        $this->assertSame($restaurant->settings->name, $roundTrip->settings->name);
         $this->assertCount(count($restaurant->getUsers()), $roundTrip->getUsers());
         $this->assertCount(count($restaurant->getAvailabilities()), $roundTrip->getAvailabilities());
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Models\Availabilities\Requests;
 
-use Application\Restaurants\UpdateAvailabilities\Availability;
 use Infrastructure\Ports\Dashboard\Models\Availabilities\Requests\UpdateAvailabilitiesRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,10 +24,9 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(3, $updateRequest->availabilities);
-        $this->assertInstanceOf(Availability::class, $updateRequest->availabilities[0]);
-        $this->assertSame(1, $updateRequest->availabilities[0]->timeSlotId);
-        $this->assertSame(2, $updateRequest->availabilities[0]->dayOfWeekId);
-        $this->assertSame(10, $updateRequest->availabilities[0]->capacity);
+        $this->assertSame(1, $updateRequest->availabilities[0]['timeSlotId']);
+        $this->assertSame(2, $updateRequest->availabilities[0]['dayOfWeekId']);
+        $this->assertSame(10, $updateRequest->availabilities[0]['capacity']);
     }
 
     public function testConstructorParsesKeyFormatTimeSlotIdDayOfWeekId(): void
@@ -43,9 +41,9 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(1, $updateRequest->availabilities);
-        $this->assertSame(13, $updateRequest->availabilities[0]->timeSlotId);
-        $this->assertSame(5, $updateRequest->availabilities[0]->dayOfWeekId);
-        $this->assertSame(25, $updateRequest->availabilities[0]->capacity);
+        $this->assertSame(13, $updateRequest->availabilities[0]['timeSlotId']);
+        $this->assertSame(5, $updateRequest->availabilities[0]['dayOfWeekId']);
+        $this->assertSame(25, $updateRequest->availabilities[0]['capacity']);
     }
 
     public function testConstructorConvertsNonNumericValueToZeroCapacity(): void
@@ -61,8 +59,8 @@ final class UpdateAvailabilitiesRequestTest extends TestCase
         $updateRequest = new UpdateAvailabilitiesRequest($requestStub);
 
         $this->assertCount(2, $updateRequest->availabilities);
-        $this->assertSame(0, $updateRequest->availabilities[0]->capacity);
-        $this->assertSame(0, $updateRequest->availabilities[1]->capacity);
+        $this->assertSame(0, $updateRequest->availabilities[0]['capacity']);
+        $this->assertSame(0, $updateRequest->availabilities[1]['capacity']);
     }
 
     public function testConstructorHandlesEmptyParsedBody(): void

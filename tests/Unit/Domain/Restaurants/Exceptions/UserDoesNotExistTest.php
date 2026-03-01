@@ -20,6 +20,6 @@ final class UserDoesNotExistTest extends TestCase
     {
         $exception = new UserDoesNotExist();
 
-        $this->assertInstanceOf(\Seedwork\Domain\Exceptions\DomainException::class, $exception);
+        $this->assertInstanceOf(\SeedWork\Domain\Exceptions\DomainException::class, $exception);
     }
 }

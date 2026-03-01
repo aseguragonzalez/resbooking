@@ -6,11 +6,11 @@ namespace Tests\Unit\Domain\Restaurants\Events;
 
 use Domain\Restaurants\Events\UserRemoved;
 use Domain\Restaurants\ValueObjects\User;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Shared\Email;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class UserRemovedTest extends TestCase
 {
@@ -27,16 +27,17 @@ final class UserRemovedTest extends TestCase
 
     public function testCreateNewEvent(): void
     {
-        $restaurantId = $this->faker->uuid;
-        $user = new User(username: new Email($this->faker->email));
+        $restaurantId = RestaurantId::fromString($this->faker->uuid);
+        $email = $this->faker->email;
+        $user = new User(username: new Email($email));
 
-        $event = UserRemoved::new(restaurantId: EntityId::fromString($restaurantId), user: $user);
+        $event = UserRemoved::create($restaurantId, $user);
 
         $this->assertNotEmpty($event->id->value);
-        $this->assertSame('UserRemoved', $event->type);
+        $this->assertSame('user.removed', $event->type);
         $this->assertSame('1.0', $event->version);
         $payload = $event->payload;
-        $this->assertSame($restaurantId, $payload['restaurantId']);
-        $this->assertSame($user, $payload['user']);
+        $this->assertSame($restaurantId->value, $payload['restaurant_id']);
+        $this->assertSame($email, $payload['user_email']);
     }
 }

@@ -7,7 +7,7 @@ namespace Domain\Restaurants\ValueObjects;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\TimeSlot;
-use Seedwork\Domain\ValueObject;
+use SeedWork\Domain\ValueObject;
 
 final readonly class Availability extends ValueObject
 {
@@ -16,6 +16,11 @@ final readonly class Availability extends ValueObject
         public DayOfWeek $dayOfWeek,
         public TimeSlot $timeSlot,
     ) {
+        parent::__construct();
+    }
+
+    protected function validate(): void
+    {
     }
 
     public function equals(ValueObject $other): bool

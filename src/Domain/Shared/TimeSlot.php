@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
+use Domain\Shared\Exceptions\InvalidTimeSlot;
+
 enum TimeSlot: int
 {
     case H1200 = 1;
@@ -88,14 +90,14 @@ enum TimeSlot: int
             22 => self::H2230,
             23 => self::H2300,
             24 => self::H2330,
-            default => throw new \InvalidArgumentException("Invalid time slot id: $id"),
+            default => throw new InvalidTimeSlot("Invalid time slot id: $id"),
         };
     }
 
     public static function getByStartTime(string $startTime): self
     {
         if (strlen($startTime) !== 5 && strlen($startTime) !== 8) {
-            throw new \InvalidArgumentException("Invalid time slot start time: $startTime");
+            throw new InvalidTimeSlot("Invalid time slot start time: $startTime");
         }
 
         return match (substr($startTime, 0, 5)) {
@@ -123,7 +125,7 @@ enum TimeSlot: int
             '22:30' => self::H2230,
             '23:00' => self::H2300,
             '23:30' => self::H2330,
-            default => throw new \InvalidArgumentException("Invalid time slot start time: $startTime"),
+            default => throw new InvalidTimeSlot("Invalid time slot start time: $startTime"),
         };
     }
 

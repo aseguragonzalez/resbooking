@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\AddDiningArea\AddDiningArea;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
-use Application\Restaurants\GetRestaurantById\GetRestaurantById;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdResult;
+use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
-use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
+use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
-use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
@@ -24,14 +24,14 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
 
 final class DiningAreasController extends RestaurantBaseController
 {
     public function __construct(
-        private readonly AddDiningArea $addDiningArea,
-        private readonly RemoveDiningArea $removeDiningArea,
-        private readonly UpdateDiningArea $updateDiningArea,
-        private readonly GetRestaurantById $getRestaurantById,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
         RequestContext $requestContext,
         RestaurantContextSettings $settings,
     ) {
@@ -41,14 +41,15 @@ final class DiningAreasController extends RestaurantBaseController
     public function index(): ActionResponse
     {
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($query);
+        /** @var GetRestaurantByIdResult $result */
+        $result = $this->queryBus->ask($query);
         $diningAreas = array_map(
-            fn ($diningArea) => new DiningArea(
-                id: $diningArea->id->value,
-                name: $diningArea->name,
-                capacity: $diningArea->capacity->value
+            fn (DiningAreaItem $da) => new DiningArea(
+                id: $da->id,
+                name: $da->name,
+                capacity: $da->capacity
             ),
-            $restaurant->getDiningAreas()
+            $result->diningAreas
         );
         $model = DiningAreasList::create(diningAreas: $diningAreas);
         return $this->view(model: $model);
@@ -70,7 +71,7 @@ final class DiningAreasController extends RestaurantBaseController
             return $this->view('edit', model: $pageModel);
         }
 
-        $this->addDiningArea->execute(new AddDiningAreaCommand(
+        $this->commandBus->dispatch(new AddDiningAreaCommand(
             restaurantId: $this->getRestaurantId(),
             name: $request->name,
             capacity: $request->capacity
@@ -81,20 +82,18 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
-        $restaurant = $this->getRestaurantById->execute($query);
-        $diningAreas = $restaurant->getDiningAreas();
-        $diningArea = array_filter($diningAreas, fn ($da) => $da->id->value === $id);
-        if (empty($diningArea)) {
-            return $this->redirectToAction('index', DiningAreasController::class);
-        }
-
-        $diningArea = array_values($diningArea)[0];
+        $query = new GetDiningAreaByIdQuery(
+            restaurantId: $this->getRestaurantId(),
+            diningAreaId: $id,
+        );
+        /** @var GetDiningAreaByIdResult $result */
+        $result = $this->queryBus->ask($query);
+        $diningArea = $result->diningArea;
         $backUrl = $request->getHeaderLine('Referer') ?: '/dining-areas';
         $model = EditDiningArea::fromDiningArea(
-            diningAreaId: $diningArea->id->value,
+            diningAreaId: $diningArea->id,
             name: $diningArea->name,
-            capacity: $diningArea->capacity->value,
+            capacity: $diningArea->capacity,
             backUrl: $backUrl
         );
         return $this->view(model: $model);
@@ -112,7 +111,7 @@ final class DiningAreasController extends RestaurantBaseController
             return $this->view('edit', model: $pageModel);
         }
 
-        $this->updateDiningArea->execute(new UpdateDiningAreaCommand(
+        $this->commandBus->dispatch(new UpdateDiningAreaCommand(
             restaurantId: $this->getRestaurantId(),
             diningAreaId: $id,
             name: $request->name,
@@ -124,7 +123,7 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function delete(string $id): ActionResponse
     {
-        $this->removeDiningArea->execute(new RemoveDiningAreaCommand(
+        $this->commandBus->dispatch(new RemoveDiningAreaCommand(
             restaurantId: $this->getRestaurantId(),
             diningAreaId: $id
         ));

@@ -20,6 +20,6 @@ final class DiningAreaAlreadyExistTest extends TestCase
     {
         $exception = new DiningAreaAlreadyExist();
 
-        $this->assertInstanceOf(\Seedwork\Domain\Exceptions\DomainException::class, $exception);
+        $this->assertInstanceOf(\SeedWork\Domain\Exceptions\DomainException::class, $exception);
     }
 }

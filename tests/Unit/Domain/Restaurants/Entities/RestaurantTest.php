@@ -13,7 +13,9 @@ use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Events\RestaurantCreated;
 use Domain\Restaurants\Events\RestaurantModified;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
+use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
@@ -23,7 +25,6 @@ use Domain\Shared\TimeSlot;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 use Tests\Unit\RestaurantBuilder;
 
 final class RestaurantTest extends TestCase
@@ -59,10 +60,10 @@ final class RestaurantTest extends TestCase
         $id = $this->faker->uuid;
         $settings = $this->settings();
 
-        $restaurant = Restaurant::new(id: $id, email: $settings->email->value);
+        $restaurant = Restaurant::create($settings->email->value, $id);
 
-        $this->assertSame($id, $restaurant->getId()->value);
-        $restaurantSettings = $restaurant->getSettings();
+        $this->assertSame($id, $restaurant->id->value);
+        $restaurantSettings = $restaurant->settings;
         $this->assertSame($settings->email->value, $restaurantSettings->email->value);
         $this->assertSame($settings->hasReminders, $restaurantSettings->hasReminders);
         $this->assertSame($settings->name, $restaurantSettings->name);
@@ -74,11 +75,10 @@ final class RestaurantTest extends TestCase
         $this->assertCount(1, $restaurant->getDiningAreas());
         $numberOfAvailabilities = count(DayOfWeek::all()) * count(TimeSlot::all());
         $this->assertCount($numberOfAvailabilities, $restaurant->getAvailabilities());
-        $events = $restaurant->getEvents();
+        $events = $restaurant->collectEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($restaurant, $event->payload['restaurant']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
         $this->assertInstanceOf(Restaurant::class, $restaurant);
         $this->assertInstanceOf(RestaurantCreated::class, $events[0]);
     }
@@ -86,22 +86,22 @@ final class RestaurantTest extends TestCase
     public function testAddDiningAreaToRestaurant(): void
     {
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->build();
-        $diningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $diningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
 
-        $restaurant->addDiningArea($diningArea);
+        $restaurant = $restaurant->addDiningArea($diningArea);
 
         $this->assertContains($diningArea, $restaurant->getDiningAreas());
-        $events = $restaurant->getEvents();
+        $events = $restaurant->collectEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($diningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($diningArea->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
         $this->assertInstanceOf(DiningAreaCreated::class, $events[0]);
     }
 
     public function testAddDiningAreaFailWhenDiningAreaAlreadyExist(): void
     {
-        $diningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $diningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
         $restaurant = $this->restaurantBuilder
             ->withSettings($this->settings())
             ->withDiningAreas([$diningArea])
@@ -116,41 +116,40 @@ final class RestaurantTest extends TestCase
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->build();
         $settings = $this->settings();
 
-        $restaurant->updateSettings($settings);
+        $restaurant = $restaurant->updateSettings($settings);
 
-        $this->assertSame($settings, $restaurant->getSettings());
-        $events = $restaurant->getEvents();
+        $this->assertSame($settings, $restaurant->settings);
+        $events = $restaurant->collectEvents();
         $this->assertCount(1, $events);
         $event = $events[0];
-        $this->assertSame($restaurant, $event->payload['restaurant']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
         $this->assertInstanceOf(RestaurantModified::class, $events[0]);
     }
 
     public function testRemoveDiningAreasFromRestaurant(): void
     {
         $diningAreas = [
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
         ];
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->withDiningAreas($diningAreas)->build();
         $diningAreaToRemove = $diningAreas[1];
 
-        $restaurant->removeDiningAreasById($diningAreaToRemove->id);
+        $restaurant = $restaurant->removeDiningAreasById($diningAreaToRemove->id);
 
-        $events = $restaurant->getEvents();
+        $events = $restaurant->collectEvents();
         $event = $events[0];
         $this->assertNotContains($diningAreaToRemove, $restaurant->getDiningAreas());
         $this->assertCount(1, $events);
-        $this->assertSame($diningAreaToRemove, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($diningAreaToRemove->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
         $this->assertInstanceOf(DiningAreaRemoved::class, $events[0]);
     }
 
     public function testUpdateDiningAreaInRestaurant(): void
     {
-        $originalDiningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $originalDiningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
         $restaurant = $this->restaurantBuilder
             ->withSettings($this->settings())
             ->withDiningAreas([$originalDiningArea])
@@ -161,15 +160,15 @@ final class RestaurantTest extends TestCase
             name: $this->faker->name
         );
 
-        $restaurant->updateDiningArea($updatedDiningArea);
+        $restaurant = $restaurant->updateDiningArea($updatedDiningArea);
 
-        $events = $restaurant->getEvents();
+        $events = $restaurant->collectEvents();
         $event = $events[0];
         $this->assertContains($updatedDiningArea, $restaurant->getDiningAreas());
         $this->assertNotContains($originalDiningArea, $restaurant->getDiningAreas());
         $this->assertCount(1, $events);
-        $this->assertSame($updatedDiningArea, $event->payload['diningArea']);
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
+        $this->assertSame($updatedDiningArea->id->value, $event->payload['dining_area_id']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
         $this->assertInstanceOf(DiningAreaModified::class, $events[0]);
     }
 
@@ -189,14 +188,38 @@ final class RestaurantTest extends TestCase
             ),
         ];
 
-        $restaurant->updateAvailabilities($newAvailabilities);
+        $restaurant = $restaurant->updateAvailabilities($newAvailabilities);
 
-        $events = $restaurant->getEvents();
+        $events = $restaurant->collectEvents();
         $event = $events[0];
         $this->assertSame($newAvailabilities, $restaurant->getAvailabilities());
         $this->assertSame(1, count($events));
-        $this->assertSame($restaurant->getId()->value, $event->payload['restaurantId']);
-        $this->assertSame($newAvailabilities, $event->payload['availabilities']);
+        $this->assertSame($restaurant->id->value, $event->payload['restaurant_id']);
+        $this->assertIsArray($event->payload['availabilities']);
+        $this->assertCount(2, $event->payload['availabilities']);
         $this->assertInstanceOf(AvailabilitiesUpdated::class, $events[0]);
+    }
+
+    public function testGetDiningAreaByIdReturnsDiningAreaWhenItExists(): void
+    {
+        $restaurant = $this->restaurantBuilder->build();
+        $firstDiningArea = $restaurant->getDiningAreas()[0];
+        $diningAreaId = $firstDiningArea->id;
+
+        $found = $restaurant->getDiningAreaById($diningAreaId);
+
+        $this->assertSame($firstDiningArea->id->value, $found->id->value);
+        $this->assertSame($firstDiningArea->name, $found->name);
+        $this->assertSame($firstDiningArea->capacity->value, $found->capacity->value);
+    }
+
+    public function testGetDiningAreaByIdThrowsDiningAreaNotFoundWhenNotExists(): void
+    {
+        $restaurant = $this->restaurantBuilder->build();
+        $nonExistentId = DiningAreaId::fromString($this->faker->uuid());
+
+        $this->expectException(DiningAreaNotFound::class);
+
+        $restaurant->getDiningAreaById($nonExistentId);
     }
 }

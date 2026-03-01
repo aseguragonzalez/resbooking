@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Restaurants\Services;
 
 use Domain\Restaurants\Entities\Restaurant;
-use Domain\Restaurants\Exceptions\RestaurantDoesNotExist;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Domain\Restaurants\Services\RestaurantObtainer;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\MockObject\MockObject;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class RestaurantObtainerTest extends TestCase
 {
@@ -29,10 +28,10 @@ final class RestaurantObtainerTest extends TestCase
 
     public function testObtainReturnsRestaurantWhenItExists(): void
     {
-        $restaurantId = EntityId::fromString($this->faker->uuid);
-        $restaurant = Restaurant::new(email: $this->faker->email, id: $restaurantId->value);
+        $restaurantId = RestaurantId::fromString($this->faker->uuid);
+        $restaurant = Restaurant::create($this->faker->email, $restaurantId->value);
         $this->restaurantRepository->expects($this->once())
-            ->method('getById')
+            ->method('findBy')
             ->with($restaurantId)
             ->willReturn($restaurant);
 
@@ -40,17 +39,19 @@ final class RestaurantObtainerTest extends TestCase
 
         $this->assertInstanceOf(Restaurant::class, $result);
         $this->assertSame($restaurant, $result);
-        $this->assertTrue($restaurantId->equals($result->getId()));
+        $this->assertTrue($restaurantId->equals($result->id));
     }
 
     public function testObtainThrowsExceptionWhenRestaurantDoesNotExist(): void
     {
-        $restaurantId = EntityId::fromString($this->faker->uuid);
+        $restaurantId = RestaurantId::fromString($this->faker->uuid);
         $this->restaurantRepository->expects($this->once())
-            ->method('getById')
+            ->method('findBy')
             ->with($restaurantId)
             ->willReturn(null);
-        $this->expectException(RestaurantDoesNotExist::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\NotFoundResource::class);
+        $this->expectExceptionMessage('Restaurant');
+        $this->expectExceptionMessage($restaurantId->value);
 
         $this->restaurantObtainer->obtain($restaurantId);
     }

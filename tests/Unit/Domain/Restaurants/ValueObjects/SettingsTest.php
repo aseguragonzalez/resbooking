@@ -8,7 +8,7 @@ use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
-use Seedwork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\Exceptions\ValueException;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;

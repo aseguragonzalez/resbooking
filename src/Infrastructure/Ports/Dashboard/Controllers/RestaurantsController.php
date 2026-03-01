@@ -44,14 +44,14 @@ final class RestaurantsController extends Controller
 
         if (count($restaurants) === 1) {
             $restaurant = $restaurants[0];
-            $this->setRestaurantCookie($restaurant->getId()->value);
+            $this->setRestaurantCookie($restaurant->id->value);
             return $this->redirectTo($backUrl);
         }
 
         $restaurantsList = array_map(
             fn ($restaurant) => (object)[
-                'id' => $restaurant->getId()->value,
-                'name' => $restaurant->getSettings()->name,
+                'id' => $restaurant->id->value,
+                'name' => $restaurant->settings->name,
             ],
             $restaurants
         );

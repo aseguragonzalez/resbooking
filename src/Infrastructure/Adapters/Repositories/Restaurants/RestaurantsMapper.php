@@ -7,6 +7,7 @@ namespace Infrastructure\Adapters\Repositories\Restaurants;
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
@@ -24,7 +25,7 @@ final class RestaurantsMapper
     public static function mapToDomain(RestaurantModel $restaurantModel): Restaurant
     {
         return Restaurant::build(
-            id: $restaurantModel->id,
+            id: RestaurantId::fromString($restaurantModel->id),
             settings: self::mapSettingsToDomain($restaurantModel->settings),
             diningAreas: self::mapDiningAreasToDomain($restaurantModel->diningAreas),
             availabilities: self::mapAvailabilitiesToDomain($restaurantModel->availabilities),
@@ -80,8 +81,8 @@ final class RestaurantsMapper
     public static function mapToModel(Restaurant $restaurant): RestaurantModel
     {
         return new RestaurantModel(
-            id: $restaurant->getId()->value,
-            settings: self::mapSettingsToModel($restaurant->getSettings()),
+            id: $restaurant->id->value,
+            settings: self::mapSettingsToModel($restaurant->settings),
             diningAreas: self::mapDiningAreasToModel($restaurant->getDiningAreas()),
             availabilities: self::mapAvailabilitiesToModel($restaurant->getAvailabilities()),
             users: array_map(fn ($user) => $user->username->value, $restaurant->getUsers()),

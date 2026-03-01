@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Domain\Restaurants\Exceptions;
 
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use PHPUnit\Framework\TestCase;
-use Seedwork\Domain\EntityId;
 
 final class DiningAreaNotFoundTest extends TestCase
 {
     public function testExceptionHasExpectedMessageWithDiningAreaId(): void
     {
-        $diningAreaId = EntityId::fromString('area-123');
+        $diningAreaId = DiningAreaId::fromString('area-123');
 
         $exception = new DiningAreaNotFound($diningAreaId);
 
@@ -21,8 +21,8 @@ final class DiningAreaNotFoundTest extends TestCase
 
     public function testExceptionExtendsDomainException(): void
     {
-        $exception = new DiningAreaNotFound(EntityId::fromString('some-id'));
+        $exception = new DiningAreaNotFound(DiningAreaId::fromString('some-id'));
 
-        $this->assertInstanceOf(\Seedwork\Domain\Exceptions\DomainException::class, $exception);
+        $this->assertInstanceOf(\SeedWork\Domain\Exceptions\DomainException::class, $exception);
     }
 }

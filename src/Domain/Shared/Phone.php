@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
-final readonly class Phone
+use SeedWork\Domain\Exceptions\ValueException;
+use SeedWork\Domain\ValueObject;
+
+final readonly class Phone extends ValueObject
 {
     public function __construct(public string $value)
     {
-        if (trim($value) === '') {
-            throw new \InvalidArgumentException('Phone number is required');
-        }
-        // TODO: Implement phone number validation
-        // if (!preg_match('/^\(\d{2}\) \d{4,5}-\d{4}$/', $value)) {
-        //      throw new \InvalidArgumentException('Invalid phone number');
-        // }
+        parent::__construct();
     }
 
     public function __toString(): string
@@ -22,8 +19,18 @@ final readonly class Phone
         return $this->value;
     }
 
-    public function equals(Phone $phone): bool
+    public function equals(ValueObject $other): bool
     {
-        return $this->value === $phone->value;
+        if (!$other instanceof self) {
+            return false;
+        }
+        return $this->value === $other->value;
+    }
+
+    protected function validate(): void
+    {
+        if (trim($this->value) === '') {
+            throw new ValueException('Phone number is required');
+        }
     }
 }

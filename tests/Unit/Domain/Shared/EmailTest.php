@@ -34,7 +34,7 @@ final class EmailTest extends TestCase
 
     public function testCreateInstanceFailWhenValueInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\ValueException::class);
 
         new Email($this->faker->word);
     }
@@ -64,7 +64,7 @@ final class EmailTest extends TestCase
 
     public function testCreateInstanceFailWhenValueIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\ValueException::class);
 
         new Email('');
     }
@@ -88,7 +88,7 @@ final class EmailTest extends TestCase
     #[DataProvider('invalidEmailProvider')]
     public function testCreateInstanceFailWhenValueIsInvalidFormat(string $invalidEmail): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\ValueException::class);
         $this->expectExceptionMessage('Invalid email address');
 
         new Email($invalidEmail);

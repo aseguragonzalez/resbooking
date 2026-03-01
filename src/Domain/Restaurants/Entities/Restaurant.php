@@ -14,17 +14,22 @@ use Domain\Restaurants\Events\RestaurantModified;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
 use Domain\Shared\Email;
 use Domain\Shared\Phone;
 use Domain\Shared\TimeSlot;
-use Seedwork\Domain\AggregateRoot;
-use Seedwork\Domain\EntityId;
+use SeedWork\Domain\AggregateRoot;
+use SeedWork\Domain\DomainEvent;
 
-final class Restaurant extends AggregateRoot
+/**
+ * @extends AggregateRoot<RestaurantId>
+ */
+final readonly class Restaurant extends AggregateRoot
 {
     public const string DEFAULT_PHONE_NUMBER = '+34-555-0100';
     public const int DEFAULT_NUMBER_OF_TABLES = 20;
@@ -37,19 +42,22 @@ final class Restaurant extends AggregateRoot
      * @param array<User> $users
      * @param array<DiningArea> $diningAreas
      * @param array<Availability> $availabilities
+     * @param array<DomainEvent> $domainEvents
      */
     private function __construct(
-        EntityId $id,
-        private Settings $settings,
-        private array $users = [],
-        private array $diningAreas = [],
-        private array $availabilities = [],
+        RestaurantId $id,
+        public Settings $settings,
+        private array $users,
+        private array $diningAreas,
+        private array $availabilities,
+        array $domainEvents = [],
     ) {
-        parent::__construct($id);
+        parent::__construct($id, $domainEvents);
     }
 
-    public static function new(string $email, ?string $id = null): self
+    public static function create(string $email, ?string $id = null): self
     {
+        $restaurantId = $id !== null ? RestaurantId::fromString($id) : RestaurantId::create();
         $restaurantEmail = new Email($email);
         $settings = new Settings(
             email: $restaurantEmail,
@@ -62,7 +70,7 @@ final class Restaurant extends AggregateRoot
         );
         $user = new User(username: $restaurantEmail);
 
-        /** @var array<Availability> */
+        /** @var array<Availability> $availabilities */
         $availabilities = [];
         foreach (DayOfWeek::all() as $dayOfWeek) {
             foreach (TimeSlot::all() as $timeSlot) {
@@ -74,39 +82,49 @@ final class Restaurant extends AggregateRoot
             }
         }
 
-        $restaurant = new self(
-            id: $id !== null ? EntityId::fromString($id) : EntityId::new(),
+        $event = RestaurantCreated::create($restaurantId);
+
+        return new self(
+            id: $restaurantId,
             settings: $settings,
             users: [$user],
-            diningAreas: [DiningArea::new(
-                capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
-                name: self::DEFAULT_DINING_AREA_NAME
-            )],
+            diningAreas: [
+                DiningArea::create(
+                    capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
+                    name: self::DEFAULT_DINING_AREA_NAME
+                ),
+            ],
             availabilities: $availabilities,
+            domainEvents: [$event],
         );
-        $restaurant->addEvent(RestaurantCreated::new(restaurantId: $restaurant->getId(), restaurant: $restaurant));
-        return $restaurant;
     }
 
     /**
      * @param array<User> $users
      * @param array<DiningArea> $diningAreas
      * @param array<Availability> $availabilities
+     * @param array<DomainEvent> $domainEvents
      */
     public static function build(
-        string $id,
+        RestaurantId $id,
         Settings $settings,
         array $users = [],
         array $diningAreas = [],
         array $availabilities = [],
+        array $domainEvents = [],
     ): self {
         return new self(
-            id: EntityId::fromString($id),
+            id: $id,
             settings: $settings,
             users: $users,
             diningAreas: $diningAreas,
             availabilities: $availabilities,
+            domainEvents: $domainEvents,
         );
+    }
+
+    protected function validate(): void
+    {
     }
 
     /**
@@ -114,7 +132,7 @@ final class Restaurant extends AggregateRoot
      */
     public function getUsers(): array
     {
-        return $this->users;
+        return array_values([...$this->users]);
     }
 
     /**
@@ -122,48 +140,89 @@ final class Restaurant extends AggregateRoot
      */
     public function getDiningAreas(): array
     {
-        return $this->diningAreas;
+        return array_values([...$this->diningAreas]);
     }
 
-    public function addDiningArea(DiningArea $diningArea): void
+    public function getDiningAreaById(DiningAreaId $diningAreaId): DiningArea
     {
-        $diningAreas = array_filter(
+        $found = array_filter(
             $this->diningAreas,
-            fn (DiningArea $existingDiningArea) => $existingDiningArea->equals($diningArea)
-                || $existingDiningArea->name === $diningArea->name
+            fn (DiningArea $d) => $d->id->equals($diningAreaId)
         );
-        if (!empty($diningAreas)) {
+        if ($found === []) {
+            throw new DiningAreaNotFound(diningAreaId: $diningAreaId);
+        }
+        return reset($found);
+    }
+
+    public function addDiningArea(DiningArea $diningArea): self
+    {
+        $conflicts = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $existing) => $existing->equals($diningArea)
+                || $existing->name === $diningArea->name
+        );
+        if ($conflicts !== []) {
             throw new DiningAreaAlreadyExist();
         }
-        $this->diningAreas[] = $diningArea;
-        $this->addEvent(DiningAreaCreated::new(restaurantId: $this->getId(), diningArea: $diningArea));
-    }
-
-    public function removeDiningAreasById(EntityId $diningAreaId): void
-    {
-        $filter = fn (DiningArea $diningArea) => $diningArea->id->equals($diningAreaId);
-        $diningAreasToBeRemoved = array_filter($this->diningAreas, $filter);
-        foreach ($diningAreasToBeRemoved as $diningArea) {
-            $this->addEvent(DiningAreaRemoved::new(restaurantId: $this->getId(), diningArea: $diningArea));
-        }
-        $this->diningAreas = array_filter($this->diningAreas, fn (DiningArea $diningArea) => !$filter($diningArea));
-    }
-
-    public function updateDiningArea(DiningArea $diningArea): void
-    {
-        $existingDiningArea = array_filter(
-            $this->diningAreas,
-            fn (DiningArea $existingDiningArea) => $existingDiningArea->id->equals($diningArea->id)
+        $newDiningAreas = [...$this->diningAreas, $diningArea];
+        $event = DiningAreaCreated::create($this->id, $diningArea);
+        return new self(
+            id: $this->id,
+            settings: $this->settings,
+            users: $this->users,
+            diningAreas: $newDiningAreas,
+            availabilities: $this->availabilities,
+            domainEvents: [...$this->collectEvents(), $event],
         );
-        if (empty($existingDiningArea)) {
+    }
+
+    public function removeDiningAreasById(DiningAreaId $diningAreaId): self
+    {
+        $toRemove = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $d) => $d->id->equals($diningAreaId)
+        );
+        $newDiningAreas = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $d) => !$d->id->equals($diningAreaId)
+        );
+        $events = $this->collectEvents();
+        foreach ($toRemove as $diningArea) {
+            $events[] = DiningAreaRemoved::create($this->id, $diningArea);
+        }
+        return new self(
+            id: $this->id,
+            settings: $this->settings,
+            users: $this->users,
+            diningAreas: array_values($newDiningAreas),
+            availabilities: $this->availabilities,
+            domainEvents: $events,
+        );
+    }
+
+    public function updateDiningArea(DiningArea $diningArea): self
+    {
+        $exists = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $d) => $d->id->equals($diningArea->id)
+        );
+        if ($exists === []) {
             throw new DiningAreaNotFound(diningAreaId: $diningArea->id);
         }
-
-        $this->diningAreas = array_map(
-            fn (DiningArea $s) => $s->id->equals($diningArea->id) ? $diningArea : $s,
+        $newDiningAreas = array_map(
+            fn (DiningArea $d) => $d->id->equals($diningArea->id) ? $diningArea : $d,
             $this->diningAreas
         );
-        $this->addEvent(DiningAreaModified::new(restaurantId: $this->getId(), diningArea: $diningArea));
+        $event = DiningAreaModified::create($this->id, $diningArea);
+        return new self(
+            id: $this->id,
+            settings: $this->settings,
+            users: $this->users,
+            diningAreas: $newDiningAreas,
+            availabilities: $this->availabilities,
+            domainEvents: [...$this->collectEvents(), $event],
+        );
     }
 
     /**
@@ -171,26 +230,35 @@ final class Restaurant extends AggregateRoot
      */
     public function getAvailabilities(): array
     {
-        return $this->availabilities;
+        return array_values([...$this->availabilities]);
     }
 
-    public function getSettings(): Settings
+    public function updateSettings(Settings $settings): self
     {
-        return $this->settings;
-    }
-
-    public function updateSettings(Settings $settings): void
-    {
-        $this->settings = $settings;
-        $this->addEvent(RestaurantModified::new(restaurantId: $this->getId(), restaurant: $this));
+        $event = RestaurantModified::create($this->id);
+        return new self(
+            id: $this->id,
+            settings: $settings,
+            users: $this->users,
+            diningAreas: $this->diningAreas,
+            availabilities: $this->availabilities,
+            domainEvents: [...$this->collectEvents(), $event],
+        );
     }
 
     /**
      * @param array<Availability> $availabilities
      */
-    public function updateAvailabilities(array $availabilities): void
+    public function updateAvailabilities(array $availabilities): self
     {
-        $this->availabilities = $availabilities;
-        $this->addEvent(AvailabilitiesUpdated::new(restaurantId: $this->getId(), availabilities: $availabilities));
+        $event = AvailabilitiesUpdated::create($this->id, $availabilities);
+        return new self(
+            id: $this->id,
+            settings: $this->settings,
+            users: $this->users,
+            diningAreas: $this->diningAreas,
+            availabilities: $availabilities,
+            domainEvents: [...$this->collectEvents(), $event],
+        );
     }
 }

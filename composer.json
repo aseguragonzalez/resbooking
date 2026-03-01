@@ -23,6 +23,7 @@
   "license": "MIT",
   "name": "resbooking/application",
   "require": {
+    "aseguragonzalez/php-seedwork": "^0.1.1",
     "monolog/monolog": "^3.10",
     "nyholm/psr7": "^1.8",
     "nyholm/psr7-server": "^1.1",

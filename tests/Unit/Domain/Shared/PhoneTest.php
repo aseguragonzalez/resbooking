@@ -56,7 +56,7 @@ final class PhoneTest extends TestCase
 
     public function testCreateInstanceFailWhenValueIsEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\SeedWork\Domain\Exceptions\ValueException::class);
 
         new Phone('');
     }
