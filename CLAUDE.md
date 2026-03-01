@@ -47,18 +47,18 @@ tests/Unit/                 # Mirrors src/ exactly
 
 ## SeedWork rules
 
-- Aggregates extend `Seedwork\Domain\AggregateRoot` — private constructor,
-  static `new()` (creates + emits event) and `build()` (reconstitutes).
-- Entities extend `Seedwork\Domain\Entity` — identity by id.
-- Value objects extend `Seedwork\Domain\ValueObject` — `final readonly`,
+- Aggregates extend `SeedWork\Domain\AggregateRoot` — private constructor,
+  static `create()` (creates + emits event) and `build()` (reconstitutes).
+- Entities extend `SeedWork\Domain\Entity` — identity by id.
+- Value objects extend `SeedWork\Domain\ValueObject` — `final readonly`,
   validate in constructor, throw `ValueException` on invalid state.
-- Domain events extend `Seedwork\Domain\DomainEvent` — past-tense name,
+- Domain events extend `SeedWork\Domain\DomainEvent` — past-tense name,
   serializable payload, `new()` static constructor.
-- Exceptions extend `Seedwork\Domain\Exceptions\DomainException`.
-- Repository interfaces extend `Seedwork\Domain\Repository` in Domain.
+- Exceptions extend `SeedWork\Domain\Exceptions\DomainException`.
+- Repository interfaces extend `SeedWork\Domain\Repository` in Domain.
   Implementations live in Infrastructure.
-- Command handlers implement `Seedwork\Application\CommandHandler`.
-  Query handlers implement `Seedwork\Application\QueryHandler`.
+- Command handlers implement `SeedWork\Application\CommandHandler`.
+  Query handlers implement `SeedWork\Application\QueryHandler`.
 
 ## Code style
 

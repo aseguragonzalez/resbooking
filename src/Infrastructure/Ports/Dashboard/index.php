@@ -6,7 +6,6 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
 use Infrastructure\Ports\Dashboard\DashboardApp;
-use Infrastructure\Ports\Dashboard\Middlewares\DomainEventsMiddleware;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 
 $app = new DashboardApp(container: new Container(), basePath: __DIR__);
