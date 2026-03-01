@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurant;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
+use SeedWork\Application\CommandBus;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Requests\RequestContext;
@@ -32,7 +32,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class AccountsController extends Controller
 {
     public function __construct(
-        private readonly CreateNewRestaurant $createNewRestaurant,
+        private readonly CommandBus $commandBus,
         private readonly IdentityManager $identityManager,
         private readonly AuthSettings $settings,
         private readonly RequestContext $requestContext,
@@ -118,7 +118,7 @@ final class AccountsController extends Controller
             ['admin']
         );
 
-        $this->createNewRestaurant->handle(new CreateNewRestaurantCommand(email: $request->username));
+        $this->commandBus->dispatch(new CreateNewRestaurantCommand(email: $request->username));
 
         return $this->redirectToAction("signIn");
     }

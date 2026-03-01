@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\AddDiningArea\AddDiningArea;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetRestaurantById\AvailabilityItem;
 use Application\Restaurants\GetRestaurantById\DiningAreaItem;
-use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
-use Application\Restaurants\RemoveDiningArea\RemoveDiningArea;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
-use Application\Restaurants\UpdateDiningArea\UpdateDiningArea;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
+use Domain\Restaurants\Entities\Restaurant;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -28,17 +25,16 @@ use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\EditDiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\AddDiningAreaRequest;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Requests\UpdateDiningAreaRequest;
 use PHPUnit\Framework\MockObject\MockObject;
-use Domain\Restaurants\Entities\Restaurant;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
 use Tests\Unit\RestaurantBuilder;
 
 final class DiningAreasControllerTest extends TestCase
 {
-    private AddDiningArea&MockObject $addDiningArea;
-    private RemoveDiningArea&MockObject $removeDiningArea;
-    private UpdateDiningArea&MockObject $updateDiningArea;
-    private GetRestaurantById&MockObject $getRestaurantById;
+    private CommandBus&MockObject $commandBus;
+    private QueryBus&MockObject $queryBus;
     private RequestContext $requestContext;
     private RestaurantContextSettings $settings;
     private DiningAreasController $controller;
@@ -50,16 +46,12 @@ final class DiningAreasControllerTest extends TestCase
     {
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->addDiningArea = $this->createMock(AddDiningArea::class);
-        $this->removeDiningArea = $this->createMock(RemoveDiningArea::class);
-        $this->updateDiningArea = $this->createMock(UpdateDiningArea::class);
-        $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
+        $this->commandBus = $this->createMock(CommandBus::class);
+        $this->queryBus = $this->createMock(QueryBus::class);
         $this->settings = new RestaurantContextSettings();
         $this->controller = new DiningAreasController(
-            $this->addDiningArea,
-            $this->removeDiningArea,
-            $this->updateDiningArea,
-            $this->getRestaurantById,
+            $this->commandBus,
+            $this->queryBus,
             $this->requestContext,
             $this->settings,
         );
@@ -72,13 +64,11 @@ final class DiningAreasControllerTest extends TestCase
     {
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->id->value);
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->getRestaurantById
+        $this->queryBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('ask')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->id->value;
             }))
@@ -102,10 +92,8 @@ final class DiningAreasControllerTest extends TestCase
     {
         $backUrl = '/dining-areas';
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
 
         $response = $this->controller->create($this->serverRequest);
@@ -128,10 +116,8 @@ final class DiningAreasControllerTest extends TestCase
         $backUrl = '/dining-areas';
         $this->requestContext->set('restaurantId', $this->faker->uuid());
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
 
         $response = $this->controller->store($request, $this->serverRequest);
 
@@ -150,12 +136,10 @@ final class DiningAreasControllerTest extends TestCase
     {
         $request = new AddDiningAreaRequest(name: 'New Area', capacity: 20);
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->addDiningArea->expects($this->once())
-            ->method('handle')
+        $this->commandBus->expects($this->once())
+            ->method('dispatch')
             ->with($this->callback(function (AddDiningAreaCommand $command) use ($request) {
                 return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->name === $request->name
@@ -179,12 +163,10 @@ final class DiningAreasControllerTest extends TestCase
         $backUrl = '/dining-areas';
         $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('ask')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->id->value;
             }))
@@ -210,12 +192,10 @@ final class DiningAreasControllerTest extends TestCase
         $restaurant = $this->restaurantBuilder->build();
         $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('ask')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->id->value;
             }))
@@ -236,10 +216,8 @@ final class DiningAreasControllerTest extends TestCase
         $request = new UpdateDiningAreaRequest(name: '', capacity: 0);
         $backUrl = '/dining-areas';
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
 
         $response = $this->controller->update($diningAreaId, $request, $this->serverRequest);
 
@@ -260,13 +238,11 @@ final class DiningAreasControllerTest extends TestCase
         $diningAreaId = $this->faker->uuid();
         $request = new UpdateDiningAreaRequest(name: 'Updated Area', capacity: 25);
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->removeDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->updateDiningArea
+        $this->commandBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('dispatch')
             ->with($this->callback(function (UpdateDiningAreaCommand $command) use ($request, $diningAreaId) {
                 return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->diningAreaId === $diningAreaId
@@ -288,13 +264,11 @@ final class DiningAreasControllerTest extends TestCase
     {
         $diningAreaId = $this->faker->uuid();
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->removeDiningArea
+        $this->commandBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('dispatch')
             ->with($this->callback(function (RemoveDiningAreaCommand $command) use ($diningAreaId) {
                 return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && $command->diningAreaId === $diningAreaId;
@@ -312,11 +286,9 @@ final class DiningAreasControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
-        $this->addDiningArea->expects($this->never())->method('handle');
-        $this->updateDiningArea->expects($this->never())->method('handle');
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->never())->method('getHeaderLine');
-        $this->removeDiningArea->expects($this->never())->method('handle');
 
         $routes = DiningAreasController::getRoutes();
 

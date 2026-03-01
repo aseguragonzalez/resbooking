@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
-use Application\Restaurants\UpdateSettings\UpdateSettings;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
@@ -17,12 +15,14 @@ use Framework\Mvc\Routes\RouteMethod;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\Settings\Pages\UpdateSettings as UpdateSettingsPage;
 use Infrastructure\Ports\Dashboard\Models\Settings\Requests\UpdateSettingsRequest;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
 
 final class SettingsController extends RestaurantBaseController
 {
     public function __construct(
-        private readonly UpdateSettings $updateSettings,
-        private readonly GetRestaurantById $getRestaurantById,
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
         RequestContext $requestContext,
         RestaurantContextSettings $settings,
     ) {
@@ -33,7 +33,7 @@ final class SettingsController extends RestaurantBaseController
     {
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         /** @var GetRestaurantByIdResult $result */
-        $result = $this->getRestaurantById->handle($query);
+        $result = $this->queryBus->ask($query);
 
         $pageModel = UpdateSettingsPage::new(
             email: $result->email,
@@ -55,7 +55,7 @@ final class SettingsController extends RestaurantBaseController
             return $this->view("settings", model: $pageModel);
         }
 
-        $this->updateSettings->handle(new UpdateSettingsCommand(
+        $this->commandBus->dispatch(new UpdateSettingsCommand(
             restaurantId: $this->getRestaurantId(),
             email: $request->email,
             hasReminders: $request->hasRemindersChecked(),

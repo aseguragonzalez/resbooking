@@ -6,10 +6,8 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\GetRestaurantById\AvailabilityItem;
 use Application\Restaurants\GetRestaurantById\DiningAreaItem;
-use Application\Restaurants\GetRestaurantById\GetRestaurantById;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
-use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilities;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
 use Faker\Factory;
 use Faker\Generator;
@@ -24,12 +22,14 @@ use Infrastructure\Ports\Dashboard\Models\Availabilities\Pages\AvailabilitiesLis
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use SeedWork\Application\CommandBus;
+use SeedWork\Application\QueryBus;
 use Tests\Unit\RestaurantBuilder;
 
 final class AvailabilitiesControllerTest extends TestCase
 {
-    private GetRestaurantById&MockObject $getRestaurantById;
-    private UpdateAvailabilities&MockObject $updateAvailabilities;
+    private CommandBus&MockObject $commandBus;
+    private QueryBus&MockObject $queryBus;
     private RequestContext $requestContext;
     private RestaurantContextSettings $settings;
     private AvailabilitiesController $controller;
@@ -41,13 +41,13 @@ final class AvailabilitiesControllerTest extends TestCase
     {
         $this->requestContext = new RequestContext();
         $this->requestContext->setIdentity(UserIdentity::anonymous());
-        $this->getRestaurantById = $this->createMock(GetRestaurantById::class);
-        $this->updateAvailabilities = $this->createMock(UpdateAvailabilities::class);
+        $this->commandBus = $this->createMock(CommandBus::class);
+        $this->queryBus = $this->createMock(QueryBus::class);
         $this->serverRequest = $this->createMock(ServerRequestInterface::class);
         $this->settings = new RestaurantContextSettings();
         $this->controller = new AvailabilitiesController(
-            $this->getRestaurantById,
-            $this->updateAvailabilities,
+            $this->commandBus,
+            $this->queryBus,
             $this->settings,
             $this->requestContext,
         );
@@ -87,11 +87,11 @@ final class AvailabilitiesControllerTest extends TestCase
                 $restaurant->getAvailabilities()
             ),
         );
-        $this->updateAvailabilities->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
-        $this->getRestaurantById
+        $this->queryBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('ask')
             ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
                 return $query->id === $restaurant->id->value;
             }))
@@ -117,14 +117,14 @@ final class AvailabilitiesControllerTest extends TestCase
             '2_3' => 15,
         ];
         $this->requestContext->set('restaurantId', $this->faker->uuid());
-        $this->getRestaurantById->expects($this->never())->method('handle');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest
             ->expects($this->once())
             ->method('getParsedBody')
             ->willReturn($parsedBody);
-        $this->updateAvailabilities
+        $this->commandBus
             ->expects($this->once())
-            ->method('handle')
+            ->method('dispatch')
             ->with($this->callback(function (UpdateAvailabilitiesCommand $command) {
                 return $command->restaurantId === $this->requestContext->get('restaurantId')
                     && count($command->availabilities) === 2;
@@ -142,8 +142,8 @@ final class AvailabilitiesControllerTest extends TestCase
 
     public function testGetRoutesConfiguration(): void
     {
-        $this->getRestaurantById->expects($this->never())->method('handle');
-        $this->updateAvailabilities->expects($this->never())->method('handle');
+        $this->commandBus->expects($this->never())->method('dispatch');
+        $this->queryBus->expects($this->never())->method('ask');
         $this->serverRequest->expects($this->never())->method('getParsedBody');
         $routes = AvailabilitiesController::getRoutes();
 
