@@ -7,6 +7,7 @@ namespace Tests\Unit;
 use Domain\Restaurants\Entities\DiningArea;
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\RestaurantId;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Restaurants\ValueObjects\User;
 use Domain\Shared\Capacity;
@@ -56,10 +57,10 @@ final class RestaurantBuilder
         );
         $capacity_value = $this->faker->numberBetween(1, 100);
         return Restaurant::build(
-            id: $this->faker->uuid,
+            id: RestaurantId::fromString($this->faker->uuid),
             settings: $this->settings ?? $settings,
             diningAreas: $this->diningAreas ?? [
-                DiningArea::new(capacity: new Capacity($capacity_value), name: 'Area 1')
+                DiningArea::create(capacity: new Capacity($capacity_value), name: 'Area 1')
             ],
             users: $this->users,
             availabilities: $this->availabilities ?? $this->getDefaultAvailabilities(capacity_value: $capacity_value),

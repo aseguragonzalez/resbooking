@@ -25,7 +25,7 @@ final readonly class AddDiningAreaHandler implements AddDiningArea
     public function handle(Command $command): void
     {
         $restaurantId = RestaurantId::fromString($command->restaurantId);
-        $diningArea = DiningArea::new(capacity: new Capacity(value: $command->capacity), name: $command->name);
+        $diningArea = DiningArea::create(capacity: new Capacity(value: $command->capacity), name: $command->name);
         $restaurant = $this->restaurantObtainer->obtain(id: $restaurantId)->addDiningArea(diningArea: $diningArea);
         $this->restaurantRepository->save($restaurant);
     }

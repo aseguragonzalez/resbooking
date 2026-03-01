@@ -89,7 +89,7 @@ final readonly class Restaurant extends AggregateRoot
             settings: $settings,
             users: [$user],
             diningAreas: [
-                DiningArea::new(
+                DiningArea::create(
                     capacity: new Capacity(self::DEFAULT_NUMBER_OF_TABLES),
                     name: self::DEFAULT_DINING_AREA_NAME
                 ),
@@ -106,7 +106,7 @@ final readonly class Restaurant extends AggregateRoot
      * @param array<DomainEvent> $domainEvents
      */
     public static function build(
-        string $id,
+        RestaurantId $id,
         Settings $settings,
         array $users = [],
         array $diningAreas = [],
@@ -114,7 +114,7 @@ final readonly class Restaurant extends AggregateRoot
         array $domainEvents = [],
     ): self {
         return new self(
-            id: RestaurantId::fromString($id),
+            id: $id,
             settings: $settings,
             users: $users,
             diningAreas: $diningAreas,

@@ -11,7 +11,7 @@ use Domain\Restaurants\Repositories\RestaurantRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class CreateNewRestaurantHandlerTest extends TestCase
+final class CreateNewRestaurantTest extends TestCase
 {
     private MockObject&RestaurantRepository $restaurantRepository;
     private CreateNewRestaurantHandler $service;

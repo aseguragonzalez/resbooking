@@ -30,7 +30,7 @@ final class DiningAreaTest extends TestCase
         $capacity = new Capacity(100);
         $name = $this->faker->name;
 
-        $diningArea = DiningArea::new(id: $id, capacity: $capacity, name: $name);
+        $diningArea = DiningArea::create(id: $id, capacity: $capacity, name: $name);
 
         $this->assertInstanceOf(DiningArea::class, $diningArea);
         $this->assertSame($id, $diningArea->id->value);
@@ -57,7 +57,7 @@ final class DiningAreaTest extends TestCase
         $this->expectException(ValueException::class);
         $this->expectExceptionMessage('Name is required');
 
-        DiningArea::new(
+        DiningArea::create(
             id: $this->faker->uuid,
             capacity: new Capacity($this->faker->numberBetween(1, 100)),
             name: ''

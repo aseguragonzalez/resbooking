@@ -181,7 +181,7 @@ final readonly class PlaceOrderHandler implements PlaceOrder
 {
     public function __construct(private OrderRepository $orderRepository) {}
 
-    public function execute(PlaceOrderCommand $command): void
+    public function handle(Command $command): void
     {
         $order = Order::create(
             details: new OrderDetails(

@@ -90,12 +90,12 @@ final class SqlRestaurantRepositoryTest extends TestCase
 
     public function testSaveInsertsDiningAreas(): void
     {
-        $diningArea1 = DiningArea::new(
+        $diningArea1 = DiningArea::create(
             capacity: new Capacity(10),
             name: 'Area 1',
             id: 'area1'
         );
-        $diningArea2 = DiningArea::new(
+        $diningArea2 = DiningArea::create(
             capacity: new Capacity(20),
             name: 'Area 2',
             id: 'area2'

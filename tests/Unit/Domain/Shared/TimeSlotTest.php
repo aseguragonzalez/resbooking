@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Domain\Shared;
 
+use Domain\Shared\Exceptions\InvalidTimeSlot;
 use Domain\Shared\TimeSlot;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
@@ -34,7 +35,7 @@ final class TimeSlotTest extends TestCase
 
     public function testGetByIdFailWhenIdIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidTimeSlot::class);
 
         TimeSlot::getById(0);
     }
@@ -76,7 +77,7 @@ final class TimeSlotTest extends TestCase
 
     public function testGetByStartTimeFailWhenValueIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidTimeSlot::class);
 
         TimeSlot::getByStartTime($this->faker->lexify('?????'));
     }
@@ -254,14 +255,14 @@ final class TimeSlotTest extends TestCase
 
     public function testGetByIdFailWhenIdIsTooLarge(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidTimeSlot::class);
 
         TimeSlot::getById(25);
     }
 
     public function testGetByIdFailWhenIdIsNegative(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidTimeSlot::class);
 
         TimeSlot::getById(-1);
     }
@@ -285,7 +286,7 @@ final class TimeSlotTest extends TestCase
     #[DataProvider('invalidTimeFormatProvider')]
     public function testGetByStartTimeFailWithInvalidFormat(string $invalidFormat): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidTimeSlot::class);
         $this->expectExceptionMessage('Invalid time slot start time');
 
         TimeSlot::getByStartTime($invalidFormat);

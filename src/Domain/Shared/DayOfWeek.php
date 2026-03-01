@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Domain\Shared;
 
+use Domain\Shared\Exceptions\InvalidDayOfWeek;
+
 enum DayOfWeek: int
 {
     case Sunday = 1;
@@ -29,7 +31,7 @@ enum DayOfWeek: int
             5 => self::Thursday,
             6 => self::Friday,
             7 => self::Saturday,
-            default => throw new \InvalidArgumentException("Invalid day of week id: $id"),
+            default => throw new InvalidDayOfWeek("Invalid day of week id: $id"),
         };
     }
 
@@ -43,7 +45,7 @@ enum DayOfWeek: int
             'thursday' => self::Thursday,
             'friday' => self::Friday,
             'saturday' => self::Saturday,
-            default => throw new \InvalidArgumentException("Invalid day of week name: $name"),
+            default => throw new InvalidDayOfWeek("Invalid day of week name: $name"),
         };
     }
 

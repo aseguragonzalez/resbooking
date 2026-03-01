@@ -86,7 +86,7 @@ final class RestaurantTest extends TestCase
     public function testAddDiningAreaToRestaurant(): void
     {
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->build();
-        $diningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $diningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
 
         $restaurant = $restaurant->addDiningArea($diningArea);
 
@@ -101,7 +101,7 @@ final class RestaurantTest extends TestCase
 
     public function testAddDiningAreaFailWhenDiningAreaAlreadyExist(): void
     {
-        $diningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $diningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
         $restaurant = $this->restaurantBuilder
             ->withSettings($this->settings())
             ->withDiningAreas([$diningArea])
@@ -129,9 +129,9 @@ final class RestaurantTest extends TestCase
     public function testRemoveDiningAreasFromRestaurant(): void
     {
         $diningAreas = [
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
-            DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
+            DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100)),
         ];
         $restaurant = $this->restaurantBuilder->withSettings($this->settings())->withDiningAreas($diningAreas)->build();
         $diningAreaToRemove = $diningAreas[1];
@@ -149,7 +149,7 @@ final class RestaurantTest extends TestCase
 
     public function testUpdateDiningAreaInRestaurant(): void
     {
-        $originalDiningArea = DiningArea::new(name: $this->faker->name, capacity: new Capacity(value: 100));
+        $originalDiningArea = DiningArea::create(name: $this->faker->name, capacity: new Capacity(value: 100));
         $restaurant = $this->restaurantBuilder
             ->withSettings($this->settings())
             ->withDiningAreas([$originalDiningArea])

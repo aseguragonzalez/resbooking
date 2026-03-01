@@ -29,7 +29,7 @@ final readonly class DiningArea extends Entity
         }
     }
 
-    public static function new(Capacity $capacity, string $name, ?string $id = null): self
+    public static function create(Capacity $capacity, string $name, ?string $id = null): self
     {
         return new self(
             id: $id !== null ? DiningAreaId::fromString($id) : DiningAreaId::create(),

@@ -32,10 +32,10 @@ final class RemoveDiningAreaTest extends TestCase
 
     public function testDiningAreaFromRestaurant(): void
     {
-        $diningArea = DiningArea::new(new Capacity(10), name: $this->faker->name);
+        $diningArea = DiningArea::create(new Capacity(10), name: $this->faker->name);
         $diningAreas = [
             $diningArea,
-            DiningArea::new(new Capacity(10), name: $this->faker->name),
+            DiningArea::create(new Capacity(10), name: $this->faker->name),
         ];
         $restaurant = $this->restaurantBuilder->withDiningAreas($diningAreas)->build();
         $this->restaurantRepository->expects($this->once())
