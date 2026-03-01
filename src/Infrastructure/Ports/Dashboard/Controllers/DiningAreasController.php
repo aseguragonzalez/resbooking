@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdResult;
 use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
@@ -80,20 +82,13 @@ final class DiningAreasController extends RestaurantBaseController
 
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
-        $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
-        /** @var GetRestaurantByIdResult $result */
+        $query = new GetDiningAreaByIdQuery(
+            restaurantId: $this->getRestaurantId(),
+            diningAreaId: $id,
+        );
+        /** @var GetDiningAreaByIdResult $result */
         $result = $this->queryBus->ask($query);
-        $diningArea = null;
-        foreach ($result->diningAreas as $da) {
-            if ($da->id === $id) {
-                $diningArea = $da;
-                break;
-            }
-        }
-        if ($diningArea === null) {
-            return $this->redirectToAction('index', DiningAreasController::class);
-        }
-
+        $diningArea = $result->diningArea;
         $backUrl = $request->getHeaderLine('Referer') ?: '/dining-areas';
         $model = EditDiningArea::fromDiningArea(
             diningAreaId: $diningArea->id,

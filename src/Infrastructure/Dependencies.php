@@ -8,6 +8,8 @@ use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\AddDiningArea\AddDiningAreaHandler;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantHandler;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdHandler;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdHandler;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
@@ -60,6 +62,7 @@ final class Dependencies
         $container->set(CommandBus::class, $transactionalCommandBus);
 
         $containerQueryBus = new ContainerQueryBus($container);
+        $containerQueryBus->register(GetDiningAreaByIdQuery::class, GetDiningAreaByIdHandler::class);
         $containerQueryBus->register(GetRestaurantByIdQuery::class, GetRestaurantByIdHandler::class);
         $container->set(QueryBus::class, $containerQueryBus);
 

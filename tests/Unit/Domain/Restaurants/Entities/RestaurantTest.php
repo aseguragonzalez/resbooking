@@ -13,7 +13,9 @@ use Domain\Restaurants\Events\DiningAreaRemoved;
 use Domain\Restaurants\Events\RestaurantCreated;
 use Domain\Restaurants\Events\RestaurantModified;
 use Domain\Restaurants\Exceptions\DiningAreaAlreadyExist;
+use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Domain\Restaurants\ValueObjects\Availability;
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use Domain\Restaurants\ValueObjects\Settings;
 use Domain\Shared\Capacity;
 use Domain\Shared\DayOfWeek;
@@ -196,5 +198,28 @@ final class RestaurantTest extends TestCase
         $this->assertIsArray($event->payload['availabilities']);
         $this->assertCount(2, $event->payload['availabilities']);
         $this->assertInstanceOf(AvailabilitiesUpdated::class, $events[0]);
+    }
+
+    public function testGetDiningAreaByIdReturnsDiningAreaWhenItExists(): void
+    {
+        $restaurant = $this->restaurantBuilder->build();
+        $firstDiningArea = $restaurant->getDiningAreas()[0];
+        $diningAreaId = $firstDiningArea->id;
+
+        $found = $restaurant->getDiningAreaById($diningAreaId);
+
+        $this->assertSame($firstDiningArea->id->value, $found->id->value);
+        $this->assertSame($firstDiningArea->name, $found->name);
+        $this->assertSame($firstDiningArea->capacity->value, $found->capacity->value);
+    }
+
+    public function testGetDiningAreaByIdThrowsDiningAreaNotFoundWhenNotExists(): void
+    {
+        $restaurant = $this->restaurantBuilder->build();
+        $nonExistentId = DiningAreaId::fromString($this->faker->uuid());
+
+        $this->expectException(DiningAreaNotFound::class);
+
+        $restaurant->getDiningAreaById($nonExistentId);
     }
 }

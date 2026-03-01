@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
+use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdResult;
 use Application\Restaurants\GetRestaurantById\AvailabilityItem;
 use Application\Restaurants\GetRestaurantById\DiningAreaItem;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
@@ -12,6 +14,8 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
 use Domain\Restaurants\Entities\Restaurant;
+use Domain\Restaurants\Exceptions\DiningAreaNotFound;
+use Domain\Restaurants\ValueObjects\DiningAreaId;
 use Faker\Factory;
 use Faker\Generator;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
@@ -159,7 +163,13 @@ final class DiningAreasControllerTest extends TestCase
     public function testEditReturnsEditView(): void
     {
         $restaurant = $this->restaurantBuilder->build();
-        $diningAreaId = $restaurant->getDiningAreas()[0]->id->value;
+        $diningArea = $restaurant->getDiningAreas()[0];
+        $diningAreaId = $diningArea->id->value;
+        $diningAreaItem = new DiningAreaItem(
+            id: $diningArea->id->value,
+            name: $diningArea->name,
+            capacity: $diningArea->capacity->value,
+        );
         $backUrl = '/dining-areas';
         $this->requestContext->set('restaurantId', $restaurant->id->value);
         $this->serverRequest->expects($this->once())->method('getHeaderLine')->with('Referer')->willReturn($backUrl);
@@ -167,10 +177,11 @@ final class DiningAreasControllerTest extends TestCase
         $this->queryBus
             ->expects($this->once())
             ->method('ask')
-            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->id->value;
+            ->with($this->callback(function (GetDiningAreaByIdQuery $query) use ($restaurant, $diningAreaId) {
+                return $query->restaurantId === $restaurant->id->value
+                    && $query->diningAreaId === $diningAreaId;
             }))
-            ->willReturn($this->resultFromRestaurant($restaurant));
+            ->willReturn(new GetDiningAreaByIdResult(diningArea: $diningAreaItem));
 
         $response = $this->controller->edit($diningAreaId, $this->serverRequest);
 
@@ -196,18 +207,15 @@ final class DiningAreasControllerTest extends TestCase
         $this->queryBus
             ->expects($this->once())
             ->method('ask')
-            ->with($this->callback(function (GetRestaurantByIdQuery $query) use ($restaurant) {
-                return $query->id === $restaurant->id->value;
+            ->with($this->callback(function (GetDiningAreaByIdQuery $query) use ($restaurant, $diningAreaId) {
+                return $query->restaurantId === $restaurant->id->value
+                    && $query->diningAreaId === $diningAreaId;
             }))
-            ->willReturn($this->resultFromRestaurant($restaurant));
+            ->willThrowException(new DiningAreaNotFound(DiningAreaId::fromString($diningAreaId)));
 
-        $response = $this->controller->edit($diningAreaId, $this->serverRequest);
+        $this->expectException(DiningAreaNotFound::class);
 
-        $this->assertInstanceOf(LocalRedirectTo::class, $response);
-        /** @var LocalRedirectTo $redirect */
-        $redirect = $response;
-        $this->assertEquals('index', $redirect->action);
-        $this->assertEquals(DiningAreasController::class, $redirect->controller);
+        $this->controller->edit($diningAreaId, $this->serverRequest);
     }
 
     public function testUpdateWithValidationErrors(): void

@@ -17,6 +17,7 @@ use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
 use Framework\Mvc\Routes\Router;
+use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Dependencies;
@@ -120,6 +121,11 @@ final class DashboardApp extends MvcWebApp
     {
         $errorsMapping = [
             RouteDoesNotFoundException::class => new ErrorMapping(
+                statusCode: 404,
+                templateName: 'Shared/404',
+                pageTitle: '{{notFound.title}}'
+            ),
+            DiningAreaNotFound::class => new ErrorMapping(
                 statusCode: 404,
                 templateName: 'Shared/404',
                 pageTitle: '{{notFound.title}}'

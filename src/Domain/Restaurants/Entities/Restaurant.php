@@ -143,6 +143,18 @@ final readonly class Restaurant extends AggregateRoot
         return $this->diningAreas;
     }
 
+    public function getDiningAreaById(DiningAreaId $diningAreaId): DiningArea
+    {
+        $found = array_filter(
+            $this->diningAreas,
+            fn (DiningArea $d) => $d->id->equals($diningAreaId)
+        );
+        if ($found === []) {
+            throw new DiningAreaNotFound(diningAreaId: $diningAreaId);
+        }
+        return reset($found);
+    }
+
     public function addDiningArea(DiningArea $diningArea): self
     {
         $conflicts = array_filter(
