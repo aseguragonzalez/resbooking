@@ -23,7 +23,7 @@ High-level flow for an HTTP request:
 1. `MvcWebApp::run()` bootstraps the container, MVC services and middleware chain.
 2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
 3. Middlewares run in order (outermost first):
-   - `ErrorHandling` → `Localization` → *optional* `Transaction` → *optional* `CsrfProtection`
+   - `ErrorHandling` → `Localization` → *optional* `CsrfProtection`
    - *optional* `Authentication` → *optional* `Authorization`
 4. The last middleware delegates to `Requests\RequestHandler`, which:
    - Resolves a `Route` via `Router::get()`
@@ -74,7 +74,6 @@ $app = new WebApp($container, basePath: __DIR__ . '/../');
 
 $app->useAuthentication();
 $app->useAuthorization();
-$app->useTransaction();
 $app->useCsrfProtection();
 
 exit($app->run());
@@ -85,7 +84,6 @@ Public knobs on `MvcWebApp`:
 - `addMiddleware(string $middleware)` – register custom middlewares (run inside the fixed chain).
 - `useAuthentication()` – require authentication middleware.
 - `useAuthorization()` – require authorization middleware.
-- `useTransaction()` – wrap `POST` requests in a DB transaction.
 - `useCsrfProtection()` – validate CSRF tokens on state-changing requests.
 
 ---
