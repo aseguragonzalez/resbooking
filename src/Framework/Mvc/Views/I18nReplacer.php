@@ -9,11 +9,11 @@ use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
 
-final readonly class I18nReplacer implements ContentReplacer
+final class I18nReplacer implements ContentReplacer
 {
     public function __construct(
-        private LanguageSettings $settings,
-        private FileManager $fileManager,
+        private readonly LanguageSettings $settings,
+        private readonly FileManager $fileManager,
     ) {
     }
 
@@ -24,6 +24,7 @@ final readonly class I18nReplacer implements ContentReplacer
     {
         $language = $context->get(RequestContextKeys::Language->value);
         $file = "{$this->settings->i18nPath}/{$language}.json";
+        /** @var array<string, string> $languageKeyValueJson */
         $languageKeyValueJson = $this->fileManager->readKeyValueJson($file);
         $keys = array_map(fn ($key) => "{{{$key}}}", array_keys($languageKeyValueJson));
         return str_replace($keys, array_values($languageKeyValueJson), $template);

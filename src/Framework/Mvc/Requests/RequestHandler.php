@@ -64,8 +64,11 @@ final class RequestHandler implements RequestHandlerInterface
         $this->actionParameterBuilder->withArgs($args);
         return array_map(
             function (\ReflectionParameter $param) use ($args, $request): mixed {
-                /** @var \ReflectionNamedType $paramType */
+                /** @var ?\ReflectionNamedType $paramType */
                 $paramType = $param->getType();
+                if ($paramType === null) {
+                    return null;
+                }
                 /** @var class-string $requestType */
                 $requestType = $paramType->getName();
                 // If the parameter type is ServerRequestInterface, return the request object
@@ -75,9 +78,9 @@ final class RequestHandler implements RequestHandlerInterface
                 $name = $param->getName();
                 $value = $this->getValueOrDefault($name, $args, $param);
                 return match ($paramType->getName()) {
-                    'int' => filter_var($value, FILTER_VALIDATE_INT),
-                    'float' => filter_var($value, FILTER_VALIDATE_FLOAT),
-                    'string' => is_string($value) ? (string)$value : null,
+                    'int' => InputNormalizer::toInt($value),
+                    'float' => InputNormalizer::toFloat($value),
+                    'string' => InputNormalizer::toString($value),
                     default => $this->actionParameterBuilder->build($requestType),
                 };
             },

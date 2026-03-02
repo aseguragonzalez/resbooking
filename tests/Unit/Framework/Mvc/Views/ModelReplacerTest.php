@@ -137,4 +137,34 @@ final class ModelReplacerTest extends TestCase
         $this->assertStringContainsString('[A: A1A2]', $result);
         $this->assertStringContainsString('[B: B1]', $result);
     }
+
+    public function testEscapesHtmlByDefault(): void
+    {
+        $model = (object)[
+            'unsafe' => '<script>alert("xss")</script>',
+        ];
+        $template = 'Value: {{unsafe}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame(
+            'Value: &lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;',
+            $result
+        );
+    }
+
+    public function testRendersRawHtmlWithTripleBraces(): void
+    {
+        $model = (object)[
+            'content' => '<strong>Safe</strong>',
+        ];
+        $template = 'Value: {{{content}}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame(
+            'Value: <strong>Safe</strong>',
+            $result
+        );
+    }
 }

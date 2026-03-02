@@ -10,6 +10,7 @@ use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
+use Framework\Mvc\Middlewares\CsrfProtection;
 use Framework\Mvc\Middlewares\ErrorHandling;
 use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
@@ -44,6 +45,7 @@ abstract class MvcWebApp extends Application
      * @param bool $requireAuthentication Whether to require authentication.
      * @param bool $requireAuthorization Whether to require authorization.
      * @param bool $requireTransaction Whether to wrap POST requests in a database transaction.
+     * @param bool $enableCsrfProtection Whether to validate CSRF tokens on state-changing requests.
      */
     protected function __construct(
         Container $container,
@@ -52,6 +54,7 @@ abstract class MvcWebApp extends Application
         private bool $requireAuthentication = false,
         private bool $requireAuthorization = false,
         private bool $requireTransaction = false,
+        private bool $enableCsrfProtection = false,
     ) {
         parent::__construct($container, $basePath);
     }
@@ -111,6 +114,14 @@ abstract class MvcWebApp extends Application
         $this->requireTransaction = true;
     }
 
+    /**
+     * Enable CSRF protection for state-changing HTTP methods.
+     */
+    public function useCsrfProtection(): void
+    {
+        $this->enableCsrfProtection = true;
+    }
+
     private function buildMiddlewareChain(): void
     {
         /** @var RequestHandling $lastMiddleware */
@@ -144,6 +155,13 @@ abstract class MvcWebApp extends Application
             $transactionMiddleware = $this->container->get(Transaction::class);
             $transactionMiddleware->setNext($lastMiddleware);
             $lastMiddleware = $transactionMiddleware;
+        }
+
+        if ($this->enableCsrfProtection) {
+            /** @var CsrfProtection $csrfMiddleware */
+            $csrfMiddleware = $this->container->get(CsrfProtection::class);
+            $csrfMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $csrfMiddleware;
         }
 
         /** @var Localization $localizationMiddleware */

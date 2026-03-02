@@ -32,6 +32,20 @@ final readonly class ModelReplacer implements ContentReplacer
     {
         $replacements = [];
 
+        // 0. Process raw {{{path}}} placeholders (no escaping, used sparingly for trusted HTML)
+        if (preg_match_all('/\{\{\{([^}]+)\}\}\}/', $template, $rawMatches, PREG_SET_ORDER)) {
+            $replacements = [];
+            foreach ($rawMatches as $rawMatch) {
+                $path = trim($rawMatch[1]);
+                $placeholder = $rawMatch[0];
+                if (!array_key_exists($placeholder, $replacements) && $this->resolver->pathExists($scope, $path)) {
+                    $value = $this->resolver->resolve($scope, $path);
+                    $replacements[$placeholder] = $this->formatRawValue($value);
+                }
+            }
+            $template = str_replace(array_keys($replacements), array_values($replacements), $template);
+        }
+
         // 1. Process {{#for var in path:}}...{{#endfor path:}}
         if (
             preg_match_all(
@@ -58,10 +72,10 @@ final readonly class ModelReplacer implements ContentReplacer
             $template = str_replace(array_keys($replacements), array_values($replacements), $template);
         }
 
-        // 2. Process simple {{path}} (exclude {{# directives). Only replace when the path exists in the
+        // 2. Process simple {{path}} (exclude {{# directives and raw {{{ }}}). Only replace when the path exists in the
         // scope so that placeholders not in the model (e.g. i18n keys like {{layout.app}}) are left for I18nReplacer.
         // When the path exists but value is null we replace with "" so that e.g. {{email}} becomes empty.
-        if (preg_match_all('/\{\{(?!#)([^}]+)\}\}/', $template, $tagMatches, PREG_SET_ORDER)) {
+        if (preg_match_all('/(?<!\{)\{\{(?!\{)(?!#)([^}]+)\}\}(?!\})/', $template, $tagMatches, PREG_SET_ORDER)) {
             $replacements = [];
             foreach ($tagMatches as $tagMatch) {
                 $path = trim($tagMatch[1]);
@@ -80,6 +94,20 @@ final readonly class ModelReplacer implements ContentReplacer
     }
 
     private function formatValue(mixed $value): string
+    {
+        $stringValue = match (true) {
+            $value instanceof \DateTimeImmutable => $value->format(\DateTime::ISO8601_EXPANDED),
+            $value instanceof \DateTime => $value->format(\DateTime::ISO8601_EXPANDED),
+            is_bool($value) => $value ? 'true' : 'false',
+            is_numeric($value) => (string) $value,
+            is_string($value) => $value,
+            default => '',
+        };
+
+        return htmlspecialchars($stringValue, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+    }
+
+    private function formatRawValue(mixed $value): string
     {
         return match (true) {
             $value instanceof \DateTimeImmutable => $value->format(\DateTime::ISO8601_EXPANDED),
