@@ -10,7 +10,7 @@ use Framework\Mvc\Requests\RequestContext;
 
 final readonly class HtmlViewEngine implements ViewEngine
 {
-    public function __construct(private HtmlViewEngineSettings $settings, private I18nReplacer $contentReplacer)
+    public function __construct(private HtmlViewEngineSettings $settings, private ContentReplacer $contentReplacer)
     {
     }
 
@@ -21,6 +21,9 @@ final readonly class HtmlViewEngine implements ViewEngine
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
         $templateFile = file_get_contents($viewPath);
+        if ($templateFile === false) {
+            throw new \RuntimeException("Could not read template: {$viewPath}");
+        }
 
         // add current identity to the model
         $currentIdentity = $context->getIdentity();
@@ -30,9 +33,10 @@ final readonly class HtmlViewEngine implements ViewEngine
                 'isAuthenticated' => $currentIdentity->isAuthenticated(),
             ]
         ];
-        $model = $view->data == null ? (object)$contextModel : (object)array_merge((array)$view->data, $contextModel);
+        $viewData = $view->data;
+        /** @var array<string, mixed> $model */
+        $model = array_merge(is_array($viewData) ? $viewData : (array) $viewData, $contextModel);
 
-        // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
 
         $body = $this->contentReplacer->replace($model, $template, $context);

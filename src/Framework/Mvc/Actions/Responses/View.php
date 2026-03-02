@@ -12,10 +12,11 @@ final class View extends ActionResponse
 {
     /**
      * @param array<Header> $headers
+     * @param array<string, mixed>|object|null $data
      */
     public function __construct(
         public readonly string $viewPath,
-        ?object $data = null,
+        array|object|null $data = null,
         array $headers = [],
         StatusCode $statusCode = StatusCode::Ok
     ) {

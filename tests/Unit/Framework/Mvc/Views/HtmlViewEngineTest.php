@@ -12,10 +12,12 @@ use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
 use Framework\Mvc\Responses\StatusCode;
 use Framework\Mvc\Security\Identity;
+use Framework\Mvc\Views\ContentReplacerPipeline;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
+use Framework\Mvc\Views\ViewValueResolver;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Views\BranchModel;
@@ -29,13 +31,14 @@ final class HtmlViewEngineTest extends TestCase
     protected function setUp(): void
     {
         $this->fileManager = $this->createStub(FileManager::class);
-        $i18nReplacer = new I18nReplacer(
-            new LanguageSettings(basePath: __DIR__),
-            $this->fileManager,
-            new BranchesReplacer(new ModelReplacer())
-        );
+        $resolver = new ViewValueResolver();
+        $pipeline = new ContentReplacerPipeline([
+            new ModelReplacer($resolver),
+            new BranchesReplacer($resolver),
+            new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->fileManager),
+        ]);
         $settings = new HtmlViewEngineSettings(basePath: __DIR__, viewPath: "/Files");
-        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $i18nReplacer);
+        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $pipeline);
     }
 
     public function testRenderFailWhenViewDoesNotExist(): void
@@ -65,6 +68,32 @@ final class HtmlViewEngineTest extends TestCase
         $model->createdAt = new \DateTimeImmutable('2025-01-02T12:01:02.000Z');
         $data = new \stdClass();
         $data->model = $model;
+        $view = new View(
+            viewPath: "primitive_properties",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $expected = file_get_contents("{$this->basePath}/primitive_properties_expected.html");
+
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
+    }
+
+    public function testRenderWithArrayViewData(): void
+    {
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
+        $data = [
+            'model' => [
+                'name' => 'Peter Parker',
+                'age' => 25,
+                'height' => 1.75,
+                'isStudent' => true,
+                'isEmployed' => false,
+                'createdAt' => new \DateTimeImmutable('2025-01-02T12:01:02.000Z'),
+            ],
+        ];
         $view = new View(
             viewPath: "primitive_properties",
             data: $data,
@@ -189,6 +218,66 @@ final class HtmlViewEngineTest extends TestCase
             statusCode: StatusCode::Ok
         );
         $expected = file_get_contents("{$this->basePath}/complex_view_expected.html");
+
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
+    }
+
+    public function testRenderNestedObjectsInTable(): void
+    {
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
+        $order1 = new \stdClass();
+        $order1->id = 'ORD-001';
+        $order1->customer = (object)['name' => 'Alice Smith', 'address' => (object)['city' => 'Madrid']];
+        $order2 = new \stdClass();
+        $order2->id = 'ORD-002';
+        $order2->customer = (object)['name' => 'Bob Jones', 'address' => (object)['city' => 'Barcelona']];
+        $model = new \stdClass();
+        $model->title = 'Orders';
+        $model->orders = [$order1, $order2];
+        $data = new \stdClass();
+        $data->model = $model;
+        $view = new View(
+            viewPath: "nested_table",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $expected = file_get_contents("{$this->basePath}/nested_table_expected.html");
+
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
+    }
+
+    public function testRenderTwoLevelNestedLists(): void
+    {
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
+        $section1 = new \stdClass();
+        $section1->title = 'Fruits';
+        $section1->items = [
+            (object)['name' => 'Apple', 'value' => 1.20],
+            (object)['name' => 'Banana', 'value' => 0.80],
+        ];
+        $section2 = new \stdClass();
+        $section2->title = 'Vegetables';
+        $section2->items = [
+            (object)['name' => 'Carrot', 'value' => 0.50],
+            (object)['name' => 'Lettuce', 'value' => 1.00],
+        ];
+        $model = new \stdClass();
+        $model->pageTitle = 'Catalog';
+        $model->sections = [$section1, $section2];
+        $data = new \stdClass();
+        $data->model = $model;
+        $view = new View(
+            viewPath: "two_level_nesting",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+        $expected = file_get_contents("{$this->basePath}/two_level_nesting_expected.html");
 
         $body = $this->viewEngine->render($view, $this->getRequestContext());
 

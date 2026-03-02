@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Views;
 
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Views\BranchesReplacer;
-use Framework\Mvc\Views\ModelReplacer;
+use Framework\Mvc\Views\ViewValueResolver;
+use PHPUnit\Framework\TestCase;
 
 final class BranchesReplacerTest extends TestCase
 {
-    private ModelReplacer $modelReplacer;
     private BranchesReplacer $branchesReplacer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->modelReplacer = new ModelReplacer();
-        $this->branchesReplacer = new BranchesReplacer($this->modelReplacer);
+        $this->branchesReplacer = new BranchesReplacer(new ViewValueResolver());
     }
 
     public function testReplacesIfBranchWithTrueProperty(): void
@@ -62,8 +60,8 @@ final class BranchesReplacerTest extends TestCase
 
     public function testReplacesIfBranchWithArrayProperty(): void
     {
-        $model = (object)['items' => ['foo' => true]];
-        $template = 'Item: {{#if items["foo"]:}}exists{{#endif items["foo"]:}}.';
+        $model = (object)['data' => ['foo' => true]];
+        $template = 'Item: {{#if data["foo"]:}}exists{{#endif data["foo"]:}}.';
 
         $result = $this->branchesReplacer->replace($model, $template, new RequestContext());
 
@@ -87,5 +85,25 @@ final class BranchesReplacerTest extends TestCase
         $result = $this->branchesReplacer->replace($model, $template, new RequestContext());
 
         $this->assertSame('A,', $result);
+    }
+
+    public function testReplacesNestedIfBlocks(): void
+    {
+        $model = (object)['outer' => true, 'inner' => true];
+        $template = '{{#if outer:}}[{{#if inner:}}INNER{{#endif inner:}}]{{#endif outer:}}';
+
+        $result = $this->branchesReplacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame('[INNER]', $result);
+    }
+
+    public function testReplacesNestedIfBlocksInnerFalse(): void
+    {
+        $model = (object)['outer' => true, 'inner' => false];
+        $template = '{{#if outer:}}[{{#if inner:}}INNER{{#endif inner:}}]{{#endif outer:}}';
+
+        $result = $this->branchesReplacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame('[]', $result);
     }
 }

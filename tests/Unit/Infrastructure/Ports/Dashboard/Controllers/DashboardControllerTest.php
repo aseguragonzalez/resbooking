@@ -35,6 +35,7 @@ final class DashboardControllerTest extends TestCase
         /** @var View $view */
         $view = $response;
         $this->assertEquals('Dashboard/index', $view->viewPath);
+        $this->assertIsObject($view->data);
         $this->assertObjectHasProperty('pageTitle', $view->data);
         $this->assertObjectHasProperty('model', $view->data);
     }

@@ -8,9 +8,7 @@ use Framework\Files\FileManager;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
-use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\I18nReplacer;
-use Framework\Mvc\Views\ModelReplacer;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -23,9 +21,8 @@ final class I18nReplacerTest extends TestCase
     protected function setUp(): void
     {
         $settings = new LanguageSettings(basePath: __DIR__);
-        $branchesReplacer = new BranchesReplacer(new ModelReplacer());
         $this->fileManager = $this->createStub(FileManager::class);
-        $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);
+        $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager);
         $this->context = new RequestContext([RequestContextKeys::Language->value => 'en']);
     }
 

@@ -11,9 +11,10 @@ abstract class ActionResponse
 {
     /**
      * @param array<Header> $headers
+     * @param array<string, mixed>|object $data
      */
     public function __construct(
-        public readonly object $data,
+        public readonly array|object $data,
         public readonly array $headers,
         public readonly StatusCode $statusCode,
     ) {

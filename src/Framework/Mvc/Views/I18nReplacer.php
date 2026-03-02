@@ -9,17 +9,18 @@ use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
 
-final class I18nReplacer extends ContentReplacerBase
+final readonly class I18nReplacer implements ContentReplacer
 {
     public function __construct(
-        private readonly LanguageSettings $settings,
-        private readonly FileManager $fileManager,
-        BranchesReplacer $nextReplacer
+        private LanguageSettings $settings,
+        private FileManager $fileManager,
     ) {
-        parent::__construct($nextReplacer);
     }
 
-    protected function customReplace(?object $model, string $template, RequestContext $context): string
+    /**
+     * @param array<string, mixed>|object|null $model
+     */
+    public function replace(array|object|null $model, string $template, RequestContext $context): string
     {
         $language = $context->get(RequestContextKeys::Language->value);
         $file = "{$this->settings->i18nPath}/{$language}.json";

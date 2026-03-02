@@ -6,70 +6,38 @@ namespace Framework\Mvc\Views;
 
 use Framework\Mvc\Requests\RequestContext;
 
-final class BranchesReplacer extends ContentReplacerBase
+final readonly class BranchesReplacer implements ContentReplacer
 {
-    public function __construct(ModelReplacer $nextReplacer)
+    public function __construct(private ViewValueResolver $resolver)
     {
-        parent::__construct($nextReplacer);
-    }
-
-    protected function customReplace(?object $model, string $template, RequestContext $context): string
-    {
-        $branchesToReplace = $model === null ? [] : $this->replaceBranches(model: $model, template: $template);
-
-        return str_replace(array_keys($branchesToReplace), array_values($branchesToReplace), $template);
     }
 
     /**
-     * @return array<string, string>
+     * @param array<string, mixed>|object|null $model
      */
-    private function replaceBranches(object $model, string $template): array
+    public function replace(array|object|null $model, string $template, RequestContext $context): string
     {
-        // TODO: allow nested if statements
-        $expressionsToReplace = [];
-        preg_match_all(
-            "/\{\{#if (.*?):\}\}(.*?)\{\{#endif \\1:\}\}/s",
-            $template,
-            $matches,
-            PREG_SET_ORDER
-        );
-        foreach ($matches as $match) {
-            $expression = $match[1];
-            $blockContent = $match[2];
-            $expressionsToReplace[$match[0]] = $this->checkExpression($expression, $model) ? $blockContent : '';
+        if ($model === null) {
+            return $template;
         }
-        return $expressionsToReplace;
+        return $this->replaceBranches($model, $template);
     }
 
-    private function checkExpression(string $expression, object $model): bool
+    /**
+     * Replace #if/#endif blocks. Processes innermost blocks first so nested #if work.
+     *
+     * @param array<string, mixed>|object $model
+     */
+    private function replaceBranches(array|object $model, string $template): string
     {
-        $parts = explode('->', trim(str_replace(['!', '()'], ['', ''], $expression)));
-        $path = $model;
-        foreach ($parts as $next) {
-            // @phpstan-ignore-next-line
-            if (property_exists($path, $next)) {
-                $path = $path->$next;
-                // @phpstan-ignore-next-line
-            } elseif (method_exists($path, $next)) {
-                $path = $path->$next();
-            } elseif (preg_match('/^(\w+)\[(.*?)\]$/', $next, $arrayMatches)) {
-                // NOTE: check if next is an key-value dict (array)
-                $property = $arrayMatches[1];
-                $key = $arrayMatches[2];
-                $cleanKey = str_replace(['"', "'"], '', $key);
-                if (
-                    // @phpstan-ignore-next-line
-                    property_exists($path, $property)
-                    && is_array($path->$property)
-                    && array_key_exists($cleanKey, $path->$property)
-                ) {
-                    $path = $path->$property[$cleanKey];
-                }
-            } else {
-                $path = null;
-                break;
-            }
+        // Match innermost blocks only: block must not contain {{#if (so we process from inside out)
+        $pattern = '/\{\{#if\s+(.+?):\}\}((?:(?!\{\{#if).)*?)\{\{#endif\s+\1:\}\}/s';
+        while (preg_match($pattern, $template, $match)) {
+            $expression = trim($match[1]);
+            $blockContent = $match[2];
+            $replacement = $this->resolver->isTruthy($model, $expression) ? $blockContent : '';
+            $template = str_replace($match[0], $replacement, $template);
         }
-        return str_starts_with($expression, '!') ? !(bool)$path : (bool)$path;
+        return $template;
     }
 }

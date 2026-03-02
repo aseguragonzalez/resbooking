@@ -18,8 +18,15 @@ use Framework\Mvc\Middlewares\Transaction;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestHandler;
 use Framework\Mvc\Routes\Router;
+use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\Views\BranchesReplacer;
+use Framework\Mvc\Views\ContentReplacer;
+use Framework\Mvc\Views\ContentReplacerPipeline;
 use Framework\Mvc\Views\HtmlViewEngine;
+use Framework\Mvc\Views\I18nReplacer;
+use Framework\Mvc\Views\ModelReplacer;
 use Framework\Mvc\Views\ViewEngine;
+use Framework\Mvc\Views\ViewValueResolver;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -163,6 +170,20 @@ abstract class MvcWebApp extends Application
         ));
         $this->container->set(Router::class, $this->router());
         $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
+        $resolver = new ViewValueResolver();
+        $languageSettings = $this->container->get(LanguageSettings::class);
+        $fileManager = $this->container->get(FileManager::class);
+        if (!$languageSettings instanceof LanguageSettings || !$fileManager instanceof FileManager) {
+            throw new \RuntimeException('LanguageSettings or FileManager not found in container');
+        }
+        $this->container->set(
+            ContentReplacer::class,
+            new ContentReplacerPipeline([
+                new ModelReplacer($resolver),
+                new BranchesReplacer($resolver),
+                new I18nReplacer($languageSettings, $fileManager),
+            ])
+        );
         $this->container->set(ViewEngine::class, $this->container->get(HtmlViewEngine::class));
         $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }

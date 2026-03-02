@@ -8,5 +8,8 @@ use Framework\Mvc\Requests\RequestContext;
 
 interface ContentReplacer
 {
-    public function replace(?object $model, string $template, RequestContext $context): string;
+    /**
+     * @param array<string, mixed>|object|null $model
+     */
+    public function replace(array|object|null $model, string $template, RequestContext $context): string;
 }
