@@ -139,6 +139,23 @@ Placeholders are replaced by the value of a path on the model.
 
 Placeholders `{{key}}` where **key** exists in the language JSON file (e.g. `{locale}.json`) are replaced in the last pipeline step. They can override model placeholders if the same key exists in the i18n file.
 
+#### Dynamic i18n keys from model values
+
+Sometimes you need an i18n key that is partially determined by the model (for example, a flash message that depends on a status). You can compose such keys using nested placeholders:
+
+```html
+<!-- model->status = 'success' -->
+<p>{{flash.{{model->status}}}}</p>
+```
+
+Processing steps:
+
+1. `ModelReplacer` resolves the inner `{{model->status}}` using the model and rewrites the outer placeholder to `{{flash.success}}`.
+2. `I18nReplacer` looks up `flash.success` in `{locale}.json` and replaces the placeholder with its value.
+3. If the computed key does **not** exist in the dictionary, the engine renders the plain key string (e.g. `flash.missing`) instead of leaving `{{flash.missing}}`.
+
+This allows you to build i18n keys dynamically while keeping the translation lookup centralized in the JSON files. The final flattened keys (e.g. `flash.success`, `availabilities.dayOfWeek.1`) must exist in the `{locale}.json` file to be localized; otherwise the plain key string is rendered.
+
 ## Processing order
 
 1. Load the view file: `{path}/{viewPath}.html`.

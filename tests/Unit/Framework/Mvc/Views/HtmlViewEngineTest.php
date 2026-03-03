@@ -356,6 +356,64 @@ final class HtmlViewEngineTest extends TestCase
         $this->viewEngine->render($view, $this->getRequestContext());
     }
 
+    public function testRenderWithDynamicI18nKeyComposedFromModel(): void
+    {
+        $this->fileManager
+            ->method('readKeyValueJson')
+            ->willReturn([
+                'flash.success' => 'Operation completed',
+            ]);
+
+        $model = new \stdClass();
+        $model->status = 'success';
+        $data = new \stdClass();
+        $data->model = $model;
+
+        $view = new View(
+            viewPath: "dynamic_i18n",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+
+        $expected = file_get_contents("{$this->basePath}/dynamic_i18n_expected.html");
+
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
+    }
+
+    public function testRenderDynamicDayOfWeekI18nInLoop(): void
+    {
+        $this->fileManager
+            ->method('readKeyValueJson')
+            ->willReturn([
+                'availabilities.dayOfWeek.1' => 'Monday',
+                'availabilities.dayOfWeek.2' => 'Tuesday',
+            ]);
+
+        $availability1 = new \stdClass();
+        $availability1->dayOfWeekId = 1;
+        $availability2 = new \stdClass();
+        $availability2->dayOfWeekId = 2;
+
+        $data = new \stdClass();
+        $data->availabilities = [$availability1, $availability2];
+
+        $view = new View(
+            viewPath: "dynamic_availabilities_i18n",
+            data: $data,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+
+        $expected = file_get_contents("{$this->basePath}/dynamic_availabilities_i18n_expected.html");
+
+        $body = $this->viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
+    }
+
     private function getRequestContext(): RequestContext
     {
         $requestContext = new RequestContext();

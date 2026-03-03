@@ -167,4 +167,34 @@ final class ModelReplacerTest extends TestCase
             $result
         );
     }
+
+    public function testResolvesNestedPlaceholderInsideExpressionForDynamicI18nKey(): void
+    {
+        $model = (object)[
+            'model' => (object)[
+                'status' => 'success',
+            ],
+        ];
+        $template = 'Message key: {{flash.{{model->status}}}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        // ModelReplacer should resolve the inner {{model->status}} but keep the outer placeholder
+        // so that I18nReplacer can later replace {{flash.success}} using the dictionary.
+        $this->assertSame('Message key: {{flash.success}}', $result);
+    }
+
+    public function testSimplePlaceholdersWithoutNestedExpressionsRemainUnchangedWhenPathMissing(): void
+    {
+        $model = (object)[
+            'name' => 'Peter',
+        ];
+        $template = 'Name: {{name}}, Missing: {{nonExistingKey}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        // Existing paths are replaced, missing ones are kept as-is for I18nReplacer.
+        $this->assertStringContainsString('Name: Peter', $result);
+        $this->assertStringContainsString('{{nonExistingKey}}', $result);
+    }
 }

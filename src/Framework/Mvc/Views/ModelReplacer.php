@@ -31,10 +31,8 @@ final readonly class ModelReplacer implements ContentReplacer
     private function replaceContent(array|object $scope, string $template): string
     {
         $replacements = [];
-
         // 0. Process raw {{{path}}} placeholders (no escaping, used sparingly for trusted HTML)
         if (preg_match_all('/\{\{\{([^}]+)\}\}\}/', $template, $rawMatches, PREG_SET_ORDER)) {
-            $replacements = [];
             foreach ($rawMatches as $rawMatch) {
                 $path = trim($rawMatch[1]);
                 $placeholder = $rawMatch[0];
@@ -45,6 +43,10 @@ final readonly class ModelReplacer implements ContentReplacer
             }
             $template = str_replace(array_keys($replacements), array_values($replacements), $template);
         }
+
+        // 1.5. Flatten one-level nested placeholders used for dynamic i18n keys, e.g.:
+        // {{availabilities.dayOfWeek.{{availability->dayOfWeekId}}}} -> {{availabilities.dayOfWeek.1}}
+        $template = $this->flattenNestedPlaceholders($scope, $template);
 
         // 1. Process {{#for var in path:}}...{{#endfor path:}}
         if (
@@ -69,12 +71,14 @@ final readonly class ModelReplacer implements ContentReplacer
                 }
                 $replacements[$match[0]] = $content;
             }
+            /** @var array<string, string> $replacements */
             $template = str_replace(array_keys($replacements), array_values($replacements), $template);
         }
 
-        // 2. Process simple {{path}} (exclude {{# directives and raw {{{ }}}). Only replace when the path exists in the
-        // scope so that placeholders not in the model (e.g. i18n keys like {{layout.app}}) are left for I18nReplacer.
-        // When the path exists but value is null we replace with "" so that e.g. {{email}} becomes empty.
+        // 2. Process simple {{path}} (exclude {{# directives and raw {{{ }}}).
+        //    Only resolve to a model value when the path exists in the scope so that placeholders
+        //    not in the model (e.g. i18n keys like {{layout.app}}) are left for I18nReplacer. When the path exists
+        //    but value is null we replace with "" so that e.g. {{email}} becomes empty.
         if (preg_match_all('/(?<!\{)\{\{(?!\{)(?!#)([^}]+)\}\}(?!\})/', $template, $tagMatches, PREG_SET_ORDER)) {
             $replacements = [];
             foreach ($tagMatches as $tagMatch) {
@@ -117,5 +121,57 @@ final readonly class ModelReplacer implements ContentReplacer
             is_string($value) => $value,
             default => '',
         };
+    }
+
+    /**
+     * Flattens one-level nested placeholders of the form:
+     *   {{prefix.{{innerPath}}}} -> {{prefix.innerValue}}
+     *
+     * This is enough for dynamic i18n keys like:
+     *   {{availabilities.dayOfWeek.{{availability->dayOfWeekId}}}}
+     *
+     * @param array<string, mixed>|object $scope
+     */
+    private function flattenNestedPlaceholders(array|object $scope, string $template): string
+    {
+        if (!str_contains($template, '{{')) {
+            return $template;
+        }
+
+        if (
+            !preg_match_all(
+                '/\{\{([^{}]+)\{\{(?!#)([^{}]+)\}\}\}\}/',
+                $template,
+                $matches,
+                PREG_SET_ORDER,
+            )
+        ) {
+            return $template;
+        }
+
+        $replacements = [];
+        foreach ($matches as $match) {
+            $outerPlaceholder = $match[0];
+            $prefix = trim($match[1]);
+            $innerPath = trim($match[2]);
+
+            if (array_key_exists($outerPlaceholder, $replacements)) {
+                continue;
+            }
+
+            if (!$this->resolver->pathExists($scope, $innerPath)) {
+                continue;
+            }
+
+            $value = $this->resolver->resolve($scope, $innerPath);
+            $flattenedExpression = $prefix . $this->formatRawValue($value);
+            $replacements[$outerPlaceholder] = '{{' . $flattenedExpression . '}}';
+        }
+
+        if ($replacements === []) {
+            return $template;
+        }
+
+        return str_replace(array_keys($replacements), array_values($replacements), $template);
     }
 }
