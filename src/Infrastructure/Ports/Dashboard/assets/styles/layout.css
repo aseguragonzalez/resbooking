@@ -116,6 +116,7 @@ body {
     color: var(--color-text-inverse);
     display: block;
     transition: opacity var(--transition-base);
+    width: fit-content;
 }
 
 .header h1 a:hover {
