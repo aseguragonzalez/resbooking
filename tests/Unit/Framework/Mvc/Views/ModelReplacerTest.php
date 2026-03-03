@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Views;
 
-use PHPUnit\Framework\TestCase;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Views\ModelReplacer;
+use Framework\Mvc\Views\ViewValueResolver;
+use PHPUnit\Framework\TestCase;
 
 final class ModelReplacerTest extends TestCase
 {
+    private ModelReplacer $replacer;
+
+    protected function setUp(): void
+    {
+        $this->replacer = new ModelReplacer(new ViewValueResolver());
+    }
+
     public function testReplacesPrimitiveProperties(): void
     {
         $model = (object)[
@@ -22,9 +30,8 @@ final class ModelReplacerTest extends TestCase
         ];
         $template = 'Name: {{name}}, Age: {{age}}, Height: {{height}},' .
              ' Student: {{isStudent}}, Employed: {{isEmployed}}, Created: {{createdAt}}';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertStringContainsString('Peter Parker', $result);
         $this->assertStringContainsString('25', $result);
@@ -46,9 +53,8 @@ final class ModelReplacerTest extends TestCase
             'address' => $address,
         ];
         $template = 'Name: {{name}}, Street: {{address->street}}, City: {{address->city}}';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertStringContainsString('Freddy Krueger', $result);
         $this->assertStringContainsString('Elm Street', $result);
@@ -61,9 +67,8 @@ final class ModelReplacerTest extends TestCase
             'items' => ['foo', 'bar', 'baz']
         ];
         $template = '{{#for item in items:}}Item: {{item}}; {{#endfor items:}}';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertStringContainsString('Item: foo;', $result);
         $this->assertStringContainsString('Item: bar;', $result);
@@ -78,9 +83,8 @@ final class ModelReplacerTest extends TestCase
             'users' => [$user1, $user2]
         ];
         $template = '{{#for user in users:}}User: {{user->name}}; {{#endfor users:}}';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertStringContainsString('User: Peter;', $result);
         $this->assertStringContainsString('User: Freddy;', $result);
@@ -90,9 +94,8 @@ final class ModelReplacerTest extends TestCase
     {
         $model = (object)[];
         $template = 'Nothing to replace here.';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertSame('Nothing to replace here.', $result);
     }
@@ -101,11 +104,97 @@ final class ModelReplacerTest extends TestCase
     {
         $model = (object)['name' => 'Peter'];
         $template = 'Name: {{name}}, Age: {{age}}';
-        $replacer = new ModelReplacer();
 
-        $result = $replacer->replace($model, $template, new RequestContext());
+        $result = $this->replacer->replace($model, $template, new RequestContext());
 
         $this->assertStringContainsString('Peter', $result);
-        $this->assertStringContainsString('Age: ', $result);
+        // Missing model paths are left unchanged so I18nReplacer can replace them (e.g. {{layout.app}})
+        $this->assertStringContainsString('{{age}}', $result);
+    }
+
+    public function testReplacesWithArrayIndexInPath(): void
+    {
+        $model = (object)['users' => [(object)['name' => 'Alice'], (object)['name' => 'Bob']]];
+        $template = 'First: {{users[0]->name}}, Second: {{users[1]->name}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertStringContainsString('First: Alice', $result);
+        $this->assertStringContainsString('Second: Bob', $result);
+    }
+
+    public function testReplacesNestedLoops(): void
+    {
+        $section1 = (object)['title' => 'A', 'items' => [(object)['name' => 'A1'], (object)['name' => 'A2']]];
+        $section2 = (object)['title' => 'B', 'items' => [(object)['name' => 'B1']]];
+        $model = (object)['sections' => [$section1, $section2]];
+        $template = '{{#for section in sections:}}' .
+            '[{{section->title}}: {{#for item in section->items:}}{{item->name}}' .
+            '{{#endfor section->items:}}] {{#endfor sections:}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertStringContainsString('[A: A1A2]', $result);
+        $this->assertStringContainsString('[B: B1]', $result);
+    }
+
+    public function testEscapesHtmlByDefault(): void
+    {
+        $model = (object)[
+            'unsafe' => '<script>alert("xss")</script>',
+        ];
+        $template = 'Value: {{unsafe}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame(
+            'Value: &lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;',
+            $result
+        );
+    }
+
+    public function testRendersRawHtmlWithTripleBraces(): void
+    {
+        $model = (object)[
+            'content' => '<strong>Safe</strong>',
+        ];
+        $template = 'Value: {{{content}}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        $this->assertSame(
+            'Value: <strong>Safe</strong>',
+            $result
+        );
+    }
+
+    public function testResolvesNestedPlaceholderInsideExpressionForDynamicI18nKey(): void
+    {
+        $model = (object)[
+            'model' => (object)[
+                'status' => 'success',
+            ],
+        ];
+        $template = 'Message key: {{flash.{{model->status}}}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        // ModelReplacer should resolve the inner {{model->status}} but keep the outer placeholder
+        // so that I18nReplacer can later replace {{flash.success}} using the dictionary.
+        $this->assertSame('Message key: {{flash.success}}', $result);
+    }
+
+    public function testSimplePlaceholdersWithoutNestedExpressionsRemainUnchangedWhenPathMissing(): void
+    {
+        $model = (object)[
+            'name' => 'Peter',
+        ];
+        $template = 'Name: {{name}}, Missing: {{nonExistingKey}}';
+
+        $result = $this->replacer->replace($model, $template, new RequestContext());
+
+        // Existing paths are replaced, missing ones are kept as-is for I18nReplacer.
+        $this->assertStringContainsString('Name: Peter', $result);
+        $this->assertStringContainsString('{{nonExistingKey}}', $result);
     }
 }

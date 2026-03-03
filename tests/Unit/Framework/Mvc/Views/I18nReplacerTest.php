@@ -8,9 +8,7 @@ use Framework\Files\FileManager;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
-use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\I18nReplacer;
-use Framework\Mvc\Views\ModelReplacer;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -23,9 +21,8 @@ final class I18nReplacerTest extends TestCase
     protected function setUp(): void
     {
         $settings = new LanguageSettings(basePath: __DIR__);
-        $branchesReplacer = new BranchesReplacer(new ModelReplacer());
         $this->fileManager = $this->createStub(FileManager::class);
-        $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager, $branchesReplacer);
+        $this->i18nReplacer = new I18nReplacer($settings, $this->fileManager);
         $this->context = new RequestContext([RequestContextKeys::Language->value => 'en']);
     }
 
@@ -49,7 +46,8 @@ final class I18nReplacerTest extends TestCase
 
         $result = $this->i18nReplacer->replace((object)[], 'No keys here. {{some-key}}', $this->context);
 
-        $this->assertSame('No keys here. {{some-key}}', $result);
+        // With empty dictionary, remaining placeholders fall back to their key names.
+        $this->assertSame('No keys here. some-key', $result);
     }
 
     public function testReplacesWithMissingKeysInDictionary(): void
@@ -58,6 +56,42 @@ final class I18nReplacerTest extends TestCase
 
         $result = $this->i18nReplacer->replace((object)[], '{{greeting}}, {{name}}!', $this->context);
 
-        $this->assertSame('Hello, {{name}}!', $result);
+        // Known keys are replaced; unknown keys fall back to the plain key string.
+        $this->assertSame('Hello, name!', $result);
+    }
+
+    public function testHandlesPrecomputedDynamicKey(): void
+    {
+        $this->fileManager
+            ->method('readKeyValueJson')
+            ->willReturn([
+                'flash.success' => 'Operation completed successfully',
+            ]);
+
+        $result = $this->i18nReplacer->replace(
+            (object)[],
+            'Status: {{flash.success}}',
+            $this->context
+        );
+
+        $this->assertSame('Status: Operation completed successfully', $result);
+    }
+
+    public function testFallbackForPrecomputedMissingDynamicKey(): void
+    {
+        $this->fileManager
+            ->method('readKeyValueJson')
+            ->willReturn([
+                'flash.success' => 'Operation completed successfully',
+            ]);
+
+        $result = $this->i18nReplacer->replace(
+            (object)[],
+            'Status: {{flash.missing}}',
+            $this->context
+        );
+
+        // Missing dynamic key falls back to the plain key string.
+        $this->assertSame('Status: flash.missing', $result);
     }
 }

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Framework\Build;
+namespace Framework\Mvc\Tools;
 
-final readonly class JsBuilder
+final readonly class CssBuilder
 {
     /**
      * @param array<string> $sourceFiles Array of source file paths (absolute or relative)
      * @param string $outputDir Directory where output files will be written
-     * @param string $outputFile Name of development output file (e.g., 'app.js')
-     * @param string $outputMinFile Name of production output file (e.g., 'app.min.js')
+     * @param string $outputFile Name of development output file (e.g., 'app.css')
+     * @param string $outputMinFile Name of production output file (e.g., 'app.min.css')
      */
     public function __construct(
         private array $sourceFiles,
@@ -26,7 +26,7 @@ final readonly class JsBuilder
 
         foreach ($this->sourceFiles as $filePath) {
             if (!file_exists($filePath)) {
-                throw new \RuntimeException("JavaScript file not found: {$filePath}");
+                throw new \RuntimeException("CSS file not found: {$filePath}");
             }
 
             $content = file_get_contents($filePath);
@@ -53,45 +53,27 @@ final readonly class JsBuilder
         echo "✓ Built {$outputFileName}\n";
     }
 
-    private function minify(string $js): string
+    private function minify(string $css): string
     {
-        // Remove multi-line comments (/* ... */) but preserve string literals
-        // This regex handles comments that don't contain */ inside strings
-        /** @var string $js */
-        $js = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $js);
+        // Remove comments
+        /** @var string $css */
+        $css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
 
-        // Remove single-line comments (//) but preserve URLs and string literals
-        // Match // that are not inside strings
-        /** @var string $js */
-        $js = preg_replace('/(?<!:)\/\/.*$/m', '', $js);
-
-        // Remove leading/trailing whitespace from each line
-        /** @var string $js */
-        $js = preg_replace('/^\s+|\s+$/m', '', $js);
-
-        // Collapse multiple whitespace to single space (but preserve newlines in some contexts)
-        /** @var string $js */
-        $js = preg_replace('/\s+/', ' ', $js);
-
-        // Remove whitespace around operators and punctuation
-        /** @var string $js */
-        $js = preg_replace('/\s*([{}();,\[\]+\-*\/=<>!&|?:;])\s*/', '$1', $js);
-
-        // Remove whitespace after keywords
-        /** @var string $js */
-        $js = preg_replace(
-            '/\b(const|let|var|function|if|else|for|while|return|new|typeof|instanceof)\s+/',
-            '$1 ',
-            $js
-        );
+        // Remove whitespace
+        /** @var string $css */
+        $css = preg_replace('/\s+/', ' ', $css);
+        /** @var string $css */
+        $css = preg_replace('/\s*([{}:;,])\s*/', '$1', $css);
+        /** @var string $css */
+        $css = preg_replace('/;}/', '}', $css);
 
         // Remove leading/trailing whitespace
-        return trim($js);
+        return trim($css);
     }
 
     public function watch(): void
     {
-        echo "👀 Watching JavaScript files...\n";
+        echo "👀 Watching CSS files...\n";
         echo "Press Ctrl+C to stop\n\n";
 
         $lastModified = [];

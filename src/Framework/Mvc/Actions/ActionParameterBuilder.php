@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Actions;
 
+use Framework\Mvc\Requests\InputNormalizer;
+
 final class ActionParameterBuilder
 {
     /** @var array<string, string|int|float> */
@@ -54,12 +56,14 @@ final class ActionParameterBuilder
         $type = $param->getType();
         $name = $param->getName();
         return match ($type->getName()) {
-            'int' => (int)$this->args[$name],
-            'float' => (float)$this->args[$name],
-            'string' => (string)$this->args[$name],
-            'bool' => (bool)$this->args[$name],
-            \DateTime::class => new \DateTime((string)$this->args[$name]),
-            \DateTimeImmutable::class => new \DateTimeImmutable((string)$this->args[$name]),
+            'int' => InputNormalizer::toInt($this->args[$name]),
+            'float' => InputNormalizer::toFloat($this->args[$name]),
+            'string' => InputNormalizer::toString($this->args[$name]),
+            'bool' => InputNormalizer::toBool($this->args[$name]),
+            \DateTime::class => new \DateTime((string) InputNormalizer::toString($this->args[$name])),
+            \DateTimeImmutable::class => new \DateTimeImmutable(
+                (string) InputNormalizer::toString($this->args[$name])
+            ),
             'array' => $this->getEmbeddedArray($param, $name),
             default => $type->isBuiltin() ? $this->args[$name] : $this->getEmbeddedObject($param, $name),
         };

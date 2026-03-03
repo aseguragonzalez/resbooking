@@ -10,16 +10,23 @@ use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
+use Framework\Mvc\Middlewares\CsrfProtection;
 use Framework\Mvc\Middlewares\ErrorHandling;
 use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
-use Framework\Mvc\Middlewares\Transaction;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestHandler;
 use Framework\Mvc\Routes\Router;
+use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\Views\BranchesReplacer;
+use Framework\Mvc\Views\ContentReplacer;
+use Framework\Mvc\Views\ContentReplacerPipeline;
 use Framework\Mvc\Views\HtmlViewEngine;
+use Framework\Mvc\Views\I18nReplacer;
+use Framework\Mvc\Views\ModelReplacer;
 use Framework\Mvc\Views\ViewEngine;
+use Framework\Mvc\Views\ViewValueResolver;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -36,7 +43,7 @@ abstract class MvcWebApp extends Application
      * @param array<class-string<Middleware>> $middlewares The middlewares to use.
      * @param bool $requireAuthentication Whether to require authentication.
      * @param bool $requireAuthorization Whether to require authorization.
-     * @param bool $requireTransaction Whether to wrap POST requests in a database transaction.
+     * @param bool $enableCsrfProtection Whether to validate CSRF tokens on state-changing requests.
      */
     protected function __construct(
         Container $container,
@@ -44,7 +51,7 @@ abstract class MvcWebApp extends Application
         private array $middlewares = [],
         private bool $requireAuthentication = false,
         private bool $requireAuthorization = false,
-        private bool $requireTransaction = false,
+        private bool $enableCsrfProtection = false,
     ) {
         parent::__construct($container, $basePath);
     }
@@ -97,11 +104,11 @@ abstract class MvcWebApp extends Application
     }
 
     /**
-     * Wrap POST requests in a database transaction (commit on success, rollback on exception).
+     * Enable CSRF protection for state-changing HTTP methods.
      */
-    public function useTransaction(): void
+    public function useCsrfProtection(): void
     {
-        $this->requireTransaction = true;
+        $this->enableCsrfProtection = true;
     }
 
     private function buildMiddlewareChain(): void
@@ -132,11 +139,11 @@ abstract class MvcWebApp extends Application
             $lastMiddleware = $authenticationMiddleware;
         }
 
-        if ($this->requireTransaction) {
-            /** @var Transaction $transactionMiddleware */
-            $transactionMiddleware = $this->container->get(Transaction::class);
-            $transactionMiddleware->setNext($lastMiddleware);
-            $lastMiddleware = $transactionMiddleware;
+        if ($this->enableCsrfProtection) {
+            /** @var CsrfProtection $csrfMiddleware */
+            $csrfMiddleware = $this->container->get(CsrfProtection::class);
+            $csrfMiddleware->setNext($lastMiddleware);
+            $lastMiddleware = $csrfMiddleware;
         }
 
         /** @var Localization $localizationMiddleware */
@@ -163,6 +170,20 @@ abstract class MvcWebApp extends Application
         ));
         $this->container->set(Router::class, $this->router());
         $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
+        $resolver = new ViewValueResolver();
+        $languageSettings = $this->container->get(LanguageSettings::class);
+        $fileManager = $this->container->get(FileManager::class);
+        if (!$languageSettings instanceof LanguageSettings || !$fileManager instanceof FileManager) {
+            throw new \RuntimeException('LanguageSettings or FileManager not found in container');
+        }
+        $this->container->set(
+            ContentReplacer::class,
+            new ContentReplacerPipeline([
+                new ModelReplacer($resolver),
+                new BranchesReplacer($resolver),
+                new I18nReplacer($languageSettings, $fileManager),
+            ])
+        );
         $this->container->set(ViewEngine::class, $this->container->get(HtmlViewEngine::class));
         $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
     }

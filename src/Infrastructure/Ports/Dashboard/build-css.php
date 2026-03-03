@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
-use Framework\Build\CssBuilder;
+use Framework\Mvc\Tools\CssBuilder;
 
 // Dashboard-specific CSS configuration
 $baseDir = __DIR__;

@@ -10,6 +10,7 @@ use Framework\Mvc\Security\Identity;
 final class Route
 {
     private const PARAM_PATTERN = '/\{(int:|uuid:|float:)?([^\}]+)\}/';
+    private ?string $cachedMatchPattern = null;
 
     /**
      * @param class-string $controller
@@ -42,6 +43,10 @@ final class Route
 
     private function getMatchPattern(): string
     {
+        if ($this->cachedMatchPattern !== null) {
+            return $this->cachedMatchPattern;
+        }
+
         $pattern = preg_replace_callback(Route::PARAM_PATTERN, function ($matches) {
             return match ($matches[1]) {
                 'int:' => '(\d+)',
@@ -49,7 +54,10 @@ final class Route
                 default => '([^/]+)',
             };
         }, $this->path->value()) ?? '';
-        return '/^' . str_replace('/', '\/', $pattern) . '$/';
+
+        $this->cachedMatchPattern = '/^' . str_replace('/', '\/', $pattern) . '$/';
+
+        return $this->cachedMatchPattern;
     }
 
     /**

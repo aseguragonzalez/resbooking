@@ -16,11 +16,13 @@ use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Security\Identity;
+use Framework\Mvc\Views\ContentReplacerPipeline;
 use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
 use Framework\Mvc\Views\ViewEngine;
+use Framework\Mvc\Views\ViewValueResolver;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -82,12 +84,13 @@ final class RequestHandlerTest extends TestCase
             ),
         ]);
         $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
-        $i18nReplacer = new I18nReplacer(
-            new LanguageSettings(basePath: __DIR__),
-            $this->createStub(FileManager::class),
-            new BranchesReplacer(new ModelReplacer())
-        );
-        $this->viewEngine = new HtmlViewEngine($this->settings, $i18nReplacer);
+        $resolver = new ViewValueResolver();
+        $pipeline = new ContentReplacerPipeline([
+            new ModelReplacer($resolver),
+            new BranchesReplacer($resolver),
+            new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->createStub(FileManager::class)),
+        ]);
+        $this->viewEngine = new HtmlViewEngine($this->settings, $pipeline);
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,

@@ -8,10 +8,15 @@ use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\HtmlViewEngineSettings;
 use Framework\Mvc\Requests\RequestContext;
 
-final readonly class HtmlViewEngine implements ViewEngine
+final class HtmlViewEngine implements ViewEngine
 {
-    public function __construct(private HtmlViewEngineSettings $settings, private I18nReplacer $contentReplacer)
-    {
+    /** @var array<string, string> */
+    private static array $templateCache = [];
+
+    public function __construct(
+        private readonly HtmlViewEngineSettings $settings,
+        private readonly ContentReplacer $contentReplacer,
+    ) {
     }
 
     public function render(View $view, RequestContext $context): string
@@ -20,7 +25,14 @@ final readonly class HtmlViewEngine implements ViewEngine
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
-        $templateFile = file_get_contents($viewPath);
+        if (!array_key_exists($viewPath, self::$templateCache)) {
+            $templateFile = file_get_contents($viewPath);
+            if ($templateFile === false) {
+                throw new \RuntimeException("Could not read template: {$viewPath}");
+            }
+            self::$templateCache[$viewPath] = $templateFile;
+        }
+        $templateFile = self::$templateCache[$viewPath];
 
         // add current identity to the model
         $currentIdentity = $context->getIdentity();
@@ -30,9 +42,10 @@ final readonly class HtmlViewEngine implements ViewEngine
                 'isAuthenticated' => $currentIdentity->isAuthenticated(),
             ]
         ];
-        $model = $view->data == null ? (object)$contextModel : (object)array_merge((array)$view->data, $contextModel);
+        $viewData = $view->data;
+        /** @var array<string, mixed> $model */
+        $model = array_merge(is_array($viewData) ? $viewData : (array) $viewData, $contextModel);
 
-        // @phpstan-ignore-next-line
         $template = $this->applyLayout($templateFile);
 
         $body = $this->contentReplacer->replace($model, $template, $context);
