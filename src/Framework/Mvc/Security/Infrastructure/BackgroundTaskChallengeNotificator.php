@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Security\Infrastructure;
 
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
+use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask;
+use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;

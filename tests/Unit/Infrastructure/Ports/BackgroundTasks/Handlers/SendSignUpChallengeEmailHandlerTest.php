@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Handlers;
 
-use Framework\BackgroundTasks\Domain\TemplateEngine;
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
+use Framework\Mvc\BackgroundTasks\Domain\Task;
 use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendSignUpChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;

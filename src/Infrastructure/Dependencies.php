@@ -22,7 +22,7 @@ use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
 use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Framework\BackgroundTasks\Dependencies as BackgroundTasksDependencies;
+use Framework\Mvc\BackgroundTasks\Dependencies as BackgroundTasksDependencies;
 use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;

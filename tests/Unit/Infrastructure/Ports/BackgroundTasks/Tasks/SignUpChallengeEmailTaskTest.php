@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Tasks;
 
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Mvc\BackgroundTasks\Domain\Task;
 use Infrastructure\Ports\BackgroundTasks\Tasks\SignUpChallengeEmailTask;
 use PHPUnit\Framework\TestCase;
 
