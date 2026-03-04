@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks;
 
 use DI\Container;
-use Framework\BackgroundTasks\Domain\TemplateEngine;
-use Framework\BackgroundTasks\BaseBackgroundTasksApp;
+use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
+use Framework\Mvc\BackgroundTasks\BaseBackgroundTasksApp;
 use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
