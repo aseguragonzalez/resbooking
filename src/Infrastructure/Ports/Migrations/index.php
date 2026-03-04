@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
-use Framework\Migrations\MigrationApp;
+use Framework\Mvc\Migrations\MigrationApp;
 
 $migrationApp = new MigrationApp(
     container: new Container(),
