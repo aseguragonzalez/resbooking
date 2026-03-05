@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\BackgroundTasks;
+
+use DI\Container;
+use Framework\Mvc\BackgroundTasks\BaseBackgroundTasksApp;
+
+final class {{name}}BackgroundTasksApp extends BaseBackgroundTasksApp
+{
+    public function __construct(Container $container, string $basePath)
+    {
+        parent::__construct($container, $basePath);
+    }
+
+    protected function configure(): void
+    {
+        // Register app-specific dependencies here
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getHandlerMap(): array
+    {
+        return [
+            // 'task_type' => TaskHandlerClass::class,
+        ];
+    }
+}

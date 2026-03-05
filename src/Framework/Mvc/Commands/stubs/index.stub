@@ -1,0 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/{{autoloadPath}}';
+
+use DI\Container;
+use {{namespace}}\{{name}}App;
+
+$app = new {{name}}App(container: new Container(), basePath: __DIR__);
+$app->run();
