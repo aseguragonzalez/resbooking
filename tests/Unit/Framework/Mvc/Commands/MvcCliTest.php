@@ -64,6 +64,9 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('create-app', $output);
         $this->assertStringContainsString('initialize-migrations', $output);
         $this->assertStringContainsString('initialize-background-tasks', $output);
+        $this->assertStringContainsString('migrations:create', $output);
+        $this->assertStringContainsString('migrations:run', $output);
+        $this->assertStringContainsString('migrations:test', $output);
     }
 
     public function testRunWithHelpFlagShowsHelp(): void
@@ -119,5 +122,39 @@ final class MvcCliTest extends TestCase
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--name=', $output);
         $this->assertStringContainsString('--namespace=', $output);
+    }
+
+    public function testRunWithMigrationsCreateHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'migrations:create', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+    }
+
+    public function testRunWithMigrationsRunHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'migrations:run', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+    }
+
+    public function testRunWithMigrationsTestHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'migrations:test', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--migration=', $output);
     }
 }
