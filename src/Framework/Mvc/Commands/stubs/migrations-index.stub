@@ -14,4 +14,6 @@ $migrationApp = new MigrationApp(
 
 $arguments = array_slice($argv, 1);
 
-$migrationApp->run(argc: count($arguments), argv: $arguments);
+$exitCode = $migrationApp->run(argc: count($arguments), argv: $arguments);
+
+exit($exitCode);
