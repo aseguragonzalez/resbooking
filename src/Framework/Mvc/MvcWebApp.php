@@ -6,8 +6,8 @@ namespace Framework\Mvc;
 
 use DI\Container;
 use Framework\Application;
-use Framework\Files\DefaultFileManager;
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\DefaultFileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
 use Framework\Mvc\Middlewares\CsrfProtection;

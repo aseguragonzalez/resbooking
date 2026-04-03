@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Migrations\Domain\Services;
 
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Migrations\Domain\Entities\Migration;
 use Framework\Mvc\Migrations\Domain\Entities\Script;
 

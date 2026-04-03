@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Files;
+namespace Tests\Unit\Framework\Mvc\Files;
 
-use PHPUnit\Framework\TestCase;
-use Framework\Files\DefaultFileManager;
+use Framework\Mvc\Files\DefaultFileManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 class DefaultFileManagerTest extends TestCase
 {

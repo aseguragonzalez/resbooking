@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Migrations\Domain\Entities;
 
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\FileManager;
 
 final readonly class Script
 {

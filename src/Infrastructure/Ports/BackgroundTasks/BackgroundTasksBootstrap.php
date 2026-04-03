@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks;
 
 use DI\Container;
-use Framework\Files\DefaultFileManager;
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\DefaultFileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;

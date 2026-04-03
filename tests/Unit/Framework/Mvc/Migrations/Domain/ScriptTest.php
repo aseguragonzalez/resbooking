@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Migrations\Domain;
 
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Migrations\Domain\Entities\Script;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;

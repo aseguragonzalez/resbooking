@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Files;
+namespace Framework\Mvc\Files;
 
 interface FileManager
 {

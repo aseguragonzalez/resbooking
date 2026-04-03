@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Framework\Mvc\Migrations;
 
 use DI\Container;
-use Framework\Files\DefaultFileManager;
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\DefaultFileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Migrations\Application\RunMigrations;
 use Framework\Mvc\Migrations\Application\RunMigrationsHandler;
 use Framework\Mvc\Migrations\Application\TestMigration;

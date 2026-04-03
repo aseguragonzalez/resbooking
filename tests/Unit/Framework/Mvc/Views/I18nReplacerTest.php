@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Views;
 
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Requests\RequestContextKeys;
