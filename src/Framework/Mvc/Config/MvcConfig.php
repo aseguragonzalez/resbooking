@@ -19,6 +19,7 @@ final readonly class MvcConfig
         public string $migrationsFolderPath,
         public ?bool $migrationsEnabled,
         public string $backgroundTasksFolderPath,
+        public ?bool $authenticationEnabled,
     ) {
     }
 
@@ -33,6 +34,7 @@ final readonly class MvcConfig
             migrationsFolderPath: '',
             migrationsEnabled: null,
             backgroundTasksFolderPath: '',
+            authenticationEnabled: null,
         );
     }
 
@@ -78,6 +80,7 @@ final readonly class MvcConfig
                 key: 'backgroundTasksFolderPath',
                 default: $defaults->backgroundTasksFolderPath
             ),
+            authenticationEnabled: self::getBoolOrNull($data, 'authenticationEnabled'),
         );
     }
 
@@ -88,6 +91,14 @@ final readonly class MvcConfig
     public function isMigrationsEnabled(): bool
     {
         return $this->migrationsEnabled !== false;
+    }
+
+    /**
+     * True only when `authenticationEnabled` is explicitly `true` in mvc.config.json.
+     */
+    public function isAuthenticationEnabled(): bool
+    {
+        return $this->authenticationEnabled === true;
     }
 
     /**
@@ -122,6 +133,7 @@ final readonly class MvcConfig
             'migrationsFolderPath' => $config->migrationsFolderPath,
             'migrationsEnabled' => $config->migrationsEnabled,
             'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
+            'authenticationEnabled' => $config->authenticationEnabled,
         ];
 
         if (is_file($configPath)) {
@@ -134,7 +146,8 @@ final readonly class MvcConfig
                         if (!array_key_exists($key, $decoded)) {
                             continue;
                         }
-                        if ($key === 'migrationsEnabled' && is_bool($decoded[$key])) {
+                        $isBoolConfigKey = $key === 'migrationsEnabled' || $key === 'authenticationEnabled';
+                        if ($isBoolConfigKey && is_bool($decoded[$key])) {
                             $data[$key] = $decoded[$key];
                             continue;
                         }

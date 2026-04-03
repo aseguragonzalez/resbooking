@@ -29,6 +29,8 @@ final class MvcConfigTest extends TestCase
         $this->assertTrue($config->isMigrationsEnabled());
         $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('', $config->backgroundTasksFolderPath);
+        $this->assertNull($config->authenticationEnabled);
+        $this->assertFalse($config->isAuthenticationEnabled());
     }
 
     public function testNormalizationRemovesDotSlashAndTrailingSlashes(): void
@@ -43,6 +45,7 @@ final class MvcConfigTest extends TestCase
                 'migrationsFolderPath' => '',
                 'migrationsEnabled' => false,
                 'backgroundTasksFolderPath' => './BackgroundTasks/',
+                'authenticationEnabled' => true,
             ], JSON_THROW_ON_ERROR),
         ]);
 
@@ -53,11 +56,37 @@ final class MvcConfigTest extends TestCase
         $this->assertFalse($config->isMigrationsEnabled());
         $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('BackgroundTasks', $config->normalizedBackgroundTasksFolderPath());
+        $this->assertTrue($config->authenticationEnabled);
+        $this->assertTrue($config->isAuthenticationEnabled());
 
         $uiAssets = UiAssetsSettings::fromConfig($config);
         $this->assertSame('/assets/scripts', $uiAssets->jsAssetsPathUrl);
         $this->assertSame('main.min.js', $uiAssets->mainJsBundler);
         $this->assertSame('/assets/styles', $uiAssets->cssAssetsPathUrl);
         $this->assertSame('main.min.css', $uiAssets->mainCssBundler);
+    }
+
+    public function testWriteMergedToAppPersistsAuthenticationEnabled(): void
+    {
+        vfsStream::setup('app', null, [
+            'index.php' => '<?php',
+            MvcConfig::CONFIG_FILENAME => json_encode([
+                'jsAssetsPath' => './assets/scripts',
+                'mainJsBundler' => 'main.min.js',
+                'cssAssetsPath' => './assets/styles',
+                'mainCssBundler' => 'main.min.css',
+                'i18nPath' => './assets/i18n',
+                'migrationsFolderPath' => '',
+                'migrationsEnabled' => false,
+                'backgroundTasksFolderPath' => '',
+                'authenticationEnabled' => false,
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $base = vfsStream::url('app');
+        MvcConfig::writeMergedToApp($base, ['authenticationEnabled' => true]);
+
+        $config = MvcConfig::load($base);
+        $this->assertTrue($config->isAuthenticationEnabled());
     }
 }

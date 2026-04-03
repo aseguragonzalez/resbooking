@@ -109,6 +109,7 @@ final class CreateAppCommandTest extends TestCase
         $this->assertSame('', $decoded['migrationsFolderPath']);
         $this->assertFalse($decoded['migrationsEnabled']);
         $this->assertSame('', $decoded['backgroundTasksFolderPath']);
+        $this->assertFalse($decoded['authenticationEnabled']);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void

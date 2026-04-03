@@ -69,6 +69,8 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('migrations:create', $output);
         $this->assertStringContainsString('migrations:run', $output);
         $this->assertStringContainsString('migrations:test', $output);
+        $this->assertStringContainsString('auth:enable', $output);
+        $this->assertStringContainsString('auth:disable', $output);
     }
 
     public function testRunWithHelpFlagShowsHelp(): void
@@ -186,5 +188,29 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('--path=', $output);
         $this->assertStringContainsString('--app-path=', $output);
         $this->assertStringContainsString('--migration=', $output);
+    }
+
+    public function testRunWithAuthEnableHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'auth:enable', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--skip-migrations', $output);
+    }
+
+    public function testRunWithAuthDisableHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'auth:disable', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--skip-migrations', $output);
     }
 }

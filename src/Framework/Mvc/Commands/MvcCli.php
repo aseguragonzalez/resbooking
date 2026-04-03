@@ -25,6 +25,8 @@ final class MvcCli
         $this->register(new MigrationsCreateCommand($this->output));
         $this->register(new MigrationsRunCommand($this->output));
         $this->register(new MigrationsTestCommand($this->output));
+        $this->register(new AuthenticationEnableCommand($this->output));
+        $this->register(new AuthenticationDisableCommand($this->output));
     }
 
     /**

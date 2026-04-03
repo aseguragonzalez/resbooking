@@ -268,6 +268,8 @@ How-to details (including `mvc.config.json` defaults): see [How to Create a New 
 
 Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./HowToMigrations.md).
 
+Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./HowToAuthentication.md).
+
 ---
 
 ## Performance characteristics

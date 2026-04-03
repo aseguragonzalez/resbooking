@@ -39,5 +39,8 @@ The scaffolded config file stores the locations and bundle filenames the framewo
 - `migrationsFolderPath` (empty by default)
 - `migrationsEnabled` (`false` by default; set `true` when you run `mvc migrations:enable`)
 - `backgroundTasksFolderPath` (empty by default)
+- `authenticationEnabled` (`false` by default; set `true` when you run `mvc auth:enable`)
 
 For migrations workflow and CLI commands, see [How to use MVC database migrations](./HowToMigrations.md).
+
+For authentication CLI and middleware wiring, see [How to enable MVC authentication and authorization (CLI)](./HowToAuthentication.md).
