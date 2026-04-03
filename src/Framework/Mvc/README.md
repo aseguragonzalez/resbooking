@@ -266,6 +266,8 @@ mvc create-app <path> --name=<AppName> --namespace=<Namespace>
 
 How-to details (including `mvc.config.json` defaults): see [How to Create a New MVC App (CLI)](./HowToCreateApp.md).
 
+Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./HowToMigrations.md).
+
 ---
 
 ## Performance characteristics

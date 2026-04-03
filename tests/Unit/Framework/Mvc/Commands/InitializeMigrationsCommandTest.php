@@ -6,6 +6,7 @@ namespace Tests\Unit\Framework\Mvc\Commands;
 
 use Framework\Mvc\Commands\ConsoleOutput;
 use Framework\Mvc\Commands\InitializeMigrationsCommand;
+use Framework\Mvc\Commands\MigrationsEnableCommand;
 use Framework\Mvc\Commands\StubGenerator;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -44,7 +45,7 @@ final class InitializeMigrationsCommandTest extends TestCase
         $this->stderr = $stderr;
         $output = new ConsoleOutput($this->stdout, $this->stderr);
         $stubGenerator = new StubGenerator();
-        $this->command = new InitializeMigrationsCommand($output, $stubGenerator);
+        $this->command = new InitializeMigrationsCommand(new MigrationsEnableCommand($output, $stubGenerator));
     }
 
     protected function tearDown(): void
@@ -73,6 +74,7 @@ final class InitializeMigrationsCommandTest extends TestCase
         /** @var array<string, mixed> $decoded */
         $decoded = json_decode($configContent, true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame('./Migrations', $decoded['migrationsFolderPath']);
+        $this->assertTrue($decoded['migrationsEnabled']);
     }
 
     public function testGeneratedIndexPhpContainsMigrationApp(): void

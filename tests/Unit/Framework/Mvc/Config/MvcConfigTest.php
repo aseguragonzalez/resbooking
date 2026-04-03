@@ -25,6 +25,9 @@ final class MvcConfigTest extends TestCase
         $this->assertSame('main.min.css', $config->mainCssBundler);
         $this->assertSame('./assets/i18n', $config->i18nPath);
         $this->assertSame('', $config->migrationsFolderPath);
+        $this->assertNull($config->migrationsEnabled);
+        $this->assertTrue($config->isMigrationsEnabled());
+        $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('', $config->backgroundTasksFolderPath);
     }
 
@@ -38,6 +41,7 @@ final class MvcConfigTest extends TestCase
                 'mainCssBundler' => '/main.min.css',
                 'i18nPath' => './assets/i18n',
                 'migrationsFolderPath' => '',
+                'migrationsEnabled' => false,
                 'backgroundTasksFolderPath' => './BackgroundTasks/',
             ], JSON_THROW_ON_ERROR),
         ]);
@@ -46,6 +50,8 @@ final class MvcConfigTest extends TestCase
 
         $this->assertSame('assets/i18n/', $config->normalizedI18nAssetsPathForLanguageSettings());
         $this->assertSame('', $config->normalizedMigrationsFolderPath());
+        $this->assertFalse($config->isMigrationsEnabled());
+        $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('BackgroundTasks', $config->normalizedBackgroundTasksFolderPath());
 
         $uiAssets = UiAssetsSettings::fromConfig($config);

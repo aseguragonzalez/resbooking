@@ -8,13 +8,14 @@ use DI\Container;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\Migrations\MigrationApp;
 
-// __DIR__ points to: {appRoot}/Migrations
+// __DIR__ points to the migration module folder under the app root.
 $appBasePath = dirname(__DIR__);
 $config = MvcConfig::load(basePath: $appBasePath);
-$migrationsFolderPath = $config->normalizedMigrationsFolderPath();
-
-// If the config field is empty (e.g. older apps), fall back to the conventional folder name.
-$migrationsFolderPath = $migrationsFolderPath !== '' ? $migrationsFolderPath : 'Migrations';
+if (!$config->isMigrationsEnabled()) {
+    fwrite(STDERR, "Migrations are disabled in mvc.config.json (migrationsEnabled: false). Run: mvc migrations:enable\n");
+    exit(1);
+}
+$migrationsFolderPath = $config->effectiveMigrationsModuleRelativePath();
 $migrationsBasePath = $appBasePath . '/' . $migrationsFolderPath . '/migrations';
 
 $migrationApp = new MigrationApp(

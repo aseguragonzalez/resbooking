@@ -17,7 +17,10 @@ final class MvcCli
         $stubGenerator = $stubGenerator ?? new StubGenerator();
 
         $this->register(new CreateAppCommand($this->output, $stubGenerator));
-        $this->register(new InitializeMigrationsCommand($this->output, $stubGenerator));
+        $enableMigrations = new MigrationsEnableCommand($this->output, $stubGenerator);
+        $this->register($enableMigrations);
+        $this->register(new InitializeMigrationsCommand($enableMigrations));
+        $this->register(new MigrationsDisableCommand($this->output));
         $this->register(new InitializeBackgroundTasksCommand($this->output, $stubGenerator));
         $this->register(new MigrationsCreateCommand($this->output));
         $this->register(new MigrationsRunCommand($this->output));

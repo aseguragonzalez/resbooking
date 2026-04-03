@@ -37,4 +37,7 @@ The scaffolded config file stores the locations and bundle filenames the framewo
 - Main CSS bundler name (default: `main.min.css`)
 - i18n base path (default: `./assets/i18n`)
 - `migrationsFolderPath` (empty by default)
+- `migrationsEnabled` (`false` by default; set `true` when you run `mvc migrations:enable`)
 - `backgroundTasksFolderPath` (empty by default)
+
+For migrations workflow and CLI commands, see [How to use MVC database migrations](./HowToMigrations.md).

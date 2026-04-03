@@ -63,6 +63,8 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('Available commands:', $output);
         $this->assertStringContainsString('create-app', $output);
         $this->assertStringContainsString('initialize-migrations', $output);
+        $this->assertStringContainsString('migrations:enable', $output);
+        $this->assertStringContainsString('migrations:disable', $output);
         $this->assertStringContainsString('initialize-background-tasks', $output);
         $this->assertStringContainsString('migrations:create', $output);
         $this->assertStringContainsString('migrations:run', $output);
@@ -110,6 +112,31 @@ final class MvcCliTest extends TestCase
         $output = $this->readStream($this->stdout);
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--folder=', $output);
+    }
+
+    public function testRunWithMigrationsEnableHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'migrations:enable', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--folder=', $output);
+    }
+
+    public function testRunWithMigrationsDisableHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'migrations:disable', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--remove-files', $output);
+        $this->assertStringContainsString('--force', $output);
     }
 
     public function testRunWithInitializeBackgroundTasksHelpReturnsZero(): void
@@ -133,6 +160,7 @@ final class MvcCliTest extends TestCase
         $output = $this->readStream($this->stdout);
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--app-path=', $output);
     }
 
     public function testRunWithMigrationsRunHelpReturnsZero(): void
@@ -144,6 +172,7 @@ final class MvcCliTest extends TestCase
         $output = $this->readStream($this->stdout);
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--app-path=', $output);
     }
 
     public function testRunWithMigrationsTestHelpReturnsZero(): void
@@ -155,6 +184,7 @@ final class MvcCliTest extends TestCase
         $output = $this->readStream($this->stdout);
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--app-path=', $output);
         $this->assertStringContainsString('--migration=', $output);
     }
 }

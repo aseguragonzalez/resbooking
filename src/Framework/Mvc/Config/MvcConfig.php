@@ -17,6 +17,7 @@ final readonly class MvcConfig
         public string $mainCssBundler,
         public string $i18nPath,
         public string $migrationsFolderPath,
+        public ?bool $migrationsEnabled,
         public string $backgroundTasksFolderPath,
     ) {
     }
@@ -30,6 +31,7 @@ final readonly class MvcConfig
             mainCssBundler: 'main.min.css',
             i18nPath: './assets/i18n',
             migrationsFolderPath: '',
+            migrationsEnabled: null,
             backgroundTasksFolderPath: '',
         );
     }
@@ -70,12 +72,91 @@ final readonly class MvcConfig
             mainCssBundler: self::getString($data, 'mainCssBundler', $defaults->mainCssBundler),
             i18nPath: self::getString($data, 'i18nPath', $defaults->i18nPath),
             migrationsFolderPath: self::getString($data, 'migrationsFolderPath', $defaults->migrationsFolderPath),
+            migrationsEnabled: self::getBoolOrNull($data, 'migrationsEnabled'),
             backgroundTasksFolderPath: self::getString(
                 data:$data,
                 key: 'backgroundTasksFolderPath',
                 default: $defaults->backgroundTasksFolderPath
             ),
         );
+    }
+
+    /**
+     * Explicitly disabled via `migrationsEnabled: false` in mvc.config.json.
+     * When the key is absent (null), legacy apps keep migrations usable (implicit module folder name).
+     */
+    public function isMigrationsEnabled(): bool
+    {
+        return $this->migrationsEnabled !== false;
+    }
+
+    /**
+     * Relative path from app root to the migration module directory (contains index.php and migrations/).
+     * When `migrationsFolderPath` is empty, uses the legacy default folder name `Migrations`.
+     */
+    public function effectiveMigrationsModuleRelativePath(): string
+    {
+        $normalized = $this->normalizedMigrationsFolderPath();
+        if ($normalized !== '') {
+            return $normalized;
+        }
+
+        return 'Migrations';
+    }
+
+    /**
+     * @param array<string, mixed> $changes
+     */
+    public static function writeMergedToApp(string $appPath, array $changes): void
+    {
+        $configPath = rtrim($appPath, '/') . '/' . self::CONFIG_FILENAME;
+
+        $config = self::defaults();
+        /** @var array<string, mixed> $data */
+        $data = [
+            'jsAssetsPath' => $config->jsAssetsPath,
+            'mainJsBundler' => $config->mainJsBundler,
+            'cssAssetsPath' => $config->cssAssetsPath,
+            'mainCssBundler' => $config->mainCssBundler,
+            'i18nPath' => $config->i18nPath,
+            'migrationsFolderPath' => $config->migrationsFolderPath,
+            'migrationsEnabled' => $config->migrationsEnabled,
+            'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
+        ];
+
+        if (is_file($configPath)) {
+            $content = file_get_contents($configPath);
+            if ($content !== false) {
+                try {
+                    /** @var array<string, mixed> $decoded */
+                    $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+                    foreach ($data as $key => $defaultValue) {
+                        if (!array_key_exists($key, $decoded)) {
+                            continue;
+                        }
+                        if ($key === 'migrationsEnabled' && is_bool($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                            continue;
+                        }
+                        if (is_string($defaultValue) && is_string($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                        }
+                    }
+                } catch (\JsonException) {
+                    // Keep defaults when config is invalid.
+                }
+            }
+        }
+
+        foreach ($changes as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if ($json === false) {
+            throw new RuntimeException('Failed to encode mvc.config.json');
+        }
+        file_put_contents($configPath, $json . PHP_EOL);
     }
 
     /**
@@ -87,6 +168,22 @@ final readonly class MvcConfig
         if (!is_string($value)) {
             return $default;
         }
+        return $value;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private static function getBoolOrNull(array $data, string $key): ?bool
+    {
+        if (!array_key_exists($key, $data)) {
+            return null;
+        }
+        $value = $data[$key];
+        if (!is_bool($value)) {
+            return null;
+        }
+
         return $value;
     }
 

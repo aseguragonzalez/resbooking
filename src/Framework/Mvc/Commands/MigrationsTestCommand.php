@@ -9,6 +9,8 @@ use Framework\Mvc\Migrations\MigrationApp;
 
 final class MigrationsTestCommand implements Command
 {
+    use MigrationsCommandPathTrait;
+
     /** @var \Closure(string, array<string>): int */
     private \Closure $migrationRunner;
 
@@ -49,15 +51,6 @@ final class MigrationsTestCommand implements Command
             return 0;
         }
 
-        $migrationsPath = $this->parsePath($args);
-
-        if ($migrationsPath === null) {
-            $this->output->error('The --path option is required.');
-            $this->output->line();
-            $this->showHelp();
-            return 1;
-        }
-
         $migrationName = $this->parseMigrationName($args);
 
         if ($migrationName === null) {
@@ -67,30 +60,27 @@ final class MigrationsTestCommand implements Command
             return 1;
         }
 
-        $resolvedPath = $this->resolvePath($migrationsPath);
+        $resolvedPath = $this->resolveLeafMigrationsDirFromArgs($args);
 
-        if (!is_dir($resolvedPath)) {
-            $this->output->error("Migrations directory does not exist: {$resolvedPath}");
+        if ($resolvedPath === null || !is_dir($resolvedPath)) {
+            if ($this->hasExplicitLeafPath($args)) {
+                $this->output->error(
+                    'Migrations directory does not exist: ' . ($resolvedPath ?? '(invalid path)'),
+                );
+            } else {
+                $this->output->error(
+                    'Could not resolve migrations directory. Use --path=<migrations-dir> or --app-path=<app-dir> '
+                    . 'where mvc.config.json enables migrations and the module exists.',
+                );
+            }
+            $this->output->line();
+            $this->showHelp();
             return 1;
         }
 
         $this->output->info("Testing migration '{$migrationName}' from: {$resolvedPath}");
 
         return ($this->migrationRunner)($resolvedPath, ["--test={$migrationName}"]);
-    }
-
-    /**
-     * @param array<string> $args
-     */
-    private function parsePath(array $args): ?string
-    {
-        foreach ($args as $arg) {
-            if (str_starts_with($arg, '--path=')) {
-                return substr($arg, 7);
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -107,21 +97,17 @@ final class MigrationsTestCommand implements Command
         return null;
     }
 
-    private function resolvePath(string $path): string
-    {
-        if (str_starts_with($path, '/') || str_contains($path, '://')) {
-            return rtrim($path, '/');
-        }
-
-        return rtrim(getcwd() . '/' . $path, '/');
-    }
-
     private function showHelp(): void
     {
-        $this->output->line('Usage: mvc migrations:test --path=<migrations-dir> --migration=<name>');
+        $this->output->line(
+            'Usage: mvc migrations:test [--app-path=<app-dir>] [--path=<migrations-dir>] --migration=<name>',
+        );
         $this->output->line();
         $this->output->line('Options:');
-        $this->output->line('  --path=<migrations-dir>  Path to the migrations directory (required)');
+        $this->output->line(
+            '  --app-path=<app-dir>     MVC app root (default: current directory); uses mvc.config.json',
+        );
+        $this->output->line('  --path=<migrations-dir>  Override path to the leaf migrations directory');
         $this->output->line('  --migration=<name>       Name of the migration to test (required)');
         $this->output->line();
         $this->output->line('Tests a migration by running it, then rolling back, and comparing schemas.');

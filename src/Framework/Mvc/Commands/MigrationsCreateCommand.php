@@ -6,6 +6,8 @@ namespace Framework\Mvc\Commands;
 
 final class MigrationsCreateCommand implements Command
 {
+    use MigrationsCommandPathTrait;
+
     public function __construct(
         private readonly ConsoleOutput $output,
     ) {
@@ -31,19 +33,21 @@ final class MigrationsCreateCommand implements Command
             return 0;
         }
 
-        $migrationsPath = $this->parsePath($args);
+        $resolvedPath = $this->resolveLeafMigrationsDirFromArgs($args);
 
-        if ($migrationsPath === null) {
-            $this->output->error('The --path option is required.');
+        if ($resolvedPath === null || !is_dir($resolvedPath)) {
+            if ($this->hasExplicitLeafPath($args)) {
+                $this->output->error(
+                    'Migrations directory does not exist: ' . ($resolvedPath ?? '(invalid path)'),
+                );
+            } else {
+                $this->output->error(
+                    'Could not resolve migrations directory. Use --path=<migrations-dir> or --app-path=<app-dir> '
+                    . 'where mvc.config.json enables migrations and the module exists.',
+                );
+            }
             $this->output->line();
             $this->showHelp();
-            return 1;
-        }
-
-        $resolvedPath = $this->resolvePath($migrationsPath);
-
-        if (!is_dir($resolvedPath)) {
-            $this->output->error("Migrations directory does not exist: {$resolvedPath}");
             return 1;
         }
 
@@ -69,35 +73,15 @@ final class MigrationsCreateCommand implements Command
         return 0;
     }
 
-    /**
-     * @param array<string> $args
-     */
-    private function parsePath(array $args): ?string
-    {
-        foreach ($args as $arg) {
-            if (str_starts_with($arg, '--path=')) {
-                return substr($arg, 7);
-            }
-        }
-
-        return null;
-    }
-
-    private function resolvePath(string $path): string
-    {
-        if (str_starts_with($path, '/') || str_contains($path, '://')) {
-            return rtrim($path, '/');
-        }
-
-        return rtrim(getcwd() . '/' . $path, '/');
-    }
-
     private function showHelp(): void
     {
-        $this->output->line('Usage: mvc migrations:create --path=<migrations-dir>');
+        $this->output->line('Usage: mvc migrations:create [--app-path=<app-dir>] [--path=<migrations-dir>]');
         $this->output->line();
         $this->output->line('Options:');
-        $this->output->line('  --path=<migrations-dir>  Path to the migrations directory (required)');
+        $this->output->line(
+            '  --app-path=<app-dir>     MVC app root (default: current directory); uses mvc.config.json',
+        );
+        $this->output->line('  --path=<migrations-dir>  Override path to the leaf migrations directory');
         $this->output->line();
         $this->output->line('Creates a new timestamped migration folder with empty SQL stubs.');
     }

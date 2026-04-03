@@ -107,6 +107,7 @@ final class CreateAppCommandTest extends TestCase
         $this->assertSame('main.min.css', $decoded['mainCssBundler']);
         $this->assertSame('./assets/i18n', $decoded['i18nPath']);
         $this->assertSame('', $decoded['migrationsFolderPath']);
+        $this->assertFalse($decoded['migrationsEnabled']);
         $this->assertSame('', $decoded['backgroundTasksFolderPath']);
     }
 

@@ -178,6 +178,7 @@ final class CreateAppCommand implements Command
                 'mainCssBundler' => $config->mainCssBundler,
                 'i18nPath' => $config->i18nPath,
                 'migrationsFolderPath' => $config->migrationsFolderPath,
+                'migrationsEnabled' => false,
                 'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
             ],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
