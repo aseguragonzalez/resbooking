@@ -295,6 +295,6 @@ These are transparent to consumers; no configuration is required.
 - `src/Framework/Mvc/MvcWebApp.php` – application bootstrap and middleware wiring.
 - `src/Framework/Mvc/Requests/RequestHandler.php` – routing + action invocation contract.
 - `src/Framework/Mvc/Views/README.md` – full template language reference.
-- `src/Framework/Mvc/Security/*` – authentication, identity and password flows.
+- `src/Framework/Mvc/Security/*` – authentication, identity and password flows; challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
 
 Use this README as the entry point when building or reviewing apps on top of the MVC package.

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Mvc\Security\Infrastructure;
+namespace Tests\Unit\Infrastructure\Ports\Dashboard;
 
 use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask;
 use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
 use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
 use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
 use Framework\Mvc\Security\Domain\Entities\UserIdentity;
-use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
+use Infrastructure\Ports\Dashboard\BackgroundTaskChallengeNotificator;
 use PHPUnit\Framework\TestCase;
 
 final class BackgroundTaskChallengeNotificatorTest extends TestCase

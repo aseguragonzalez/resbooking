@@ -16,6 +16,7 @@ use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
+use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\UiAssetsSettings;
 use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
@@ -107,6 +108,8 @@ final class DashboardBootstrap
         $container->set(PDO::class, $connection);
 
         Dependencies::configure($container);
+
+        $container->set(ChallengeNotificator::class, $container->get(BackgroundTaskChallengeNotificator::class));
     }
 
     private static function errorSettings(): ErrorSettings
