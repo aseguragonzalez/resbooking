@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Framework\Mvc\Migrations;
 
 use DI\Container;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
+use Framework\Mvc\LoggerSettings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -56,8 +55,7 @@ final class MigrationBootstrap
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $loggerAdapter = new LoggerAdapter(logger: $logger);
-        $container->set(LoggerInterface::class, $loggerAdapter);
+        $container->set(LoggerInterface::class, $logger);
 
         Dependencies::configure($container);
     }

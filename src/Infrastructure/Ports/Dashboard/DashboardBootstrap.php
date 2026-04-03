@@ -6,9 +6,8 @@ namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
 use Framework\Mvc\AuthSettings;
+use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
@@ -89,8 +88,7 @@ final class DashboardBootstrap
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $loggerAdapter = new LoggerAdapter(logger: $logger);
-        $container->set(LoggerInterface::class, $loggerAdapter);
+        $container->set(LoggerInterface::class, $logger);
     }
 
     private static function registerDependencies(Container $container): void

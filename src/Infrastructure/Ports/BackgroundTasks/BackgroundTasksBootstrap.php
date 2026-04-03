@@ -7,8 +7,7 @@ namespace Infrastructure\Ports\BackgroundTasks;
 use DI\Container;
 use Framework\Files\DefaultFileManager;
 use Framework\Files\FileManager;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
+use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;
 use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
@@ -72,7 +71,7 @@ final class BackgroundTasksBootstrap
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $container->set(LoggerInterface::class, new LoggerAdapter(logger: $logger));
+        $container->set(LoggerInterface::class, $logger);
 
         $container->set(
             ChallengeEmailSettings::class,

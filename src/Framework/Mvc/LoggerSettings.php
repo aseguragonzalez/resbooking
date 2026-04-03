@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Logging;
+namespace Framework\Mvc;
 
 final readonly class LoggerSettings
 {

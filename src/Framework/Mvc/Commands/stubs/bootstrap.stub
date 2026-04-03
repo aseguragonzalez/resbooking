@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace {{namespace}};
 
 use DI\Container;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\HtmlViewEngineSettings;
 use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\UiAssetsSettings;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
@@ -88,7 +87,7 @@ final class {{name}}Bootstrap
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $container->set(LoggerInterface::class, new LoggerAdapter(logger: $logger));
+        $container->set(LoggerInterface::class, $logger);
     }
 
     private static function registerDependencies(Container $container): void

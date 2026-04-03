@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace {{namespace}}\BackgroundTasks;
 
 use DI\Container;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;
+use Framework\Mvc\LoggerSettings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -63,7 +62,7 @@ final class {{name}}BackgroundTasksBootstrap
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
-        $container->set(LoggerInterface::class, new LoggerAdapter(logger: $logger));
+        $container->set(LoggerInterface::class, $logger);
 
         // Register app-specific container bindings here before BackgroundTasksRuntime::register().
 
