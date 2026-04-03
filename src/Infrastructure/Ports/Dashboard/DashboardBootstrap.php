@@ -7,7 +7,6 @@ namespace Infrastructure\Ports\Dashboard;
 use DI\Container;
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Framework\Mvc\AuthSettings;
-use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
@@ -47,16 +46,6 @@ final class DashboardBootstrap
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
 
         $container->set(
-            LoggerSettings::class,
-            new LoggerSettings(
-                environment: getenv('ENVIRONMENT') ?: 'local',
-                serviceName: getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard',
-                serviceVersion: getenv('DASHBOARD_SERVICE_VERSION') ?: '1.0.0',
-                logLevel: getenv('DASHBOARD_LOG_LEVEL') ?: 'debug',
-            )
-        );
-
-        $container->set(
             DashboardSettings::class,
             new DashboardSettings(
                 host: getenv('DASHBOARD_DATABASE_HOST') ?: 'localhost',
@@ -69,13 +58,13 @@ final class DashboardBootstrap
 
     private static function registerLogging(Container $container): void
     {
-        /** @var LoggerSettings $loggerSettings */
-        $loggerSettings = $container->get(LoggerSettings::class);
+        $serviceName = getenv('DASHBOARD_SERVICE_NAME') ?: 'dashboard';
+        $logLevel = getenv('DASHBOARD_LOG_LEVEL') ?: 'debug';
 
         $handler = new RotatingFileHandler(
             filename: "/var/log/apache2/dashboard.log",
             maxFiles: 10,
-            level: self::logLevel($loggerSettings)
+            level: self::logLevel($logLevel)
         );
         $handler->setFormatter(new LineFormatter(
             format: '[%datetime%] %level_name%: %message%',
@@ -85,7 +74,7 @@ final class DashboardBootstrap
             includeStacktraces: false,
         ));
 
-        $logger = new Logger($loggerSettings->serviceName);
+        $logger = new Logger($serviceName);
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
@@ -149,14 +138,14 @@ final class DashboardBootstrap
         );
     }
 
-    private static function logLevel(LoggerSettings $loggerSettings): Level
+    private static function logLevel(string $logLevel): Level
     {
         $logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
-        $logLevel = strtolower($loggerSettings->logLevel);
-        if (!in_array($logLevel, $logLevels)) {
-            throw new \InvalidArgumentException("Invalid log level: {$loggerSettings->logLevel}");
+        $normalized = strtolower($logLevel);
+        if (!in_array($normalized, $logLevels)) {
+            throw new \InvalidArgumentException("Invalid log level: {$logLevel}");
         }
 
-        return Level::fromName($logLevel);
+        return Level::fromName($normalized);
     }
 }

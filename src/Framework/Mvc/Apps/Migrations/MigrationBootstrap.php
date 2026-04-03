@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Framework\Mvc\Migrations;
 
 use DI\Container;
-use Framework\Mvc\LoggerSettings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -18,15 +17,6 @@ final class MigrationBootstrap
     public static function registerFromEnvironment(Container $container): void
     {
         $container->set(
-            LoggerSettings::class,
-            new LoggerSettings(
-                environment: getenv('ENVIRONMENT') ?: 'local',
-                serviceName: getenv('MIGRATIONS_SERVICE_NAME') ?: 'migrations',
-                serviceVersion: getenv('MIGRATIONS_SERVICE_VERSION') ?: '1.0.0',
-                logLevel: getenv('MIGRATIONS_LOG_LEVEL') ?: 'debug',
-            ),
-        );
-        $container->set(
             MigrationSettings::class,
             new MigrationSettings(
                 host: getenv('MIGRATIONS_DATABASE_HOST') ?: 'mariadb',
@@ -36,12 +26,12 @@ final class MigrationBootstrap
             ),
         );
 
-        /** @var LoggerSettings $loggerSettings */
-        $loggerSettings = $container->get(LoggerSettings::class);
+        $serviceName = getenv('MIGRATIONS_SERVICE_NAME') ?: 'migrations';
+        $logLevel = getenv('MIGRATIONS_LOG_LEVEL') ?: 'debug';
 
         $handler = new StreamHandler(
             stream: 'php://stdout',
-            level: self::logLevelFromSettings($loggerSettings)
+            level: self::logLevelFromSettings($logLevel)
         );
         $handler->setFormatter(new LineFormatter(
             format: '[%datetime%] %level_name%: %message%',
@@ -51,7 +41,7 @@ final class MigrationBootstrap
             includeStacktraces: false,
         ));
 
-        $logger = new Logger($loggerSettings->serviceName);
+        $logger = new Logger($serviceName);
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
@@ -60,14 +50,14 @@ final class MigrationBootstrap
         Dependencies::configure($container);
     }
 
-    private static function logLevelFromSettings(LoggerSettings $loggerSettings): Level
+    private static function logLevelFromSettings(string $logLevel): Level
     {
-        $logLevel = $loggerSettings->logLevel;
         $logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
-        if (!in_array($logLevel, $logLevels)) {
+        $normalized = strtolower($logLevel);
+        if (!in_array($normalized, $logLevels)) {
             throw new \InvalidArgumentException("Invalid log level: {$logLevel}");
         }
 
-        return Level::fromName($logLevel);
+        return Level::fromName($normalized);
     }
 }

@@ -7,7 +7,6 @@ namespace Infrastructure\Ports\BackgroundTasks;
 use DI\Container;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
-use Framework\Mvc\LoggerSettings;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;
 use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
@@ -33,15 +32,6 @@ final class BackgroundTasksBootstrap
         ];
 
         $container->set(
-            LoggerSettings::class,
-            new LoggerSettings(
-                environment: getenv('ENVIRONMENT') ?: 'local',
-                serviceName: getenv('BACKGROUND_TASKS_SERVICE_NAME') ?: 'background-tasks',
-                serviceVersion: getenv('BACKGROUND_TASKS_SERVICE_VERSION') ?: '1.0.0',
-                logLevel: getenv('BACKGROUND_TASKS_LOG_LEVEL') ?: 'debug',
-            ),
-        );
-        $container->set(
             BackgroundTasksSettings::class,
             new BackgroundTasksSettings(
                 host: getenv('BACKGROUND_TASKS_DATABASE_HOST') ?: 'localhost',
@@ -52,12 +42,12 @@ final class BackgroundTasksBootstrap
             ),
         );
 
-        /** @var LoggerSettings $loggerSettings */
-        $loggerSettings = $container->get(LoggerSettings::class);
+        $serviceName = getenv('BACKGROUND_TASKS_SERVICE_NAME') ?: 'background-tasks';
+        $logLevel = getenv('BACKGROUND_TASKS_LOG_LEVEL') ?: 'debug';
 
         $handler = new StreamHandler(
             stream: 'php://stdout',
-            level: self::logLevelFromSettings($loggerSettings)
+            level: self::logLevelFromSettings($logLevel)
         );
         $handler->setFormatter(new LineFormatter(
             format: '[%datetime%] %level_name%: %message%',
@@ -67,7 +57,7 @@ final class BackgroundTasksBootstrap
             includeStacktraces: false,
         ));
 
-        $logger = new Logger($loggerSettings->serviceName);
+        $logger = new Logger($serviceName);
         $logger->pushHandler($handler);
         $logger->pushProcessor(new PsrLogMessageProcessor());
 
@@ -95,14 +85,14 @@ final class BackgroundTasksBootstrap
         BackgroundTasksRuntime::register($container);
     }
 
-    private static function logLevelFromSettings(LoggerSettings $loggerSettings): Level
+    private static function logLevelFromSettings(string $logLevel): Level
     {
-        $logLevel = $loggerSettings->logLevel;
         $logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
-        if (!in_array($logLevel, $logLevels)) {
+        $normalized = strtolower($logLevel);
+        if (!in_array($normalized, $logLevels)) {
             throw new \InvalidArgumentException("Invalid log level: {$logLevel}");
         }
 
-        return Level::fromName($logLevel);
+        return Level::fromName($normalized);
     }
 }
