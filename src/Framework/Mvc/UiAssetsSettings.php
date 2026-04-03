@@ -18,11 +18,17 @@ final readonly class UiAssetsSettings
 
     public static function fromConfig(MvcConfig $config): self
     {
+        $useDev = $config->useDevAssets;
+
         return new self(
             jsAssetsPathUrl: self::toUrlBasePath($config->jsAssetsPath),
-            mainJsBundler: self::normalizeBundlerFileName($config->mainJsBundler),
+            mainJsBundler: self::normalizeBundlerFileName(
+                $useDev ? $config->devMainJsBundler : $config->mainJsBundler
+            ),
             cssAssetsPathUrl: self::toUrlBasePath($config->cssAssetsPath),
-            mainCssBundler: self::normalizeBundlerFileName($config->mainCssBundler),
+            mainCssBundler: self::normalizeBundlerFileName(
+                $useDev ? $config->devMainCssBundler : $config->mainCssBundler
+            ),
         );
     }
 

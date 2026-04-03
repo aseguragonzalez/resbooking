@@ -133,6 +133,8 @@ final class CreateAppCommand implements Command
             'Views/Shared/404.html' => $this->stubGenerator->generate('error-404.html.stub', $replacements),
             'Views/Shared/500.html' => $this->stubGenerator->generate('error-500.html.stub', $replacements),
             'assets/i18n/en.json' => $this->stubGenerator->generate('i18n-en.json.stub', $replacements),
+            'assets/scripts/main.js' => "// App JavaScript (edit and run: mvc watch-assets --app-path=<app-dir>)\n",
+            'assets/styles/main.css' => "/* App styles (edit and run: mvc watch-assets --app-path=<app-dir>) */\n",
         ];
 
         foreach ($files as $relativePath => $content) {
@@ -176,6 +178,16 @@ final class CreateAppCommand implements Command
                 'mainJsBundler' => $config->mainJsBundler,
                 'cssAssetsPath' => $config->cssAssetsPath,
                 'mainCssBundler' => $config->mainCssBundler,
+                'devMainJsBundler' => $config->devMainJsBundler,
+                'devMainCssBundler' => $config->devMainCssBundler,
+                'useDevAssets' => false,
+                'assetRoutes' => [
+                    [
+                        'label' => 'default',
+                        'js' => ['assets/scripts/main.js'],
+                        'css' => ['assets/styles/main.css'],
+                    ],
+                ],
                 'i18nPath' => $config->i18nPath,
                 'migrationsFolderPath' => $config->migrationsFolderPath,
                 'migrationsEnabled' => false,

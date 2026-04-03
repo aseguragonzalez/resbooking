@@ -53,6 +53,38 @@ final readonly class CssBuilder
         echo "✓ Built {$outputFileName}\n";
     }
 
+    /**
+     * One polling step for watch mode: detect source changes and rebuild the unminified bundle only.
+     *
+     * @param array<string, int> $lastModified path => mtime
+     */
+    public function watchTick(array &$lastModified): bool
+    {
+        $changed = false;
+
+        foreach ($this->sourceFiles as $filePath) {
+            if (!file_exists($filePath)) {
+                continue;
+            }
+
+            $currentModified = filemtime($filePath);
+            if ($currentModified === false) {
+                continue;
+            }
+
+            if (!isset($lastModified[$filePath]) || $lastModified[$filePath] !== $currentModified) {
+                $lastModified[$filePath] = $currentModified;
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            $this->build(minify: false);
+        }
+
+        return $changed;
+    }
+
     private function minify(string $css): string
     {
         // Remove comments
@@ -78,28 +110,9 @@ final readonly class CssBuilder
 
         $lastModified = [];
 
-        /** @phpstan-ignore-next-line */
+        // @phpstan-ignore while.alwaysTrue (watch loop; process exits on SIGINT)
         while (true) {
-            $changed = false;
-
-            foreach ($this->sourceFiles as $filePath) {
-                if (!file_exists($filePath)) {
-                    continue;
-                }
-
-                $currentModified = filemtime($filePath);
-
-                if (!isset($lastModified[$filePath]) || $lastModified[$filePath] !== $currentModified) {
-                    $lastModified[$filePath] = $currentModified;
-                    $changed = true;
-                }
-            }
-
-            if ($changed) {
-                $this->build(minify: false);
-                $this->build(minify: true);
-            }
-
+            $this->watchTick($lastModified);
             usleep(500000); // Check every 500ms
         }
     }

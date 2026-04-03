@@ -71,6 +71,8 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('migrations:test', $output);
         $this->assertStringContainsString('auth:enable', $output);
         $this->assertStringContainsString('auth:disable', $output);
+        $this->assertStringContainsString('watch-assets', $output);
+        $this->assertStringContainsString('create-bundle', $output);
     }
 
     public function testRunWithHelpFlagShowsHelp(): void

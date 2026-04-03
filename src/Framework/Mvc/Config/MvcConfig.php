@@ -10,6 +10,9 @@ final readonly class MvcConfig
 {
     public const CONFIG_FILENAME = 'mvc.config.json';
 
+    /**
+     * @param list<AssetRouteGroup> $assetRoutes
+     */
     public function __construct(
         public string $jsAssetsPath,
         public string $mainJsBundler,
@@ -20,6 +23,10 @@ final readonly class MvcConfig
         public ?bool $migrationsEnabled,
         public string $backgroundTasksFolderPath,
         public ?bool $authenticationEnabled,
+        public array $assetRoutes,
+        public string $devMainJsBundler,
+        public string $devMainCssBundler,
+        public bool $useDevAssets,
     ) {
     }
 
@@ -35,6 +42,10 @@ final readonly class MvcConfig
             migrationsEnabled: null,
             backgroundTasksFolderPath: '',
             authenticationEnabled: null,
+            assetRoutes: [],
+            devMainJsBundler: 'main.js',
+            devMainCssBundler: 'main.css',
+            useDevAssets: false,
         );
     }
 
@@ -76,12 +87,64 @@ final readonly class MvcConfig
             migrationsFolderPath: self::getString($data, 'migrationsFolderPath', $defaults->migrationsFolderPath),
             migrationsEnabled: self::getBoolOrNull($data, 'migrationsEnabled'),
             backgroundTasksFolderPath: self::getString(
-                data:$data,
+                data: $data,
                 key: 'backgroundTasksFolderPath',
                 default: $defaults->backgroundTasksFolderPath
             ),
             authenticationEnabled: self::getBoolOrNull($data, 'authenticationEnabled'),
+            assetRoutes: self::parseAssetRoutes($data),
+            devMainJsBundler: self::getString($data, 'devMainJsBundler', $defaults->devMainJsBundler),
+            devMainCssBundler: self::getString($data, 'devMainCssBundler', $defaults->devMainCssBundler),
+            useDevAssets: self::getBool($data, 'useDevAssets', $defaults->useDevAssets),
         );
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return list<AssetRouteGroup>
+     */
+    private static function parseAssetRoutes(array $data): array
+    {
+        $raw = $data['assetRoutes'] ?? null;
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $groups = [];
+        foreach ($raw as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            /** @var array<string, mixed> $item */
+            $groups[] = new AssetRouteGroup(
+                label: self::getString($item, 'label', ''),
+                js: self::getStringList($item, 'js'),
+                css: self::getStringList($item, 'css'),
+            );
+        }
+
+        return $groups;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return list<string>
+     */
+    private static function getStringList(array $data, string $key): array
+    {
+        $value = $data[$key] ?? [];
+        if (!is_array($value)) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($value as $item) {
+            if (is_string($item) && $item !== '') {
+                $out[] = $item;
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -122,18 +185,22 @@ final readonly class MvcConfig
     {
         $configPath = rtrim($appPath, '/') . '/' . self::CONFIG_FILENAME;
 
-        $config = self::defaults();
+        $d = self::defaults();
         /** @var array<string, mixed> $data */
         $data = [
-            'jsAssetsPath' => $config->jsAssetsPath,
-            'mainJsBundler' => $config->mainJsBundler,
-            'cssAssetsPath' => $config->cssAssetsPath,
-            'mainCssBundler' => $config->mainCssBundler,
-            'i18nPath' => $config->i18nPath,
-            'migrationsFolderPath' => $config->migrationsFolderPath,
-            'migrationsEnabled' => $config->migrationsEnabled,
-            'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
-            'authenticationEnabled' => $config->authenticationEnabled,
+            'jsAssetsPath' => $d->jsAssetsPath,
+            'mainJsBundler' => $d->mainJsBundler,
+            'cssAssetsPath' => $d->cssAssetsPath,
+            'mainCssBundler' => $d->mainCssBundler,
+            'i18nPath' => $d->i18nPath,
+            'migrationsFolderPath' => $d->migrationsFolderPath,
+            'migrationsEnabled' => $d->migrationsEnabled,
+            'backgroundTasksFolderPath' => $d->backgroundTasksFolderPath,
+            'authenticationEnabled' => $d->authenticationEnabled,
+            'assetRoutes' => self::assetRoutesToJsonArray($d->assetRoutes),
+            'devMainJsBundler' => $d->devMainJsBundler,
+            'devMainCssBundler' => $d->devMainCssBundler,
+            'useDevAssets' => $d->useDevAssets,
         ];
 
         if (is_file($configPath)) {
@@ -146,12 +213,22 @@ final readonly class MvcConfig
                         if (!array_key_exists($key, $decoded)) {
                             continue;
                         }
-                        $isBoolConfigKey = $key === 'migrationsEnabled' || $key === 'authenticationEnabled';
+                        if ($key === 'assetRoutes' && is_array($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                            continue;
+                        }
+                        $isBoolConfigKey = $key === 'migrationsEnabled'
+                            || $key === 'authenticationEnabled'
+                            || $key === 'useDevAssets';
                         if ($isBoolConfigKey && is_bool($decoded[$key])) {
                             $data[$key] = $decoded[$key];
                             continue;
                         }
                         if (is_string($defaultValue) && is_string($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                            continue;
+                        }
+                        if (is_array($defaultValue) && is_array($decoded[$key])) {
                             $data[$key] = $decoded[$key];
                         }
                     }
@@ -170,6 +247,22 @@ final readonly class MvcConfig
             throw new RuntimeException('Failed to encode mvc.config.json');
         }
         file_put_contents($configPath, $json . PHP_EOL);
+    }
+
+    /**
+     * @param list<AssetRouteGroup> $routes
+     * @return list<array<string, mixed>>
+     */
+    public static function assetRoutesToJsonArray(array $routes): array
+    {
+        return array_map(
+            static fn (AssetRouteGroup $g): array => [
+                'label' => $g->label,
+                'js' => $g->js,
+                'css' => $g->css,
+            ],
+            $routes,
+        );
     }
 
     /**
@@ -195,6 +288,22 @@ final readonly class MvcConfig
         $value = $data[$key];
         if (!is_bool($value)) {
             return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private static function getBool(array $data, string $key, bool $default): bool
+    {
+        if (!array_key_exists($key, $data)) {
+            return $default;
+        }
+        $value = $data[$key];
+        if (!is_bool($value)) {
+            return $default;
         }
 
         return $value;

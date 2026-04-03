@@ -35,11 +35,16 @@ The scaffolded config file stores the locations and bundle filenames the framewo
 - Main JavaScript bundler name (default: `main.min.js`)
 - CSS assets path (default: `./assets/styles`)
 - Main CSS bundler name (default: `main.min.css`)
+- Development bundle names: `devMainJsBundler` (default: `main.js`), `devMainCssBundler` (default: `main.css`)
+- `useDevAssets` (`false` by default; set `true` while using `mvc watch-assets` so layouts load the dev bundles)
+- `assetRoutes` — ordered groups of `js` / `css` source paths (relative to the app root); used by `mvc watch-assets` and `mvc create-bundle`
 - i18n base path (default: `./assets/i18n`)
 - `migrationsFolderPath` (empty by default)
 - `migrationsEnabled` (`false` by default; set `true` when you run `mvc migrations:enable`)
 - `backgroundTasksFolderPath` (empty by default)
 - `authenticationEnabled` (`false` by default; set `true` when you run `mvc auth:enable`)
+
+For CSS/JS bundling CLI and `assetRoutes` details, see [How to bundle CSS and JavaScript (MVC CLI)](./HowToAssets.md).
 
 For migrations workflow and CLI commands, see [How to use MVC database migrations](./HowToMigrations.md).
 

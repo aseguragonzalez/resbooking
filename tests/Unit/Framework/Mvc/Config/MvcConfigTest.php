@@ -31,6 +31,10 @@ final class MvcConfigTest extends TestCase
         $this->assertSame('', $config->backgroundTasksFolderPath);
         $this->assertNull($config->authenticationEnabled);
         $this->assertFalse($config->isAuthenticationEnabled());
+        $this->assertSame([], $config->assetRoutes);
+        $this->assertSame('main.js', $config->devMainJsBundler);
+        $this->assertSame('main.css', $config->devMainCssBundler);
+        $this->assertFalse($config->useDevAssets);
     }
 
     public function testNormalizationRemovesDotSlashAndTrailingSlashes(): void
@@ -64,6 +68,51 @@ final class MvcConfigTest extends TestCase
         $this->assertSame('main.min.js', $uiAssets->mainJsBundler);
         $this->assertSame('/assets/styles', $uiAssets->cssAssetsPathUrl);
         $this->assertSame('main.min.css', $uiAssets->mainCssBundler);
+    }
+
+    public function testLoadParsesAssetRoutesAndUseDevAssets(): void
+    {
+        vfsStream::setup('project', null, [
+            MvcConfig::CONFIG_FILENAME => json_encode([
+                'jsAssetsPath' => './assets/scripts',
+                'mainJsBundler' => 'app.min.js',
+                'cssAssetsPath' => './assets/styles',
+                'mainCssBundler' => 'app.min.css',
+                'devMainJsBundler' => 'app.js',
+                'devMainCssBundler' => 'app.css',
+                'useDevAssets' => true,
+                'assetRoutes' => [
+                    [
+                        'label' => 'a',
+                        'js' => ['./assets/scripts/a.js', 'assets/scripts/b.js'],
+                        'css' => ['assets/styles/x.css'],
+                    ],
+                    [
+                        'label' => 'b',
+                        'js' => ['assets/scripts/a.js'],
+                        'css' => [],
+                    ],
+                ],
+                'i18nPath' => './assets/i18n',
+                'migrationsFolderPath' => '',
+                'migrationsEnabled' => null,
+                'backgroundTasksFolderPath' => '',
+                'authenticationEnabled' => null,
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $config = MvcConfig::load(vfsStream::url('project'));
+
+        $this->assertTrue($config->useDevAssets);
+        $this->assertCount(2, $config->assetRoutes);
+        $this->assertSame('a', $config->assetRoutes[0]->label);
+        $this->assertSame(['./assets/scripts/a.js', 'assets/scripts/b.js'], $config->assetRoutes[0]->js);
+        $this->assertSame(['assets/styles/x.css'], $config->assetRoutes[0]->css);
+        $this->assertSame(['assets/scripts/a.js'], $config->assetRoutes[1]->js);
+
+        $ui = UiAssetsSettings::fromConfig($config);
+        $this->assertSame('app.js', $ui->mainJsBundler);
+        $this->assertSame('app.css', $ui->mainCssBundler);
     }
 
     public function testWriteMergedToAppPersistsAuthenticationEnabled(): void

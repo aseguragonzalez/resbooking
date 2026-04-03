@@ -82,6 +82,8 @@ final class CreateAppCommandTest extends TestCase
         $this->assertTrue(is_dir($appPath . '/Models'));
         $this->assertTrue(is_dir($appPath . '/assets/scripts'));
         $this->assertTrue(is_dir($appPath . '/assets/styles'));
+        $this->assertTrue(is_file($appPath . '/assets/scripts/main.js'));
+        $this->assertTrue(is_file($appPath . '/assets/styles/main.css'));
     }
 
     public function testCreatedMvcConfigContainsDefaults(): void
@@ -110,6 +112,16 @@ final class CreateAppCommandTest extends TestCase
         $this->assertFalse($decoded['migrationsEnabled']);
         $this->assertSame('', $decoded['backgroundTasksFolderPath']);
         $this->assertFalse($decoded['authenticationEnabled']);
+        $this->assertSame('main.js', $decoded['devMainJsBundler']);
+        $this->assertSame('main.css', $decoded['devMainCssBundler']);
+        $this->assertFalse($decoded['useDevAssets']);
+        $this->assertIsArray($decoded['assetRoutes']);
+        /** @var array<int, array<string, mixed>> $assetRoutes */
+        $assetRoutes = $decoded['assetRoutes'];
+        $this->assertArrayHasKey(0, $assetRoutes);
+        $this->assertSame('default', $assetRoutes[0]['label']);
+        $this->assertSame(['assets/scripts/main.js'], $assetRoutes[0]['js']);
+        $this->assertSame(['assets/styles/main.css'], $assetRoutes[0]['css']);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void
