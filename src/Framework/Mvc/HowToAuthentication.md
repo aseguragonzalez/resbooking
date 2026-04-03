@@ -67,8 +67,11 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use DI\Container;
 use Framework\Mvc\Config\MvcConfig;
 use My\Ports\MyApp\MyApp;
+use My\Ports\MyApp\MyAppBootstrap;
 
-$app = new MyApp(container: new Container(), basePath: __DIR__);
+$container = new Container();
+MyAppBootstrap::register($container, __DIR__);
+$app = new MyApp(container: $container, basePath: __DIR__);
 
 $config = MvcConfig::load(__DIR__);
 if ($config->isAuthenticationEnabled()) {

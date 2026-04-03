@@ -34,7 +34,7 @@ This sets `migrationsEnabled: false` and clears `migrationsFolderPath`. By defau
 
 ## Database environment
 
-The migration runner reads database settings from environment variables (see `Framework\Mvc\Migrations\MigrationApp`), for example:
+The migration runner reads database settings from environment variables (registered by `Framework\Mvc\Migrations\MigrationBootstrap::registerFromEnvironment()` before `MigrationApp` runs — see the migration module’s `index.php` or the `mvc migrations:*` commands), for example:
 
 - `MIGRATIONS_DATABASE_HOST`
 - `MIGRATIONS_DATABASE_NAME`

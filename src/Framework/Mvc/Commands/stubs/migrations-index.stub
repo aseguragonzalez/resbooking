@@ -7,6 +7,7 @@ require_once __DIR__ . '/{{autoloadPath}}';
 use DI\Container;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\Migrations\MigrationApp;
+use Framework\Mvc\Migrations\MigrationBootstrap;
 
 // __DIR__ points to the migration module folder under the app root.
 $appBasePath = dirname(__DIR__);
@@ -18,8 +19,10 @@ if (!$config->isMigrationsEnabled()) {
 $migrationsFolderPath = $config->effectiveMigrationsModuleRelativePath();
 $migrationsBasePath = $appBasePath . '/' . $migrationsFolderPath . '/migrations';
 
+$migrationContainer = new Container();
+MigrationBootstrap::registerFromEnvironment($migrationContainer);
 $migrationApp = new MigrationApp(
-    container: new Container(),
+    container: $migrationContainer,
     basePath: $migrationsBasePath,
 );
 

@@ -122,6 +122,7 @@ final class CreateAppCommand implements Command
         $files = [
             'index.php' => $this->stubGenerator->generate('index.stub', $replacements),
             '.htaccess' => $this->stubGenerator->generate('htaccess.stub', $replacements),
+            "{$name}Bootstrap.php" => $this->stubGenerator->generate('bootstrap.stub', $replacements),
             "{$name}App.php" => $this->stubGenerator->generate('app.stub', $replacements),
             "{$name}Settings.php" => $this->stubGenerator->generate('app-settings.stub', $replacements),
             'Controllers/RouterBuilder.php' => $this->stubGenerator->generate('router-builder.stub', $replacements),

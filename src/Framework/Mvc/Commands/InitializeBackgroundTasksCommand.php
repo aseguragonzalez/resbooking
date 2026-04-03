@@ -72,6 +72,9 @@ final class InitializeBackgroundTasksCommand implements Command
             'name' => $name,
             'namespace' => $namespace,
             'autoloadPath' => $autoloadPath,
+            'nameKebab' => $this->toKebabCase($name),
+            'nameSnake' => $this->toSnakeCase($name),
+            'envPrefix' => strtoupper($this->toSnakeCase($name)),
         ];
 
         $this->output->info("Initializing BackgroundTasks in {$resolvedPath}");
@@ -89,9 +92,9 @@ final class InitializeBackgroundTasksCommand implements Command
         file_put_contents($bgTasksDir . '/index.php', $indexContent);
         $this->output->line('  Created BackgroundTasks/index.php');
 
-        $appContent = $this->stubGenerator->generate('background-tasks-app.stub', $replacements);
-        file_put_contents($bgTasksDir . '/' . $name . 'BackgroundTasksApp.php', $appContent);
-        $this->output->line("  Created BackgroundTasks/{$name}BackgroundTasksApp.php");
+        $bootstrapContent = $this->stubGenerator->generate('background-tasks-bootstrap.stub', $replacements);
+        file_put_contents($bgTasksDir . '/' . $name . 'BackgroundTasksBootstrap.php', $bootstrapContent);
+        $this->output->line("  Created BackgroundTasks/{$name}BackgroundTasksBootstrap.php");
 
         $this->output->line('  Created BackgroundTasks/Handlers/');
         $this->output->line('  Created BackgroundTasks/Tasks/');
@@ -188,6 +191,20 @@ final class InitializeBackgroundTasksCommand implements Command
         $downParts = array_slice($toParts, $commonLength);
 
         return implode('/', array_merge(array_fill(0, $upCount, '..'), $downParts));
+    }
+
+    private function toKebabCase(string $name): string
+    {
+        $result = preg_replace('/([a-z])([A-Z])/', '$1-$2', $name);
+
+        return strtolower($result ?? $name);
+    }
+
+    private function toSnakeCase(string $name): string
+    {
+        $result = preg_replace('/([a-z])([A-Z])/', '$1_$2', $name);
+
+        return strtolower($result ?? $name);
     }
 
     private function showHelp(): void

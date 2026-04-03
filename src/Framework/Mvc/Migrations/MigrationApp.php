@@ -6,17 +6,9 @@ namespace Framework\Mvc\Migrations;
 
 use DI\Container;
 use Framework\Application;
-use Framework\Logging\LoggerAdapter;
-use Framework\Logging\LoggerSettings;
 use Framework\Mvc\Migrations\Application\RunMigrations;
 use Framework\Mvc\Migrations\Application\TestMigration;
 use Framework\Mvc\Migrations\Application\TestMigrationCommand;
-use Framework\Mvc\Migrations\MigrationSettings;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
-use Monolog\Logger;
-use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\LoggerInterface;
 
 final class MigrationApp extends Application
@@ -34,10 +26,6 @@ final class MigrationApp extends Application
      */
     public function run(?int $argc = null, array $argv = []): int
     {
-        $this->configureSettings();
-        $this->configureLogging();
-        $this->configureDependencies();
-
         try {
             $arguments = $this->parseArguments($argv);
 
@@ -61,70 +49,9 @@ final class MigrationApp extends Application
             /** @var LoggerInterface $logger */
             $logger = $this->container->get(LoggerInterface::class);
             $logger->error('Error running migrations: {error}', ['error' => $e->getMessage()]);
+
             return 1;
         }
-    }
-
-    protected function configureDependencies(): void
-    {
-        Dependencies::configure($this->container);
-    }
-
-    protected function configureLogging(): void
-    {
-        /** @var LoggerSettings $loggerSettings */
-        $loggerSettings = $this->container->get(LoggerSettings::class);
-
-        $handler = new StreamHandler(
-            stream: 'php://stdout',
-            level: $this->getLogLevelFromSettings($loggerSettings)
-        );
-        $handler->setFormatter(new LineFormatter(
-            format: '[%datetime%] %level_name%: %message%',
-            dateFormat: 'Y-m-d H:i:s',
-            allowInlineLineBreaks: true,
-            ignoreEmptyContextAndExtra: true,
-            includeStacktraces: false,
-        ));
-
-        $logger = new Logger($loggerSettings->serviceName);
-        $logger->pushHandler($handler);
-        $logger->pushProcessor(new PsrLogMessageProcessor());
-
-        $loggerAdapter = new LoggerAdapter(logger: $logger);
-        $this->container->set(LoggerInterface::class, $loggerAdapter);
-    }
-
-    private function getLogLevelFromSettings(LoggerSettings $loggerSettings): Level
-    {
-        $logLevel = $loggerSettings->logLevel;
-        $logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
-        if (!in_array($logLevel, $logLevels)) {
-            throw new \InvalidArgumentException("Invalid log level: {$logLevel}");
-        }
-        return Level::fromName($logLevel);
-    }
-
-    protected function configureSettings(): void
-    {
-        $this->container->set(
-            LoggerSettings::class,
-            new LoggerSettings(
-                environment: getenv('ENVIRONMENT') ?: 'local',
-                serviceName: getenv('MIGRATIONS_SERVICE_NAME') ?: 'migrations',
-                serviceVersion: getenv('MIGRATIONS_SERVICE_VERSION') ?: '1.0.0',
-                logLevel: getenv('MIGRATIONS_LOG_LEVEL') ?: 'debug',
-            ),
-        );
-        $this->container->set(
-            MigrationSettings::class,
-            new MigrationSettings(
-                host: getenv('MIGRATIONS_DATABASE_HOST') ?: 'mariadb',
-                database: getenv('MIGRATIONS_DATABASE_NAME') ?: 'migrations',
-                user: getenv('MIGRATIONS_DATABASE_USER') ?: 'migrations',
-                password: getenv('MIGRATIONS_DATABASE_PASSWORD') ?: '',
-            ),
-        );
     }
 
     /**
@@ -143,6 +70,7 @@ final class MigrationApp extends Application
 
         if (count($argv) === 1) {
             $migrationName = str_replace('--test=', '', $argv[0] ?? '');
+
             return [
                 'command' => 'test',
                 'args' => $migrationName,

@@ -86,6 +86,7 @@ final class InitializeMigrationsCommandTest extends TestCase
         $content = file_get_contents($appPath . '/Migrations/index.php');
         \assert(\is_string($content));
         $this->assertStringContainsString('MigrationApp', $content);
+        $this->assertStringContainsString('MigrationBootstrap', $content);
         $this->assertStringContainsString("'/migrations'", $content);
     }
 

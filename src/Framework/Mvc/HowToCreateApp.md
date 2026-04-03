@@ -22,8 +22,9 @@ When you run `mvc create-app`, the CLI will:
 
 1. Create the MVC app folder structure under `<path>`.
 2. Generate `mvc.config.json` in the app root.
-3. Create i18n file `assets/i18n/en.json`.
-4. Create asset directories:
+3. Generate `{AppName}Bootstrap.php` — composition root that registers settings, logging, and PDO on the container (called from `index.php` before `{AppName}App` runs).
+4. Create i18n file `assets/i18n/en.json`.
+5. Create asset directories:
    - `assets/scripts`
    - `assets/styles`
 

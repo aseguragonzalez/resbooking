@@ -74,12 +74,14 @@ Without `--skip-migrations`, the CLI creates a timestamped folder under your mig
 ## Custom `TaskRepository` or storage
 
 1. Run **`mvc background-tasks:enable --skip-migrations`** (and **`background-tasks:disable --skip-migrations`** when turning off) so only `mvc.config.json` changes.
-2. Register your own `TaskRepository` implementation in the app’s `configure()` / DI setup instead of the default SQL wiring.
+2. Register your own `TaskRepository` implementation in the BackgroundTasks bootstrap (composition root) / DI setup instead of the default SQL wiring.
 3. You do not need the `background_tasks` table unless your implementation uses it.
 
 ## Database and logging (environment variables)
 
-The stock `BaseBackgroundTasksApp` reads **database** and **logging** settings from environment variables (for example `BACKGROUND_TASKS_DATABASE_HOST`, `BACKGROUND_TASKS_DATABASE_NAME`, `BACKGROUND_TASKS_DATABASE_USER`, `BACKGROUND_TASKS_DATABASE_PASSWORD`, `BACKGROUND_TASKS_LOG_LEVEL`). Override `configureSettings()` in your concrete `*BackgroundTasksApp` if you need different configuration sources.
+The **composition root** for your worker (for example `BackgroundTasksBootstrap` next to `index.php`, or the generated `*BackgroundTasksBootstrap` from `mvc initialize-background-tasks`) registers **database** and **logging** from environment variables (for example `BACKGROUND_TASKS_DATABASE_HOST`, `BACKGROUND_TASKS_DATABASE_NAME`, `BACKGROUND_TASKS_DATABASE_USER`, `BACKGROUND_TASKS_DATABASE_PASSWORD`, `BACKGROUND_TASKS_LOG_LEVEL`, or app-prefixed names in the generated bootstrap). Edit that bootstrap class if you need different configuration sources.
+
+The runnable class is `Framework\Mvc\BackgroundTasks\BaseBackgroundTasksApp`: it only processes batches; it does not read environment variables itself.
 
 ## Related documentation
 

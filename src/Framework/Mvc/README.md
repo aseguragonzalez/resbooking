@@ -20,7 +20,7 @@ It is designed for:
 
 High-level flow for an HTTP request:
 
-1. `MvcWebApp::run()` bootstraps the container, MVC services and middleware chain.
+1. The composition root registers services on the DI container; then `MvcWebApp::run()` wires MVC-only services and the middleware chain.
 2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → `Localization` → *optional* `CsrfProtection`
@@ -66,10 +66,11 @@ final class WebApp extends MvcWebApp
 }
 ```
 
-In your composition root (e.g. `public/index.php`) configure and run:
+In your composition root (e.g. `public/index.php`) register settings, logging, and dependencies on the container, then construct and run the app:
 
 ```php
-$container = /* build DI container */;
+$container = new \DI\Container();
+MyAppBootstrap::register($container, __DIR__ . '/../');
 $app = new WebApp($container, basePath: __DIR__ . '/../');
 
 $app->useAuthentication();
@@ -78,6 +79,8 @@ $app->useCsrfProtection();
 
 exit($app->run());
 ```
+
+`MvcWebApp::run()` does not populate the container; anything your middlewares and controllers need must already be registered before `run()`.
 
 Public knobs on `MvcWebApp`:
 

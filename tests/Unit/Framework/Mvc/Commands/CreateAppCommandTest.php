@@ -67,6 +67,7 @@ final class CreateAppCommandTest extends TestCase
 
         $this->assertTrue(is_file($appPath . '/index.php'));
         $this->assertTrue(is_file($appPath . '/.htaccess'));
+        $this->assertTrue(is_file($appPath . '/MyAppBootstrap.php'));
         $this->assertTrue(is_file($appPath . '/MyAppApp.php'));
         $this->assertTrue(is_file($appPath . '/MyAppSettings.php'));
         $this->assertTrue(is_file($appPath . '/Controllers/RouterBuilder.php'));
@@ -139,6 +140,23 @@ final class CreateAppCommandTest extends TestCase
         $indexContent = file_get_contents($appPath . '/index.php');
         \assert(\is_string($indexContent));
         $this->assertStringContainsString("'/../../../vendor/autoload.php'", $indexContent);
+        $this->assertStringContainsString('MyAppBootstrap::register', $indexContent);
+    }
+
+    public function testGeneratedBootstrapClassContainsCorrectNamespace(): void
+    {
+        $appPath = vfsStream::url('project/src/Ports/MyApp');
+
+        $this->command->execute([
+            $appPath,
+            '--name=MyApp',
+            '--namespace=App\\Ports\\MyApp',
+        ]);
+
+        $bootstrapContent = file_get_contents($appPath . '/MyAppBootstrap.php');
+        \assert(\is_string($bootstrapContent));
+        $this->assertStringContainsString('namespace App\\Ports\\MyApp;', $bootstrapContent);
+        $this->assertStringContainsString('class MyAppBootstrap', $bootstrapContent);
     }
 
     public function testGeneratedAppClassContainsCorrectNamespace(): void
@@ -266,9 +284,9 @@ final class CreateAppCommandTest extends TestCase
             '--namespace=App\\Ports\\MyApp',
         ]);
 
-        $appContent = file_get_contents($appPath . '/MyAppApp.php');
-        \assert(\is_string($appContent));
-        $this->assertStringContainsString("'MY_APP_SERVICE_NAME'", $appContent);
-        $this->assertStringContainsString("'MY_APP_DATABASE_HOST'", $appContent);
+        $bootstrapContent = file_get_contents($appPath . '/MyAppBootstrap.php');
+        \assert(\is_string($bootstrapContent));
+        $this->assertStringContainsString("'MY_APP_SERVICE_NAME'", $bootstrapContent);
+        $this->assertStringContainsString("'MY_APP_DATABASE_HOST'", $bootstrapContent);
     }
 }

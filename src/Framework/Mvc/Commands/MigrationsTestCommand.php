@@ -6,6 +6,7 @@ namespace Framework\Mvc\Commands;
 
 use DI\Container;
 use Framework\Mvc\Migrations\MigrationApp;
+use Framework\Mvc\Migrations\MigrationBootstrap;
 
 final class MigrationsTestCommand implements Command
 {
@@ -22,8 +23,10 @@ final class MigrationsTestCommand implements Command
         ?\Closure $migrationRunner = null,
     ) {
         $this->migrationRunner = $migrationRunner ?? static function (string $basePath, array $argv): int {
+            $container = new Container();
+            MigrationBootstrap::registerFromEnvironment($container);
             $app = new MigrationApp(
-                container: new Container(),
+                container: $container,
                 basePath: $basePath,
             );
             /** @var array<string> $argv */

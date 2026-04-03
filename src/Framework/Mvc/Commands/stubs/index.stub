@@ -6,6 +6,9 @@ require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
 use {{namespace}}\{{name}}App;
+use {{namespace}}\{{name}}Bootstrap;
 
-$app = new {{name}}App(container: new Container(), basePath: __DIR__);
+$container = new Container();
+{{name}}Bootstrap::register($container, __DIR__);
+$app = new {{name}}App(container: $container, basePath: __DIR__);
 $app->run();

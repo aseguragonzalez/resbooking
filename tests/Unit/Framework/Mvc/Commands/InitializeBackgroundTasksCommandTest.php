@@ -72,7 +72,7 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         $this->assertTrue(is_dir($appPath . '/BackgroundTasks/Handlers'));
         $this->assertTrue(is_dir($appPath . '/BackgroundTasks/Tasks'));
         $this->assertTrue(is_file($appPath . '/BackgroundTasks/index.php'));
-        $this->assertTrue(is_file($appPath . '/BackgroundTasks/MyAppBackgroundTasksApp.php'));
+        $this->assertTrue(is_file($appPath . '/BackgroundTasks/MyAppBackgroundTasksBootstrap.php'));
 
         $configContent = file_get_contents($appPath . '/mvc.config.json');
         \assert(\is_string($configContent));
@@ -97,7 +97,7 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         $this->assertStringContainsString("'/../../../../vendor/autoload.php'", $content);
     }
 
-    public function testGeneratedAppClassHasCorrectNamespaceAndClassName(): void
+    public function testGeneratedBootstrapClassHasCorrectNamespaceAndClassName(): void
     {
         $appPath = vfsStream::url('project/src/Ports/MyApp');
 
@@ -107,13 +107,13 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
             '--namespace=App\\Ports\\MyApp',
         ]);
 
-        $content = file_get_contents($appPath . '/BackgroundTasks/MyAppBackgroundTasksApp.php');
+        $content = file_get_contents($appPath . '/BackgroundTasks/MyAppBackgroundTasksBootstrap.php');
         \assert(\is_string($content));
         $this->assertStringContainsString('namespace App\\Ports\\MyApp\\BackgroundTasks;', $content);
-        $this->assertStringContainsString('class MyAppBackgroundTasksApp extends BaseBackgroundTasksApp', $content);
+        $this->assertStringContainsString('class MyAppBackgroundTasksBootstrap', $content);
     }
 
-    public function testGeneratedIndexPhpReferencesAppClass(): void
+    public function testGeneratedIndexPhpReferencesBootstrapAndBaseApp(): void
     {
         $appPath = vfsStream::url('project/src/Ports/MyApp');
 
@@ -125,8 +125,12 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
 
         $content = file_get_contents($appPath . '/BackgroundTasks/index.php');
         \assert(\is_string($content));
-        $this->assertStringContainsString('MyAppBackgroundTasksApp', $content);
-        $this->assertStringContainsString('App\\Ports\\MyApp\\BackgroundTasks\\MyAppBackgroundTasksApp', $content);
+        $this->assertStringContainsString('MyAppBackgroundTasksBootstrap', $content);
+        $this->assertStringContainsString(
+            'App\\Ports\\MyApp\\BackgroundTasks\\MyAppBackgroundTasksBootstrap',
+            $content
+        );
+        $this->assertStringContainsString('BaseBackgroundTasksApp', $content);
     }
 
     public function testGeneratedIndexPhpGuardsWhenBackgroundTasksDisabled(): void

@@ -70,9 +70,6 @@ abstract class MvcWebApp extends Application
     {
         $requestContext = new RequestContext();
         $this->container->set(RequestContext::class, $requestContext);
-        $this->configureSettings();
-        $this->configureLogging();
-        $this->configureDependencies();
         $this->configureMvc();
         $this->buildMiddlewareChain();
         $this->handleRequest($requestContext);

@@ -8,6 +8,10 @@ use DI\Container;
 
 /**
  * The base class for all applications.
+ *
+ * The container must be configured by the composition root (e.g. a bootstrap invoked from index.php)
+ * before constructing the application. Implementations of {@see run()} expect required services to
+ * already be registered.
  */
 abstract class Application
 {
@@ -29,22 +33,4 @@ abstract class Application
      * @return int The exit code of the application.
      */
     abstract public function run(?int $argc = null, array $argv = []): int;
-
-    /**
-     * Configure the dependencies of the application.
-     * @return void
-     */
-    abstract protected function configureDependencies(): void;
-
-    /**
-     * Configure the settings of the application.
-     * @return void
-     */
-    abstract protected function configureSettings(): void;
-
-    /**
-     * Configure the logging of the application.
-     * @return void
-     */
-    abstract protected function configureLogging(): void;
 }
