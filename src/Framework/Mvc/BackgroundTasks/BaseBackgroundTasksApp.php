@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Mvc\BackgroundTasks;
 
 use DI\Container;
-use Framework\Application;
+use Framework\Mvc\Application;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;

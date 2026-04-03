@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Mvc\Migrations;
 
 use DI\Container;
-use Framework\Application;
+use Framework\Mvc\Application;
 use Framework\Mvc\Migrations\Application\RunMigrations;
 use Framework\Mvc\Migrations\Application\TestMigration;
 use Framework\Mvc\Migrations\Application\TestMigrationCommand;

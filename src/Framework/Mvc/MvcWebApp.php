@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Framework\Mvc;
 
 use DI\Container;
-use Framework\Application;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Middlewares\Authentication;
