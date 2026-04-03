@@ -22,6 +22,8 @@ final readonly class MvcConfig
         public string $migrationsFolderPath,
         public ?bool $migrationsEnabled,
         public string $backgroundTasksFolderPath,
+        public ?bool $backgroundTasksEnabled,
+        public int $backgroundTasksPollIntervalSeconds,
         public ?bool $authenticationEnabled,
         public array $assetRoutes,
         public string $devMainJsBundler,
@@ -41,6 +43,8 @@ final readonly class MvcConfig
             migrationsFolderPath: '',
             migrationsEnabled: null,
             backgroundTasksFolderPath: '',
+            backgroundTasksEnabled: null,
+            backgroundTasksPollIntervalSeconds: 0,
             authenticationEnabled: null,
             assetRoutes: [],
             devMainJsBundler: 'main.js',
@@ -90,6 +94,12 @@ final readonly class MvcConfig
                 data: $data,
                 key: 'backgroundTasksFolderPath',
                 default: $defaults->backgroundTasksFolderPath
+            ),
+            backgroundTasksEnabled: self::getBoolOrNull($data, 'backgroundTasksEnabled'),
+            backgroundTasksPollIntervalSeconds: self::getInt(
+                $data,
+                'backgroundTasksPollIntervalSeconds',
+                $defaults->backgroundTasksPollIntervalSeconds
             ),
             authenticationEnabled: self::getBoolOrNull($data, 'authenticationEnabled'),
             assetRoutes: self::parseAssetRoutes($data),
@@ -165,6 +175,24 @@ final readonly class MvcConfig
     }
 
     /**
+     * True only when `backgroundTasksEnabled` is explicitly `true` in mvc.config.json.
+     */
+    public function isBackgroundTasksEnabled(): bool
+    {
+        return $this->backgroundTasksEnabled === true;
+    }
+
+    /**
+     * Poll interval from config when > 0; otherwise no default loop (single batch unless CLI passes --interval).
+     */
+    public function effectiveBackgroundTasksPollIntervalSeconds(): int
+    {
+        return $this->backgroundTasksPollIntervalSeconds > 0
+            ? $this->backgroundTasksPollIntervalSeconds
+            : 0;
+    }
+
+    /**
      * Relative path from app root to the migration module directory (contains index.php and migrations/).
      * When `migrationsFolderPath` is empty, uses the legacy default folder name `Migrations`.
      */
@@ -196,6 +224,8 @@ final readonly class MvcConfig
             'migrationsFolderPath' => $d->migrationsFolderPath,
             'migrationsEnabled' => $d->migrationsEnabled,
             'backgroundTasksFolderPath' => $d->backgroundTasksFolderPath,
+            'backgroundTasksEnabled' => $d->backgroundTasksEnabled,
+            'backgroundTasksPollIntervalSeconds' => $d->backgroundTasksPollIntervalSeconds,
             'authenticationEnabled' => $d->authenticationEnabled,
             'assetRoutes' => self::assetRoutesToJsonArray($d->assetRoutes),
             'devMainJsBundler' => $d->devMainJsBundler,
@@ -218,9 +248,14 @@ final readonly class MvcConfig
                             continue;
                         }
                         $isBoolConfigKey = $key === 'migrationsEnabled'
+                            || $key === 'backgroundTasksEnabled'
                             || $key === 'authenticationEnabled'
                             || $key === 'useDevAssets';
                         if ($isBoolConfigKey && is_bool($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                            continue;
+                        }
+                        if ($key === 'backgroundTasksPollIntervalSeconds' && is_int($decoded[$key])) {
                             $data[$key] = $decoded[$key];
                             continue;
                         }
@@ -303,6 +338,22 @@ final readonly class MvcConfig
         }
         $value = $data[$key];
         if (!is_bool($value)) {
+            return $default;
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private static function getInt(array $data, string $key, int $default): int
+    {
+        if (!array_key_exists($key, $data)) {
+            return $default;
+        }
+        $value = $data[$key];
+        if (!is_int($value)) {
             return $default;
         }
 

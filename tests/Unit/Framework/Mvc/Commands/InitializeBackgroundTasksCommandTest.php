@@ -79,6 +79,7 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         /** @var array<string, mixed> $decoded */
         $decoded = json_decode($configContent, true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame('./BackgroundTasks', $decoded['backgroundTasksFolderPath']);
+        $this->assertFalse($decoded['backgroundTasksEnabled']);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void
@@ -126,6 +127,22 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         \assert(\is_string($content));
         $this->assertStringContainsString('MyAppBackgroundTasksApp', $content);
         $this->assertStringContainsString('App\\Ports\\MyApp\\BackgroundTasks\\MyAppBackgroundTasksApp', $content);
+    }
+
+    public function testGeneratedIndexPhpGuardsWhenBackgroundTasksDisabled(): void
+    {
+        $appPath = vfsStream::url('project/src/Ports/MyApp');
+
+        $this->command->execute([
+            '--path=' . $appPath,
+            '--name=MyApp',
+            '--namespace=App\\Ports\\MyApp',
+        ]);
+
+        $content = file_get_contents($appPath . '/BackgroundTasks/index.php');
+        \assert(\is_string($content));
+        $this->assertStringContainsString('isBackgroundTasksEnabled', $content);
+        $this->assertStringContainsString('mvc background-tasks:enable', $content);
     }
 
     public function testExecuteFailsWhenNotAnAppDirectory(): void

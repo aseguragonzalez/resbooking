@@ -192,6 +192,8 @@ final class CreateAppCommand implements Command
                 'migrationsFolderPath' => $config->migrationsFolderPath,
                 'migrationsEnabled' => false,
                 'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
+                'backgroundTasksEnabled' => false,
+                'backgroundTasksPollIntervalSeconds' => 0,
                 'authenticationEnabled' => false,
             ],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,

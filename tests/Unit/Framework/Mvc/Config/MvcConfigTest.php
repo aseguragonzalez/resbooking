@@ -29,6 +29,10 @@ final class MvcConfigTest extends TestCase
         $this->assertTrue($config->isMigrationsEnabled());
         $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('', $config->backgroundTasksFolderPath);
+        $this->assertNull($config->backgroundTasksEnabled);
+        $this->assertFalse($config->isBackgroundTasksEnabled());
+        $this->assertSame(0, $config->backgroundTasksPollIntervalSeconds);
+        $this->assertSame(0, $config->effectiveBackgroundTasksPollIntervalSeconds());
         $this->assertNull($config->authenticationEnabled);
         $this->assertFalse($config->isAuthenticationEnabled());
         $this->assertSame([], $config->assetRoutes);
@@ -49,6 +53,8 @@ final class MvcConfigTest extends TestCase
                 'migrationsFolderPath' => '',
                 'migrationsEnabled' => false,
                 'backgroundTasksFolderPath' => './BackgroundTasks/',
+                'backgroundTasksEnabled' => true,
+                'backgroundTasksPollIntervalSeconds' => 120,
                 'authenticationEnabled' => true,
             ], JSON_THROW_ON_ERROR),
         ]);
@@ -60,6 +66,9 @@ final class MvcConfigTest extends TestCase
         $this->assertFalse($config->isMigrationsEnabled());
         $this->assertSame('Migrations', $config->effectiveMigrationsModuleRelativePath());
         $this->assertSame('BackgroundTasks', $config->normalizedBackgroundTasksFolderPath());
+        $this->assertTrue($config->isBackgroundTasksEnabled());
+        $this->assertSame(120, $config->backgroundTasksPollIntervalSeconds);
+        $this->assertSame(120, $config->effectiveBackgroundTasksPollIntervalSeconds());
         $this->assertTrue($config->authenticationEnabled);
         $this->assertTrue($config->isAuthenticationEnabled());
 
@@ -137,5 +146,35 @@ final class MvcConfigTest extends TestCase
 
         $config = MvcConfig::load($base);
         $this->assertTrue($config->isAuthenticationEnabled());
+    }
+
+    public function testWriteMergedToAppPersistsBackgroundTasksEnabledAndPollInterval(): void
+    {
+        vfsStream::setup('app', null, [
+            'index.php' => '<?php',
+            MvcConfig::CONFIG_FILENAME => json_encode([
+                'jsAssetsPath' => './assets/scripts',
+                'mainJsBundler' => 'main.min.js',
+                'cssAssetsPath' => './assets/styles',
+                'mainCssBundler' => 'main.min.css',
+                'i18nPath' => './assets/i18n',
+                'migrationsFolderPath' => '',
+                'migrationsEnabled' => false,
+                'backgroundTasksFolderPath' => './BackgroundTasks',
+                'backgroundTasksEnabled' => false,
+                'backgroundTasksPollIntervalSeconds' => 0,
+                'authenticationEnabled' => false,
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $base = vfsStream::url('app');
+        MvcConfig::writeMergedToApp($base, [
+            'backgroundTasksEnabled' => true,
+            'backgroundTasksPollIntervalSeconds' => 45,
+        ]);
+
+        $config = MvcConfig::load($base);
+        $this->assertTrue($config->isBackgroundTasksEnabled());
+        $this->assertSame(45, $config->backgroundTasksPollIntervalSeconds);
     }
 }

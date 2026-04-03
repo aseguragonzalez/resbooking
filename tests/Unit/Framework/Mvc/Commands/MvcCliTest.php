@@ -66,6 +66,9 @@ final class MvcCliTest extends TestCase
         $this->assertStringContainsString('migrations:enable', $output);
         $this->assertStringContainsString('migrations:disable', $output);
         $this->assertStringContainsString('initialize-background-tasks', $output);
+        $this->assertStringContainsString('background-tasks:enable', $output);
+        $this->assertStringContainsString('background-tasks:disable', $output);
+        $this->assertStringContainsString('background-tasks:run', $output);
         $this->assertStringContainsString('migrations:create', $output);
         $this->assertStringContainsString('migrations:run', $output);
         $this->assertStringContainsString('migrations:test', $output);
@@ -214,5 +217,17 @@ final class MvcCliTest extends TestCase
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('--path=', $output);
         $this->assertStringContainsString('--skip-migrations', $output);
+    }
+
+    public function testRunWithBackgroundTasksRunHelpReturnsZero(): void
+    {
+        $cli = $this->createCli();
+
+        $exitCode = $cli->run(['mvc', 'background-tasks:run', '--help']);
+
+        $output = $this->readStream($this->stdout);
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('--app-path=', $output);
+        $this->assertStringContainsString('--force', $output);
     }
 }

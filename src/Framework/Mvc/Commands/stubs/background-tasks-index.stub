@@ -11,6 +11,10 @@ use {{namespace}}\BackgroundTasks\{{name}}BackgroundTasksApp;
 // __DIR__ points to: {appRoot}/BackgroundTasks
 $appBasePath = dirname(__DIR__);
 $config = MvcConfig::load(basePath: $appBasePath);
+if (!$config->isBackgroundTasksEnabled()) {
+    fwrite(STDERR, "Background tasks are disabled in mvc.config.json (backgroundTasksEnabled: false). Run: mvc background-tasks:enable\n");
+    exit(1);
+}
 $backgroundTasksFolderPath = $config->normalizedBackgroundTasksFolderPath();
 
 // If the config field is empty (e.g. older apps), fall back to the conventional folder name.

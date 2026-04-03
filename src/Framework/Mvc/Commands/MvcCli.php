@@ -22,6 +22,9 @@ final class MvcCli
         $this->register(new InitializeMigrationsCommand($enableMigrations));
         $this->register(new MigrationsDisableCommand($this->output));
         $this->register(new InitializeBackgroundTasksCommand($this->output, $stubGenerator));
+        $this->register(new BackgroundTasksEnableCommand($this->output));
+        $this->register(new BackgroundTasksDisableCommand($this->output));
+        $this->register(new BackgroundTasksRunCommand($this->output));
         $this->register(new MigrationsCreateCommand($this->output));
         $this->register(new MigrationsRunCommand($this->output));
         $this->register(new MigrationsTestCommand($this->output));

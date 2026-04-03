@@ -111,6 +111,8 @@ final class CreateAppCommandTest extends TestCase
         $this->assertSame('', $decoded['migrationsFolderPath']);
         $this->assertFalse($decoded['migrationsEnabled']);
         $this->assertSame('', $decoded['backgroundTasksFolderPath']);
+        $this->assertFalse($decoded['backgroundTasksEnabled']);
+        $this->assertSame(0, $decoded['backgroundTasksPollIntervalSeconds']);
         $this->assertFalse($decoded['authenticationEnabled']);
         $this->assertSame('main.js', $decoded['devMainJsBundler']);
         $this->assertSame('main.css', $decoded['devMainCssBundler']);

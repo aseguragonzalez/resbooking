@@ -33,6 +33,8 @@ final class AssetBundleSourceResolverTest extends TestCase
             migrationsFolderPath: '',
             migrationsEnabled: null,
             backgroundTasksFolderPath: '',
+            backgroundTasksEnabled: null,
+            backgroundTasksPollIntervalSeconds: 0,
             authenticationEnabled: null,
             assetRoutes: [
                 new AssetRouteGroup('g', ['sub/a.js'], ['sub/b.css']),

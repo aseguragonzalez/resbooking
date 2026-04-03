@@ -82,6 +82,7 @@ final class InitializeBackgroundTasksCommand implements Command
 
         MvcConfig::writeMergedToApp($resolvedPath, [
             'backgroundTasksFolderPath' => './BackgroundTasks',
+            'backgroundTasksEnabled' => false,
         ]);
 
         $indexContent = $this->stubGenerator->generate('background-tasks-index.stub', $replacements);
