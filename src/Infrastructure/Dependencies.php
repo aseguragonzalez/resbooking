@@ -24,8 +24,6 @@ use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Framework\Mvc\BackgroundTasks\Dependencies as BackgroundTasksDependencies;
 use Framework\Mvc\Security\Dependencies as SecurityDependencies;
-use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
-use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
 use Infrastructure\Adapters\PdoUnitOfWork;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
 use PDO;
@@ -67,9 +65,6 @@ final class Dependencies
         $container->set(QueryBus::class, $containerQueryBus);
 
         BackgroundTasksDependencies::configure($container);
-
-        // App Notification Services for Challenge Notifications (Using Background Tasks)
-        $container->set(ChallengeNotificator::class, $container->get(BackgroundTaskChallengeNotificator::class));
 
         // Configure security: IdentityManager, repositories, use cases
         SecurityDependencies::configure($container);

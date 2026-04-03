@@ -15,7 +15,7 @@
     }
   },
   "bin": [
-    "src/Framework/Mvc/bin/mvc"
+    "src/Framework/Mvc/Cli/bin/mvc"
   ],
   "config": {
     "platform": {

@@ -7,7 +7,7 @@ namespace Infrastructure\Ports\BackgroundTasks\Handlers;
 use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
 use Framework\Mvc\BackgroundTasks\Domain\Task;
 use Framework\Mvc\BackgroundTasks\Domain\TaskHandler;
-use Framework\Files\FileManager;
+use Framework\Mvc\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
 use Infrastructure\Ports\BackgroundTasks\Tasks\SignUpChallengeEmailTask;

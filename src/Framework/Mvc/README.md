@@ -20,7 +20,7 @@ It is designed for:
 
 High-level flow for an HTTP request:
 
-1. `MvcWebApp::run()` bootstraps the container, MVC services and middleware chain.
+1. The composition root registers services on the DI container; then `MvcWebApp::run()` wires MVC-only services and the middleware chain.
 2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → `Localization` → *optional* `CsrfProtection`
@@ -66,10 +66,11 @@ final class WebApp extends MvcWebApp
 }
 ```
 
-In your composition root (e.g. `public/index.php`) configure and run:
+In your composition root (e.g. `public/index.php`) register settings, logging, and dependencies on the container, then construct and run the app:
 
 ```php
-$container = /* build DI container */;
+$container = new \DI\Container();
+MyAppBootstrap::register($container, __DIR__ . '/../');
 $app = new WebApp($container, basePath: __DIR__ . '/../');
 
 $app->useAuthentication();
@@ -78,6 +79,8 @@ $app->useCsrfProtection();
 
 exit($app->run());
 ```
+
+`MvcWebApp::run()` does not populate the container; anything your middlewares and controllers need must already be registered before `run()`.
 
 Public knobs on `MvcWebApp`:
 
@@ -256,6 +259,24 @@ $data['csrfToken'] = $token;
 
 ---
 
+## MVC CLI
+
+Use the MVC scaffolding tool to generate a new app structure:
+
+```bash
+mvc create-app <path> --name=<AppName> --namespace=<Namespace>
+```
+
+How-to details (including `mvc.config.json` defaults): see [How to Create a New MVC App (CLI)](./Cli/HowToCreateApp.md).
+
+Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./Apps/HowToMigrations.md).
+
+Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./Functional/HowToAuthentication.md).
+
+CSS and JavaScript bundling (`mvc watch-assets`, `mvc create-bundle`, `assetRoutes` in `mvc.config.json`): see [How to bundle CSS and JavaScript (MVC CLI)](./Web/HowToAssets.md).
+
+---
+
 ## Performance characteristics
 
 The framework includes a few built-in optimizations:
@@ -271,9 +292,9 @@ These are transparent to consumers; no configuration is required.
 
 ## Where to look next
 
-- `src/Framework/Mvc/MvcWebApp.php` – application bootstrap and middleware wiring.
-- `src/Framework/Mvc/Requests/RequestHandler.php` – routing + action invocation contract.
-- `src/Framework/Mvc/Views/README.md` – full template language reference.
-- `src/Framework/Mvc/Security/*` – authentication, identity and password flows.
+- `src/Framework/Mvc/Web/MvcWebApp.php` – application bootstrap and middleware wiring.
+- `src/Framework/Mvc/Web/Requests/RequestHandler.php` – routing + action invocation contract.
+- `src/Framework/Mvc/Web/Views/README.md` – full template language reference.
+- `src/Framework/Mvc/Functional/Security/*` – authentication, identity and password flows; challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
 
 Use this README as the entry point when building or reviewing apps on top of the MVC package.
