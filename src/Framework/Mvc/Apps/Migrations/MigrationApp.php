@@ -19,6 +19,27 @@ final class MigrationApp extends Application
     }
 
     /**
+     * Removes `--migrations-base=<path>` from argv (used when the CLI subprocess forwards the SQL leaf directory).
+     *
+     * @param array<string> $argv
+     * @return array{0: string|null, 1: array<string>}
+     */
+    public static function stripMigrationsBaseFromArgv(array $argv): array
+    {
+        $override = null;
+        $out = [];
+        foreach ($argv as $arg) {
+            if (str_starts_with($arg, '--migrations-base=')) {
+                $override = substr($arg, strlen('--migrations-base='));
+                continue;
+            }
+            $out[] = $arg;
+        }
+
+        return [$override !== '' ? $override : null, $out];
+    }
+
+    /**
      * Run the application with the given arguments.
      * @param int|null $argc The number of arguments passed to the application. Default is null.
      * @param array<string> $argv The arguments to pass to the application. Default is an empty array.
@@ -27,7 +48,10 @@ final class MigrationApp extends Application
     public function run(?int $argc = null, array $argv = []): int
     {
         try {
-            $arguments = $this->parseArguments($argv);
+            [$migrationsBaseOverride, $cleanArgv] = self::stripMigrationsBaseFromArgv($argv);
+            $effectiveBasePath = $migrationsBaseOverride ?? $this->basePath;
+
+            $arguments = $this->parseArguments($cleanArgv);
 
             if ($arguments['command'] === 'test') {
                 /** @var string $migrationName */
@@ -36,12 +60,12 @@ final class MigrationApp extends Application
                 $testMigration = $this->container->get(TestMigration::class);
                 $testMigration->execute(new TestMigrationCommand(
                     migrationName: $migrationName,
-                    basePath: $this->basePath,
+                    basePath: $effectiveBasePath,
                 ));
             } elseif ($arguments['command'] === 'run') {
                 /** @var RunMigrations $runMigrations */
                 $runMigrations = $this->container->get(RunMigrations::class);
-                $runMigrations->execute(basePath: $this->basePath);
+                $runMigrations->execute(basePath: $effectiveBasePath);
             }
 
             return 0;

@@ -68,6 +68,7 @@ final class InitializeMigrationsCommandTest extends TestCase
         $this->assertTrue(is_dir($appPath . '/Migrations'));
         $this->assertTrue(is_dir($appPath . '/Migrations/migrations'));
         $this->assertTrue(is_file($appPath . '/Migrations/index.php'));
+        $this->assertTrue(is_file($appPath . '/Migrations/MigrationsBootstrap.php'));
 
         $configContent = file_get_contents($appPath . '/mvc.config.json');
         \assert(\is_string($configContent));
@@ -86,7 +87,8 @@ final class InitializeMigrationsCommandTest extends TestCase
         $content = file_get_contents($appPath . '/Migrations/index.php');
         \assert(\is_string($content));
         $this->assertStringContainsString('MigrationApp', $content);
-        $this->assertStringContainsString('MigrationBootstrap', $content);
+        $this->assertStringContainsString('MigrationsBootstrap', $content);
+        $this->assertStringContainsString('App\Migrations\MigrationsBootstrap', $content);
         $this->assertStringContainsString("'/migrations'", $content);
     }
 

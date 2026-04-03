@@ -2,29 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Framework\Mvc\Migrations;
+namespace {{namespace}};
 
 use DI\Container;
+use Framework\Mvc\Migrations\Dependencies;
+use Framework\Mvc\Migrations\MigrationsMysqlConnection;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PDO;
 use Psr\Log\LoggerInterface;
 
-final class MigrationBootstrap
+final class MigrationsBootstrap
 {
-    public static function registerFromEnvironment(Container $container): void
+    public static function register(Container $container): void
     {
-        $container->set(
-            MigrationSettings::class,
-            new MigrationSettings(
-                host: getenv('MIGRATIONS_DATABASE_HOST') ?: 'mariadb',
-                database: getenv('MIGRATIONS_DATABASE_NAME') ?: 'migrations',
-                user: getenv('MIGRATIONS_DATABASE_USER') ?: 'migrations',
-                password: getenv('MIGRATIONS_DATABASE_PASSWORD') ?: '',
-            ),
+        $mysql = new MigrationsMysqlConnection(
+            host: getenv('MIGRATIONS_DATABASE_HOST') ?: 'mariadb',
+            database: getenv('MIGRATIONS_DATABASE_NAME') ?: 'migrations',
+            user: getenv('MIGRATIONS_DATABASE_USER') ?: 'migrations',
+            password: getenv('MIGRATIONS_DATABASE_PASSWORD') ?: '',
         );
+        $container->set(MigrationsMysqlConnection::class, $mysql);
+
+        $container->set(PDO::class, new PDO(
+            $mysql->getPdoDsn(),
+            $mysql->user,
+            $mysql->password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        ));
 
         $serviceName = getenv('MIGRATIONS_SERVICE_NAME') ?: 'migrations';
         $logLevel = getenv('MIGRATIONS_LOG_LEVEL') ?: 'debug';

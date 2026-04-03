@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Framework\Mvc\Migrations\Infrastructure;
 
 use Framework\Mvc\Migrations\Domain\Services\DatabaseBackupManager;
-use Framework\Mvc\Migrations\MigrationSettings;
+use Framework\Mvc\Migrations\MigrationsMysqlConnection;
 
 final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 {
-    public function __construct(private MigrationSettings $settings)
+    public function __construct(private MigrationsMysqlConnection $mysql)
     {
     }
 
@@ -18,10 +18,10 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
         $backupFile = sys_get_temp_dir() . '/migration_test_' . uniqid() . '.sql';
         $command = sprintf(
             'mysqldump -h %s -u %s -p%s --no-data %s > %s 2>&1',
-            escapeshellarg($this->settings->host),
-            escapeshellarg($this->settings->user),
-            escapeshellarg($this->settings->password),
-            escapeshellarg($this->settings->database),
+            escapeshellarg($this->mysql->host),
+            escapeshellarg($this->mysql->user),
+            escapeshellarg($this->mysql->password),
+            escapeshellarg($this->mysql->database),
             escapeshellarg($backupFile)
         );
 
@@ -42,10 +42,10 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 
         $command = sprintf(
             'mysql -h %s -u %s -p%s %s < %s 2>&1',
-            escapeshellarg($this->settings->host),
-            escapeshellarg($this->settings->user),
-            escapeshellarg($this->settings->password),
-            escapeshellarg($this->settings->database),
+            escapeshellarg($this->mysql->host),
+            escapeshellarg($this->mysql->user),
+            escapeshellarg($this->mysql->password),
+            escapeshellarg($this->mysql->database),
             escapeshellarg($backupFilePath)
         );
 
@@ -68,9 +68,9 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 
         $createDbCommand = sprintf(
             'mysql -h %s -u %s -p%s -e "CREATE DATABASE %s CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci" 2>&1',
-            escapeshellarg($this->settings->host),
-            escapeshellarg($this->settings->user),
-            escapeshellarg($this->settings->password),
+            escapeshellarg($this->mysql->host),
+            escapeshellarg($this->mysql->user),
+            escapeshellarg($this->mysql->password),
             $this->escapeDatabaseName($testDatabaseName)
         );
 
@@ -83,9 +83,9 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 
         $restoreCommand = sprintf(
             'mysql -h %s -u %s -p%s %s < %s 2>&1',
-            escapeshellarg($this->settings->host),
-            escapeshellarg($this->settings->user),
-            escapeshellarg($this->settings->password),
+            escapeshellarg($this->mysql->host),
+            escapeshellarg($this->mysql->user),
+            escapeshellarg($this->mysql->password),
             escapeshellarg($testDatabaseName),
             escapeshellarg($backupFilePath)
         );
@@ -105,9 +105,9 @@ final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
     {
         $command = sprintf(
             'mysql -h %s -u %s -p%s -e "DROP DATABASE IF EXISTS %s" 2>&1',
-            escapeshellarg($this->settings->host),
-            escapeshellarg($this->settings->user),
-            escapeshellarg($this->settings->password),
+            escapeshellarg($this->mysql->host),
+            escapeshellarg($this->mysql->user),
+            escapeshellarg($this->mysql->password),
             $this->escapeDatabaseName($testDatabaseName)
         );
 

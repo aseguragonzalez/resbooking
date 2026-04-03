@@ -26,7 +26,6 @@ use Framework\Mvc\Migrations\Domain\Services\SchemaComparatorHandler;
 use Framework\Mvc\Migrations\Domain\Services\SchemaSnapshotExecutor;
 use Framework\Mvc\Migrations\Domain\Services\TestMigrationExecutor;
 use Framework\Mvc\Migrations\Domain\Services\TestMigrationExecutorHandler;
-use Framework\Mvc\Migrations\MigrationSettings;
 use Framework\Mvc\Migrations\Infrastructure\MigrationTestScopeFactoryHandler;
 use Framework\Mvc\Migrations\Infrastructure\ShellDatabaseBackupManager;
 use Framework\Mvc\Migrations\Infrastructure\SqlDbClient;
@@ -38,37 +37,28 @@ use function DI\factory;
 
 final class Dependencies
 {
+    /**
+     * Registers framework migrations bindings. The composition root must register {@see PDO}
+     * and {@see MigrationsMysqlConnection} before calling this method.
+     */
     public static function configure(Container $container): void
     {
-        /** @var MigrationSettings $settings */
-        $settings = $container->get(MigrationSettings::class);
-        $connection = new PDO(
-            $settings->getDsn(),
-            $settings->user,
-            $settings->password,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]
-        );
-        $container->set(PDO::class, $connection);
-
         // Infrastructure services
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));
         $container->set(MigrationRepository::class, $container->get(SqlMigrationRepository::class));
         $container->set(DbClient::class, $container->get(SqlDbClient::class));
         $container->set(
             MigrationExecutorHandler::class,
-            factory(function (MigrationRepository $r, DbClient $c, MigrationSettings $s) {
-                return new MigrationExecutorHandler($r, $c, $s->database);
+            factory(function (MigrationRepository $r, DbClient $c, MigrationsMysqlConnection $mysql) {
+                return new MigrationExecutorHandler($r, $c, $mysql->database);
             }),
         );
         $container->set(MigrationExecutor::class, $container->get(MigrationExecutorHandler::class));
         $container->set(MigrationFileManager::class, $container->get(MigrationFileManagerHandler::class));
         $container->set(
             RollbackExecutorHandler::class,
-            factory(function (DbClient $c, MigrationSettings $s) {
-                return new RollbackExecutorHandler($c, $s->database);
+            factory(function (DbClient $c, MigrationsMysqlConnection $mysql) {
+                return new RollbackExecutorHandler($c, $mysql->database);
             }),
         );
         $container->set(RollbackExecutor::class, $container->get(RollbackExecutorHandler::class));
@@ -77,8 +67,8 @@ final class Dependencies
         $container->set(SchemaComparator::class, $container->get(SchemaComparatorHandler::class));
         $container->set(
             TestMigrationExecutorHandler::class,
-            factory(function (DbClient $c, MigrationSettings $s) {
-                return new TestMigrationExecutorHandler($c, $s->database);
+            factory(function (DbClient $c, MigrationsMysqlConnection $mysql) {
+                return new TestMigrationExecutorHandler($c, $mysql->database);
             }),
         );
         $container->set(TestMigrationExecutor::class, $container->get(TestMigrationExecutorHandler::class));

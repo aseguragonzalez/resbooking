@@ -38,8 +38,9 @@ trait MigrationsCommandPathTrait
 
         $appPath = $this->parseAppPathArg($args);
         $resolvedApp = $this->resolveShellPath($appPath);
+        $ignoreDisabled = in_array('--force', $args, true);
 
-        return MigrationsLeafPathResolver::resolveLeafMigrationsDir($resolvedApp);
+        return MigrationsLeafPathResolver::resolveLeafMigrationsDir($resolvedApp, $ignoreDisabled);
     }
 
     /**

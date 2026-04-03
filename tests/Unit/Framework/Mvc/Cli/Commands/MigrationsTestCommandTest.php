@@ -22,7 +22,10 @@ final class MigrationsTestCommandTest extends TestCase
     protected function setUp(): void
     {
         vfsStream::setup('project', null, [
-            'migrations' => [],
+            'module' => [
+                'index.php' => '<?php',
+                'migrations' => [],
+            ],
         ]);
 
         $stdout = fopen('php://memory', 'r+');
@@ -46,15 +49,22 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testExecuteDelegatesToMigrationRunnerWithTestArg(): void
     {
-        $capturedBasePath = null;
-        $capturedArgv = null;
-        $runner = function (string $basePath, array $argv) use (&$capturedBasePath, &$capturedArgv): int {
-            $capturedBasePath = $basePath;
-            $capturedArgv = $argv;
+        $capturedIndexPath = null;
+        $capturedForwardArgs = null;
+        $runner = function (
+            string $indexPath,
+            array $forwardArgs,
+        ) use (
+            &$capturedIndexPath,
+            &$capturedForwardArgs,
+        ): int {
+            $capturedIndexPath = $indexPath;
+            $capturedForwardArgs = $forwardArgs;
             return 0;
         };
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
+        $expectedIndex = vfsStream::url('project/module/index.php');
 
         $exitCode = $command->execute([
             '--path=' . $migrationsPath,
@@ -62,15 +72,18 @@ final class MigrationsTestCommandTest extends TestCase
         ]);
 
         $this->assertSame(0, $exitCode);
-        $this->assertSame($migrationsPath, $capturedBasePath);
-        $this->assertSame(['--test=20260123183421'], $capturedArgv);
+        $this->assertSame($expectedIndex, $capturedIndexPath);
+        $this->assertSame(
+            ['--migrations-base=' . $migrationsPath, '--test=20260123183421'],
+            $capturedForwardArgs,
+        );
     }
 
     public function testExecuteReturnsRunnerExitCode(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 1;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 1;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
 
         $exitCode = $command->execute([
             '--path=' . $migrationsPath,
@@ -82,7 +95,7 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testExecuteFailsWhenPathNotProvided(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['--migration=20260123183421']);
@@ -92,9 +105,9 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testExecuteFailsWhenMigrationNotProvided(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
 
         $exitCode = $command->execute(['--path=' . $migrationsPath]);
 
@@ -103,7 +116,7 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testExecuteFailsWhenDirectoryDoesNotExist(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute([
@@ -116,7 +129,7 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testHelpFlagReturnsZero(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['--help']);
@@ -126,7 +139,7 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testShortHelpFlagReturnsZero(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['-h']);
@@ -136,7 +149,7 @@ final class MigrationsTestCommandTest extends TestCase
 
     public function testHelpOutputContainsUsageInfo(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
 
         $command->execute(['--help']);
@@ -146,13 +159,14 @@ final class MigrationsTestCommandTest extends TestCase
         \assert(\is_string($output));
         $this->assertStringContainsString('--path=', $output);
         $this->assertStringContainsString('--migration=', $output);
+        $this->assertStringContainsString('--force', $output);
     }
 
     public function testOutputContainsInfoMessage(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsTestCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
 
         $command->execute([
             '--path=' . $migrationsPath,
@@ -164,5 +178,6 @@ final class MigrationsTestCommandTest extends TestCase
         \assert(\is_string($output));
         $this->assertStringContainsString('Testing migration', $output);
         $this->assertStringContainsString('20260123183421', $output);
+        $this->assertStringContainsString('Entrypoint:', $output);
     }
 }

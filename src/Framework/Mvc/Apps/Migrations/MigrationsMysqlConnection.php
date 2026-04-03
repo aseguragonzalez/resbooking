@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Migrations;
 
-final readonly class MigrationSettings
+/**
+ * MySQL connection parameters registered by the migrations instance bootstrap (PDO + CLI tools).
+ */
+final readonly class MigrationsMysqlConnection
 {
     public function __construct(
         public string $host,
@@ -15,7 +18,7 @@ final readonly class MigrationSettings
     ) {
     }
 
-    public function getDsn(): string
+    public function getPdoDsn(): string
     {
         return "mysql:host={$this->host};dbname={$this->database};charset={$this->charset}";
     }

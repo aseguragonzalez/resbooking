@@ -48,6 +48,14 @@ final class MigrationsEnableCommand implements Command
             $this->output->error($e->getMessage());
             return 1;
         }
+
+        try {
+            $namespace = $this->parseNamespace($args);
+        } catch (\InvalidArgumentException $e) {
+            $this->output->error($e->getMessage());
+            return 1;
+        }
+
         $migrationsDir = $resolvedPath . '/' . $folderName;
         if (is_dir($migrationsDir)) {
             $this->output->error("Migrations module directory already exists: {$migrationsDir}");
@@ -73,11 +81,18 @@ final class MigrationsEnableCommand implements Command
             'migrationsEnabled' => true,
         ]);
 
-        $content = $this->stubGenerator->generate('migrations-index.stub', [
+        $indexContent = $this->stubGenerator->generate('migrations-index.stub', [
             'autoloadPath' => $autoloadPath,
+            'namespace' => $namespace,
         ]);
-        file_put_contents($migrationsDir . '/index.php', $content);
+        file_put_contents($migrationsDir . '/index.php', $indexContent);
         $this->output->line("  Created {$folderName}/index.php");
+
+        $bootstrapContent = $this->stubGenerator->generate('migrations-bootstrap.stub', [
+            'namespace' => $namespace,
+        ]);
+        file_put_contents($migrationsDir . '/MigrationsBootstrap.php', $bootstrapContent);
+        $this->output->line("  Created {$folderName}/MigrationsBootstrap.php");
         $this->output->line("  Created {$folderName}/migrations/");
 
         $this->output->success('Migrations feature enabled successfully.');
@@ -124,6 +139,33 @@ final class MigrationsEnableCommand implements Command
         }
 
         return $folder;
+    }
+
+    /**
+     * @param array<string> $args
+     */
+    private function parseNamespace(array $args): string
+    {
+        foreach ($args as $arg) {
+            if (str_starts_with($arg, '--namespace=')) {
+                return $this->normalizeNamespace(substr($arg, 12));
+            }
+        }
+
+        return 'App\Migrations';
+    }
+
+    private function normalizeNamespace(string $namespace): string
+    {
+        $namespace = trim($namespace);
+        if ($namespace === '') {
+            throw new \InvalidArgumentException('Invalid --namespace: value cannot be empty.');
+        }
+        if (!preg_match('/^[a-zA-Z_\x7f-\xff\\\\][a-zA-Z0-9_\x7f-\xff\\\\]*$/', $namespace)) {
+            throw new \InvalidArgumentException('Invalid --namespace: not a valid PHP namespace.');
+        }
+
+        return $namespace;
     }
 
     private function resolvePath(string $path): string
@@ -183,12 +225,17 @@ final class MigrationsEnableCommand implements Command
 
     private function showHelp(): void
     {
-        $this->output->line('Usage: mvc migrations:enable [--path=<app-path>] [--folder=<module-folder>]');
+        $this->output->line(
+            'Usage: mvc migrations:enable [--path=<app-path>] [--folder=<module-folder>] [--namespace=<php-ns>]',
+        );
         $this->output->line();
         $this->output->line('Options:');
         $this->output->line('  --path=<app-path>          Path to the MVC app directory (default: current directory)');
         $this->output->line(
             '  --folder=<module-folder>   Migration module folder under the app root (default: Migrations)',
+        );
+        $this->output->line(
+            '  --namespace=<php-ns>       PHP namespace for MigrationsBootstrap (default: App\\Migrations)',
         );
     }
 }

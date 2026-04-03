@@ -8,12 +8,12 @@ use Framework\Mvc\Migrations\Domain\Services\MigrationTestScope;
 use Framework\Mvc\Migrations\Domain\Services\MigrationTestScopeFactory;
 use Framework\Mvc\Migrations\Domain\Services\RollbackExecutorHandler;
 use Framework\Mvc\Migrations\Domain\Services\TestMigrationExecutorHandler;
-use Framework\Mvc\Migrations\MigrationSettings;
+use Framework\Mvc\Migrations\MigrationsMysqlConnection;
 use PDO;
 
 final readonly class MigrationTestScopeFactoryHandler implements MigrationTestScopeFactory
 {
-    public function __construct(private MigrationSettings $settings)
+    public function __construct(private MigrationsMysqlConnection $mysql)
     {
     }
 
@@ -21,14 +21,14 @@ final readonly class MigrationTestScopeFactoryHandler implements MigrationTestSc
     {
         $dsn = sprintf(
             'mysql:host=%s;dbname=%s;charset=%s',
-            $this->settings->host,
+            $this->mysql->host,
             $databaseName,
-            $this->settings->charset,
+            $this->mysql->charset,
         );
         $pdo = new PDO(
             $dsn,
-            $this->settings->user,
-            $this->settings->password,
+            $this->mysql->user,
+            $this->mysql->password,
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

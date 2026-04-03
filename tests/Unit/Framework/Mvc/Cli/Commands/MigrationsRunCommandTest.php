@@ -22,7 +22,10 @@ final class MigrationsRunCommandTest extends TestCase
     protected function setUp(): void
     {
         vfsStream::setup('project', null, [
-            'migrations' => [],
+            'module' => [
+                'index.php' => '<?php',
+                'migrations' => [],
+            ],
         ]);
 
         $stdout = fopen('php://memory', 'r+');
@@ -46,28 +49,35 @@ final class MigrationsRunCommandTest extends TestCase
 
     public function testExecuteDelegatesToMigrationRunner(): void
     {
-        $capturedBasePath = null;
-        $capturedArgv = null;
-        $runner = function (string $basePath, array $argv) use (&$capturedBasePath, &$capturedArgv): int {
-            $capturedBasePath = $basePath;
-            $capturedArgv = $argv;
+        $capturedIndexPath = null;
+        $capturedForwardArgs = null;
+        $runner = function (
+            string $indexPath,
+            array $forwardArgs,
+        ) use (
+            &$capturedIndexPath,
+            &$capturedForwardArgs,
+        ): int {
+            $capturedIndexPath = $indexPath;
+            $capturedForwardArgs = $forwardArgs;
             return 0;
         };
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
+        $expectedIndex = vfsStream::url('project/module/index.php');
 
         $exitCode = $command->execute(['--path=' . $migrationsPath]);
 
         $this->assertSame(0, $exitCode);
-        $this->assertSame($migrationsPath, $capturedBasePath);
-        $this->assertSame([], $capturedArgv);
+        $this->assertSame($expectedIndex, $capturedIndexPath);
+        $this->assertSame(['--migrations-base=' . $migrationsPath], $capturedForwardArgs);
     }
 
     public function testExecuteReturnsRunnerExitCode(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 1;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 1;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
 
         $exitCode = $command->execute(['--path=' . $migrationsPath]);
 
@@ -76,7 +86,7 @@ final class MigrationsRunCommandTest extends TestCase
 
     public function testExecuteFailsWhenPathNotProvided(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute([]);
@@ -86,7 +96,7 @@ final class MigrationsRunCommandTest extends TestCase
 
     public function testExecuteFailsWhenDirectoryDoesNotExist(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['--path=' . vfsStream::url('project/nonexistent')]);
@@ -94,9 +104,25 @@ final class MigrationsRunCommandTest extends TestCase
         $this->assertSame(1, $exitCode);
     }
 
+    public function testExecuteFailsWhenIndexPhpMissing(): void
+    {
+        vfsStream::setup('nopindex', null, [
+            'module' => [
+                'migrations' => [],
+            ],
+        ]);
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
+        $command = new MigrationsRunCommand($this->consoleOutput, $runner);
+        $migrationsPath = vfsStream::url('nopindex/module/migrations');
+
+        $exitCode = $command->execute(['--path=' . $migrationsPath]);
+
+        $this->assertSame(1, $exitCode);
+    }
+
     public function testHelpFlagReturnsZero(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['--help']);
@@ -106,7 +132,7 @@ final class MigrationsRunCommandTest extends TestCase
 
     public function testShortHelpFlagReturnsZero(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
 
         $exitCode = $command->execute(['-h']);
@@ -116,7 +142,7 @@ final class MigrationsRunCommandTest extends TestCase
 
     public function testHelpOutputContainsUsageInfo(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
 
         $command->execute(['--help']);
@@ -125,13 +151,14 @@ final class MigrationsRunCommandTest extends TestCase
         $output = stream_get_contents($this->stdout);
         \assert(\is_string($output));
         $this->assertStringContainsString('--path=', $output);
+        $this->assertStringContainsString('--force', $output);
     }
 
     public function testOutputContainsInfoMessage(): void
     {
-        $runner = fn (string $basePath, array $argv): int => 0;
+        $runner = fn (string $indexPath, array $forwardArgs): int => 0;
         $command = new MigrationsRunCommand($this->consoleOutput, $runner);
-        $migrationsPath = vfsStream::url('project/migrations');
+        $migrationsPath = vfsStream::url('project/module/migrations');
 
         $command->execute(['--path=' . $migrationsPath]);
 
@@ -139,5 +166,6 @@ final class MigrationsRunCommandTest extends TestCase
         $output = stream_get_contents($this->stdout);
         \assert(\is_string($output));
         $this->assertStringContainsString('Running pending migrations', $output);
+        $this->assertStringContainsString('Entrypoint:', $output);
     }
 }
