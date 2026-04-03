@@ -73,6 +73,12 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         $this->assertTrue(is_dir($appPath . '/BackgroundTasks/Tasks'));
         $this->assertTrue(is_file($appPath . '/BackgroundTasks/index.php'));
         $this->assertTrue(is_file($appPath . '/BackgroundTasks/MyAppBackgroundTasksApp.php'));
+
+        $configContent = file_get_contents($appPath . '/mvc.config.json');
+        \assert(\is_string($configContent));
+        /** @var array<string, mixed> $decoded */
+        $decoded = json_decode($configContent, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('./BackgroundTasks', $decoded['backgroundTasksFolderPath']);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void

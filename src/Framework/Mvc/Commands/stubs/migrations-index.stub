@@ -5,11 +5,21 @@ declare(strict_types=1);
 require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
+use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\Migrations\MigrationApp;
+
+// __DIR__ points to: {appRoot}/Migrations
+$appBasePath = dirname(__DIR__);
+$config = MvcConfig::load(basePath: $appBasePath);
+$migrationsFolderPath = $config->normalizedMigrationsFolderPath();
+
+// If the config field is empty (e.g. older apps), fall back to the conventional folder name.
+$migrationsFolderPath = $migrationsFolderPath !== '' ? $migrationsFolderPath : 'Migrations';
+$migrationsBasePath = $appBasePath . '/' . $migrationsFolderPath . '/migrations';
 
 $migrationApp = new MigrationApp(
     container: new Container(),
-    basePath: __DIR__ . '/migrations',
+    basePath: $migrationsBasePath,
 );
 
 $arguments = array_slice($argv, 1);

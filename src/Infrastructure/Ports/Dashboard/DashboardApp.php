@@ -8,6 +8,7 @@ use DI\Container;
 use Framework\Logging\LoggerAdapter;
 use Framework\Logging\LoggerSettings;
 use Framework\Mvc\AuthSettings;
+use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\HtmlViewEngineSettings;
@@ -18,8 +19,7 @@ use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
 use Framework\Mvc\Routes\Router;
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
-use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
-use Framework\Mvc\Security\Infrastructure\BackgroundTaskChallengeNotificator;
+use Framework\Mvc\UiAssetsSettings;
 use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 use Infrastructure\Ports\Dashboard\DashboardSettings;
@@ -90,6 +90,7 @@ final class DashboardApp extends MvcWebApp
         $this->container->set(ErrorSettings::class, $this->getErrorSettings());
         $this->container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $this->basePath));
         $this->container->set(LanguageSettings::class, new LanguageSettings(basePath: $this->basePath));
+        $this->container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
 
         $this->container->set(
             LoggerSettings::class,

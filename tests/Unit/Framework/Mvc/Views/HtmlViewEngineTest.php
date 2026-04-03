@@ -17,6 +17,7 @@ use Framework\Mvc\Views\BranchesReplacer;
 use Framework\Mvc\Views\HtmlViewEngine;
 use Framework\Mvc\Views\I18nReplacer;
 use Framework\Mvc\Views\ModelReplacer;
+use Framework\Mvc\UiAssetsSettings;
 use Framework\Mvc\Views\ViewValueResolver;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +40,42 @@ final class HtmlViewEngineTest extends TestCase
         ]);
         $settings = new HtmlViewEngineSettings(basePath: __DIR__, viewPath: "/Files");
         $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $pipeline);
+    }
+
+    public function testRenderInjectsUiAssetsSettingsPlaceholders(): void
+    {
+        $this->fileManager->method('readKeyValueJson')->willReturn([]);
+
+        $uiAssets = new UiAssetsSettings(
+            jsAssetsPathUrl: '/assets/scripts',
+            mainJsBundler: 'main.min.js',
+            cssAssetsPathUrl: '/assets/styles',
+            mainCssBundler: 'main.min.css',
+        );
+
+        $viewEngine = new HtmlViewEngine(
+            settings: new HtmlViewEngineSettings(basePath: __DIR__, viewPath: '/Files'),
+            contentReplacer: new ContentReplacerPipeline([
+                new ModelReplacer(new ViewValueResolver()),
+                new BranchesReplacer(new ViewValueResolver()),
+                new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->fileManager),
+            ]),
+            uiAssetsSettings: $uiAssets,
+        );
+
+        $view = new View(
+            viewPath: "ui_assets_placeholders",
+            data: null,
+            headers: [],
+            statusCode: StatusCode::Ok
+        );
+
+        $expected = file_get_contents("{$this->basePath}/ui_assets_placeholders_expected.html");
+        \assert(\is_string($expected));
+
+        $body = $viewEngine->render($view, $this->getRequestContext());
+
+        $this->assertSame($expected, $body);
     }
 
     public function testRenderFailWhenViewDoesNotExist(): void

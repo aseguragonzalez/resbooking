@@ -67,6 +67,12 @@ final class InitializeMigrationsCommandTest extends TestCase
         $this->assertTrue(is_dir($appPath . '/Migrations'));
         $this->assertTrue(is_dir($appPath . '/Migrations/migrations'));
         $this->assertTrue(is_file($appPath . '/Migrations/index.php'));
+
+        $configContent = file_get_contents($appPath . '/mvc.config.json');
+        \assert(\is_string($configContent));
+        /** @var array<string, mixed> $decoded */
+        $decoded = json_decode($configContent, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('./Migrations', $decoded['migrationsFolderPath']);
     }
 
     public function testGeneratedIndexPhpContainsMigrationApp(): void
@@ -78,7 +84,7 @@ final class InitializeMigrationsCommandTest extends TestCase
         $content = file_get_contents($appPath . '/Migrations/index.php');
         \assert(\is_string($content));
         $this->assertStringContainsString('MigrationApp', $content);
-        $this->assertStringContainsString("__DIR__ . '/migrations'", $content);
+        $this->assertStringContainsString("'/migrations'", $content);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void

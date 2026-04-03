@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Commands;
 
+use Framework\Mvc\Config\MvcConfig;
+
 final class CreateAppCommand implements Command
 {
     public function __construct(
@@ -64,6 +66,7 @@ final class CreateAppCommand implements Command
         $this->output->info("Creating MVC app '{$name}' at {$resolvedPath}");
 
         $this->createDirectories($resolvedPath);
+        $this->createConfigFile($resolvedPath);
         $this->createFiles($resolvedPath, $name, $replacements);
 
         $this->output->success("App '{$name}' created successfully at {$resolvedPath}");
@@ -163,6 +166,32 @@ final class CreateAppCommand implements Command
         }
     }
 
+    private function createConfigFile(string $basePath): void
+    {
+        $config = MvcConfig::defaults();
+
+        $content = json_encode(
+            [
+                'jsAssetsPath' => $config->jsAssetsPath,
+                'mainJsBundler' => $config->mainJsBundler,
+                'cssAssetsPath' => $config->cssAssetsPath,
+                'mainCssBundler' => $config->mainCssBundler,
+                'i18nPath' => $config->i18nPath,
+                'migrationsFolderPath' => $config->migrationsFolderPath,
+                'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
+            ],
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+        );
+
+        if ($content === false) {
+            throw new \RuntimeException('Failed to encode mvc.config.json');
+        }
+
+        $configPath = rtrim($basePath, '/') . '/' . MvcConfig::CONFIG_FILENAME;
+        file_put_contents($configPath, $content . PHP_EOL);
+        $this->output->line("  Created " . MvcConfig::CONFIG_FILENAME);
+    }
+
     /**
      * @return array<string, string>
      */
@@ -182,11 +211,20 @@ final class CreateAppCommand implements Command
 
     private function resolvePath(string $path): string
     {
-        if (str_starts_with($path, '/') || str_contains($path, '://')) {
-            return $path;
+        $path = trim($path);
+        $cwd = getcwd();
+        if ($cwd === false) {
+            throw new \RuntimeException('Could not resolve current working directory.');
+        }
+        if ($path === '') {
+            return $cwd;
         }
 
-        return getcwd() . '/' . $path;
+        if (str_starts_with($path, '/') || str_contains($path, '://')) {
+            return rtrim($path, '/');
+        }
+
+        return rtrim($cwd . '/' . $path, '/');
     }
 
     private function findProjectRoot(string $fromPath): ?string

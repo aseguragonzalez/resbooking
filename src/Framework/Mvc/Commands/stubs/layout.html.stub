@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{pageTitle}}</title>
-        <link rel="stylesheet" type="text/css" href="/assets/styles/app.css" />
+        <link rel="stylesheet" type="text/css" href="{{cssAssetsPathUrl}}/{{mainCssBundler}}" />
     </head>
     <body>
         <header>
@@ -16,6 +16,6 @@
         <footer>
             <p>&copy; {{year}} {{appTitle}}</p>
         </footer>
-        <script src="/assets/scripts/app.js"></script>
+        <script src="{{jsAssetsPathUrl}}/{{mainJsBundler}}"></script>
     </body>
 </html>

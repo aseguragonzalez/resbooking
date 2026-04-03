@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Commands;
 
+use Framework\Mvc\Config\MvcConfig;
+
 final class InitializeBackgroundTasksCommand implements Command
 {
     public function __construct(
@@ -78,6 +80,10 @@ final class InitializeBackgroundTasksCommand implements Command
         mkdir($bgTasksDir . '/Handlers', 0755, true);
         mkdir($bgTasksDir . '/Tasks', 0755, true);
 
+        $this->updateMvcConfig($resolvedPath, [
+            'backgroundTasksFolderPath' => './BackgroundTasks',
+        ]);
+
         $indexContent = $this->stubGenerator->generate('background-tasks-index.stub', $replacements);
         file_put_contents($bgTasksDir . '/index.php', $indexContent);
         $this->output->line('  Created BackgroundTasks/index.php');
@@ -91,6 +97,52 @@ final class InitializeBackgroundTasksCommand implements Command
 
         $this->output->success('BackgroundTasks feature initialized successfully.');
         return 0;
+    }
+
+    /**
+     * @param array<string, string> $changes
+     */
+    private function updateMvcConfig(string $appPath, array $changes): void
+    {
+        $configPath = rtrim($appPath, '/') . '/' . MvcConfig::CONFIG_FILENAME;
+
+        $config = MvcConfig::defaults();
+        $data = [
+            'jsAssetsPath' => $config->jsAssetsPath,
+            'mainJsBundler' => $config->mainJsBundler,
+            'cssAssetsPath' => $config->cssAssetsPath,
+            'mainCssBundler' => $config->mainCssBundler,
+            'i18nPath' => $config->i18nPath,
+            'migrationsFolderPath' => $config->migrationsFolderPath,
+            'backgroundTasksFolderPath' => $config->backgroundTasksFolderPath,
+        ];
+
+        if (is_file($configPath)) {
+            $content = file_get_contents($configPath);
+            if ($content !== false) {
+                try {
+                    /** @var array<string, mixed> $decoded */
+                    $decoded = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+                    foreach ($data as $key => $defaultValue) {
+                        if (array_key_exists($key, $decoded) && is_string($decoded[$key])) {
+                            $data[$key] = $decoded[$key];
+                        }
+                    }
+                } catch (\JsonException) {
+                    // Keep defaults when config is invalid.
+                }
+            }
+        }
+
+        foreach ($changes as $key => $value) {
+            $data[$key] = $value;
+        }
+
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        if ($json === false) {
+            throw new \RuntimeException('Failed to encode mvc.config.json');
+        }
+        file_put_contents($configPath, $json . PHP_EOL);
     }
 
     /**

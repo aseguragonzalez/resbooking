@@ -5,11 +5,21 @@ declare(strict_types=1);
 require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
+use Framework\Mvc\Config\MvcConfig;
 use {{namespace}}\BackgroundTasks\{{name}}BackgroundTasksApp;
+
+// __DIR__ points to: {appRoot}/BackgroundTasks
+$appBasePath = dirname(__DIR__);
+$config = MvcConfig::load(basePath: $appBasePath);
+$backgroundTasksFolderPath = $config->normalizedBackgroundTasksFolderPath();
+
+// If the config field is empty (e.g. older apps), fall back to the conventional folder name.
+$backgroundTasksFolderPath = $backgroundTasksFolderPath !== '' ? $backgroundTasksFolderPath : 'BackgroundTasks';
+$backgroundTasksBasePath = $appBasePath . '/' . $backgroundTasksFolderPath;
 
 $app = new {{name}}BackgroundTasksApp(
     container: new Container(),
-    basePath: __DIR__,
+    basePath: $backgroundTasksBasePath,
 );
 
 $arguments = array_slice($argv ?? [], 1);

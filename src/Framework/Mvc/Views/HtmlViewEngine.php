@@ -6,6 +6,7 @@ namespace Framework\Mvc\Views;
 
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\HtmlViewEngineSettings;
+use Framework\Mvc\UiAssetsSettings;
 use Framework\Mvc\Requests\RequestContext;
 
 final class HtmlViewEngine implements ViewEngine
@@ -16,6 +17,7 @@ final class HtmlViewEngine implements ViewEngine
     public function __construct(
         private readonly HtmlViewEngineSettings $settings,
         private readonly ContentReplacer $contentReplacer,
+        private readonly ?UiAssetsSettings $uiAssetsSettings = null,
     ) {
     }
 
@@ -42,6 +44,15 @@ final class HtmlViewEngine implements ViewEngine
                 'isAuthenticated' => $currentIdentity->isAuthenticated(),
             ]
         ];
+
+        if ($this->uiAssetsSettings !== null) {
+            $contextModel = array_merge($contextModel, [
+                'jsAssetsPathUrl' => $this->uiAssetsSettings->jsAssetsPathUrl,
+                'mainJsBundler' => $this->uiAssetsSettings->mainJsBundler,
+                'cssAssetsPathUrl' => $this->uiAssetsSettings->cssAssetsPathUrl,
+                'mainCssBundler' => $this->uiAssetsSettings->mainCssBundler,
+            ]);
+        }
         $viewData = $view->data;
         /** @var array<string, mixed> $model */
         $model = array_merge(is_array($viewData) ? $viewData : (array) $viewData, $contextModel);

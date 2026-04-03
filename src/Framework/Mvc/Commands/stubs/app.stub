@@ -10,8 +10,10 @@ use Framework\Logging\LoggerSettings;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
+use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\HtmlViewEngineSettings;
 use Framework\Mvc\LanguageSettings;
+use Framework\Mvc\UiAssetsSettings;
 use Framework\Mvc\MvcWebApp;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\AccessDeniedException;
@@ -79,7 +81,12 @@ final class {{name}}App extends MvcWebApp
         $this->container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
         $this->container->set(ErrorSettings::class, $this->getErrorSettings());
         $this->container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $this->basePath));
-        $this->container->set(LanguageSettings::class, new LanguageSettings(basePath: $this->basePath));
+        $config = MvcConfig::load(basePath: $this->basePath);
+        $this->container->set(LanguageSettings::class, new LanguageSettings(
+            basePath: $this->basePath,
+            assetsPath: $config->normalizedI18nAssetsPathForLanguageSettings(),
+        ));
+        $this->container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig($config));
 
         $this->container->set(
             LoggerSettings::class,

@@ -78,9 +78,36 @@ final class CreateAppCommandTest extends TestCase
         $this->assertTrue(is_file($appPath . '/Views/Shared/404.html'));
         $this->assertTrue(is_file($appPath . '/Views/Shared/500.html'));
         $this->assertTrue(is_file($appPath . '/assets/i18n/en.json'));
+        $this->assertTrue(is_file($appPath . '/mvc.config.json'));
         $this->assertTrue(is_dir($appPath . '/Models'));
         $this->assertTrue(is_dir($appPath . '/assets/scripts'));
         $this->assertTrue(is_dir($appPath . '/assets/styles'));
+    }
+
+    public function testCreatedMvcConfigContainsDefaults(): void
+    {
+        $appPath = vfsStream::url('project/src/Ports/MyApp');
+
+        $exitCode = $this->command->execute([
+            $appPath,
+            '--name=MyApp',
+            '--namespace=App\\Ports\\MyApp',
+        ]);
+
+        $this->assertSame(0, $exitCode);
+
+        $configContent = file_get_contents($appPath . '/mvc.config.json');
+        \assert(\is_string($configContent));
+        /** @var array<string, mixed> $decoded */
+        $decoded = json_decode($configContent, true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame('./assets/scripts', $decoded['jsAssetsPath']);
+        $this->assertSame('main.min.js', $decoded['mainJsBundler']);
+        $this->assertSame('./assets/styles', $decoded['cssAssetsPath']);
+        $this->assertSame('main.min.css', $decoded['mainCssBundler']);
+        $this->assertSame('./assets/i18n', $decoded['i18nPath']);
+        $this->assertSame('', $decoded['migrationsFolderPath']);
+        $this->assertSame('', $decoded['backgroundTasksFolderPath']);
     }
 
     public function testGeneratedIndexPhpContainsCorrectAutoloadPath(): void

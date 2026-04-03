@@ -256,6 +256,18 @@ $data['csrfToken'] = $token;
 
 ---
 
+## MVC CLI
+
+Use the MVC scaffolding tool to generate a new app structure:
+
+```bash
+mvc create-app <path> --name=<AppName> --namespace=<Namespace>
+```
+
+How-to details (including `mvc.config.json` defaults): see [How to Create a New MVC App (CLI)](./HowToCreateApp.md).
+
+---
+
 ## Performance characteristics
 
 The framework includes a few built-in optimizations:
