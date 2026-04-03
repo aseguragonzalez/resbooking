@@ -267,13 +267,13 @@ Use the MVC scaffolding tool to generate a new app structure:
 mvc create-app <path> --name=<AppName> --namespace=<Namespace>
 ```
 
-How-to details (including `mvc.config.json` defaults): see [How to Create a New MVC App (CLI)](./HowToCreateApp.md).
+How-to details (including `mvc.config.json` defaults): see [How to Create a New MVC App (CLI)](./Cli/HowToCreateApp.md).
 
-Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./HowToMigrations.md).
+Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./Apps/HowToMigrations.md).
 
-Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./HowToAuthentication.md).
+Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./Functional/HowToAuthentication.md).
 
-CSS and JavaScript bundling (`mvc watch-assets`, `mvc create-bundle`, `assetRoutes` in `mvc.config.json`): see [How to bundle CSS and JavaScript (MVC CLI)](./HowToAssets.md).
+CSS and JavaScript bundling (`mvc watch-assets`, `mvc create-bundle`, `assetRoutes` in `mvc.config.json`): see [How to bundle CSS and JavaScript (MVC CLI)](./Web/HowToAssets.md).
 
 ---
 
@@ -292,9 +292,9 @@ These are transparent to consumers; no configuration is required.
 
 ## Where to look next
 
-- `src/Framework/Mvc/MvcWebApp.php` – application bootstrap and middleware wiring.
-- `src/Framework/Mvc/Requests/RequestHandler.php` – routing + action invocation contract.
-- `src/Framework/Mvc/Views/README.md` – full template language reference.
-- `src/Framework/Mvc/Security/*` – authentication, identity and password flows; challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
+- `src/Framework/Mvc/Web/MvcWebApp.php` – application bootstrap and middleware wiring.
+- `src/Framework/Mvc/Web/Requests/RequestHandler.php` – routing + action invocation contract.
+- `src/Framework/Mvc/Web/Views/README.md` – full template language reference.
+- `src/Framework/Mvc/Functional/Security/*` – authentication, identity and password flows; challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
 
 Use this README as the entry point when building or reviewing apps on top of the MVC package.

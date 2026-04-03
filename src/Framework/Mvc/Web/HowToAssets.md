@@ -75,5 +75,5 @@ Running **`mvc create-app`** generates **`assets/scripts/main.js`**, **`assets/s
 
 ## See also
 
-- [How to Create a New MVC App (CLI)](./HowToCreateApp.md) — scaffold and `mvc.config.json` overview
-- [How to use MVC database migrations](./HowToMigrations.md)
+- [How to Create a New MVC App (CLI)](../Cli/HowToCreateApp.md) — scaffold and `mvc.config.json` overview
+- [How to use MVC database migrations](../Apps/HowToMigrations.md)

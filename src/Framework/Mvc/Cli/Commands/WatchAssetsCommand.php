@@ -50,7 +50,7 @@ final class WatchAssetsCommand implements Command
         if ($config->assetRoutes === []) {
             $this->output->error(
                 'No assetRoutes configured in ' . MvcConfig::CONFIG_FILENAME . '. '
-                . 'See src/Framework/Mvc/HowToAssets.md',
+                . 'See src/Framework/Mvc/Web/HowToAssets.md',
             );
             return 1;
         }
@@ -63,7 +63,7 @@ final class WatchAssetsCommand implements Command
             $this->output->error(
                 'assetRoutes defines no JS or CSS source paths. '
                 . 'Add "js" and/or "css" entries under each route group. '
-                . 'See src/Framework/Mvc/HowToAssets.md',
+                . 'See src/Framework/Mvc/Web/HowToAssets.md',
             );
             return 1;
         }

@@ -39,7 +39,7 @@ Apply the migration when ready:
 mvc migrations:run --app-path=<app-dir>
 ```
 
-Database environment variables for the migration runner are described in [How to use MVC database migrations](./HowToMigrations.md).
+Database environment variables for the migration runner are described in [How to use MVC database migrations](../Apps/HowToMigrations.md).
 
 ## CLI: disable
 
@@ -110,5 +110,5 @@ In this repository, the Dashboard port provides `Infrastructure\Ports\Dashboard\
 
 ## Related documentation
 
-- [How to use MVC database migrations](./HowToMigrations.md) — `migrations:enable`, `migrations:run`, env vars.
-- [How to Create a New MVC App (CLI)](./HowToCreateApp.md) — scaffold and `mvc.config.json` defaults.
+- [How to use MVC database migrations](../Apps/HowToMigrations.md) — `migrations:enable`, `migrations:run`, env vars.
+- [How to Create a New MVC App (CLI)](../Cli/HowToCreateApp.md) — scaffold and `mvc.config.json` defaults.
