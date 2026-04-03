@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Mvc\BackgroundTasks\Domain;
+namespace Infrastructure\Ports\BackgroundTasks;
 
 final readonly class TemplateEngine
 {

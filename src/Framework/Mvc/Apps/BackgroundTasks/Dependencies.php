@@ -13,16 +13,20 @@ use Framework\Mvc\BackgroundTasks\Domain\Repositories\TaskRepository;
 use Framework\Mvc\BackgroundTasks\Domain\TaskBus;
 use Framework\Mvc\BackgroundTasks\Domain\TaskHandlerRegistry;
 use Framework\Mvc\BackgroundTasks\Domain\TransactionRunner;
-use Framework\Mvc\BackgroundTasks\Infrastructure\MapTaskHandlerRegistry;
+use Framework\Mvc\BackgroundTasks\Infrastructure\ContainerTaskHandlerRegistry;
 use Framework\Mvc\BackgroundTasks\Infrastructure\PdoTransactionRunner;
 use Framework\Mvc\BackgroundTasks\Infrastructure\SqlTaskRepository;
 use Framework\Mvc\BackgroundTasks\Infrastructure\TaskBusHandler;
 
 final class Dependencies
 {
+    /**
+     * Registers framework BackgroundTasks bindings. Call after the composition root has set
+     * {@see \PDO} and {@see TaskHandlerClassMap} on the container (plus any app-specific services).
+     */
     public static function configure(Container $container): void
     {
-        $container->set(TaskHandlerRegistry::class, $container->get(MapTaskHandlerRegistry::class));
+        $container->set(TaskHandlerRegistry::class, $container->get(ContainerTaskHandlerRegistry::class));
         $container->set(TaskRepository::class, $container->get(SqlTaskRepository::class));
         $container->set(TransactionRunner::class, $container->get(PdoTransactionRunner::class));
         $container->set(RegisterTask::class, $container->get(RegisterTaskHandler::class));

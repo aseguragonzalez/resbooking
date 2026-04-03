@@ -7,9 +7,9 @@ namespace Infrastructure\Ports\BackgroundTasks;
 use DI\Container;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
-use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
-use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;
-use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
+use Framework\Mvc\BackgroundTasks\Dependencies;
+use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
+use Framework\Mvc\BackgroundTasks\TaskHandlerClassMap;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendSignUpChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
@@ -20,26 +20,36 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 final class BackgroundTasksBootstrap
 {
     public static function register(Container $container, string $basePath): void
     {
-        $handlerMap = [
-            'send_sign_up_challenge_email' => SendSignUpChallengeEmailHandler::class,
-            'send_reset_password_challenge_email' => SendResetPasswordChallengeEmailHandler::class,
-        ];
+        $host = getenv('BACKGROUND_TASKS_DATABASE_HOST') ?: 'localhost';
+        $database = getenv('BACKGROUND_TASKS_DATABASE_NAME') ?: 'reservations';
+        $charset = 'utf8mb4';
+        $dsn = "mysql:host={$host};dbname={$database};charset={$charset}";
+        $user = getenv('BACKGROUND_TASKS_DATABASE_USER') ?: 'root';
+        $password = getenv('BACKGROUND_TASKS_DATABASE_PASSWORD') ?: '';
+
+        $container->set(PDO::class, new PDO(
+            $dsn,
+            $user,
+            $password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        ));
 
         $container->set(
-            BackgroundTasksSettings::class,
-            new BackgroundTasksSettings(
-                host: getenv('BACKGROUND_TASKS_DATABASE_HOST') ?: 'localhost',
-                database: getenv('BACKGROUND_TASKS_DATABASE_NAME') ?: 'reservations',
-                user: getenv('BACKGROUND_TASKS_DATABASE_USER') ?: 'root',
-                password: getenv('BACKGROUND_TASKS_DATABASE_PASSWORD') ?: '',
-                handlerMap: $handlerMap,
-            ),
+            TaskHandlerClassMap::class,
+            new TaskHandlerClassMap([
+                'send_sign_up_challenge_email' => SendSignUpChallengeEmailHandler::class,
+                'send_reset_password_challenge_email' => SendResetPasswordChallengeEmailHandler::class,
+            ]),
         );
 
         $serviceName = getenv('BACKGROUND_TASKS_SERVICE_NAME') ?: 'background-tasks';
@@ -82,7 +92,7 @@ final class BackgroundTasksBootstrap
         $container->set(TemplateEngine::class, new TemplateEngine());
         $container->set(MailerInterface::class, $container->get(PhpMailerMailer::class));
 
-        BackgroundTasksRuntime::register($container);
+        Dependencies::configure($container);
     }
 
     private static function logLevelFromSettings(string $logLevel): Level

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks\Handlers;
 
-use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
+use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
 use Framework\Mvc\BackgroundTasks\Domain\Task;
 use Framework\Mvc\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Mvc\BackgroundTasks\Domain;
+namespace Tests\Unit\Infrastructure\Ports\BackgroundTasks;
 
-use Framework\Mvc\BackgroundTasks\Domain\TemplateEngine;
+use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
 use PHPUnit\Framework\TestCase;
 
 final class TemplateEngineTest extends TestCase

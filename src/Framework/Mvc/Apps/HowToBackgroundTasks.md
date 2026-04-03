@@ -77,9 +77,16 @@ Without `--skip-migrations`, the CLI creates a timestamped folder under your mig
 2. Register your own `TaskRepository` implementation in the BackgroundTasks bootstrap (composition root) / DI setup instead of the default SQL wiring.
 3. You do not need the `background_tasks` table unless your implementation uses it.
 
-## Database and logging (environment variables)
+## Database, handler map, and logging (environment variables)
 
-The **composition root** for your worker (for example `BackgroundTasksBootstrap` next to `index.php`, or the generated `*BackgroundTasksBootstrap` from `mvc initialize-background-tasks`) registers **database** and **logging** from environment variables (for example `BACKGROUND_TASKS_DATABASE_HOST`, `BACKGROUND_TASKS_DATABASE_NAME`, `BACKGROUND_TASKS_DATABASE_USER`, `BACKGROUND_TASKS_DATABASE_PASSWORD`, `BACKGROUND_TASKS_LOG_LEVEL`, or app-prefixed names in the generated bootstrap). Edit that bootstrap class if you need different configuration sources.
+The **composition root** for your worker (for example `BackgroundTasksBootstrap` next to `index.php`, or the generated `*BackgroundTasksBootstrap` from `mvc initialize-background-tasks`) should:
+
+1. Build a `PDO` instance from environment variables (for example `BACKGROUND_TASKS_DATABASE_HOST`, `BACKGROUND_TASKS_DATABASE_NAME`, `BACKGROUND_TASKS_DATABASE_USER`, `BACKGROUND_TASKS_DATABASE_PASSWORD`, or app-prefixed names in the generated bootstrap) and register it on the container as `PDO::class`.
+2. Register a `Framework\Mvc\BackgroundTasks\TaskHandlerClassMap` (task type string → `TaskHandler` class name) for your port’s handlers.
+3. Register logging and any other app-specific services.
+4. Call `Framework\Mvc\BackgroundTasks\Dependencies::configure($container)` to wire the default SQL task repository, transaction runner, and container-backed `TaskHandlerRegistry`.
+
+Edit that bootstrap class if you need different configuration sources or custom `TaskRepository` wiring (see above).
 
 The runnable class is `Framework\Mvc\BackgroundTasks\BaseBackgroundTasksApp`: it only processes batches; it does not read environment variables itself.
 

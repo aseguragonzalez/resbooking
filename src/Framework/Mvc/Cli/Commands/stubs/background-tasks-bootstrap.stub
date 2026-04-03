@@ -5,33 +5,42 @@ declare(strict_types=1);
 namespace {{namespace}}\BackgroundTasks;
 
 use DI\Container;
-use Framework\Mvc\BackgroundTasks\BackgroundTasksRuntime;
-use Framework\Mvc\BackgroundTasks\BackgroundTasksSettings;
+use Framework\Mvc\BackgroundTasks\Dependencies;
+use Framework\Mvc\BackgroundTasks\TaskHandlerClassMap;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
+use PDO;
 use Psr\Log\LoggerInterface;
 
 final class {{name}}BackgroundTasksBootstrap
 {
     public static function register(Container $container, string $basePath): void
     {
+        $host = getenv('{{envPrefix}}_DATABASE_HOST') ?: 'localhost';
+        $database = getenv('{{envPrefix}}_DATABASE_NAME') ?: '{{nameSnake}}';
+        $charset = 'utf8mb4';
+        $dsn = "mysql:host={$host};dbname={$database};charset={$charset}";
+        $user = getenv('{{envPrefix}}_DATABASE_USER') ?: 'root';
+        $password = getenv('{{envPrefix}}_DATABASE_PASSWORD') ?: '';
+
+        $container->set(PDO::class, new PDO(
+            $dsn,
+            $user,
+            $password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        ));
+
         $handlerMap = [
             // 'task_type' => TaskHandlerClass::class,
         ];
 
-        $container->set(
-            BackgroundTasksSettings::class,
-            new BackgroundTasksSettings(
-                host: getenv('{{envPrefix}}_DATABASE_HOST') ?: 'localhost',
-                database: getenv('{{envPrefix}}_DATABASE_NAME') ?: '{{nameSnake}}',
-                user: getenv('{{envPrefix}}_DATABASE_USER') ?: 'root',
-                password: getenv('{{envPrefix}}_DATABASE_PASSWORD') ?: '',
-                handlerMap: $handlerMap,
-            ),
-        );
+        $container->set(TaskHandlerClassMap::class, new TaskHandlerClassMap($handlerMap));
 
         $serviceName = getenv('{{envPrefix}}_SERVICE_NAME') ?: '{{nameKebab}}-background-tasks';
         $logLevel = getenv('{{envPrefix}}_LOG_LEVEL') ?: 'debug';
@@ -54,9 +63,9 @@ final class {{name}}BackgroundTasksBootstrap
 
         $container->set(LoggerInterface::class, $logger);
 
-        // Register app-specific container bindings here before BackgroundTasksRuntime::register().
+        // Register app-specific container bindings here before Dependencies::configure().
 
-        BackgroundTasksRuntime::register($container);
+        Dependencies::configure($container);
     }
 
     private static function logLevelFromSettings(string $logLevel): Level
