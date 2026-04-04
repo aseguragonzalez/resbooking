@@ -113,7 +113,7 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
         $this->assertStringContainsString('class MyAppBackgroundTasksBootstrap', $content);
     }
 
-    public function testGeneratedIndexPhpReferencesBootstrapAndBaseApp(): void
+    public function testGeneratedIndexPhpReferencesBootstrapAndApp(): void
     {
         $appPath = vfsStream::url('project/src/Ports/MyApp');
 
@@ -130,7 +130,7 @@ final class InitializeBackgroundTasksCommandTest extends TestCase
             'App\\Ports\\MyApp\\BackgroundTasks\\MyAppBackgroundTasksBootstrap',
             $content
         );
-        $this->assertStringContainsString('BaseBackgroundTasksApp', $content);
+        $this->assertStringContainsString('BackgroundTasksApp', $content);
     }
 
     public function testGeneratedIndexPhpGuardsWhenBackgroundTasksDisabled(): void

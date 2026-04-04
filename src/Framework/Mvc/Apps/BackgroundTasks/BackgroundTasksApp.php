@@ -11,7 +11,7 @@ use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPending
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
 use Psr\Log\LoggerInterface;
 
-class BaseBackgroundTasksApp extends Application
+final class BackgroundTasksApp extends Application
 {
     private bool $shutdownRequested = false;
 

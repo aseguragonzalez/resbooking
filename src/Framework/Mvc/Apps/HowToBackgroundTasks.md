@@ -88,7 +88,7 @@ The **composition root** for your worker (for example `BackgroundTasksBootstrap`
 
 Edit that bootstrap class if you need different configuration sources or custom `TaskRepository` wiring (see above).
 
-The runnable class is `Framework\Mvc\BackgroundTasks\BaseBackgroundTasksApp`: it only processes batches; it does not read environment variables itself.
+The runnable class is `Framework\Mvc\BackgroundTasks\BackgroundTasksApp`: it only processes batches; it does not read environment variables itself.
 
 ## Related documentation
 
