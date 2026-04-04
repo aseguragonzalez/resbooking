@@ -8,6 +8,7 @@ use DI\Container;
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Config\MvcConfig;
+use Framework\Mvc\Config\PublicApplicationUrl;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\HtmlViewEngineSettings;
@@ -44,6 +45,9 @@ final class DashboardBootstrap
         $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));
         $container->set(LanguageSettings::class, new LanguageSettings(basePath: $basePath));
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
+
+        $publicApplicationUrl = getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost';
+        $container->set(PublicApplicationUrl::class, new PublicApplicationUrl($publicApplicationUrl));
 
         $container->set(
             DashboardSettings::class,

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard;
 
-use DI\Container;
+use Framework\Mvc\Container\ServiceRegistry;
 use Framework\Mvc\MvcWebApp;
 use Framework\Mvc\Routes\Router;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 
 final class DashboardApp extends MvcWebApp
 {
-    public function __construct(Container $container, string $basePath)
+    public function __construct(ServiceRegistry $container, string $basePath)
     {
         parent::__construct($container, $basePath);
     }

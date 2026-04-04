@@ -6,8 +6,12 @@ namespace Framework\Mvc\Routes;
 
 final class InvalidAction extends \Exception
 {
-    public function __construct(string $controller, string $action)
+    public function __construct(string $controller, string $action, ?string $detail = null)
     {
-        parent::__construct("Action '{$action}' is not a valid action for controller {$controller}");
+        $message = "Action '{$action}' is not a valid action for controller {$controller}";
+        if ($detail !== null && $detail !== '') {
+            $message .= ": {$detail}";
+        }
+        parent::__construct($message);
     }
 }

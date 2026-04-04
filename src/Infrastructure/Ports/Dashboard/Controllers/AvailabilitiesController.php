@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\UpdateAvailabilities\UpdateAvailabilitiesCommand;
@@ -30,15 +31,17 @@ final class AvailabilitiesController extends RestaurantBaseController
         parent::__construct($requestContext, $settings);
     }
 
+    #[MvcAction]
     public function availabilities(): ActionResponse
     {
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
         /** @var GetRestaurantByIdResult $result */
         $result = $this->queryBus->ask($query);
         $pageModel = AvailabilitiesList::createFromResultAvailabilities($result->availabilities);
-        return $this->view(model: $pageModel);
+        return $this->view('Availabilities/availabilities', model: $pageModel);
     }
 
+    #[MvcAction]
     public function updateAvailabilities(ServerRequestInterface $request): ActionResponse
     {
         $availabilityRequest = new UpdateAvailabilitiesRequest($request);
@@ -47,7 +50,7 @@ final class AvailabilitiesController extends RestaurantBaseController
             availabilities: $availabilityRequest->availabilities
         );
         $this->commandBus->dispatch($command);
-        return $this->redirectToAction(action: 'availabilities');
+        return $this->redirectToAction('availabilities', AvailabilitiesController::class);
     }
 
     /**

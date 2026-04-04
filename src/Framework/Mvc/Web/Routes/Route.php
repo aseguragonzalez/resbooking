@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Routes;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Security\Identity;
 
@@ -167,6 +168,13 @@ final class Route
         }
         if (!method_exists($controller, $action)) {
             throw new InvalidAction($controller, $action);
+        }
+        $actionMethod = new \ReflectionMethod($controller, $action);
+        if (!$actionMethod->isPublic() || $actionMethod->isStatic()) {
+            throw new InvalidAction($controller, $action, 'method must be public and non-static');
+        }
+        if ($actionMethod->getAttributes(MvcAction::class) === []) {
+            throw new InvalidAction($controller, $action, 'method must be marked with #[MvcAction]');
         }
         return new Route($method, $path, $controller, $action, $authRequired, $roles);
     }

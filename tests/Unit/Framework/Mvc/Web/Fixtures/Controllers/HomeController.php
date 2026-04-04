@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Fixtures\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 
@@ -14,8 +15,9 @@ final class HomeController extends Controller
         parent::__construct();
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
-        return $this->view();
+        return $this->view('Home/index');
     }
 }

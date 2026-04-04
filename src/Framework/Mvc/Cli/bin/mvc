@@ -23,5 +23,8 @@ if (isset($_composer_autoload_path)) {
     }
 }
 
-$cli = new \Framework\Mvc\Commands\MvcCli();
+$colorsEnabled = getenv('NO_COLOR') === false;
+$cli = new \Framework\Mvc\Commands\MvcCli(
+    new \Framework\Mvc\Commands\ConsoleOutput(null, null, $colorsEnabled)
+);
 exit($cli->run($_SERVER['argv'] ?? []));

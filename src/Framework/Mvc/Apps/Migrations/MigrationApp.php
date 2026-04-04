@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Migrations;
 
-use DI\Container;
 use Framework\Mvc\Application;
+use Framework\Mvc\Container\ServiceRegistry;
 use Framework\Mvc\Migrations\Application\RunMigrations;
 use Framework\Mvc\Migrations\Application\TestMigration;
 use Framework\Mvc\Migrations\Application\TestMigrationCommand;
@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 final class MigrationApp extends Application
 {
-    public function __construct(Container $container, string $basePath)
+    public function __construct(ServiceRegistry $container, string $basePath)
     {
         parent::__construct($container, $basePath);
     }

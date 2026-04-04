@@ -6,12 +6,13 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
 use Framework\Mvc\BackgroundTasks\BackgroundTasksApp;
+use Framework\Mvc\Container\PhpDiServiceRegistry;
 use Infrastructure\Ports\BackgroundTasks\BackgroundTasksBootstrap;
 
 $container = new Container();
 BackgroundTasksBootstrap::register($container, __DIR__);
 $app = new BackgroundTasksApp(
-    container: $container,
+    container: new PhpDiServiceRegistry($container),
     basePath: __DIR__,
 );
 

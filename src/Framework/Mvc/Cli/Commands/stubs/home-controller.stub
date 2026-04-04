@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace {{namespace}}\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
-use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
 use Framework\Mvc\Routes\Route;
 use Framework\Mvc\Routes\RouteMethod;
 
 final class HomeController extends Controller
 {
-    public function __construct(RequestContext $requestContext)
+    public function __construct()
     {
-        parent::__construct($requestContext);
+        parent::__construct();
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
-        return $this->view(model: (object)[
+        return $this->view('Home/index', model: (object)[
             'pageTitle' => '{{name}}',
             'model' => (object)[
                 'title' => 'Welcome to {{name}}',

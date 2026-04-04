@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\UpdateSettings\UpdateSettingsCommand;
@@ -29,6 +30,7 @@ final class SettingsController extends RestaurantBaseController
         parent::__construct($requestContext, $settings);
     }
 
+    #[MvcAction]
     public function settings(): ActionResponse
     {
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
@@ -44,15 +46,16 @@ final class SettingsController extends RestaurantBaseController
             numberOfTables: $result->numberOfTables,
             phone: $result->phone,
         );
-        return $this->view(model: $pageModel);
+        return $this->view('Settings/settings', model: $pageModel);
     }
 
+    #[MvcAction]
     public function updateSettings(UpdateSettingsRequest $request): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
             $pageModel = UpdateSettingsPage::withErrors($request, $errors);
-            return $this->view("settings", model: $pageModel);
+            return $this->view('Settings/settings', model: $pageModel);
         }
 
         $this->commandBus->dispatch(new UpdateSettingsCommand(

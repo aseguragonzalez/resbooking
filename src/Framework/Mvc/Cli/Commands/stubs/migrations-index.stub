@@ -6,6 +6,7 @@ require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
 use Framework\Mvc\Config\MvcConfig;
+use Framework\Mvc\Container\PhpDiServiceRegistry;
 use Framework\Mvc\Migrations\MigrationApp;
 use {{namespace}}\MigrationsBootstrap;
 
@@ -22,7 +23,7 @@ $defaultMigrationsBasePath = $appBasePath . '/' . $migrationsFolderPath . '/migr
 $migrationContainer = new Container();
 MigrationsBootstrap::register($migrationContainer);
 $migrationApp = new MigrationApp(
-    container: $migrationContainer,
+    container: new PhpDiServiceRegistry($migrationContainer),
     basePath: $defaultMigrationsBasePath,
 );
 

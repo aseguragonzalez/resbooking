@@ -6,6 +6,7 @@ namespace Tests\Unit\Framework\Mvc\Requests;
 
 use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Actions\ActionParameterBuilder;
+use Framework\Mvc\Config\PublicApplicationUrl;
 use Framework\Mvc\HtmlViewEngineSettings;
 use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Requests\RequestContext;
@@ -94,6 +95,7 @@ final class RequestHandlerTest extends TestCase
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,
+            new PublicApplicationUrl('http://localhost'),
             $this->responseFactory,
             $this->router,
             $this->viewEngine
@@ -222,25 +224,7 @@ final class RequestHandlerTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame(303, $response->getStatusCode());
         $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
-        $defaultHost = getenv('DEFAULT_HOST') ?: '';
-        $this->assertSame("{$defaultHost}/test/get?offset=10&limit=20", $response->getHeaderLine('Location'));
-        $this->assertEmpty((string) $response->getBody());
-    }
-
-    public function testHandleLocalRedirectToControllerActionWithSourceOrigin(): void
-    {
-        $uri = $this->requestFactory->createUri('/test/local-redirect');
-        $request = $this->requestFactory->createServerRequest('GET', $uri)
-            ->withQueryParams(['offset' => 10, 'limit' => 20])
-            ->withAttribute(RequestContext::class, $this->getRequestContext())
-            ->withHeader('Origin', 'http://example.com');
-
-        $response = $this->requestHandler->handle($request);
-
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertSame(303, $response->getStatusCode());
-        $this->assertSame('text/html', $response->getHeaderLine('Content-Type'));
-        $this->assertSame('http://example.com/test/get?offset=10&limit=20', $response->getHeaderLine('Location'));
+        $this->assertSame('http://localhost/test/get?offset=10&limit=20', $response->getHeaderLine('Location'));
         $this->assertEmpty((string) $response->getBody());
     }
 

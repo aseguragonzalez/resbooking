@@ -26,15 +26,11 @@ abstract class Controller
     }
 
     protected function view(
-        ?string $name = null,
+        string $viewPath,
         ?object $model = null,
         StatusCode $statusCode = StatusCode::Ok,
     ): ActionResponse {
-        $backtrace = debug_backtrace();
-        $viewName = $name ? $name : $backtrace[1]['function'];
-        // @phpstan-ignore-next-line
-        $viewPath = str_replace("Controller", "", basename(str_replace('\\', '/', $backtrace[1]['class'])));
-        return new View("{$viewPath}/{$viewName}", $model, array_merge($this->headers, []), $statusCode);
+        return new View($viewPath, $model, array_merge($this->headers, []), $statusCode);
     }
 
     /**
@@ -50,12 +46,9 @@ abstract class Controller
      */
     protected function redirectToAction(
         string $action,
-        ?string $controller = null,
+        string $controller,
         ?object $args = null,
     ): ActionResponse {
-        $backtrace = debug_backtrace();
-        // @phpstan-ignore-next-line
-        $requestedController = $controller ?? $backtrace[1]['class'];
-        return LocalRedirectTo::create($action, $requestedController, $args, array_merge($this->headers, []));
+        return LocalRedirectTo::create($action, $controller, $args, array_merge($this->headers, []));
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Fixtures\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 
 final class SubTestController extends TestController
@@ -13,8 +14,9 @@ final class SubTestController extends TestController
         parent::__construct();
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
-        return $this->view();
+        return $this->view('SubTest/index');
     }
 }

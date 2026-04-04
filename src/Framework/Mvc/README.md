@@ -23,8 +23,8 @@ High-level flow for an HTTP request:
 1. The composition root registers services on the DI container; then `MvcWebApp::run()` wires MVC-only services and the middleware chain.
 2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
 3. Middlewares run in order (outermost first):
-   - `ErrorHandling` → `Localization` → *optional* `CsrfProtection`
-   - *optional* `Authentication` → *optional* `Authorization`
+   - `ErrorHandling` → *optional* `AllowedHttpMethodsForHtmlUi` → `Localization` → *optional* `CsrfProtection`
+   - *optional* `Authentication` → *optional* route access control (`Middlewares\Authorization`)
 4. The last middleware delegates to `Requests\RequestHandler`, which:
    - Resolves a `Route` via `Router::get()`
    - Builds action parameters from route args, query params, and body
@@ -74,7 +74,7 @@ MyAppBootstrap::register($container, __DIR__ . '/../');
 $app = new WebApp($container, basePath: __DIR__ . '/../');
 
 $app->useAuthentication();
-$app->useAuthorization();
+$app->useRouteAccessControl();
 $app->useCsrfProtection();
 
 exit($app->run());
@@ -82,12 +82,18 @@ exit($app->run());
 
 `MvcWebApp::run()` does not populate the container; anything your middlewares and controllers need must already be registered before `run()`.
 
+Register **`Framework\Mvc\Config\PublicApplicationUrl`** in the composition root (absolute `https://` or `http://` origin, no path, no trailing slash). It is used to build **`Location`** headers for `LocalRedirectTo`. Example: `new PublicApplicationUrl(getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost')` in your bootstrap (read env only outside the framework if you prefer).
+
+`Application` / `MvcWebApp` accept **`Framework\Mvc\Container\ServiceRegistry`** (use **`Framework\Mvc\Container\PhpDiServiceRegistry`** to wrap a PHP-DI `Container` from `index.php`).
+
 Public knobs on `MvcWebApp`:
 
 - `addMiddleware(string $middleware)` – register custom middlewares (run inside the fixed chain).
-- `useAuthentication()` – require authentication middleware.
-- `useAuthorization()` – require authorization middleware.
+- `useAuthentication()` – run authentication middleware (identity on `RequestContext`).
+- `useRouteAccessControl()` – enforce each route’s `authRequired` / `roles`; **must** be called after `useAuthentication()`.
 - `useCsrfProtection()` – validate CSRF tokens on state-changing requests.
+
+**Authentication vs route access control:** Public routes ignore roles. You can enable **authentication only** (signed-in user, no route-level enforcement) or add **route access control** to enforce `authRequired` and `roles`. Route access control does not run without authentication.
 
 ---
 
@@ -111,15 +117,17 @@ Finding routes:
 
 Security metadata:
 
-- `authRequired` – when true, `Authorization` will enforce authentication.
+- `authRequired` – when true, route access control middleware enforces authentication.
 - `roles` – list of roles; route allows any identity whose `getRoles()` intersects this list.
 
 ---
 
 ## Controllers and actions
 
-Controllers are regular PHP classes (recommended in `Framework\Mvc\Controllers`) that:
+Controllers are regular PHP classes (recommended under your app’s `Controllers` namespace) that:
 
+- **Extend** `Controllers\Controller` (required for `Route::create` validation).
+- Expose routable actions as **public instance methods** marked with **`#[\Framework\Mvc\Actions\MvcAction]`**.
 - Are referenced from routes via their FQCN and method name.
 - Return an `Actions\Responses\ActionResponse` subtype:
   - `View` – render an HTML view.
@@ -129,11 +137,14 @@ Controllers are regular PHP classes (recommended in `Framework\Mvc\Controllers`)
 Example:
 
 ```php
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\View;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
+use Framework\Mvc\Controllers\Controller;
 
-final class AccountController
+final class AccountController extends Controller
 {
+    #[MvcAction]
     public function edit(int $id): View
     {
         $account = /* load account by $id */;
@@ -144,6 +155,7 @@ final class AccountController
         );
     }
 
+    #[MvcAction]
     public function update(int $id, AccountRequest $request): LocalRedirectTo
     {
         /* update account */
@@ -163,7 +175,7 @@ final class AccountController
 
 1. Route path parameters (from `Path` placeholders).
 2. Query string parameters.
-3. Parsed body (for `POST` and other state-changing methods).
+3. Parsed body for **`POST` only** (HTML form use case). Other verbs are not used for form posts in this stack; `AllowedHttpMethodsForHtmlUi` rejects `PUT` / `PATCH` / `DELETE` at the edge with **405** and an **`Allow`** header.
 
 Binding rules:
 
@@ -172,7 +184,7 @@ Binding rules:
 - Non-scalar, non-built-in parameters are treated as **request/DTO objects** and are built using `ActionParameterBuilder`:
   - Constructor parameters are filled from flat keys like `id`, `name`.
   - Embedded objects use dotted keys: `address.street`, `address.city`.
-  - Arrays use `name[0]`, `name[1]` and docblock `@param array<Type> $name` to infer element type.
+  - Arrays use `name[0]`, `name[1]` and either **`#[RequestArrayElementType('int')]`** (or another type name) on the constructor parameter or docblock `@param array<Type> $name` to infer element type.
 
 This allows you to keep actions strongly typed and free from manual array plumbing.
 
@@ -213,7 +225,7 @@ The views subsystem is documented in detail in `Views/README.md`. Key points for
 - All `{{path}}` placeholders are HTML-escaped.
 - Only `{{{path}}}` renders raw HTML; use this for already-sanitized content and keep its usage rare and reviewed.
 
-### Authentication and authorization
+### Authentication and route access control
 
 Enable with:
 
@@ -221,10 +233,12 @@ Enable with:
   - Reads auth token from cookie.
   - Loads identity via `Security\IdentityManager`.
   - Stores identity and token in `RequestContext`.
-- `MvcWebApp::useAuthorization()` – runs `Middlewares\Authorization`:
+- `MvcWebApp::useRouteAccessControl()` – runs `Middlewares\Authorization` (route access control):
   - Looks up the current `Route`.
   - Enforces `authRequired` and `roles` metadata.
   - Redirects unauthenticated users to `AuthSettings::signInPath` and clears the auth cookie.
+
+Call `useAuthentication()` **before** `useRouteAccessControl()`; otherwise `useRouteAccessControl()` throws `LogicException`.
 
 ### CSRF protection
 
@@ -271,7 +285,7 @@ How-to details (including `mvc.config.json` defaults): see [How to Create a New 
 
 Database migrations (enable/disable, `mvc.config.json`, and `migrations:create` / `migrations:run` / `migrations:test`): see [How to use MVC database migrations](./Apps/HowToMigrations.md).
 
-Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./Functional/HowToAuthentication.md).
+Authentication and authorization (`mvc auth:enable` / `mvc auth:disable`, `authenticationEnabled` in `mvc.config.json`, default SQL migrations): see [How to enable MVC authentication and authorization (CLI)](./Module/HowToAuthentication.md).
 
 CSS and JavaScript bundling (`mvc watch-assets`, `mvc create-bundle`, `assetRoutes` in `mvc.config.json`): see [How to bundle CSS and JavaScript (MVC CLI)](./Web/HowToAssets.md).
 
@@ -295,6 +309,6 @@ These are transparent to consumers; no configuration is required.
 - `src/Framework/Mvc/Web/MvcWebApp.php` – application bootstrap and middleware wiring.
 - `src/Framework/Mvc/Web/Requests/RequestHandler.php` – routing + action invocation contract.
 - `src/Framework/Mvc/Web/Views/README.md` – full template language reference.
-- `src/Framework/Mvc/Functional/Security/*` – authentication, identity and password flows; challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
+- `src/Framework/Mvc/Module/Security/*` – optional LAMP-oriented SQL-backed security module (authentication, identity, password flows); challenge delivery is the `ChallengeNotificator` port (implement and register in your app).
 
 Use this README as the entry point when building or reviewing apps on top of the MVC package.

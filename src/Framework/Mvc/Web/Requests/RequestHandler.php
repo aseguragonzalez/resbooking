@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Framework\Mvc\Requests;
 
 use Framework\Mvc\Actions\ActionParameterBuilder;
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
+use Framework\Mvc\Config\PublicApplicationUrl;
 use Framework\Mvc\Actions\Responses\LocalRedirectTo;
 use Framework\Mvc\Actions\Responses\RedirectTo;
 use Framework\Mvc\Actions\Responses\View;
@@ -25,6 +27,7 @@ final class RequestHandler implements RequestHandlerInterface
     public function __construct(
         private readonly ActionParameterBuilder $actionParameterBuilder,
         private readonly ContainerInterface $container,
+        private readonly PublicApplicationUrl $publicApplicationUrl,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly Router $router,
         private readonly ViewEngine $viewEngine,
@@ -106,6 +109,12 @@ final class RequestHandler implements RequestHandlerInterface
      */
     private function executeAction(Route $route, array $args): ActionResponse
     {
+        $actionReflection = new \ReflectionMethod($route->controller, $route->action);
+        if ($actionReflection->getAttributes(MvcAction::class) === []) {
+            throw new \RuntimeException(
+                "Action {$route->action} on {$route->controller} is not marked with #[MvcAction]"
+            );
+        }
         $controller = $this->container->get($route->controller);
         $actionResponse = (count($args) === 0)
             ? $controller->{$route->action}()
@@ -133,7 +142,6 @@ final class RequestHandler implements RequestHandlerInterface
         ServerRequestInterface $request,
         LocalRedirectTo $actionResponse
     ): ResponseInterface {
-        $host = empty($request->getHeaderLine("origin")) ? getenv('DEFAULT_HOST') : $request->getHeaderLine("origin");
         $newRoute = $this->router->getFromControllerAndAction($actionResponse->controller, $actionResponse->action);
         if (is_null($newRoute)) {
             throw new \RuntimeException(
@@ -146,9 +154,10 @@ final class RequestHandler implements RequestHandlerInterface
             is_object($actionResponse->args) ? get_object_vars($actionResponse->args) : (array)$actionResponse->args
         );
         $path = $newRoute->getPathFromArgs($args);
+        $location = $this->publicApplicationUrl->absoluteUrlForPath($path->value());
         $response = $this->responseFactory
             ->createResponse(code: StatusCode::SeeOther->value)
-            ->withHeader('Location', "{$host}{$path}");
+            ->withHeader('Location', $location);
         foreach ($actionResponse->headers as $header) {
             $response = $response->withAddedHeader($header->name, $header->value);
         }

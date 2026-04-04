@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use SeedWork\Application\CommandBus;
@@ -40,19 +41,21 @@ final class AccountsController extends Controller
         parent::__construct();
     }
 
+    #[MvcAction]
     public function signIn(): ActionResponse
     {
         if ($this->isUserAuthenticated()) {
             return $this->redirectToAction("index", DashboardController::class);
         }
-        return $this->view(model: SignIn::new());
+        return $this->view('Accounts/signIn', model: SignIn::new());
     }
 
+    #[MvcAction]
     public function signInUser(SignInRequest $request): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
-            return $this->view("signIn", model: SignIn::withErrors($errors));
+            return $this->view('Accounts/signIn', model: SignIn::withErrors($errors));
         }
 
         try {
@@ -69,21 +72,22 @@ final class AccountsController extends Controller
             $this->addHeader($setCookieHeader);
             return $this->redirectToAction("index", DashboardController::class);
         } catch (InvalidCredentialsException) {
-            return $this->view("signIn", model: SignIn::withErrors([
+            return $this->view('Accounts/signIn', model: SignIn::withErrors([
                 'username' => '{{accounts.signin.form.invalid-credentials}}',
             ]));
         } catch (UserIsNotActiveException) {
-            return $this->view("signIn", model: SignIn::withErrors([
+            return $this->view('Accounts/signIn', model: SignIn::withErrors([
                 'username-inactive' => '{{accounts.signin.form.inactive-user}}',
             ]));
         }
     }
 
+    #[MvcAction]
     public function signOut(ServerRequestInterface $request): ActionResponse
     {
         $token = $request->getCookieParams()['auth'] ?? '';
         if (!is_string($token) || empty($token)) {
-            return $this->redirectToAction("signIn");
+            return $this->redirectToAction('signIn', AccountsController::class);
         }
 
         $this->identityManager->signOut($token);
@@ -94,22 +98,24 @@ final class AccountsController extends Controller
             $this->addHeader(SetCookie::removeCookie($cookieName));
         }
 
-        return $this->redirectToAction("signIn");
+        return $this->redirectToAction('signIn', AccountsController::class);
     }
 
+    #[MvcAction]
     public function signUp(): ActionResponse
     {
         if ($this->isUserAuthenticated()) {
             return $this->redirectToAction("index", DashboardController::class);
         }
-        return $this->view(model: SignUp::new());
+        return $this->view('Accounts/signUp', model: SignUp::new());
     }
 
+    #[MvcAction]
     public function signUpUser(SignUpRequest $request): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
-            return $this->view("signUp", model: SignUp::withErrors($errors));
+            return $this->view('Accounts/signUp', model: SignUp::withErrors($errors));
         }
 
         $this->identityManager->signUp(
@@ -120,52 +126,57 @@ final class AccountsController extends Controller
 
         $this->commandBus->dispatch(new CreateNewRestaurantCommand(email: $request->username));
 
-        return $this->redirectToAction("signIn");
+        return $this->redirectToAction('signIn', AccountsController::class);
     }
 
+    #[MvcAction]
     public function activateUser(string $token): ActionResponse
     {
         try {
             $this->identityManager->activateUserIdentity($token);
         } catch (SignUpChallengeException) {
-            return $this->view("tokenExpired");
+            return $this->view('Accounts/tokenExpired');
         }
-        return $this->redirectToAction("signIn");
+        return $this->redirectToAction('signIn', AccountsController::class);
     }
 
+    #[MvcAction]
     public function resetPassword(): ActionResponse
     {
         if ($this->isUserAuthenticated()) {
             return $this->redirectToAction("index", DashboardController::class);
         }
-        return $this->view(model: ResetPassword::new());
+        return $this->view('Accounts/resetPassword', model: ResetPassword::new());
     }
 
+    #[MvcAction]
     public function sendResetPasswordEmail(ResetPasswordRequest $request): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
-            return $this->view("resetPassword", model: ResetPassword::withErrors($errors));
+            return $this->view('Accounts/resetPassword', model: ResetPassword::withErrors($errors));
         }
 
         $this->identityManager->resetPasswordChallenge($request->username);
-        return $this->view("resetPassword", model: ResetPassword::succeeded());
+        return $this->view('Accounts/resetPassword', model: ResetPassword::succeeded());
     }
 
+    #[MvcAction]
     public function resetPasswordChallenge(string $token): ActionResponse
     {
         if ($this->isUserAuthenticated()) {
             return $this->redirectToAction("index", DashboardController::class);
         }
-        return $this->view(model: ResetPasswordChallenge::new($token));
+        return $this->view('Accounts/resetPasswordChallenge', model: ResetPasswordChallenge::new($token));
     }
 
+    #[MvcAction]
     public function confirmResetPassword(ConfirmResetPasswordRequest $request): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
             return $this->view(
-                "resetPasswordChallenge",
+                'Accounts/resetPasswordChallenge',
                 model: ResetPasswordChallenge::withErrors($errors, $request->token)
             );
         }
@@ -174,21 +185,21 @@ final class AccountsController extends Controller
             $this->identityManager->resetPasswordFromToken($request->token, $request->newPassword);
         } catch (ResetPasswordChallengeException) {
             return $this->view(
-                "resetPasswordChallenge",
+                'Accounts/resetPasswordChallenge',
                 model: ResetPasswordChallenge::withErrors([
                     'token' => '{{accounts.reset-password-challenge.form.token.error.expired}}',
                 ], $request->token)
             );
         } catch (UserIsNotActiveException) {
             return $this->view(
-                "resetPasswordChallenge",
+                'Accounts/resetPasswordChallenge',
                 model: ResetPasswordChallenge::withErrors([
                     'token' => '{{accounts.reset-password-challenge.form.token.error.invalid}}',
                 ], $request->token)
             );
         }
 
-        return $this->redirectToAction("signIn");
+        return $this->redirectToAction('signIn', AccountsController::class);
     }
 
     private function isUserAuthenticated(): bool

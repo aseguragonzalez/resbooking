@@ -6,7 +6,7 @@ The MVC framework provides cookie-based **authentication** (`Middlewares\Authent
 
 - **`authenticationEnabled`** — `true` when the feature is enabled via `mvc auth:enable`; `false` when disabled via `mvc auth:disable`. New apps from `mvc create-app` start with `false`.
 
-This flag does **not** turn middleware on by itself. Your `index.php` (or app bootstrap) should read the config and call `MvcWebApp::useAuthentication()` and `useAuthorization()` when appropriate (see below).
+This flag does **not** turn middleware on by itself. Your `index.php` (or app bootstrap) should read the config and call `MvcWebApp::useAuthentication()` and `useRouteAccessControl()` when appropriate (see below). Always call `useAuthentication()` **before** `useRouteAccessControl()`.
 
 ## CLI: enable
 
@@ -76,13 +76,13 @@ $app = new MyApp(container: $container, basePath: __DIR__);
 $config = MvcConfig::load(__DIR__);
 if ($config->isAuthenticationEnabled()) {
     $app->useAuthentication();
-    $app->useAuthorization();
+    $app->useRouteAccessControl();
 }
 
 $app->run();
 ```
 
-Adjust the `require_once` path to your vendor location. You can still call `useAuthentication()` / `useAuthorization()` unconditionally if you prefer not to use the config flag.
+Adjust the `require_once` path to your vendor location. You can still call `useAuthentication()` / `useRouteAccessControl()` unconditionally if you prefer not to use the config flag.
 
 ## Default security dependencies (SQL)
 

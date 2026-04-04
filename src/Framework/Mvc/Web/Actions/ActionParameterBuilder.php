@@ -72,7 +72,7 @@ final class ActionParameterBuilder
     private function getEmbeddedArray(\ReflectionParameter $param, string $path): mixed
     {
         $args = array_filter($this->args, fn ($key) => str_starts_with($key, $path . '['), ARRAY_FILTER_USE_KEY);
-        $itemType = $this->getArrayItemTypeFromDocComment($param);
+        $itemType = $this->getArrayItemType($param);
         $builtInTypes = ['int', 'float', 'string', 'bool', \DateTime::class, \DateTimeImmutable::class];
         if (class_exists($itemType) && !in_array($itemType, $builtInTypes, true)) {
             return $this->getEmbeddedObjectArray($itemType, $args);
@@ -89,6 +89,34 @@ final class ActionParameterBuilder
                 default => $value,
             };
         }, array_values($args));
+    }
+
+    private function getArrayItemType(\ReflectionParameter $param): string
+    {
+        $attrs = $param->getAttributes(RequestArrayElementType::class);
+        if ($attrs !== []) {
+            $raw = $attrs[0]->newInstance()->type;
+            if (in_array($raw, ['int', 'float', 'string', 'bool'], true)) {
+                return $raw;
+            }
+            if ($raw === 'DateTime' || $raw === \DateTime::class) {
+                return \DateTime::class;
+            }
+            if ($raw === 'DateTimeImmutable' || $raw === \DateTimeImmutable::class) {
+                return \DateTimeImmutable::class;
+            }
+            if (str_contains($raw, '\\')) {
+                return $raw;
+            }
+            $declaringClass = $param->getDeclaringClass();
+            if ($declaringClass !== null) {
+                return $declaringClass->getNamespaceName() . '\\' . $raw;
+            }
+
+            return $raw;
+        }
+
+        return $this->getArrayItemTypeFromDocComment($param);
     }
 
     private function getArrayItemTypeFromDocComment(\ReflectionParameter $param): string
@@ -112,7 +140,14 @@ final class ActionParameterBuilder
             return $itemType;
         }
 
-        throw new \RuntimeException("Doc comment not found for parameter $paramName");
+        throw new \InvalidArgumentException(
+            sprintf(
+                'Array parameter "$%s" requires #[RequestArrayElementType(...)] on the parameter '
+                . 'or @param array<Type> $%s on the constructor docblock.',
+                $paramName,
+                $paramName
+            )
+        );
     }
 
     /**

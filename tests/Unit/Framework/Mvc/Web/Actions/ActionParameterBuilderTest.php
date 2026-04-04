@@ -420,8 +420,8 @@ final class ActionParameterBuilderTest extends TestCase
             'items[2]' => (new \DateTime())->format('Y-m-d'),
             'items[3]' => (new \DateTime())->format('Y-m-d'),
         ];
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage("Doc comment not found for parameter items");
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Array parameter "$items" requires #[RequestArrayElementType(...)]');
 
         $requestBuilder->withArgs($args)->build(WithoutDocsObject::class);
     }

@@ -2,22 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Mvc\Fixtures\Routes\Router;
+namespace Tests\Unit\Framework\Mvc\Fixtures\Routes\Route;
 
-use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 
-final class RouterController extends Controller
+/**
+ * Intentionally no #[MvcAction] on get() for Route::create validation tests.
+ */
+final class RouteControllerWithoutMvcAction extends Controller
 {
     public function __construct()
     {
         parent::__construct();
     }
 
-    #[MvcAction]
     public function get(): ActionResponse
     {
-        return $this->view('Router/get');
+        return $this->view('Route/get');
     }
 }

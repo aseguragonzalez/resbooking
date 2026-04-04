@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
-use DI\Container;
+use Framework\Mvc\Container\ServiceRegistry;
 
 /**
  * The base class for all applications.
@@ -17,11 +17,11 @@ abstract class Application
 {
     /**
      * Create a new application instance.
-     * @param Container $container The container instance.
+     * @param ServiceRegistry $container Service registry (often a PHP-DI adapter from the composition root).
      * @param string $basePath The base path of the application.
      */
     protected function __construct(
-        protected Container $container,
+        protected ServiceRegistry $container,
         protected string $basePath,
     ) {
     }

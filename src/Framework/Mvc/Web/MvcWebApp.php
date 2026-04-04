@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
-use DI\Container;
+use Framework\Mvc\Container\ServiceRegistry;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
+use Framework\Mvc\Middlewares\AllowedHttpMethodsForHtmlUi;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
 use Framework\Mvc\Middlewares\CsrfProtection;
@@ -37,19 +38,19 @@ use Psr\Http\Server\RequestHandlerInterface;
 abstract class MvcWebApp extends Application
 {
     /**
-     * @param Container $container The container instance.
+     * @param ServiceRegistry $container The service registry instance.
      * @param string $basePath The base path of the application.
      * @param array<class-string<Middleware>> $middlewares The middlewares to use.
      * @param bool $requireAuthentication Whether to require authentication.
-     * @param bool $requireAuthorization Whether to require authorization.
+     * @param bool $requireRouteAccessControl Whether to enforce route authRequired/roles (requires authentication).
      * @param bool $enableCsrfProtection Whether to validate CSRF tokens on state-changing requests.
      */
     protected function __construct(
-        Container $container,
+        ServiceRegistry $container,
         string $basePath,
         private array $middlewares = [],
         private bool $requireAuthentication = false,
-        private bool $requireAuthorization = false,
+        private bool $requireRouteAccessControl = false,
         private bool $enableCsrfProtection = false,
     ) {
         parent::__construct($container, $basePath);
@@ -92,11 +93,18 @@ abstract class MvcWebApp extends Application
     }
 
     /**
-     * Require authorization for the application.
+     * Enforce route access control (authRequired and roles on routes). Requires authentication to be enabled.
+     *
+     * @throws \LogicException When {@see useAuthentication()} was not called first.
      */
-    public function useAuthorization(): void
+    public function useRouteAccessControl(): void
     {
-        $this->requireAuthorization = true;
+        if (!$this->requireAuthentication) {
+            throw new \LogicException(
+                'Route access control requires authentication: call useAuthentication() before useRouteAccessControl().'
+            );
+        }
+        $this->requireRouteAccessControl = true;
     }
 
     /**
@@ -120,8 +128,8 @@ abstract class MvcWebApp extends Application
             return $currentMiddleware;
         }, $lastMiddleware);
 
-        // Configure fixed middlewares: Authorization, Authentication, Localization, ErrorHandling
-        if ($this->requireAuthorization && $this->requireAuthentication) {
+        // Configure fixed middlewares: Route access control, Authentication, Localization, ErrorHandling
+        if ($this->requireRouteAccessControl && $this->requireAuthentication) {
             /** @var Authorization $authorizationMiddleware */
             $authorizationMiddleware = $this->container->get(Authorization::class);
             $authorizationMiddleware->setNext($lastMiddleware);
@@ -146,6 +154,11 @@ abstract class MvcWebApp extends Application
         $localizationMiddleware = $this->container->get(Localization::class);
         $localizationMiddleware->setNext($lastMiddleware);
         $lastMiddleware = $localizationMiddleware;
+
+        /** @var AllowedHttpMethodsForHtmlUi $allowedHttpMethodsMiddleware */
+        $allowedHttpMethodsMiddleware = $this->container->get(AllowedHttpMethodsForHtmlUi::class);
+        $allowedHttpMethodsMiddleware->setNext($lastMiddleware);
+        $lastMiddleware = $allowedHttpMethodsMiddleware;
 
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);

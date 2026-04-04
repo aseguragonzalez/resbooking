@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Mvc\Fixtures\Actions\Responses;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 
@@ -14,25 +15,30 @@ final class TestController extends Controller
         parent::__construct();
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
-        return $this->view();
+        return $this->view('Test/index');
     }
 
+    #[MvcAction]
     public function list(int $offset, int $limit): ActionResponse
     {
         $model = new \stdClass();
         $model->offset = $offset;
         $model->limit = $limit;
-        return $this->view(model: $model);
+
+        return $this->view('Test/list', model: $model);
     }
 
+    #[MvcAction]
     public function search(int $offset, int $limit, SearchRequest $request): ActionResponse
     {
         $model = new \stdClass();
         $model->offset = $offset;
         $model->limit = $limit;
         $model->request = $request;
-        return $this->view(model: $model);
+
+        return $this->view('Test/search', model: $model);
     }
 }

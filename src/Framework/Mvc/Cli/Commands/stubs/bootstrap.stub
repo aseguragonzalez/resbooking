@@ -7,6 +7,7 @@ namespace {{namespace}};
 use DI\Container;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Config\MvcConfig;
+use Framework\Mvc\Config\PublicApplicationUrl;
 use Framework\Mvc\ErrorMapping;
 use Framework\Mvc\ErrorSettings;
 use Framework\Mvc\HtmlViewEngineSettings;
@@ -43,6 +44,9 @@ final class {{name}}Bootstrap
             assetsPath: $config->normalizedI18nAssetsPathForLanguageSettings(),
         ));
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig($config));
+
+        $publicUrl = getenv('{{envPrefix}}_PUBLIC_URL') ?: 'http://localhost';
+        $container->set(PublicApplicationUrl::class, new PublicApplicationUrl($publicUrl));
 
         $container->set(
             {{name}}Settings::class,

@@ -49,4 +49,4 @@ For CSS/JS bundling CLI and `assetRoutes` details, see [How to bundle CSS and Ja
 
 For migrations workflow and CLI commands, see [How to use MVC database migrations](../Apps/HowToMigrations.md).
 
-For authentication CLI and middleware wiring, see [How to enable MVC authentication and authorization (CLI)](../Functional/HowToAuthentication.md).
+For authentication CLI and middleware wiring, see [How to enable MVC authentication and authorization (CLI)](../Module/HowToAuthentication.md).

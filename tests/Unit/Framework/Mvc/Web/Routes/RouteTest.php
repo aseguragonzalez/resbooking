@@ -15,6 +15,7 @@ use Framework\Mvc\Security\Identity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Mvc\Fixtures\Routes\Route\RouteController;
+use Tests\Unit\Framework\Mvc\Fixtures\Routes\Route\RouteControllerWithoutMvcAction;
 
 final class RouteTest extends TestCase
 {
@@ -192,6 +193,19 @@ final class RouteTest extends TestCase
         );
 
         Route::create(RouteMethod::Get, Path::create('/foo'), RouteController::class, 'invalidAction');
+    }
+
+    public function testCreateFailWhenActionMissingMvcActionAttribute(): void
+    {
+        $this->expectException(InvalidAction::class);
+        $this->expectExceptionMessage('must be marked with #[MvcAction]');
+
+        Route::create(
+            RouteMethod::Get,
+            Path::create('/foo'),
+            RouteControllerWithoutMvcAction::class,
+            'get'
+        );
     }
 
     public function testEquals(): void

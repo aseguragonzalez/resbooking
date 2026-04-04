@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
 use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdResult;
@@ -38,6 +39,7 @@ final class DiningAreasController extends RestaurantBaseController
         parent::__construct($requestContext, $settings);
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
         $query = new GetRestaurantByIdQuery(id: $this->getRestaurantId());
@@ -52,23 +54,25 @@ final class DiningAreasController extends RestaurantBaseController
             $result->diningAreas
         );
         $model = DiningAreasList::create(diningAreas: $diningAreas);
-        return $this->view(model: $model);
+        return $this->view('DiningAreas/index', model: $model);
     }
 
+    #[MvcAction]
     public function create(ServerRequestInterface $request): ActionResponse
     {
         $backUrl = $request->getHeaderLine('Referer') ?: '/dining-areas';
         $model = EditDiningArea::new(backUrl: $backUrl);
-        return $this->view('edit', model: $model);
+        return $this->view('DiningAreas/edit', model: $model);
     }
 
+    #[MvcAction]
     public function store(AddDiningAreaRequest $request, ServerRequestInterface $serverRequest): ActionResponse
     {
         $errors = $request->validate();
         if (!empty($errors)) {
             $backUrl = $serverRequest->getHeaderLine('Referer') ?: '/dining-areas';
             $pageModel = EditDiningArea::withErrors($request, $errors, diningAreaId: null, backUrl: $backUrl);
-            return $this->view('edit', model: $pageModel);
+            return $this->view('DiningAreas/edit', model: $pageModel);
         }
 
         $this->commandBus->dispatch(new AddDiningAreaCommand(
@@ -80,6 +84,7 @@ final class DiningAreasController extends RestaurantBaseController
         return $this->redirectToAction('index', DiningAreasController::class);
     }
 
+    #[MvcAction]
     public function edit(string $id, ServerRequestInterface $request): ActionResponse
     {
         $query = new GetDiningAreaByIdQuery(
@@ -96,9 +101,10 @@ final class DiningAreasController extends RestaurantBaseController
             capacity: $diningArea->capacity,
             backUrl: $backUrl
         );
-        return $this->view(model: $model);
+        return $this->view('DiningAreas/edit', model: $model);
     }
 
+    #[MvcAction]
     public function update(
         string $id,
         UpdateDiningAreaRequest $request,
@@ -108,7 +114,7 @@ final class DiningAreasController extends RestaurantBaseController
         if (!empty($errors)) {
             $backUrl = $serverRequest->getHeaderLine('Referer') ?: '/dining-areas';
             $pageModel = EditDiningArea::withErrors($request, $errors, diningAreaId: $id, backUrl: $backUrl);
-            return $this->view('edit', model: $pageModel);
+            return $this->view('DiningAreas/edit', model: $pageModel);
         }
 
         $this->commandBus->dispatch(new UpdateDiningAreaCommand(
@@ -121,6 +127,7 @@ final class DiningAreasController extends RestaurantBaseController
         return $this->redirectToAction('index', DiningAreasController::class);
     }
 
+    #[MvcAction]
     public function delete(string $id): ActionResponse
     {
         $this->commandBus->dispatch(new RemoveDiningAreaCommand(

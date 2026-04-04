@@ -18,9 +18,9 @@ final class ConsoleOutput
      * @param resource|null $stdout
      * @param resource|null $stderr
      */
-    public function __construct(mixed $stdout = null, mixed $stderr = null)
+    public function __construct(mixed $stdout = null, mixed $stderr = null, bool $colorsEnabled = true)
     {
-        $this->colorsEnabled = getenv('NO_COLOR') === false;
+        $this->colorsEnabled = $colorsEnabled;
         $this->stdout = $stdout ?? \STDOUT;
         $this->stderr = $stderr ?? \STDERR;
     }

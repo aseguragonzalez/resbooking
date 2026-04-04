@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
 use Domain\Restaurants\Repositories\RestaurantRepository;
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Controllers\Controller;
 use Framework\Mvc\Requests\RequestContext;
@@ -26,6 +27,7 @@ final class RestaurantsController extends Controller
         parent::__construct();
     }
 
+    #[MvcAction]
     public function select(ServerRequestInterface $request): ActionResponse
     {
         /** @var RequestContext $context */
@@ -39,7 +41,7 @@ final class RestaurantsController extends Controller
 
         if (count($restaurants) === 0) {
             $model = SelectRestaurant::withNoRestaurants(backUrl: $backUrl);
-            return $this->view(model: $model);
+            return $this->view('Restaurants/select', model: $model);
         }
 
         if (count($restaurants) === 1) {
@@ -56,9 +58,10 @@ final class RestaurantsController extends Controller
             $restaurants
         );
         $model = SelectRestaurant::withRestaurants(restaurants: $restaurantsList, backUrl: $backUrl);
-        return $this->view(model: $model);
+        return $this->view('Restaurants/select', model: $model);
     }
 
+    #[MvcAction]
     public function setRestaurant(
         SelectRestaurantRequest $request,
         ServerRequestInterface $serverRequest
@@ -67,7 +70,7 @@ final class RestaurantsController extends Controller
         if (!empty($errors)) {
             $backUrl = $this->getBackUrl($serverRequest);
             $model = SelectRestaurant::withErrors(errors: $errors, backUrl: $backUrl);
-            return $this->view('select', model: $model);
+            return $this->view('Restaurants/select', model: $model);
         }
 
         $this->setRestaurantCookie($request->restaurantId);

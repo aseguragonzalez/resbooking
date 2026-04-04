@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
+use Framework\Mvc\Actions\MvcAction;
 use Framework\Mvc\Actions\Responses\ActionResponse;
 use Framework\Mvc\Requests\RequestContext;
 use Framework\Mvc\Routes\Path;
@@ -20,9 +21,10 @@ final class DashboardController extends RestaurantBaseController
         parent::__construct($requestContext, $settings);
     }
 
+    #[MvcAction]
     public function index(): ActionResponse
     {
-        return $this->view(model: (object)[
+        return $this->view('Dashboard/index', model: (object)[
             'pageTitle' => 'Dashboard',
             'model' => (object)[
                 'title' => 'Welcome to the Dashboard',

@@ -30,7 +30,7 @@ lint:
 
 static-analyse:
 	@rm -rf /tmp/phpstan/cache
-	@./vendor/bin/phpstan analyse ./src ./tests --level=max --memory-limit=1G
+	@./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G
 
 test:
 	@./vendor/bin/phpunit -c phpunit.xml --coverage-html coverage/

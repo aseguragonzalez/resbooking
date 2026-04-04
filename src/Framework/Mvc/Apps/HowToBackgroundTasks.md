@@ -94,4 +94,4 @@ The runnable class is `Framework\Mvc\BackgroundTasks\BackgroundTasksApp`: it onl
 
 - [How to use MVC database migrations](./HowToMigrations.md) — `migrations:enable`, `migrations:run`, env vars.
 - [How to Create a New MVC App (CLI)](../Cli/HowToCreateApp.md) — scaffold and `mvc.config.json` defaults.
-- [How to enable MVC authentication](../Functional/HowToAuthentication.md) — similar enable/disable + migration pattern.
+- [How to enable MVC authentication](../Module/HowToAuthentication.md) — similar enable/disable + migration pattern.
