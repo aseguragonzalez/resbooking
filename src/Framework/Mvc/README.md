@@ -20,8 +20,8 @@ It is designed for:
 
 High-level flow for an HTTP request:
 
-1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Mvc\Web\Dependencies::configure()`); then `MvcWebApp::run()` builds the middleware chain and handles the request.
-2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
+1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Mvc\Web\Dependencies::configure()`).
+2. The HTTP entrypoint creates a per-request `RequestContext`, registers it on the container for controller injection, builds a PSR-7 `ServerRequestInterface` (e.g. `Nyholm\Psr7Server\ServerRequestCreator::fromGlobals()`), then calls `WebApplication::run($request)`. `MvcWebApp` builds the middleware chain and handles that request.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → *optional* `AllowedHttpMethodsForHtmlUi` → `Localization` → *optional* `CsrfProtection`
    - *optional* `Authentication` → *optional* route access control (`Middlewares\Authorization`)
@@ -47,32 +47,42 @@ Framework\Mvc\Web\Dependencies::configure(new Infrastructure\Container\PhpDiMuta
 ```php
 final class WebApp extends MvcWebApp
 {
-    public function __construct(\Psr\Container\ContainerInterface $container, string $basePath)
-    {
-        parent::__construct($container, $basePath);
+    public function __construct(
+        \Psr\Container\ContainerInterface $container,
+        string $basePath,
+        \Framework\Mvc\Requests\RequestContext $requestContext,
+    ) {
+        parent::__construct($container, $basePath, $requestContext);
     }
 }
 ```
 
-In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Mvc\Web\Dependencies::configure()`**, then construct and run the app. Pass a container that implements **`Framework\Mvc\Container\MutableContainer`** (in this repository: wrap PHP-DI with **`Infrastructure\Container\PhpDiMutableContainer`**) so `MvcWebApp::run()` can register the per-request `RequestContext` and composed `Middleware` entrypoint:
+In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Mvc\Web\Dependencies::configure()`**. Use **`Infrastructure\Container\PhpDiMutableContainer`** when your bootstrap calls `Web\Dependencies::configure()` (it requires `MutableContainer`). For each HTTP request, register the same `RequestContext` instance on the container (for PHP-DI constructor injection), build the PSR-7 request, then call `run($request)`:
 
 ```php
 $container = new \DI\Container();
 MyAppBootstrap::register($container, __DIR__ . '/../');
-$app = new WebApp(new \Infrastructure\Container\PhpDiMutableContainer($container), __DIR__ . '/../');
+$wrapped = new \Infrastructure\Container\PhpDiMutableContainer($container);
+$requestContext = new \Framework\Mvc\Requests\RequestContext();
+$wrapped->set(\Framework\Mvc\Requests\RequestContext::class, $requestContext);
 
+/** @var \Nyholm\Psr7Server\ServerRequestCreator $creator */
+$creator = $wrapped->get(\Nyholm\Psr7Server\ServerRequestCreator::class);
+$request = $creator->fromGlobals();
+
+$app = new WebApp($wrapped, __DIR__ . '/../', $requestContext);
 $app->useAuthentication();
 $app->useRouteAccessControl();
 $app->useCsrfProtection();
 
-exit($app->run());
+exit($app->run($request));
 ```
 
 Anything your middlewares and controllers need (including `Router`, PSR-17 factories, view pipeline, `RequestHandlerInterface`) must be registered **before** `run()` via the bootstrap.
 
 Register **`Framework\Mvc\Config\PublicApplicationUrl`** in the composition root (absolute `https://` or `http://` origin, no path, no trailing slash). It is used to build **`Location`** headers for `LocalRedirectTo`. Example: `new PublicApplicationUrl(getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost')` in your bootstrap (read env only outside the framework if you prefer).
 
-`Application` and its subclasses are typed against **`Psr\Container\ContainerInterface`**. Framework **`Dependencies::configure`** methods take **`Framework\Mvc\Container\MutableContainer`** (extends PSR-11 and adds `set()`).
+`WebApplication` / `MvcWebApp` and CLI `Application` subclasses are typed against **`Psr\Container\ContainerInterface`**. Framework **`Dependencies::configure`** methods that need `set()` take **`Framework\Mvc\Container\MutableContainer`** (extends PSR-11 and adds `set()`).
 
 Public knobs on `MvcWebApp`:
 
@@ -294,7 +304,8 @@ These are transparent to consumers; no configuration is required.
 
 ## Where to look next
 
-- `src/Framework/Mvc/Web/MvcWebApp.php` – application bootstrap and middleware wiring.
+- `src/Framework/Mvc/WebApplication.php` – HTTP app base (`run(ServerRequestInterface)`).
+- `src/Framework/Mvc/Web/MvcWebApp.php` – MVC bootstrap and middleware wiring.
 - `src/Framework/Mvc/Web/Requests/RequestHandler.php` – routing + action invocation contract.
 - `src/Framework/Mvc/Web/Views/README.md` – full template language reference.
 - `src/Framework/Mvc/Module/Security/*` – optional LAMP-oriented SQL-backed security module (authentication, identity, password flows); challenge delivery is the `ChallengeNotificator` port (implement and register in your app).

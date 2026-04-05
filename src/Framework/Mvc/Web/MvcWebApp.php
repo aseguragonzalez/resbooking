@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
-use Framework\Mvc\Container\MutableContainer;
 use Framework\Mvc\Middlewares\AllowedHttpMethodsForHtmlUi;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
@@ -14,17 +13,18 @@ use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
 use Framework\Mvc\Requests\RequestContext;
-use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The base class for all MVC Web applications.
  */
-abstract class MvcWebApp extends Application
+abstract class MvcWebApp extends WebApplication
 {
+    private ?Middleware $middlewareChain = null;
+
     /**
-     * @param ContainerInterface $container PSR-11 container. For {@see run()}, the instance must also implement
-     *        {@see MutableContainer} so request-scoped services can be registered.
+     * @param ContainerInterface $container PSR-11 container.
      * @param string $basePath The base path of the application.
      * @param array<class-string<Middleware>> $middlewares The middlewares to use.
      * @param bool $requireAuthentication Whether to require authentication.
@@ -34,6 +34,7 @@ abstract class MvcWebApp extends Application
     protected function __construct(
         ContainerInterface $container,
         string $basePath,
+        private readonly RequestContext $requestContext,
         private array $middlewares = [],
         private bool $requireAuthentication = false,
         private bool $requireRouteAccessControl = false,
@@ -42,17 +43,10 @@ abstract class MvcWebApp extends Application
         parent::__construct($container, $basePath);
     }
 
-    /**
-     * @param int|null $argc The number of arguments passed to the application. Default is null.
-     * @param array<string> $argv The arguments to pass to the application. Default is an empty array.
-     * @return int The exit code of the application.
-     */
-    public function run(?int $argc = null, array $argv = []): int
+    public function run(ServerRequestInterface $request): int
     {
-        $requestContext = new RequestContext();
-        $this->mutableContainer()->set(RequestContext::class, $requestContext);
         $this->buildMiddlewareChain();
-        $this->handleRequest($requestContext);
+        $this->handleRequest($request);
 
         return 0;
     }
@@ -145,39 +139,19 @@ abstract class MvcWebApp extends Application
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);
         $errorMiddleware->setNext($lastMiddleware);
-        $this->mutableContainer()->set(Middleware::class, $errorMiddleware);
+        $this->middlewareChain = $errorMiddleware;
     }
 
-    /**
-     * @throws \LogicException When the container does not support runtime registration.
-     */
-    private function mutableContainer(): MutableContainer
+    private function handleRequest(ServerRequestInterface $request): void
     {
-        if (!$this->container instanceof MutableContainer) {
-            throw new \LogicException(
-                'MvcWebApp::run() requires a container implementing ' . MutableContainer::class
-                . ' (e.g. Infrastructure\\Container\\PhpDiMutableContainer).'
+        if (!$this->middlewareChain instanceof Middleware) {
+            throw new \RuntimeException(
+                'Middleware chain was not built; call buildMiddlewareChain() before handleRequest().'
             );
         }
 
-        return $this->container;
-    }
-
-    private function handleRequest(RequestContext $requestContext): void
-    {
-        $requestCreator = $this->container->get(ServerRequestCreator::class);
-        if (!$requestCreator instanceof ServerRequestCreator) {
-            throw new \RuntimeException('ServerRequestCreator not found in container');
-        }
-
-        $middlewareChain = $this->container->get(Middleware::class);
-        if (!$middlewareChain instanceof Middleware) {
-            throw new \RuntimeException('Middleware not found in container');
-        }
-
-        $request = $requestCreator->fromGlobals();
-        $response = $middlewareChain->handleRequest(
-            $request->withAttribute(RequestContext::class, $requestContext)
+        $response = $this->middlewareChain->handleRequest(
+            $request->withAttribute(RequestContext::class, $this->requestContext)
         );
 
         http_response_code($response->getStatusCode());

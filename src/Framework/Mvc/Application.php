@@ -7,7 +7,8 @@ namespace Framework\Mvc;
 use Psr\Container\ContainerInterface;
 
 /**
- * The base class for all applications.
+ * Base class for CLI and long-running process applications (e.g. migrations, background tasks).
+ *
  *
  * The container must be configured by the composition root (e.g. a bootstrap invoked from index.php)
  * before constructing the application. Implementations of {@see run()} expect required services to

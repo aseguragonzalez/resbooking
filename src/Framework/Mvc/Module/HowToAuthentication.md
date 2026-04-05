@@ -66,12 +66,23 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use DI\Container;
 use Framework\Mvc\Config\MvcConfig;
+use Framework\Mvc\Requests\RequestContext;
+use Infrastructure\Container\PhpDiMutableContainer;
 use My\Ports\MyApp\MyApp;
 use My\Ports\MyApp\MyAppBootstrap;
+use Nyholm\Psr7Server\ServerRequestCreator;
 
 $container = new Container();
 MyAppBootstrap::register($container, __DIR__);
-$app = new MyApp(container: $container, basePath: __DIR__);
+$wrapped = new PhpDiMutableContainer($container);
+$requestContext = new RequestContext();
+$wrapped->set(RequestContext::class, $requestContext);
+
+/** @var ServerRequestCreator $creator */
+$creator = $wrapped->get(ServerRequestCreator::class);
+$request = $creator->fromGlobals();
+
+$app = new MyApp(container: $wrapped, basePath: __DIR__, requestContext: $requestContext);
 
 $config = MvcConfig::load(__DIR__);
 if ($config->isAuthenticationEnabled()) {
@@ -79,7 +90,7 @@ if ($config->isAuthenticationEnabled()) {
     $app->useRouteAccessControl();
 }
 
-$app->run();
+$app->run($request);
 ```
 
 Adjust the `require_once` path to your vendor location. You can still call `useAuthentication()` / `useRouteAccessControl()` unconditionally if you prefer not to use the config flag.

@@ -141,6 +141,8 @@ final class CreateAppCommandTest extends TestCase
         \assert(\is_string($indexContent));
         $this->assertStringContainsString("'/../../../vendor/autoload.php'", $indexContent);
         $this->assertStringContainsString('MyAppBootstrap::register', $indexContent);
+        $this->assertStringContainsString('RequestContext', $indexContent);
+        $this->assertStringContainsString('run($request)', $indexContent);
     }
 
     public function testGeneratedBootstrapClassContainsCorrectNamespace(): void
@@ -174,6 +176,7 @@ final class CreateAppCommandTest extends TestCase
         $this->assertStringContainsString('namespace App\\Ports\\MyApp;', $appContent);
         $this->assertStringContainsString('class MyAppApp extends MvcWebApp', $appContent);
         $this->assertStringContainsString('ContainerInterface', $appContent);
+        $this->assertStringContainsString('RequestContext', $appContent);
         $this->assertStringNotContainsString('function router()', $appContent);
     }
 
