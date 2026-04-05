@@ -38,16 +38,12 @@ final class {{name}}Bootstrap
 
     private static function registerSettings(Container $container, string $basePath): void
     {
-        $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
         $config = MvcConfig::load(basePath: $basePath);
-        $container->set(LanguageSettings::class, new LanguageSettings(
-            basePath: $basePath,
-            assetsPath: $config->normalizedI18nAssetsPathForLanguageSettings(),
-        ));
+        $container->set(MvcConfig::class, $config);
+        $container->set(LanguageSettings::class, $config->languageSettings($basePath));
+        $container->set(AuthSettings::class, $config->authSettings());
+        $container->set(PublicApplicationUrl::class, $config->publicApplicationUrl());
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig($config));
-
-        $publicUrl = getenv('{{envPrefix}}_PUBLIC_URL') ?: 'http://localhost';
-        $container->set(PublicApplicationUrl::class, new PublicApplicationUrl($publicUrl));
 
         $container->set(
             {{name}}Settings::class,

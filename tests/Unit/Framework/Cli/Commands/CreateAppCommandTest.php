@@ -118,6 +118,13 @@ final class CreateAppCommandTest extends TestCase
         $this->assertSame('main.js', $decoded['devMainJsBundler']);
         $this->assertSame('main.css', $decoded['devMainCssBundler']);
         $this->assertFalse($decoded['useDevAssets']);
+        $this->assertSame('http://localhost', $decoded['publicApplicationUrl']);
+        $this->assertSame('/accounts/sign-in', $decoded['authSignInPath']);
+        $this->assertSame('auth', $decoded['authCookieName']);
+        $this->assertSame(['en'], $decoded['languages']);
+        $this->assertSame('lang', $decoded['languageCookieName']);
+        $this->assertSame('en', $decoded['defaultLanguage']);
+        $this->assertSame('/set-language', $decoded['setLanguageUrl']);
         $this->assertIsArray($decoded['assetRoutes']);
         /** @var array<int, array<string, mixed>> $assetRoutes */
         $assetRoutes = $decoded['assetRoutes'];

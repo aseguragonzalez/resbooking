@@ -42,6 +42,13 @@ final class AssetBundleSourceResolverTest extends TestCase
             devMainJsBundler: 'd.js',
             devMainCssBundler: 'd.css',
             useDevAssets: false,
+            publicApplicationOrigin: 'http://localhost',
+            authSignInPath: '/accounts/sign-in',
+            authCookieName: 'auth',
+            languages: ['en'],
+            languageCookieName: 'lang',
+            defaultLanguage: 'en',
+            setLanguageUrl: '/set-language',
         );
 
         $resolver = new AssetBundleSourceResolver('/app/root', $config);

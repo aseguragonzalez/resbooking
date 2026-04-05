@@ -77,7 +77,7 @@ exit($app->run($request));
 
 Anything your middlewares and controllers need (including `Router`, PSR-17 factories, view pipeline, `RequestHandlerInterface`) must be registered **before** `run()` via the bootstrap.
 
-Register **`Framework\Config\PublicApplicationUrl`** in the composition root (absolute `https://` or `http://` origin, no path, no trailing slash). It is used to build **`Location`** headers for `LocalRedirectTo`. Example: `new PublicApplicationUrl(getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost')` in your bootstrap (read env only outside the framework if you prefer).
+Register **`PublicApplicationUrl`** (and related web settings) from **`MvcConfig`**: load **`Framework\Web\Config\MvcConfig::load($basePath)`** from **`mvc.config.json`**, then register **`PublicApplicationUrl`** via **`$config->publicApplicationUrl()`** (origin comes from the **`publicApplicationUrl`** key: absolute `https://` or `http://` origin, no path, no trailing slash). It is used to build **`Location`** headers for `LocalRedirectTo`. Defaults match local dev (**`http://localhost`**). You may also register **`MvcConfig::class`** in the container if other code needs the full config.
 
 `WebApplication` / `MvcWebApp` and CLI `Application` subclasses are typed against **`Psr\Container\ContainerInterface`**. Framework **`Dependencies::configure`** methods that need `set()` take **`Framework\Container\MutableContainer`** (extends PSR-11 and adds `set()`).
 
@@ -192,7 +192,7 @@ This allows you to keep actions strongly typed and free from manual array plumbi
 
 The views subsystem is documented in detail in `Views/README.md`. Key points for public usage:
 
-- Register **`LanguageSettings`** (and optional **`UiAssetsSettings`**) in the container; the composition root registers **`Router::class`** and calls **`Framework\Web\Dependencies::configure($mutable, $basePath)`** to register the PSR-17 stack, view pipeline, and request handler. HTML templates load from **`{basePath}/Views/`** (same `$basePath` as `WebApplication::basePath()`).
+- Register **`LanguageSettings`**, **`AuthSettings`**, **`PublicApplicationUrl`**, and optional **`UiAssetsSettings`** from **`MvcConfig`**: **`$config = MvcConfig::load($basePath)`**, then **`$container->set(LanguageSettings::class, $config->languageSettings($basePath))`**, **`AuthSettings::class` → `$config->authSettings()`**, **`PublicApplicationUrl::class` → `$config->publicApplicationUrl()`**, **`UiAssetsSettings::class` → `UiAssetsSettings::fromConfig($config)`**. Web-related keys live in **`mvc.config.json`** (e.g. **`i18nPath`**, **`languages`**, **`publicApplicationUrl`**, **`authSignInPath`**). The composition root registers **`Router::class`** and calls **`Framework\Web\Dependencies::configure($mutable, $basePath)`** to register the PSR-17 stack, view pipeline, and request handler. HTML templates load from **`{basePath}/Views/`** (same `$basePath` as `WebApplication::basePath()`).
 - Return `View` responses from controller actions, passing:
   - `viewPath` – path relative to `{basePath}/Views/`, without `.html`.
   - `data` – array or object; merged with request context.

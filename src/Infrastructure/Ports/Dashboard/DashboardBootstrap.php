@@ -37,13 +37,13 @@ final class DashboardBootstrap
 
     private static function registerSettings(Container $container, string $basePath): void
     {
-        $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in'));
+        $mvcConfig = MvcConfig::load($basePath);
+        $container->set(MvcConfig::class, $mvcConfig);
         $container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
-        $container->set(LanguageSettings::class, new LanguageSettings(basePath: $basePath));
-        $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
-
-        $publicApplicationUrl = getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost';
-        $container->set(PublicApplicationUrl::class, new PublicApplicationUrl($publicApplicationUrl));
+        $container->set(LanguageSettings::class, $mvcConfig->languageSettings($basePath));
+        $container->set(AuthSettings::class, $mvcConfig->authSettings());
+        $container->set(PublicApplicationUrl::class, $mvcConfig->publicApplicationUrl());
+        $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig($mvcConfig));
 
         $container->set(
             DashboardSettings::class,

@@ -12,10 +12,19 @@
       "label": "dashboard"
     }
   ],
+  "authCookieName": "auth",
+  "authSignInPath": "/accounts/sign-in",
   "cssAssetsPath": "./assets/styles",
+  "defaultLanguage": "en",
   "devMainCssBundler": "app.css",
   "devMainJsBundler": "app.js",
   "jsAssetsPath": "./assets/scripts",
+  "languageCookieName": "lang",
+  "languages": [
+    "en"
+  ],
   "mainCssBundler": "app.min.css",
-  "mainJsBundler": "app.min.js"
+  "mainJsBundler": "app.min.js",
+  "publicApplicationUrl": "http://localhost",
+  "setLanguageUrl": "/set-language"
 }

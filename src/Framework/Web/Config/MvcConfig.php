@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Framework\Web\Config;
 
+use Framework\Web\AuthSettings;
+use Framework\Web\LanguageSettings;
 use RuntimeException;
 
 final readonly class MvcConfig
@@ -12,6 +14,7 @@ final readonly class MvcConfig
 
     /**
      * @param list<AssetRouteGroup> $assetRoutes
+     * @param list<string> $languages
      */
     public function __construct(
         public string $jsAssetsPath,
@@ -29,6 +32,13 @@ final readonly class MvcConfig
         public string $devMainJsBundler,
         public string $devMainCssBundler,
         public bool $useDevAssets,
+        public string $publicApplicationOrigin,
+        public string $authSignInPath,
+        public string $authCookieName,
+        public array $languages,
+        public string $languageCookieName,
+        public string $defaultLanguage,
+        public string $setLanguageUrl,
     ) {
     }
 
@@ -50,6 +60,13 @@ final readonly class MvcConfig
             devMainJsBundler: 'main.js',
             devMainCssBundler: 'main.css',
             useDevAssets: false,
+            publicApplicationOrigin: 'http://localhost',
+            authSignInPath: '/accounts/sign-in',
+            authCookieName: 'auth',
+            languages: ['en'],
+            languageCookieName: 'lang',
+            defaultLanguage: 'en',
+            setLanguageUrl: '/set-language',
         );
     }
 
@@ -81,6 +98,15 @@ final readonly class MvcConfig
     private static function fromArray(array $data): self
     {
         $defaults = self::defaults();
+        [$languages, $defaultLanguage] = self::normalizeLanguagesFromArray($data, $defaults);
+        $publicApplicationOrigin = self::getString(
+            $data,
+            'publicApplicationUrl',
+            $defaults->publicApplicationOrigin
+        );
+        if (trim($publicApplicationOrigin) === '') {
+            $publicApplicationOrigin = $defaults->publicApplicationOrigin;
+        }
 
         return new self(
             jsAssetsPath: self::getString($data, 'jsAssetsPath', $defaults->jsAssetsPath),
@@ -106,7 +132,33 @@ final readonly class MvcConfig
             devMainJsBundler: self::getString($data, 'devMainJsBundler', $defaults->devMainJsBundler),
             devMainCssBundler: self::getString($data, 'devMainCssBundler', $defaults->devMainCssBundler),
             useDevAssets: self::getBool($data, 'useDevAssets', $defaults->useDevAssets),
+            publicApplicationOrigin: $publicApplicationOrigin,
+            authSignInPath: self::getString($data, 'authSignInPath', $defaults->authSignInPath),
+            authCookieName: self::getString($data, 'authCookieName', $defaults->authCookieName),
+            languages: $languages,
+            languageCookieName: self::getString($data, 'languageCookieName', $defaults->languageCookieName),
+            defaultLanguage: $defaultLanguage,
+            setLanguageUrl: self::getString($data, 'setLanguageUrl', $defaults->setLanguageUrl),
         );
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array{0: list<string>, 1: string}
+     */
+    private static function normalizeLanguagesFromArray(array $data, self $defaults): array
+    {
+        $raw = self::getStringList($data, 'languages');
+        $languages = $raw !== [] ? $raw : $defaults->languages;
+        $defaultLanguage = self::getString($data, 'defaultLanguage', $defaults->defaultLanguage);
+        if (trim($defaultLanguage) === '') {
+            $defaultLanguage = $defaults->defaultLanguage;
+        }
+        if (!in_array($defaultLanguage, $languages, true)) {
+            array_unshift($languages, $defaultLanguage);
+        }
+
+        return [$languages, $defaultLanguage];
     }
 
     /**
@@ -231,6 +283,13 @@ final readonly class MvcConfig
             'devMainJsBundler' => $d->devMainJsBundler,
             'devMainCssBundler' => $d->devMainCssBundler,
             'useDevAssets' => $d->useDevAssets,
+            'publicApplicationUrl' => $d->publicApplicationOrigin,
+            'authSignInPath' => $d->authSignInPath,
+            'authCookieName' => $d->authCookieName,
+            'languages' => $d->languages,
+            'languageCookieName' => $d->languageCookieName,
+            'defaultLanguage' => $d->defaultLanguage,
+            'setLanguageUrl' => $d->setLanguageUrl,
         ];
 
         if (is_file($configPath)) {
@@ -243,7 +302,7 @@ final readonly class MvcConfig
                         if (!array_key_exists($key, $decoded)) {
                             continue;
                         }
-                        if ($key === 'assetRoutes' && is_array($decoded[$key])) {
+                        if (($key === 'assetRoutes' || $key === 'languages') && is_array($decoded[$key])) {
                             $data[$key] = $decoded[$key];
                             continue;
                         }
@@ -358,6 +417,28 @@ final readonly class MvcConfig
         }
 
         return $value;
+    }
+
+    public function languageSettings(string $basePath): LanguageSettings
+    {
+        return new LanguageSettings(
+            basePath: $basePath,
+            assetsPath: $this->normalizedI18nAssetsPathForLanguageSettings(),
+            languages: $this->languages,
+            cookieName: $this->languageCookieName,
+            defaultValue: $this->defaultLanguage,
+            setUrl: $this->setLanguageUrl,
+        );
+    }
+
+    public function authSettings(): AuthSettings
+    {
+        return new AuthSettings($this->authSignInPath, $this->authCookieName);
+    }
+
+    public function publicApplicationUrl(): PublicApplicationUrl
+    {
+        return new PublicApplicationUrl($this->publicApplicationOrigin);
     }
 
     /**

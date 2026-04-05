@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web\Config;
 
+use Framework\Web\AuthSettings;
 use Framework\Web\Config\MvcConfig;
+use Framework\Web\Config\PublicApplicationUrl;
+use Framework\Web\LanguageSettings;
 use Framework\Web\UiAssetsSettings;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +42,13 @@ final class MvcConfigTest extends TestCase
         $this->assertSame('main.js', $config->devMainJsBundler);
         $this->assertSame('main.css', $config->devMainCssBundler);
         $this->assertFalse($config->useDevAssets);
+        $this->assertSame('http://localhost', $config->publicApplicationOrigin);
+        $this->assertSame('/accounts/sign-in', $config->authSignInPath);
+        $this->assertSame('auth', $config->authCookieName);
+        $this->assertSame(['en'], $config->languages);
+        $this->assertSame('lang', $config->languageCookieName);
+        $this->assertSame('en', $config->defaultLanguage);
+        $this->assertSame('/set-language', $config->setLanguageUrl);
     }
 
     public function testNormalizationRemovesDotSlashAndTrailingSlashes(): void
@@ -176,5 +186,75 @@ final class MvcConfigTest extends TestCase
         $config = MvcConfig::load($base);
         $this->assertTrue($config->isBackgroundTasksEnabled());
         $this->assertSame(45, $config->backgroundTasksPollIntervalSeconds);
+    }
+
+    public function testFactoryMethodsBuildWebSettings(): void
+    {
+        vfsStream::setup('app', null, [
+            MvcConfig::CONFIG_FILENAME => json_encode([
+                'jsAssetsPath' => './assets/scripts',
+                'mainJsBundler' => 'main.min.js',
+                'cssAssetsPath' => './assets/styles',
+                'mainCssBundler' => 'main.min.css',
+                'i18nPath' => './assets/i18n',
+                'migrationsFolderPath' => '',
+                'migrationsEnabled' => false,
+                'backgroundTasksFolderPath' => '',
+                'backgroundTasksEnabled' => false,
+                'backgroundTasksPollIntervalSeconds' => 0,
+                'authenticationEnabled' => false,
+                'publicApplicationUrl' => 'https://app.example.com',
+                'authSignInPath' => '/login',
+                'authCookieName' => 'session',
+                'languages' => ['en', 'es'],
+                'languageCookieName' => 'locale',
+                'defaultLanguage' => 'es',
+                'setLanguageUrl' => '/locale',
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $base = vfsStream::url('app');
+        $config = MvcConfig::load($base);
+
+        $lang = $config->languageSettings($base);
+        $this->assertInstanceOf(LanguageSettings::class, $lang);
+        $this->assertSame(['en', 'es'], $lang->languages);
+        $this->assertSame('locale', $lang->cookieName);
+        $this->assertSame('es', $lang->defaultValue);
+        $this->assertSame('/locale', $lang->setUrl);
+
+        $auth = $config->authSettings();
+        $this->assertInstanceOf(AuthSettings::class, $auth);
+        $this->assertSame('/login', $auth->signInPath);
+        $this->assertSame('session', $auth->cookieName);
+
+        $public = $config->publicApplicationUrl();
+        $this->assertInstanceOf(PublicApplicationUrl::class, $public);
+        $this->assertSame('https://app.example.com', $public->origin());
+    }
+
+    public function testDefaultLanguageIsPrependedWhenNotInLanguagesList(): void
+    {
+        vfsStream::setup('app', null, [
+            MvcConfig::CONFIG_FILENAME => json_encode([
+                'jsAssetsPath' => './assets/scripts',
+                'mainJsBundler' => 'main.min.js',
+                'cssAssetsPath' => './assets/styles',
+                'mainCssBundler' => 'main.min.css',
+                'i18nPath' => './assets/i18n',
+                'migrationsFolderPath' => '',
+                'migrationsEnabled' => false,
+                'backgroundTasksFolderPath' => '',
+                'backgroundTasksEnabled' => false,
+                'backgroundTasksPollIntervalSeconds' => 0,
+                'authenticationEnabled' => false,
+                'languages' => ['fr'],
+                'defaultLanguage' => 'de',
+            ], JSON_THROW_ON_ERROR),
+        ]);
+
+        $config = MvcConfig::load(vfsStream::url('app'));
+        $this->assertSame(['de', 'fr'], $config->languages);
+        $this->assertSame('de', $config->defaultLanguage);
     }
 }

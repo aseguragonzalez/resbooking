@@ -65,7 +65,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use DI\Container;
-use Framework\Config\MvcConfig;
+use Framework\Web\Config\MvcConfig;
 use Framework\Requests\RequestContext;
 use Infrastructure\Container\PhpDiMutableContainer;
 use My\Ports\MyApp\MyApp;

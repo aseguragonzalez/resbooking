@@ -196,6 +196,13 @@ final class CreateAppCommand implements Command
                 'backgroundTasksEnabled' => false,
                 'backgroundTasksPollIntervalSeconds' => 0,
                 'authenticationEnabled' => false,
+                'publicApplicationUrl' => $config->publicApplicationOrigin,
+                'authSignInPath' => $config->authSignInPath,
+                'authCookieName' => $config->authCookieName,
+                'languages' => $config->languages,
+                'languageCookieName' => $config->languageCookieName,
+                'defaultLanguage' => $config->defaultLanguage,
+                'setLanguageUrl' => $config->setLanguageUrl,
             ],
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
         );
