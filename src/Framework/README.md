@@ -89,6 +89,7 @@ Public knobs on `MvcWebApp`:
 - `useAuthentication()` – run authentication middleware (identity on `RequestContext`).
 - `useRouteAccessControl()` – enforce each route’s `authRequired` / `roles`; **must** be called after `useAuthentication()`.
 - `useCsrfProtection()` – validate CSRF tokens on state-changing requests.
+- `useErrorSettings(ErrorSettings $settings)` – exception-to-view mapping for `Middlewares\ErrorHandling`; call from the HTTP entrypoint before `run()` / `handleRequest()`. If omitted, `ErrorSettings::frameworkDefault()` is used.
 
 **Authentication vs route access control:** Public routes ignore roles. You can enable **authentication only** (signed-in user, no route-level enforcement) or add **route access control** to enforce `authRequired` and `roles`. Route access control does not run without authentication.
 

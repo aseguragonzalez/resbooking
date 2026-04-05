@@ -17,9 +17,10 @@ use Psr\Log\LoggerInterface;
 /**
  * Outermost middleware: catches throwables, logs them, and renders an HTML error view.
  *
- * {@see ErrorSettings} maps exception types to status code and template. Resolution walks the
- * exception class hierarchy (concrete class first, then each parent) and uses the first mapping
- * found; if none match, {@see ErrorSettings::$errorsMappingDefaultValue} is used.
+ * {@see ErrorSettings} maps exception types to status code and template; the HTTP app passes it
+ * via {@see \Framework\MvcWebApp::useErrorSettings()} (or {@see ErrorSettings::frameworkDefault()}).
+ * Resolution walks the exception class hierarchy (concrete class first, then each parent) and uses
+ * the first mapping found; if none match, {@see ErrorSettings::$errorsMappingDefaultValue} is used.
  */
 final class ErrorHandling extends Middleware
 {

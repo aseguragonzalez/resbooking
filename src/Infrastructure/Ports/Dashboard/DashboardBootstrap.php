@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
-use Domain\Restaurants\Exceptions\DiningAreaNotFound;
 use Framework\AuthSettings;
 use Framework\Config\MvcConfig;
 use Framework\Config\PublicApplicationUrl;
-use Framework\ErrorMapping;
-use Framework\ErrorSettings;
 use Framework\HtmlViewEngineSettings;
 use Framework\LanguageSettings;
-use Framework\Routes\AccessDeniedException;
-use Framework\Routes\AuthenticationRequiredException;
-use Framework\Routes\RouteDoesNotFoundException;
 use Framework\Routes\Router;
 use Framework\Web\Dependencies as MvcWebDependencies;
 use Framework\Security\Domain\Services\ChallengeNotificator;
@@ -46,7 +40,6 @@ final class DashboardBootstrap
     {
         $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in'));
         $container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
-        $container->set(ErrorSettings::class, self::errorSettings());
         $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));
         $container->set(LanguageSettings::class, new LanguageSettings(basePath: $basePath));
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
@@ -111,43 +104,6 @@ final class DashboardBootstrap
 
         $container->set(Router::class, RouterBuilder::build());
         MvcWebDependencies::configure(new PhpDiMutableContainer($container));
-    }
-
-    private static function errorSettings(): ErrorSettings
-    {
-        $errorsMapping = [
-            RouteDoesNotFoundException::class => new ErrorMapping(
-                statusCode: 404,
-                templateName: 'Shared/404',
-                pageTitle: '{{notFound.title}}'
-            ),
-            DiningAreaNotFound::class => new ErrorMapping(
-                statusCode: 404,
-                templateName: 'Shared/404',
-                pageTitle: '{{notFound.title}}'
-            ),
-            AuthenticationRequiredException::class => new ErrorMapping(
-                statusCode: 401,
-                templateName: 'Shared/401',
-                pageTitle: '{{unauthenticated.title}}'
-            ),
-            AccessDeniedException::class => new ErrorMapping(
-                statusCode: 403,
-                templateName: 'Shared/403',
-                pageTitle: '{{accessDenied.title}}'
-            ),
-        ];
-
-        $defaultErrorMapping = new ErrorMapping(
-            statusCode: 500,
-            templateName: 'Shared/500',
-            pageTitle: '{{internalServerError.title}}'
-        );
-
-        return new ErrorSettings(
-            errorsMapping: $errorsMapping,
-            errorsMappingDefaultValue: $defaultErrorMapping
-        );
     }
 
     private static function logLevel(string $logLevel): Level

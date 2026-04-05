@@ -40,7 +40,6 @@ final class {{name}}Bootstrap
     private static function registerSettings(Container $container, string $basePath): void
     {
         $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
-        $container->set(ErrorSettings::class, self::errorSettings());
         $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));
         $config = MvcConfig::load(basePath: $basePath);
         $container->set(LanguageSettings::class, new LanguageSettings(
@@ -106,7 +105,7 @@ final class {{name}}Bootstrap
         MvcWebDependencies::configure(new PhpDiMutableContainer($container));
     }
 
-    private static function errorSettings(): ErrorSettings
+    public static function errorSettings(): ErrorSettings
     {
         $errorsMapping = [
             RouteDoesNotFoundException::class => new ErrorMapping(

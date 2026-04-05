@@ -14,4 +14,20 @@ final readonly class ErrorSettings
     public function __construct(public array $errorsMapping, public ErrorMapping $errorsMappingDefaultValue)
     {
     }
+
+    /**
+     * Minimal mapping used when {@see \Framework\MvcWebApp::useErrorSettings()} was not called.
+     * Applications should pass explicit {@see ErrorSettings} from the HTTP entrypoint.
+     */
+    public static function frameworkDefault(): self
+    {
+        return new self(
+            errorsMapping: [],
+            errorsMappingDefaultValue: new ErrorMapping(
+                statusCode: 500,
+                templateName: 'Shared/500',
+                pageTitle: 'Internal Server Error'
+            ),
+        );
+    }
 }

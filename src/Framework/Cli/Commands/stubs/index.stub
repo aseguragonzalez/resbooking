@@ -22,4 +22,5 @@ $requestCreator = $wrapped->get(ServerRequestCreator::class);
 $request = $requestCreator->fromGlobals();
 
 $app = new {{name}}App(container: $wrapped, basePath: __DIR__);
+$app->useErrorSettings({{name}}Bootstrap::errorSettings());
 $app->run($request);

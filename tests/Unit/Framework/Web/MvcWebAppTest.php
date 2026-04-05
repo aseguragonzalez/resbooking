@@ -6,6 +6,8 @@ namespace Tests\Unit\Framework\Web;
 
 use DI\Container;
 use DI\NotFoundException;
+use Framework\ErrorMapping;
+use Framework\ErrorSettings;
 use Framework\MvcWebApp;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Nyholm\Psr7\Response;
@@ -93,6 +95,28 @@ final class MvcWebAppTest extends TestCase
     {
         $app = $this->createThrowingApp(new \Exception('generic'));
         $this->assertSame(1, $app->run($this->createStub(ServerRequestInterface::class)));
+    }
+
+
+    public function testUseErrorSettingsStoresSettings(): void
+    {
+        $settings = new ErrorSettings(
+            errorsMapping: [\InvalidArgumentException::class => new ErrorMapping(400, 't', 't')],
+            errorsMappingDefaultValue: new ErrorMapping(500, 'd', 'd'),
+        );
+        $app = new class (new PhpDiMutableContainer(new Container()), '/tmp') extends MvcWebApp {
+            public function __construct(ContainerInterface $container, string $basePath)
+            {
+                parent::__construct($container, $basePath);
+            }
+        };
+
+        $app->useErrorSettings($settings);
+
+        $reflection = new \ReflectionClass(MvcWebApp::class);
+        $prop = $reflection->getProperty('errorSettings');
+        $prop->setAccessible(true);
+        $this->assertSame($settings, $prop->getValue($app));
     }
 
     private function createThrowingApp(\Throwable $toThrow): MvcWebApp

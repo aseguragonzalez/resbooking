@@ -9,6 +9,7 @@ use Framework\Requests\RequestContext;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Ports\Dashboard\DashboardApp;
 use Infrastructure\Ports\Dashboard\DashboardBootstrap;
+use Infrastructure\Ports\Dashboard\DashboardErrorSettings;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContext;
 use Nyholm\Psr7Server\ServerRequestCreator;
 
@@ -22,6 +23,7 @@ $requestCreator = $wrapped->get(ServerRequestCreator::class);
 $request = $requestCreator->fromGlobals();
 
 $app = new DashboardApp(container: $wrapped, basePath: __DIR__);
+$app->useErrorSettings(DashboardErrorSettings::create());
 $app->addMiddleware(RestaurantContext::class);
 $app->useAuthentication();
 $app->useRouteAccessControl();

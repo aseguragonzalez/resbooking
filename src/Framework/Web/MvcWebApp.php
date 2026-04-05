@@ -13,10 +13,13 @@ use Framework\Middlewares\Localization;
 use Framework\Middlewares\Middleware;
 use Framework\Middlewares\RequestHandling;
 use Framework\Requests\RequestContext;
+use Framework\Views\ViewEngine;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * The base class for all MVC Web applications.
@@ -41,6 +44,7 @@ abstract class MvcWebApp extends WebApplication
         private bool $requireAuthentication = false,
         private bool $requireRouteAccessControl = false,
         private bool $enableCsrfProtection = false,
+        private ?ErrorSettings $errorSettings = null,
     ) {
         parent::__construct($container, $basePath);
     }
@@ -151,6 +155,16 @@ abstract class MvcWebApp extends WebApplication
         $this->enableCsrfProtection = true;
     }
 
+    /**
+     * Maps exception types to HTTP status and error views for {@see ErrorHandling}.
+     * Call from the HTTP entrypoint before {@see run()} or {@see handleRequest()}.
+     * If omitted, {@see ErrorSettings::frameworkDefault()} is used.
+     */
+    public function useErrorSettings(ErrorSettings $settings): void
+    {
+        $this->errorSettings = $settings;
+    }
+
     private function buildMiddlewareChain(): Middleware
     {
         /** @var RequestHandling $lastMiddleware */
@@ -197,8 +211,21 @@ abstract class MvcWebApp extends WebApplication
         $allowedHttpMethodsMiddleware->setNext($lastMiddleware);
         $lastMiddleware = $allowedHttpMethodsMiddleware;
 
-        /** @var ErrorHandling $errorMiddleware */
-        $errorMiddleware = $this->container->get(ErrorHandling::class);
+        $effectiveErrorSettings = $this->errorSettings ?? ErrorSettings::frameworkDefault();
+
+        /** @var LoggerInterface $logger */
+        $logger = $this->container->get(LoggerInterface::class);
+        /** @var ResponseFactoryInterface $responseFactory */
+        $responseFactory = $this->container->get(ResponseFactoryInterface::class);
+        /** @var ViewEngine $viewEngine */
+        $viewEngine = $this->container->get(ViewEngine::class);
+
+        $errorMiddleware = new ErrorHandling(
+            settings: $effectiveErrorSettings,
+            logger: $logger,
+            responseFactory: $responseFactory,
+            viewEngine: $viewEngine,
+        );
         $errorMiddleware->setNext($lastMiddleware);
 
         return $errorMiddleware;
