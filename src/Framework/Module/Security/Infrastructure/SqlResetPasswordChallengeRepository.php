@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Infrastructure;
+namespace Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\ResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\ResetPasswordChallengeRepository;
 use PDO;
 
 final readonly class SqlResetPasswordChallengeRepository implements ResetPasswordChallengeRepository

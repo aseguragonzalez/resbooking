@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
-use Framework\Routes\AuthenticationRequiredException;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
+use Framework\Web\Routes\AuthenticationRequiredException;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Fixtures\Routes\Route\RouteController;
 

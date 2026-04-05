@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Framework\Requests;
+namespace Framework\Web\Requests;
 
-use Framework\Actions\ActionParameterBuilder;
-use Framework\Actions\MvcAction;
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Config\PublicApplicationUrl;
-use Framework\Actions\Responses\LocalRedirectTo;
-use Framework\Actions\Responses\RedirectTo;
-use Framework\Actions\Responses\View;
-use Framework\Responses\StatusCode;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
-use Framework\Routes\Router;
-use Framework\Views\ViewEngine;
+use Framework\Web\Actions\ActionParameterBuilder;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Config\PublicApplicationUrl;
+use Framework\Web\Actions\Responses\LocalRedirectTo;
+use Framework\Web\Actions\Responses\RedirectTo;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\Responses\StatusCode;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
+use Framework\Web\Routes\Router;
+use Framework\Web\Views\ViewEngine;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

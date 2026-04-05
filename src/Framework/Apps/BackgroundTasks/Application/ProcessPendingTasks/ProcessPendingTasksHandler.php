@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Application\ProcessPendingTasks;
+namespace Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks;
 
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
-use Framework\BackgroundTasks\Domain\TaskBus;
-use Framework\BackgroundTasks\Domain\TransactionRunner;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\TaskBus;
+use Framework\Apps\BackgroundTasks\Domain\TransactionRunner;
 use Psr\Log\LoggerInterface;
 
 final readonly class ProcessPendingTasksHandler implements ProcessPendingTasks

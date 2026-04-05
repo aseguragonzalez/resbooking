@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Infrastructure;
+namespace Framework\Apps\Migrations\Infrastructure;
 
-use Framework\Migrations\Domain\Services\DatabaseBackupManager;
-use Framework\Migrations\MigrationsMysqlConnection;
+use Framework\Apps\Migrations\Domain\Services\DatabaseBackupManager;
+use Framework\Apps\Migrations\MigrationsMysqlConnection;
 
 final readonly class ShellDatabaseBackupManager implements DatabaseBackupManager
 {

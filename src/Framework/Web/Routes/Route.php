@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Routes;
+namespace Framework\Web\Routes;
 
-use Framework\Actions\MvcAction;
-use Framework\Controllers\Controller;
-use Framework\Security\Identity;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Controllers\Controller;
+use Framework\Module\Security\Identity;
 
 final class Route
 {

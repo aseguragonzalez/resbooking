@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\Middlewares\RequestHandling;
+use Framework\Web\Middlewares\RequestHandling;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use PHPUnit\Framework\TestCase;

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Framework\Middlewares;
+namespace Framework\Web\Middlewares;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\AuthSettings;
-use Framework\Requests\RequestContext;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Responses\StatusCode;
-use Framework\Security\Domain\Exceptions\SessionExpiredException;
-use Framework\Security\IdentityManager;
+use Framework\Web\AuthSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Web\Responses\StatusCode;
+use Framework\Module\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Module\Security\IdentityManager;
 
 final class Authentication extends Middleware
 {

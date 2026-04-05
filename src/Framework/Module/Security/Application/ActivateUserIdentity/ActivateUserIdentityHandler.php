@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ActivateUserIdentity;
+namespace Framework\Module\Security\Application\ActivateUserIdentity;
 
-use Framework\Security\Domain\Exceptions\SignUpChallengeException;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Exceptions\SignUpChallengeException;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class ActivateUserIdentityHandler implements ActivateUserIdentity
 {

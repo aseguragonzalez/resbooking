@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\BackgroundTasksDisableCommand;
-use Framework\Commands\BackgroundTasksEnableCommand;
-use Framework\Commands\BackgroundTasksRunCommand;
-use Framework\Commands\ConsoleOutput;
-use Framework\Config\MvcConfig;
+use Framework\Cli\Commands\BackgroundTasksDisableCommand;
+use Framework\Cli\Commands\BackgroundTasksEnableCommand;
+use Framework\Cli\Commands\BackgroundTasksRunCommand;
+use Framework\Cli\Commands\ConsoleOutput;
+use Framework\Web\Config\MvcConfig;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

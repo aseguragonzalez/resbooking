@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Infrastructure;
+namespace Tests\Unit\Framework\Apps\Migrations\Infrastructure;
 
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
-use Framework\Migrations\Infrastructure\SqlSchemaSnapshotExecutor;
+use Framework\Apps\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use Framework\Apps\Migrations\Infrastructure\SqlSchemaSnapshotExecutor;
 
 final class SqlSchemaSnapshotExecutorTest extends TestCase
 {

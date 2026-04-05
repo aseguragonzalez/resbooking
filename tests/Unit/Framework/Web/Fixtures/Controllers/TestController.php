@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Fixtures\Controllers;
 
-use Framework\Actions\MvcAction;
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Controllers\Controller;
-use Framework\Responses\Headers\Header;
-use Framework\Responses\StatusCode;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Controllers\Controller;
+use Framework\Web\Responses\Headers\Header;
+use Framework\Web\Responses\StatusCode;
 use Psr\Http\Message\ServerRequestInterface;
 use Tests\Unit\Framework\Fixtures\Requests\EditRequest;
 use Tests\Unit\Framework\Fixtures\Requests\FindRequest;

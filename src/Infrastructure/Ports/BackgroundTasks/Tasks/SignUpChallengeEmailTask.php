@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\BackgroundTasks\Tasks;
 
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Task;
 
 final readonly class SignUpChallengeEmailTask extends Task
 {

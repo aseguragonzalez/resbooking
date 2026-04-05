@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Domain\Exceptions;
+namespace Tests\Unit\Framework\Module\Security\Domain\Exceptions;
 
-use Framework\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Module\Security\Domain\Exceptions\SessionExpiredException;
 use PHPUnit\Framework\TestCase;
 
 final class SessionExpiredExceptionTest extends TestCase

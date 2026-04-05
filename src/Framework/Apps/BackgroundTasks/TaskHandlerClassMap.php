@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks;
+namespace Framework\Apps\BackgroundTasks;
 
 /**
  * Maps task type strings to TaskHandler implementation class names.

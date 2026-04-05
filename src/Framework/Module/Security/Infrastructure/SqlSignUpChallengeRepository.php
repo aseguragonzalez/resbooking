@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Infrastructure;
+namespace Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\SignUpChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
 use PDO;
 
 final readonly class SqlSignUpChallengeRepository implements SignUpChallengeRepository

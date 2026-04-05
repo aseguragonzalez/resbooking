@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Infrastructure;
+namespace Framework\Apps\BackgroundTasks\Infrastructure;
 
 use DI\Container;
-use Framework\BackgroundTasks\Domain\TaskHandler;
-use Framework\BackgroundTasks\Domain\TaskHandlerRegistry;
-use Framework\BackgroundTasks\TaskHandlerClassMap;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandler;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\TaskHandlerClassMap;
 
 final class ContainerTaskHandlerRegistry implements TaskHandlerRegistry
 {

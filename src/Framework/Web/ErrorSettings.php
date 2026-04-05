@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace Framework\Web;
 
 final readonly class ErrorSettings
 {
     /**
      * @param array<class-string<\Throwable>, ErrorMapping> $errorsMapping Per throwable class;
-     *   {@see \Framework\Middlewares\ErrorHandling} matches the thrown instance's class and its parents
+     *   {@see \Framework\Web\Middlewares\ErrorHandling} matches the thrown instance's class and its parents
      * @param ErrorMapping $errorsMappingDefaultValue Used when no entry matches the exception hierarchy
      */
     public function __construct(public array $errorsMapping, public ErrorMapping $errorsMappingDefaultValue)
@@ -16,7 +16,7 @@ final readonly class ErrorSettings
     }
 
     /**
-     * Minimal mapping used when {@see \Framework\MvcWebApp::useErrorSettings()} was not called.
+     * Minimal mapping used when {@see \Framework\Web\MvcWebApp::useErrorSettings()} was not called.
      * Applications should pass explicit {@see ErrorSettings} from the HTTP entrypoint.
      */
     public static function frameworkDefault(): self

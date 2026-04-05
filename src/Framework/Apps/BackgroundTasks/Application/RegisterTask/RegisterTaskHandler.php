@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Application\RegisterTask;
+namespace Framework\Apps\BackgroundTasks\Application\RegisterTask;
 
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\Task;
 
 final readonly class RegisterTaskHandler implements RegisterTask
 {

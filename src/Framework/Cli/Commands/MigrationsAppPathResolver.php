@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Commands;
+namespace Framework\Cli\Commands;
 
-use Framework\Config\MvcConfig;
+use Framework\Web\Config\MvcConfig;
 
 /**
  * Resolves the migrations module index.php from the MVC app root or from an explicit leaf directory.

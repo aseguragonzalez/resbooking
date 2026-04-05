@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\ResetPasswordFromToken;
+namespace Tests\Unit\Framework\Module\Security\Application\ResetPasswordFromToken;
 
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenCommand;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenHandler;
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\ResetPasswordChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenCommand;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenHandler;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\ResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ResetPasswordFromTokenTest extends TestCase

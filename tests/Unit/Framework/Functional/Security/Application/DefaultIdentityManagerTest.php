@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application;
+namespace Tests\Unit\Framework\Module\Security\Application;
 
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
-use Framework\Security\Application\DefaultIdentityManager;
-use Framework\Security\Application\GetIdentity\GetIdentity;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSession;
-use Framework\Security\Application\RequestResetPassword\RequestResetPassword;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
-use Framework\Security\Application\SignIn\SignIn;
-use Framework\Security\Application\SignOut\SignOut;
-use Framework\Security\Application\SignUp\SignUp;
-use Framework\Security\Challenge;
-use Framework\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Module\Security\Application\DefaultIdentityManager;
+use Framework\Module\Security\Application\GetIdentity\GetIdentity;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSession;
+use Framework\Module\Security\Application\RequestResetPassword\RequestResetPassword;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
+use Framework\Module\Security\Application\SignIn\SignIn;
+use Framework\Module\Security\Application\SignOut\SignOut;
+use Framework\Module\Security\Application\SignUp\SignUp;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -118,10 +118,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testActivateUserIdentityDoesNothingIfChallengeNotFound(): void
     {
         $this->activateUserIdentity->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\SignUpChallengeException('token')
+            new \Framework\Module\Security\Domain\Exceptions\SignUpChallengeException('token')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\SignUpChallengeException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\SignUpChallengeException::class);
 
         $this->manager->activateUserIdentity('token');
     }
@@ -129,10 +129,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testActivateUserIdentityDoesNothingIfChallengeExpired(): void
     {
         $this->activateUserIdentity->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\SignUpChallengeException('token')
+            new \Framework\Module\Security\Domain\Exceptions\SignUpChallengeException('token')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\SignUpChallengeException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\SignUpChallengeException::class);
 
         $this->manager->activateUserIdentity('token');
     }
@@ -140,10 +140,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testSignInThrowsIfUserNotFound(): void
     {
         $this->signIn->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\InvalidCredentialsException('user')
+            new \Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException('user')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\InvalidCredentialsException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException::class);
 
         $this->manager->signIn('user', 'pass', false);
     }
@@ -151,10 +151,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testSignInThrowsIfPasswordInvalid(): void
     {
         $this->signIn->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\InvalidCredentialsException('user')
+            new \Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException('user')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\InvalidCredentialsException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException::class);
 
         $this->manager->signIn('user', 'wrongpass', false);
     }
@@ -188,10 +188,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testRefreshSignInSessionThrowsSessionExpiredIfSessionNotFound(): void
     {
         $this->refreshSignInSession->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\SessionExpiredException()
+            new \Framework\Module\Security\Domain\Exceptions\SessionExpiredException()
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\SessionExpiredException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\SessionExpiredException::class);
 
         $this->manager->refreshSignInSession('token');
     }
@@ -199,10 +199,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testRefreshSignInSessionThrowsSessionExpiredIfChallengeExpired(): void
     {
         $this->refreshSignInSession->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\SessionExpiredException()
+            new \Framework\Module\Security\Domain\Exceptions\SessionExpiredException()
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\SessionExpiredException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\SessionExpiredException::class);
 
         $this->manager->refreshSignInSession('token');
     }
@@ -227,10 +227,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testModifyUserIdentityPasswordThrowsIfUserNotFound(): void
     {
         $this->modifyUserIdentityPassword->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\UserIsNotFoundException('user@domain.com')
+            new \Framework\Module\Security\Domain\Exceptions\UserIsNotFoundException('user@domain.com')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\UserIsNotFoundException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\UserIsNotFoundException::class);
 
         $this->manager->modifyUserIdentityPassword('token', 'old', 'new');
     }
@@ -280,10 +280,10 @@ final class DefaultIdentityManagerTest extends TestCase
     public function testResetPasswordFromTokenThrowsIfChallengeExpired(): void
     {
         $this->resetPasswordFromToken->method('execute')->willThrowException(
-            new \Framework\Security\Domain\Exceptions\ResetPasswordChallengeException('token')
+            new \Framework\Module\Security\Domain\Exceptions\ResetPasswordChallengeException('token')
         );
 
-        $this->expectException(\Framework\Security\Domain\Exceptions\ResetPasswordChallengeException::class);
+        $this->expectException(\Framework\Module\Security\Domain\Exceptions\ResetPasswordChallengeException::class);
 
         $this->manager->resetPasswordFromToken('token', 'newpass');
     }

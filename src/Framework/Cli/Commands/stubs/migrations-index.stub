@@ -5,9 +5,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
-use Framework\Config\MvcConfig;
+use Framework\Web\Config\MvcConfig;
 use Infrastructure\Container\PhpDiMutableContainer;
-use Framework\Migrations\MigrationApp;
+use Framework\Apps\Migrations\MigrationApp;
 use {{namespace}}\MigrationsBootstrap;
 
 // __DIR__ points to the migration module folder under the app root.

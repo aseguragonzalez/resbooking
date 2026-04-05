@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Routes\DuplicatedRouteException;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
-use Framework\Routes\Router;
-use Framework\Routes\RouteDoesNotFoundException;
+use Framework\Web\Routes\DuplicatedRouteException;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
+use Framework\Web\Routes\Router;
+use Framework\Web\Routes\RouteDoesNotFoundException;
 use Tests\Unit\Framework\Fixtures\Routes\Router\RouterController;
 
 final class RouterTest extends TestCase

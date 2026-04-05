@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Actions\Responses;
+namespace Framework\Web\Actions\Responses;
 
-use Framework\Responses\Headers\ContentType;
-use Framework\Responses\Headers\Header;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\StatusCode;
+use Framework\Web\Responses\Headers\ContentType;
+use Framework\Web\Responses\Headers\Header;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\StatusCode;
 
 final class RedirectTo extends ActionResponse
 {

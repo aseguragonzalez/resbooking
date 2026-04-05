@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Infrastructure;
+namespace Framework\Apps\Migrations\Infrastructure;
 
-use Framework\Migrations\Domain\Clients\DbClient;
+use Framework\Apps\Migrations\Domain\Clients\DbClient;
 use PDO;
 
 final readonly class SqlDbClient implements DbClient

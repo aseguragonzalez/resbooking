@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Middlewares;
+namespace Framework\Web\Middlewares;
 
-use Framework\Requests\RequestContext;
-use Framework\Requests\RequestContextKeys;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Responses\StatusCode;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Requests\RequestContextKeys;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Web\Responses\StatusCode;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

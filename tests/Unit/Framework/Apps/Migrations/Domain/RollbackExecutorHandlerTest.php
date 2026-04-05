@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
-use Framework\Files\FileManager;
-use Framework\Migrations\Domain\Clients\DbClient;
-use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
+use Framework\Module\Files\FileManager;
+use Framework\Apps\Migrations\Domain\Clients\DbClient;
+use Framework\Apps\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutorHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Domain\Entities;
+namespace Tests\Unit\Framework\Module\Security\Domain\Entities;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Security\Domain\Entities\SignUpChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
 
 final class SignUpChallengeTest extends TestCase
 {

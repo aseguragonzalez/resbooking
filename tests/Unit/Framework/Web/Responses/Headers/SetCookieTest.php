@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Responses\Headers;
+namespace Tests\Unit\Framework\Web\Responses\Headers;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Responses\Headers\SetCookie;
+use Framework\Web\Responses\Headers\SetCookie;
 
 final class SetCookieTest extends TestCase
 {

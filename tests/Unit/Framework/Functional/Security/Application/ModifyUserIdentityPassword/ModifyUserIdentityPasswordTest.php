@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\ModifyUserIdentityPassword;
+namespace Tests\Unit\Framework\Module\Security\Application\ModifyUserIdentityPassword;
 
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordCommand;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordHandler;
-use Framework\Security\Challenge;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordCommand;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordHandler;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ModifyUserIdentityPasswordTest extends TestCase

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ResetPasswordFromToken;
+namespace Framework\Module\Security\Application\ResetPasswordFromToken;
 
-use Framework\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Framework\Security\Domain\Repositories\ResetPasswordChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Exceptions\ResetPasswordChallengeException;
+use Framework\Module\Security\Domain\Repositories\ResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class ResetPasswordFromTokenHandler implements ResetPasswordFromToken
 {

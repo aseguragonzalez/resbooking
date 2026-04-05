@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\AuthenticationDisableCommand;
-use Framework\Commands\AuthenticationEnableCommand;
-use Framework\Commands\ConsoleOutput;
-use Framework\Config\MvcConfig;
+use Framework\Cli\Commands\AuthenticationDisableCommand;
+use Framework\Cli\Commands\AuthenticationEnableCommand;
+use Framework\Cli\Commands\ConsoleOutput;
+use Framework\Web\Config\MvcConfig;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

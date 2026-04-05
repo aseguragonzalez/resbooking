@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks\Handlers;
 
 use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Domain\TaskHandler;
-use Framework\Files\FileManager;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandler;
+use Framework\Module\Files\FileManager;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;
 use Infrastructure\Ports\BackgroundTasks\Settings\ChallengeEmailSettings;
 use Infrastructure\Ports\BackgroundTasks\Tasks\SignUpChallengeEmailTask;

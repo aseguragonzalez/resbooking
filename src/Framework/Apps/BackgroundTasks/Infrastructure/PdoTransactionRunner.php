@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Infrastructure;
+namespace Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Domain\TransactionRunner;
+use Framework\Apps\BackgroundTasks\Domain\TransactionRunner;
 use PDO;
 
 final readonly class PdoTransactionRunner implements TransactionRunner

@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks;
+namespace Framework\Apps\BackgroundTasks;
 
 use Framework\Container\MutableContainer;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
-use Framework\BackgroundTasks\Domain\TaskBus;
-use Framework\BackgroundTasks\Domain\TaskHandlerRegistry;
-use Framework\BackgroundTasks\Domain\TransactionRunner;
-use Framework\BackgroundTasks\Infrastructure\ContainerTaskHandlerRegistry;
-use Framework\BackgroundTasks\Infrastructure\PdoTransactionRunner;
-use Framework\BackgroundTasks\Infrastructure\SqlTaskRepository;
-use Framework\BackgroundTasks\Infrastructure\TaskBusHandler;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTask;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\TaskBus;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\Domain\TransactionRunner;
+use Framework\Apps\BackgroundTasks\Infrastructure\ContainerTaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\Infrastructure\PdoTransactionRunner;
+use Framework\Apps\BackgroundTasks\Infrastructure\SqlTaskRepository;
+use Framework\Apps\BackgroundTasks\Infrastructure\TaskBusHandler;
 
 final class Dependencies
 {

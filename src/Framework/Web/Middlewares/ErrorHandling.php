@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Middlewares;
+namespace Framework\Web\Middlewares;
 
-use Framework\Actions\Responses\View;
-use Framework\ErrorMapping;
-use Framework\ErrorSettings;
-use Framework\Requests\RequestContext;
-use Framework\Views\ViewEngine;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\ErrorMapping;
+use Framework\Web\ErrorSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Views\ViewEngine;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  * Outermost middleware: catches throwables, logs them, and renders an HTML error view.
  *
  * {@see ErrorSettings} maps exception types to status code and template; the HTTP app passes it
- * via {@see \Framework\MvcWebApp::useErrorSettings()} (or {@see ErrorSettings::frameworkDefault()}).
+ * via {@see \Framework\Web\MvcWebApp::useErrorSettings()} (or {@see ErrorSettings::frameworkDefault()}).
  * Resolution walks the exception class hierarchy (concrete class first, then each parent) and uses
  * the first mapping found; if none match, {@see ErrorSettings::$errorsMappingDefaultValue} is used.
  */

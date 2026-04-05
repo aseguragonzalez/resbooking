@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\Repositories;
+namespace Framework\Apps\Migrations\Domain\Repositories;
 
-use Framework\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
 
 interface MigrationRepository
 {

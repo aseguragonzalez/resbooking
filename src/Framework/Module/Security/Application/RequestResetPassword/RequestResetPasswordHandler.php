@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\RequestResetPassword;
+namespace Framework\Module\Security\Application\RequestResetPassword;
 
-use Framework\Security\Domain\Services\ChallengeNotificator;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Repositories\ResetPasswordChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Services\ChallengeNotificator;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Repositories\ResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class RequestResetPasswordHandler implements RequestResetPassword
 {

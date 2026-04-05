@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Routes\Path;
+use Framework\Web\Routes\Path;
 
 final class PathTest extends TestCase
 {

@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Views;
+namespace Tests\Unit\Framework\Web\Views;
 
-use Framework\Files\FileManager;
-use Framework\Actions\Responses\View;
-use Framework\HtmlViewEngineSettings;
-use Framework\LanguageSettings;
-use Framework\Requests\RequestContext;
-use Framework\Requests\RequestContextKeys;
-use Framework\Responses\StatusCode;
-use Framework\Security\Identity;
-use Framework\Views\ContentReplacerPipeline;
-use Framework\Views\BranchesReplacer;
-use Framework\Views\HtmlViewEngine;
-use Framework\Views\I18nReplacer;
-use Framework\Views\ModelReplacer;
-use Framework\UiAssetsSettings;
-use Framework\Views\ViewValueResolver;
+use Framework\Module\Files\FileManager;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\HtmlViewEngineSettings;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Requests\RequestContextKeys;
+use Framework\Web\Responses\StatusCode;
+use Framework\Module\Security\Identity;
+use Framework\Web\Views\ContentReplacerPipeline;
+use Framework\Web\Views\BranchesReplacer;
+use Framework\Web\Views\HtmlViewEngine;
+use Framework\Web\Views\I18nReplacer;
+use Framework\Web\Views\ModelReplacer;
+use Framework\Web\UiAssetsSettings;
+use Framework\Web\Views\ViewValueResolver;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Fixtures\Views\BranchModel;

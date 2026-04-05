@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Commands;
+namespace Framework\Cli\Commands;
 
 /**
  * Resolves MVC app root from `--app-path` (default: current directory).

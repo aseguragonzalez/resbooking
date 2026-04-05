@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
-use Framework\Files\FileManager;
-use Framework\Migrations\Domain\Entities\Script;
+use Framework\Module\Files\FileManager;
+use Framework\Apps\Migrations\Domain\Entities\Script;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 

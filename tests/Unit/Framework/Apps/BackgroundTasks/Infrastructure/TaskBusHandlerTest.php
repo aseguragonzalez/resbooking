@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Infrastructure;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Domain\TaskHandler;
-use Framework\BackgroundTasks\Domain\TaskHandlerRegistry;
-use Framework\BackgroundTasks\Infrastructure\TaskBusHandler;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandler;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\Infrastructure\TaskBusHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

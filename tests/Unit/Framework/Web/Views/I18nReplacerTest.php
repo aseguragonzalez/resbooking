@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Views;
+namespace Tests\Unit\Framework\Web\Views;
 
-use Framework\Files\FileManager;
-use Framework\LanguageSettings;
-use Framework\Requests\RequestContext;
-use Framework\Requests\RequestContextKeys;
-use Framework\Views\I18nReplacer;
+use Framework\Module\Files\FileManager;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Requests\RequestContextKeys;
+use Framework\Web\Views\I18nReplacer;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 

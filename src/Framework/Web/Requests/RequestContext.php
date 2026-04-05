@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Requests;
+namespace Framework\Web\Requests;
 
-use Framework\Security\Identity;
+use Framework\Module\Security\Identity;
 
 final class RequestContext
 {

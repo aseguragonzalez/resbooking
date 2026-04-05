@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace Framework\Web;
 
-use Framework\Middlewares\AllowedHttpMethodsForHtmlUi;
-use Framework\Middlewares\Authentication;
-use Framework\Middlewares\Authorization;
-use Framework\Middlewares\CsrfProtection;
-use Framework\Middlewares\ErrorHandling;
-use Framework\Middlewares\Localization;
-use Framework\Middlewares\Middleware;
-use Framework\Middlewares\RequestHandling;
-use Framework\Requests\RequestContext;
-use Framework\Views\ViewEngine;
+use Framework\Web\Middlewares\AllowedHttpMethodsForHtmlUi;
+use Framework\Web\Middlewares\Authentication;
+use Framework\Web\Middlewares\Authorization;
+use Framework\Web\Middlewares\CsrfProtection;
+use Framework\Web\Middlewares\ErrorHandling;
+use Framework\Web\Middlewares\Localization;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Middlewares\RequestHandling;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Views\ViewEngine;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

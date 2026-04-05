@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Application;
+namespace Framework\Apps\Migrations\Application;
 
-use Framework\Migrations\Domain\Services\DatabaseBackupManager;
-use Framework\Migrations\Domain\Services\MigrationFileManager;
-use Framework\Migrations\Domain\Services\MigrationTestScopeFactory;
-use Framework\Migrations\Domain\Services\SchemaComparator;
+use Framework\Apps\Migrations\Domain\Services\DatabaseBackupManager;
+use Framework\Apps\Migrations\Domain\Services\MigrationFileManager;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScopeFactory;
+use Framework\Apps\Migrations\Domain\Services\SchemaComparator;
 
 final readonly class TestMigrationHandler implements TestMigration
 {

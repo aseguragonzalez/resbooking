@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Application;
+namespace Tests\Unit\Framework\Apps\Migrations\Application;
 
-use Framework\Migrations\Application\RunMigrationsHandler;
-use Framework\Migrations\Domain\Entities\Migration;
-use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Exceptions\MigrationException;
-use Framework\Migrations\Domain\Repositories\MigrationRepository;
-use Framework\Migrations\Domain\Services\MigrationExecutor;
-use Framework\Migrations\Domain\Services\MigrationFileManager;
-use Framework\Migrations\Domain\Services\RollbackExecutor;
+use Framework\Apps\Migrations\Application\RunMigrationsHandler;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Exceptions\MigrationException;
+use Framework\Apps\Migrations\Domain\Repositories\MigrationRepository;
+use Framework\Apps\Migrations\Domain\Services\MigrationExecutor;
+use Framework\Apps\Migrations\Domain\Services\MigrationFileManager;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutor;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;

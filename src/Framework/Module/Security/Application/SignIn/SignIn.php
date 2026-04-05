@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignIn;
+namespace Framework\Module\Security\Application\SignIn;
 
-use Framework\Security\Challenge;
+use Framework\Module\Security\Challenge;
 
 interface SignIn
 {

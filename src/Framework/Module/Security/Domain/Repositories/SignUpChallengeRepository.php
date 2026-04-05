@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Domain\Repositories;
+namespace Framework\Module\Security\Domain\Repositories;
 
-use Framework\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
 
 interface SignUpChallengeRepository
 {

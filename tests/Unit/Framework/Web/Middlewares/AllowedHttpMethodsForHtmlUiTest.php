@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\Middlewares\AllowedHttpMethodsForHtmlUi;
-use Framework\Middlewares\Middleware;
-use Framework\Middlewares\RequestHandling;
+use Framework\Web\Middlewares\AllowedHttpMethodsForHtmlUi;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Middlewares\RequestHandling;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;

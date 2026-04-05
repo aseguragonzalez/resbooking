@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Files;
+namespace Tests\Unit\Framework\Module\Files;
 
-use Framework\Files\DefaultFileManager;
+use Framework\Module\Files\DefaultFileManager;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

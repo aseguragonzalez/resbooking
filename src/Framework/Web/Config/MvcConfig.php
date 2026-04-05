@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Config;
+namespace Framework\Web\Config;
 
 use RuntimeException;
 

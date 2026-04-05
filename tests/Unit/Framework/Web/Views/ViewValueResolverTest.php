@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Views;
+namespace Tests\Unit\Framework\Web\Views;
 
-use Framework\Views\ViewValueResolver;
+use Framework\Web\Views\ViewValueResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ViewValueResolverTest extends TestCase

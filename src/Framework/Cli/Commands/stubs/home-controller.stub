@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace {{namespace}}\Controllers;
 
-use Framework\Actions\MvcAction;
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Controllers\Controller;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Controllers\Controller;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
 
 final class HomeController extends Controller
 {

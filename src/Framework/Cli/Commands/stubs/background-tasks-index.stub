@@ -5,8 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
-use Framework\BackgroundTasks\BackgroundTasksApp;
-use Framework\Config\MvcConfig;
+use Framework\Apps\BackgroundTasks\BackgroundTasksApp;
+use Framework\Web\Config\MvcConfig;
 use Infrastructure\Container\PhpDiMutableContainer;
 use {{namespace}}\BackgroundTasks\{{name}}BackgroundTasksBootstrap;
 

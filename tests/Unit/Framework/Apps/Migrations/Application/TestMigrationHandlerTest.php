@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Application;
+namespace Tests\Unit\Framework\Apps\Migrations\Application;
 
-use Framework\Migrations\Application\TestMigrationCommand;
-use Framework\Migrations\Application\TestMigrationHandler;
-use Framework\Migrations\Domain\Entities\Migration;
-use Framework\Migrations\Domain\Services\DatabaseBackupManager;
-use Framework\Migrations\Domain\Services\MigrationFileManager;
-use Framework\Migrations\Domain\Services\MigrationTestScope;
-use Framework\Migrations\Domain\Services\MigrationTestScopeFactory;
-use Framework\Migrations\Domain\Services\RollbackExecutor;
-use Framework\Migrations\Domain\Services\SchemaComparator;
-use Framework\Migrations\Domain\Services\SchemaComparisonResult;
-use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
-use Framework\Migrations\Domain\Services\TestMigrationExecutor;
-use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use Framework\Apps\Migrations\Application\TestMigrationCommand;
+use Framework\Apps\Migrations\Application\TestMigrationHandler;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Services\DatabaseBackupManager;
+use Framework\Apps\Migrations\Domain\Services\MigrationFileManager;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScope;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScopeFactory;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutor;
+use Framework\Apps\Migrations\Domain\Services\SchemaComparator;
+use Framework\Apps\Migrations\Domain\Services\SchemaComparisonResult;
+use Framework\Apps\Migrations\Domain\Services\SchemaSnapshotExecutor;
+use Framework\Apps\Migrations\Domain\Services\TestMigrationExecutor;
+use Framework\Apps\Migrations\Domain\ValueObjects\SchemaSnapshot;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 

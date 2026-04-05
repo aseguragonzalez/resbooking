@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignUp;
+namespace Framework\Module\Security\Application\SignUp;
 
-use Framework\Security\Domain\Services\ChallengeNotificator;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\SignUpChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Services\ChallengeNotificator;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class SignUpHandler implements SignUp
 {

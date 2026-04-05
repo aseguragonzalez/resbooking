@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Exceptions\MigrationException;
+use Framework\Apps\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Exceptions\MigrationException;
 
 final class MigrationExceptionTest extends TestCase
 {

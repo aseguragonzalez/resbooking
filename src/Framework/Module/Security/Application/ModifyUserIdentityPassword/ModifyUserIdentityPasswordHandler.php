@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ModifyUserIdentityPassword;
+namespace Framework\Module\Security\Application\ModifyUserIdentityPassword;
 
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Exceptions\SessionExpiredException;
-use Framework\Security\Domain\Exceptions\UserIsNotFoundException;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Module\Security\Domain\Exceptions\UserIsNotFoundException;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class ModifyUserIdentityPasswordHandler implements ModifyUserIdentityPassword
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Fixtures\Routes\Route;
 
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Controllers\Controller;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Controllers\Controller;
 
 /**
  * Intentionally no #[MvcAction] on get() for Route::create validation tests.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Framework\Actions\MvcAction;
+use Framework\Web\Actions\MvcAction;
 use Application\Restaurants\AddDiningArea\AddDiningAreaCommand;
 use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdQuery;
 use Application\Restaurants\GetDiningAreaById\GetDiningAreaByIdResult;
@@ -13,11 +13,11 @@ use Application\Restaurants\GetRestaurantById\GetRestaurantByIdQuery;
 use Application\Restaurants\GetRestaurantById\GetRestaurantByIdResult;
 use Application\Restaurants\RemoveDiningArea\RemoveDiningAreaCommand;
 use Application\Restaurants\UpdateDiningArea\UpdateDiningAreaCommand;
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Requests\RequestContext;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\DiningArea;
 use Infrastructure\Ports\Dashboard\Models\DiningAreas\Pages\DiningAreasList;

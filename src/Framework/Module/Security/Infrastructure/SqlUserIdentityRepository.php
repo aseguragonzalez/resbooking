@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Infrastructure;
+namespace Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PDO;
 
 final readonly class SqlUserIdentityRepository implements UserIdentityRepository

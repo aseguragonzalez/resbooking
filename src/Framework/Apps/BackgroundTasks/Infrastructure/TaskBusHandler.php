@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Infrastructure;
+namespace Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Domain\TaskBus;
-use Framework\BackgroundTasks\Domain\TaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\TaskBus;
+use Framework\Apps\BackgroundTasks\Domain\TaskHandlerRegistry;
 
 final readonly class TaskBusHandler implements TaskBus
 {

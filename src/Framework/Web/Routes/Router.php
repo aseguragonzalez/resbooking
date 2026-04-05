@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Routes;
+namespace Framework\Web\Routes;
 
 final class Router
 {

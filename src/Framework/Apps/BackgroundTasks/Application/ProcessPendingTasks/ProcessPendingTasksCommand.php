@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Application\ProcessPendingTasks;
+namespace Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks;
 
 final readonly class ProcessPendingTasksCommand
 {

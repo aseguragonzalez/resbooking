@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Tools;
+namespace Tests\Unit\Framework\DevTools\Tools;
 
-use Framework\Tools\JsBuilder;
+use Framework\DevTools\Tools\JsBuilder;
 use PHPUnit\Framework\TestCase;
 
 final class JsBuilderWatchTickTest extends TestCase

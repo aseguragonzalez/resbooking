@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Migrations\Domain\ValueObjects\ColumnDefinition;
-use Framework\Migrations\Domain\ValueObjects\ForeignKeyDefinition;
-use Framework\Migrations\Domain\ValueObjects\IndexDefinition;
-use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
-use Framework\Migrations\Domain\ValueObjects\TableDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\ColumnDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\ForeignKeyDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\IndexDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use Framework\Apps\Migrations\Domain\ValueObjects\TableDefinition;
 
 final class SchemaSnapshotTest extends TestCase
 {

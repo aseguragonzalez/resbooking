@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace {{namespace}}\BackgroundTasks;
 
 use DI\Container;
-use Framework\BackgroundTasks\Dependencies;
+use Framework\Apps\BackgroundTasks\Dependencies;
 use Infrastructure\Container\PhpDiMutableContainer;
-use Framework\BackgroundTasks\TaskHandlerClassMap;
+use Framework\Apps\BackgroundTasks\TaskHandlerClassMap;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;

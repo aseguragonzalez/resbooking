@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\ConsoleOutput;
+use Framework\Cli\Commands\ConsoleOutput;
 use PHPUnit\Framework\TestCase;
 
 final class ConsoleOutputTest extends TestCase

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Domain;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Domain;
 
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Task;
 use PHPUnit\Framework\TestCase;
 
 final class TaskTest extends TestCase

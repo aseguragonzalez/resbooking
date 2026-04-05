@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
-use Framework\Routes\RouteMethod;
+use Framework\Web\Routes\RouteMethod;
 use PHPUnit\Framework\TestCase;
 
 class RouteMethodTest extends TestCase

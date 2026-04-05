@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\ConsoleOutput;
-use Framework\Commands\InitializeBackgroundTasksCommand;
-use Framework\Commands\StubGenerator;
+use Framework\Cli\Commands\ConsoleOutput;
+use Framework\Cli\Commands\InitializeBackgroundTasksCommand;
+use Framework\Cli\Commands\StubGenerator;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

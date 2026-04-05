@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Infrastructure;
+namespace Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\CurrentIdentity;
-use Framework\Security\Domain\Entities\SignInChallenge;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Entities\CurrentIdentity;
+use Framework\Module\Security\Domain\Entities\SignInChallenge;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 use PDO;
 
 final readonly class SqlSignInSessionRepository implements SignInSessionRepository

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security;
+namespace Tests\Unit\Framework\Module\Security;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Security\ChallengesExpirationTime;
+use Framework\Module\Security\ChallengesExpirationTime;
 
 final class ChallengesExpirationTimeTest extends TestCase
 {

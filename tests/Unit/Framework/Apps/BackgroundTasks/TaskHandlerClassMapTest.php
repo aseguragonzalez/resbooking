@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Apps\BackgroundTasks;
 
-use Framework\BackgroundTasks\TaskHandlerClassMap;
+use Framework\Apps\BackgroundTasks\TaskHandlerClassMap;
 use PHPUnit\Framework\TestCase;
 
 final class TaskHandlerClassMapTest extends TestCase

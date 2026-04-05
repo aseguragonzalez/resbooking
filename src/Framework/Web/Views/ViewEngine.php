@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Views;
+namespace Framework\Web\Views;
 
-use Framework\Actions\Responses\View;
-use Framework\Requests\RequestContext;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\Requests\RequestContext;
 
 interface ViewEngine
 {

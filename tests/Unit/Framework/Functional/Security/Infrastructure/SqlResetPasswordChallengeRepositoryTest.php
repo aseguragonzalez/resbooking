@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Infrastructure;
+namespace Tests\Unit\Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Infrastructure\SqlResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Infrastructure\SqlResetPasswordChallengeRepository;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;

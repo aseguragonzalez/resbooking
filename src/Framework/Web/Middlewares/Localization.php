@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Framework\Middlewares;
+namespace Framework\Web\Middlewares;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\LanguageSettings;
-use Framework\Requests\RequestContext;
-use Framework\Requests\RequestContextKeys;
-use Framework\Responses\Headers\ContentLanguage;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Responses\StatusCode;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Requests\RequestContextKeys;
+use Framework\Web\Responses\Headers\ContentLanguage;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Web\Responses\StatusCode;
 
 final class Localization extends Middleware
 {

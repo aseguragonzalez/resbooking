@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Actions\Responses;
+namespace Tests\Unit\Framework\Web\Actions\Responses;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Framework\Actions\Responses\LocalRedirectTo;
-use Framework\Responses\Headers\ContentType;
+use Framework\Web\Actions\Responses\LocalRedirectTo;
+use Framework\Web\Responses\Headers\ContentType;
 use Tests\Unit\Framework\Fixtures\Actions\Responses\SearchRequest;
 use Tests\Unit\Framework\Fixtures\Actions\Responses\TestController;
 

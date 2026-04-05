@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web\Config;
 
-use Framework\Config\PublicApplicationUrl;
+use Framework\Web\Config\PublicApplicationUrl;
 use PHPUnit\Framework\TestCase;
 
 final class PublicApplicationUrlTest extends TestCase

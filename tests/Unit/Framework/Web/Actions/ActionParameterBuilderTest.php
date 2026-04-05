@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Actions;
+namespace Tests\Unit\Framework\Web\Actions;
 
 use Faker\Factory as FakerFactory;
 use Faker\Generator as Faker;
 use PHPUnit\Framework\TestCase;
-use Framework\Actions\ActionParameterBuilder;
+use Framework\Web\Actions\ActionParameterBuilder;
 use Tests\Unit\Framework\Fixtures\Actions\WithoutDocsObject;
 use Tests\Unit\Framework\Fixtures\Actions\RequestObject;
 

@@ -11,6 +11,7 @@
       "tests/"
     ],
     "psr-4": {
+      "Framework\\": "src/Framework/",
       "Vscode\\Workspace\\": "src/"
     }
   },

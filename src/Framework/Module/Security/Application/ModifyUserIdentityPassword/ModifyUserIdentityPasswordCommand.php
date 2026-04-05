@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ModifyUserIdentityPassword;
+namespace Framework\Module\Security\Application\ModifyUserIdentityPassword;
 
 final readonly class ModifyUserIdentityPasswordCommand
 {

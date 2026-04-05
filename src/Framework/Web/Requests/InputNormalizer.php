@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Requests;
+namespace Framework\Web\Requests;
 
 /**
  * Centralized helpers to normalize and coerce raw request input values.

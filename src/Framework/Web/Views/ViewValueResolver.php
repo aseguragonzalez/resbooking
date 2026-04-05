@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Views;
+namespace Framework\Web\Views;
 
 /**
  * Resolves a path expression (e.g. "model->customer->address->street", "items[0]->name")

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\GetIdentity;
+namespace Framework\Module\Security\Application\GetIdentity;
 
-use Framework\Security\Identity;
+use Framework\Module\Security\Identity;
 
 interface GetIdentity
 {

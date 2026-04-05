@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Domain\Repositories;
+namespace Framework\Apps\BackgroundTasks\Domain\Repositories;
 
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Task;
 
 interface TaskRepository
 {

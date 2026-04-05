@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks;
+namespace Framework\Apps\BackgroundTasks;
 
-use Framework\Application;
+use Framework\Apps\Application;
 use Psr\Container\ContainerInterface;
-use Framework\Config\MvcConfig;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
+use Framework\Web\Config\MvcConfig;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
 use Psr\Log\LoggerInterface;
 
 final class BackgroundTasksApp extends Application

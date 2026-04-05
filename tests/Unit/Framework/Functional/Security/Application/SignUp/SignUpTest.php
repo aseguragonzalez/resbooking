@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\SignUp;
+namespace Tests\Unit\Framework\Module\Security\Application\SignUp;
 
-use Framework\Security\Application\SignUp\SignUpCommand;
-use Framework\Security\Application\SignUp\SignUpHandler;
-use Framework\Security\Domain\Services\ChallengeNotificator;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Application\SignUp\SignUpCommand;
+use Framework\Module\Security\Application\SignUp\SignUpHandler;
+use Framework\Module\Security\Domain\Services\ChallengeNotificator;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PHPUnit\Framework\TestCase;
 
 final class SignUpTest extends TestCase

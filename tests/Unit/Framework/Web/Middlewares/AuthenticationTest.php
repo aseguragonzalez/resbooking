@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\AuthSettings;
-use Framework\Middlewares\Authentication;
-use Framework\Middlewares\Middleware;
-use Framework\Requests\RequestContext;
-use Framework\Responses\StatusCode;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Exceptions\SessionExpiredException;
-use Framework\Security\IdentityManager;
+use Framework\Web\AuthSettings;
+use Framework\Web\Middlewares\Authentication;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\StatusCode;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Module\Security\IdentityManager;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;

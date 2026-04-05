@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Views;
+namespace Framework\Web\Views;
 
-use Framework\Requests\RequestContext;
+use Framework\Web\Requests\RequestContext;
 
 final readonly class BranchesReplacer implements ContentReplacer
 {

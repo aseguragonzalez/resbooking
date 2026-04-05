@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
-use Framework\Migrations\Domain\Services\SchemaComparatorHandler;
-use Framework\Migrations\Domain\ValueObjects\ColumnDefinition;
-use Framework\Migrations\Domain\ValueObjects\IndexDefinition;
-use Framework\Migrations\Domain\ValueObjects\SchemaSnapshot;
-use Framework\Migrations\Domain\ValueObjects\TableDefinition;
+use Framework\Apps\Migrations\Domain\Services\SchemaComparatorHandler;
+use Framework\Apps\Migrations\Domain\ValueObjects\ColumnDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\IndexDefinition;
+use Framework\Apps\Migrations\Domain\ValueObjects\SchemaSnapshot;
+use Framework\Apps\Migrations\Domain\ValueObjects\TableDefinition;
 use PHPUnit\Framework\TestCase;
 
 final class SchemaComparatorHandlerTest extends TestCase

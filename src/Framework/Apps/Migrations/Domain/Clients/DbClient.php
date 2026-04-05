@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\Clients;
+namespace Framework\Apps\Migrations\Domain\Clients;
 
 interface DbClient
 {

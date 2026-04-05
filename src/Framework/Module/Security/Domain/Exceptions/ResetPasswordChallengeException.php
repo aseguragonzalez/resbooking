@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Domain\Exceptions;
+namespace Framework\Module\Security\Domain\Exceptions;
 
 final class ResetPasswordChallengeException extends \Exception
 {

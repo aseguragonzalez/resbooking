@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\RefreshSignInSession;
+namespace Framework\Module\Security\Application\RefreshSignInSession;
 
-use Framework\Security\Challenge;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Exceptions\SessionExpiredException;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Exceptions\SessionExpiredException;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 
 final readonly class RefreshSignInSessionHandler implements RefreshSignInSession
 {

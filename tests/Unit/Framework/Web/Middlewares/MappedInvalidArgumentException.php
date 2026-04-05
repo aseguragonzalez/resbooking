@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
 final class MappedInvalidArgumentException extends \InvalidArgumentException
 {

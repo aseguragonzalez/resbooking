@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Views;
+namespace Tests\Unit\Framework\Web\Views;
 
-use Framework\Requests\RequestContext;
-use Framework\Views\ContentReplacer;
-use Framework\Views\ContentReplacerPipeline;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Views\ContentReplacer;
+use Framework\Web\Views\ContentReplacerPipeline;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Fixtures\Views\OrderRecorder;
 

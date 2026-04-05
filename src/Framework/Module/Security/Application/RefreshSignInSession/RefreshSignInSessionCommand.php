@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\RefreshSignInSession;
+namespace Framework\Module\Security\Application\RefreshSignInSession;
 
 final readonly class RefreshSignInSessionCommand
 {

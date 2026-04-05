@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Config;
+namespace Tests\Unit\Framework\Web\Config;
 
-use Framework\Config\MvcConfig;
-use Framework\UiAssetsSettings;
+use Framework\Web\Config\MvcConfig;
+use Framework\Web\UiAssetsSettings;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

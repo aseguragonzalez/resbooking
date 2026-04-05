@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignOut;
+namespace Framework\Module\Security\Application\SignOut;
 
 interface SignOut
 {

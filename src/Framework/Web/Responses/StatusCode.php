@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Responses;
+namespace Framework\Web\Responses;
 
 enum StatusCode: int
 {

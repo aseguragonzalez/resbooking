@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Framework\Apps\BackgroundTasks\Infrastructure;
 
 use DI\Container;
-use Framework\BackgroundTasks\Infrastructure\ContainerTaskHandlerRegistry;
-use Framework\BackgroundTasks\TaskHandlerClassMap;
+use Framework\Apps\BackgroundTasks\Infrastructure\ContainerTaskHandlerRegistry;
+use Framework\Apps\BackgroundTasks\TaskHandlerClassMap;
 use PHPUnit\Framework\TestCase;
 
 final class ContainerTaskHandlerRegistryTest extends TestCase

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\SignOut;
+namespace Tests\Unit\Framework\Module\Security\Application\SignOut;
 
-use Framework\Security\Application\SignOut\SignOutCommand;
-use Framework\Security\Application\SignOut\SignOutHandler;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Application\SignOut\SignOutCommand;
+use Framework\Module\Security\Application\SignOut\SignOutHandler;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 use PHPUnit\Framework\TestCase;
 
 final class SignOutTest extends TestCase

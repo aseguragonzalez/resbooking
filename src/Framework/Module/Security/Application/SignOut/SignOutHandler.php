@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignOut;
+namespace Framework\Module\Security\Application\SignOut;
 
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 
 final readonly class SignOutHandler implements SignOut
 {

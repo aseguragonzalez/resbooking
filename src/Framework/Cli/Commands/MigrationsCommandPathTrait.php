@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Commands;
+namespace Framework\Cli\Commands;
 
 /**
  * Resolves the leaf `migrations` directory from --path or from mvc.config.json via --app-path.

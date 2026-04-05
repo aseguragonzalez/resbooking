@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
-use Framework\Routes\InvalidController;
+use Framework\Web\Routes\InvalidController;
 use PHPUnit\Framework\TestCase;
 
 final class InvalidControllerTest extends TestCase

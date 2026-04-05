@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Infrastructure;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Infrastructure\SqlTaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Infrastructure\SqlTaskRepository;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;

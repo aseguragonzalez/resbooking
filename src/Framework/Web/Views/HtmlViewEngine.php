@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Views;
+namespace Framework\Web\Views;
 
-use Framework\Actions\Responses\View;
-use Framework\HtmlViewEngineSettings;
-use Framework\UiAssetsSettings;
-use Framework\Requests\RequestContext;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\HtmlViewEngineSettings;
+use Framework\Web\UiAssetsSettings;
+use Framework\Web\Requests\RequestContext;
 
 final class HtmlViewEngine implements ViewEngine
 {

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\AuthSettings;
-use Framework\Middlewares\Authorization;
-use Framework\Middlewares\Middleware;
-use Framework\Requests\RequestContext;
-use Framework\Routes\AccessDeniedException;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
-use Framework\Routes\Router;
-use Framework\Security\Identity;
+use Framework\Web\AuthSettings;
+use Framework\Web\Middlewares\Authorization;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Routes\AccessDeniedException;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
+use Framework\Web\Routes\Router;
+use Framework\Module\Security\Identity;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;

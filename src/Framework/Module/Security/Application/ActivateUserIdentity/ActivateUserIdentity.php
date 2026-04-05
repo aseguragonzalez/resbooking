@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ActivateUserIdentity;
+namespace Framework\Module\Security\Application\ActivateUserIdentity;
 
 interface ActivateUserIdentity
 {

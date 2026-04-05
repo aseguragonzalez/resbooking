@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Views;
+namespace Framework\Web\Views;
 
-use Framework\Files\FileManager;
-use Framework\LanguageSettings;
-use Framework\Requests\RequestContext;
-use Framework\Requests\RequestContextKeys;
+use Framework\Module\Files\FileManager;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Requests\RequestContextKeys;
 
 final class I18nReplacer implements ContentReplacer
 {

@@ -17,14 +17,14 @@ if (isset($_composer_autoload_path)) {
         $dir = dirname($dir);
     }
 
-    if (!class_exists(\Framework\Commands\MvcCli::class)) {
+    if (!class_exists(\Framework\Cli\Commands\MvcCli::class)) {
         fwrite(STDERR, "Could not find vendor/autoload.php\n");
         exit(1);
     }
 }
 
 $colorsEnabled = getenv('NO_COLOR') === false;
-$cli = new \Framework\Commands\MvcCli(
-    new \Framework\Commands\ConsoleOutput(null, null, $colorsEnabled)
+$cli = new \Framework\Cli\Commands\MvcCli(
+    new \Framework\Cli\Commands\ConsoleOutput(null, null, $colorsEnabled)
 );
 exit($cli->run($_SERVER['argv'] ?? []));

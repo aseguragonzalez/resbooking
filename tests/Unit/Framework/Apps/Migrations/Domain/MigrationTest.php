@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
-use Framework\Migrations\Domain\Entities\Migration;
-use Framework\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Entities\Script;
 
 final class MigrationTest extends TestCase
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Domain\Services;
+namespace Framework\Module\Security\Domain\Services;
 
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
 
 interface ChallengeNotificator
 {

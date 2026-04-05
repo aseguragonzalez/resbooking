@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Tools;
+namespace Framework\DevTools\Tools;
 
 final readonly class CssBuilder
 {

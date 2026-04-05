@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Infrastructure;
+namespace Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
-use Framework\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\Task;
 use PDO;
 
 final readonly class SqlTaskRepository implements TaskRepository

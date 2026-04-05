@@ -6,9 +6,9 @@ namespace Tests\Unit\Framework\Web;
 
 use DI\Container;
 use DI\NotFoundException;
-use Framework\ErrorMapping;
-use Framework\ErrorSettings;
-use Framework\MvcWebApp;
+use Framework\Web\ErrorMapping;
+use Framework\Web\ErrorSettings;
+use Framework\Web\MvcWebApp;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\TestCase;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
-use Framework\Routes\Path;
-use Framework\Routes\RouteDoesNotFoundException;
-use Framework\Routes\RouteMethod;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\RouteDoesNotFoundException;
+use Framework\Web\Routes\RouteMethod;
 use PHPUnit\Framework\TestCase;
 
 final class RouteDoesNotFoundExceptionTest extends TestCase

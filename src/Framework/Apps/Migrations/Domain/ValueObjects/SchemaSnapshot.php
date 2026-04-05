@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\ValueObjects;
+namespace Framework\Apps\Migrations\Domain\ValueObjects;
 
 final readonly class SchemaSnapshot
 {

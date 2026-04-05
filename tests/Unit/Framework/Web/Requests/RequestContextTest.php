@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Requests;
+namespace Tests\Unit\Framework\Web\Requests;
 
-use Framework\Requests\RequestContext;
-use Framework\Security\Identity;
+use Framework\Web\Requests\RequestContext;
+use Framework\Module\Security\Identity;
 use PHPUnit\Framework\TestCase;
 
 final class RequestContextTest extends TestCase

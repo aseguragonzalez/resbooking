@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\ResetPasswordFromToken;
+namespace Framework\Module\Security\Application\ResetPasswordFromToken;
 
 interface ResetPasswordFromToken
 {

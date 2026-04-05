@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\RefreshSignInSession;
+namespace Tests\Unit\Framework\Module\Security\Application\RefreshSignInSession;
 
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSessionCommand;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSessionHandler;
-use Framework\Security\Challenge;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSessionCommand;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSessionHandler;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 use PHPUnit\Framework\TestCase;
 
 final class RefreshSignInSessionTest extends TestCase

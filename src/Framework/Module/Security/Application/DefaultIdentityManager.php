@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application;
+namespace Framework\Module\Security\Application;
 
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
-use Framework\Security\Application\GetIdentity\GetIdentity;
-use Framework\Security\Application\GetIdentity\GetIdentityCommand;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordCommand;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSession;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSessionCommand;
-use Framework\Security\Application\RequestResetPassword\RequestResetPassword;
-use Framework\Security\Application\RequestResetPassword\RequestResetPasswordCommand;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenCommand;
-use Framework\Security\Application\SignIn\SignIn;
-use Framework\Security\Application\SignIn\SignInCommand;
-use Framework\Security\Application\SignOut\SignOut;
-use Framework\Security\Application\SignOut\SignOutCommand;
-use Framework\Security\Application\SignUp\SignUp;
-use Framework\Security\Application\SignUp\SignUpCommand;
-use Framework\Security\Challenge;
-use Framework\Security\Identity;
-use Framework\Security\IdentityManager;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
+use Framework\Module\Security\Application\GetIdentity\GetIdentity;
+use Framework\Module\Security\Application\GetIdentity\GetIdentityCommand;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordCommand;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSession;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSessionCommand;
+use Framework\Module\Security\Application\RequestResetPassword\RequestResetPassword;
+use Framework\Module\Security\Application\RequestResetPassword\RequestResetPasswordCommand;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenCommand;
+use Framework\Module\Security\Application\SignIn\SignIn;
+use Framework\Module\Security\Application\SignIn\SignInCommand;
+use Framework\Module\Security\Application\SignOut\SignOut;
+use Framework\Module\Security\Application\SignOut\SignOutCommand;
+use Framework\Module\Security\Application\SignUp\SignUp;
+use Framework\Module\Security\Application\SignUp\SignUpCommand;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\Identity;
+use Framework\Module\Security\IdentityManager;
 
 final readonly class DefaultIdentityManager implements IdentityManager
 {

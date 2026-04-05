@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Infrastructure;
+namespace Tests\Unit\Framework\Apps\Migrations\Infrastructure;
 
-use Framework\Migrations\Infrastructure\ShellDatabaseBackupManager;
-use Framework\Migrations\MigrationsMysqlConnection;
+use Framework\Apps\Migrations\Infrastructure\ShellDatabaseBackupManager;
+use Framework\Apps\Migrations\MigrationsMysqlConnection;
 use PHPUnit\Framework\TestCase;
 
 final class ShellDatabaseBackupManagerTest extends TestCase

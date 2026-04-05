@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations;
+namespace Framework\Apps\Migrations;
 
-use Framework\Application;
+use Framework\Apps\Application;
 use Psr\Container\ContainerInterface;
-use Framework\Migrations\Application\RunMigrations;
-use Framework\Migrations\Application\TestMigration;
-use Framework\Migrations\Application\TestMigrationCommand;
+use Framework\Apps\Migrations\Application\RunMigrations;
+use Framework\Apps\Migrations\Application\TestMigration;
+use Framework\Apps\Migrations\Application\TestMigrationCommand;
 use Psr\Log\LoggerInterface;
 
 final class MigrationApp extends Application

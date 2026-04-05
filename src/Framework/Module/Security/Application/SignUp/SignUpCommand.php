@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignUp;
+namespace Framework\Module\Security\Application\SignUp;
 
 final readonly class SignUpCommand
 {

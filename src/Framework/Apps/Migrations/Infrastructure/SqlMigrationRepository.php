@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Infrastructure;
+namespace Framework\Apps\Migrations\Infrastructure;
 
 use PDO;
-use Framework\Migrations\Domain\Entities\Migration;
-use Framework\Migrations\Domain\Entities\Script;
-use Framework\Migrations\Domain\Repositories\MigrationRepository;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Repositories\MigrationRepository;
 
 final readonly class SqlMigrationRepository implements MigrationRepository
 {

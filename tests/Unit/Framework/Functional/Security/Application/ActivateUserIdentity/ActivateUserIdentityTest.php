@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\ActivateUserIdentity;
+namespace Tests\Unit\Framework\Module\Security\Application\ActivateUserIdentity;
 
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentityHandler;
-use Framework\Security\Domain\Entities\SignUpChallenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentityCommand;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentityHandler;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ActivateUserIdentityTest extends TestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Actions;
+namespace Framework\Web\Actions;
 
 /**
  * Declares the element type for an array request parameter (alternative to @param array<T> docblocks).

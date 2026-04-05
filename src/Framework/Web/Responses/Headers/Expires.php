@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Responses\Headers;
+namespace Framework\Web\Responses\Headers;
 
 final readonly class Expires extends Header
 {

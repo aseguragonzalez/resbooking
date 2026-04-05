@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignIn;
+namespace Framework\Module\Security\Application\SignIn;
 
-use Framework\Security\Challenge;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Domain\Exceptions\InvalidCredentialsException;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 
 final readonly class SignInHandler implements SignIn
 {

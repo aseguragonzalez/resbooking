@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard\Controllers;
 
-use Framework\Routes\Router;
+use Framework\Web\Routes\Router;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Controllers\AvailabilitiesController;
 use Infrastructure\Ports\Dashboard\Controllers\DashboardController;

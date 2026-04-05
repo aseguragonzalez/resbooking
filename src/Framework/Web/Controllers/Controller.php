@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Framework\Controllers;
+namespace Framework\Web\Controllers;
 
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Actions\Responses\LocalRedirectTo;
-use Framework\Actions\Responses\RedirectTo;
-use Framework\Actions\Responses\View;
-use Framework\Responses\Headers\Header;
-use Framework\Responses\StatusCode;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Actions\Responses\LocalRedirectTo;
+use Framework\Web\Actions\Responses\RedirectTo;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\Responses\Headers\Header;
+use Framework\Web\Responses\StatusCode;
 
 abstract class Controller
 {

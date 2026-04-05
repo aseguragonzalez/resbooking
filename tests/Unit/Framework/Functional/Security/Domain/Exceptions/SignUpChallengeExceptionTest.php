@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Domain\Exceptions;
+namespace Tests\Unit\Framework\Module\Security\Domain\Exceptions;
 
-use Framework\Security\Domain\Exceptions\SignUpChallengeException;
+use Framework\Module\Security\Domain\Exceptions\SignUpChallengeException;
 use PHPUnit\Framework\TestCase;
 
 final class SignUpChallengeExceptionTest extends TestCase

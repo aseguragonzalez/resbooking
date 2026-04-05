@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit\Framework\Actions\Responses\Views;
+namespace Tests\Unit\Framework\Web\Actions\Responses\Views;
 
 use PHPUnit\Framework\TestCase;
-use Framework\Actions\Responses\View;
-use Framework\Responses\Headers\ContentType;
-use Framework\Responses\StatusCode;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\Responses\Headers\ContentType;
+use Framework\Web\Responses\StatusCode;
 
 final class ViewTest extends TestCase
 {

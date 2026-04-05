@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Application\RegisterTask;
+namespace Framework\Apps\BackgroundTasks\Application\RegisterTask;
 
 final readonly class RegisterTaskCommand
 {

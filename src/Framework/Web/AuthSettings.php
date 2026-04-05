@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace Framework\Web;
 
 /**
  * Web authentication wiring for the MVC stack: sign-in redirect URL and session cookie name.
  *
  * Registered by the composition root (e.g. dashboard bootstrap) and consumed by
- * {@see \Framework\Middlewares\Authentication}, {@see \Framework\Middlewares\Authorization},
+ * {@see \Framework\Web\Middlewares\Authentication}, {@see \Framework\Web\Middlewares\Authorization},
  * and account controllers.
  */
 final readonly class AuthSettings

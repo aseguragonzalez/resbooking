@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Config;
+namespace Framework\Web\Config;
 
 /** One logical group of asset sources (e.g. a route area), merged in config order into a single bundle. */
 final readonly class AssetRouteGroup

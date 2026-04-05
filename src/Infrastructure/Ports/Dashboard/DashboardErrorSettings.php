@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use Domain\Restaurants\Exceptions\DiningAreaNotFound;
-use Framework\ErrorMapping;
-use Framework\ErrorSettings;
-use Framework\Routes\AccessDeniedException;
-use Framework\Routes\AuthenticationRequiredException;
-use Framework\Routes\RouteDoesNotFoundException;
+use Framework\Web\ErrorMapping;
+use Framework\Web\ErrorSettings;
+use Framework\Web\Routes\AccessDeniedException;
+use Framework\Web\Routes\AuthenticationRequiredException;
+use Framework\Web\Routes\RouteDoesNotFoundException;
 
 final class DashboardErrorSettings
 {

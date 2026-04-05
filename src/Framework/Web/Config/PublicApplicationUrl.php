@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Config;
+namespace Framework\Web\Config;
 
 /**
  * Absolute public origin for building Location headers (e.g. local redirects). No trailing slash, no path.

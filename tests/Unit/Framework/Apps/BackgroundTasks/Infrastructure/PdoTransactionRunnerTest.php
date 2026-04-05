@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Infrastructure;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Infrastructure;
 
-use Framework\BackgroundTasks\Infrastructure\PdoTransactionRunner;
+use Framework\Apps\BackgroundTasks\Infrastructure\PdoTransactionRunner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PDO;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\SignIn;
+namespace Framework\Module\Security\Application\SignIn;
 
 final readonly class SignInCommand
 {

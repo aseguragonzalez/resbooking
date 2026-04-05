@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web;
 
-use Framework\ErrorSettings;
+use Framework\Web\ErrorSettings;
 use PHPUnit\Framework\TestCase;
 
 final class ErrorSettingsTest extends TestCase

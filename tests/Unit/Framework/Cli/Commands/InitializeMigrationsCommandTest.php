@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\ConsoleOutput;
-use Framework\Commands\InitializeMigrationsCommand;
-use Framework\Commands\MigrationsEnableCommand;
-use Framework\Commands\StubGenerator;
+use Framework\Cli\Commands\ConsoleOutput;
+use Framework\Cli\Commands\InitializeMigrationsCommand;
+use Framework\Cli\Commands\MigrationsEnableCommand;
+use Framework\Cli\Commands\StubGenerator;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

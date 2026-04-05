@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Commands;
+namespace Tests\Unit\Framework\Cli\Commands;
 
-use Framework\Commands\ConsoleOutput;
-use Framework\Commands\CreateBundleCommand;
-use Framework\Config\MvcConfig;
+use Framework\Cli\Commands\ConsoleOutput;
+use Framework\Cli\Commands\CreateBundleCommand;
+use Framework\Web\Config\MvcConfig;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 

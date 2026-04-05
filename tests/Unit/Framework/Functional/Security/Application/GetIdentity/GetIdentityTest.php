@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\GetIdentity;
+namespace Tests\Unit\Framework\Module\Security\Application\GetIdentity;
 
-use Framework\Security\Application\GetIdentity\GetIdentityCommand;
-use Framework\Security\Application\GetIdentity\GetIdentityHandler;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Application\GetIdentity\GetIdentityCommand;
+use Framework\Module\Security\Application\GetIdentity\GetIdentityHandler;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
 use PHPUnit\Framework\TestCase;
 
 final class GetIdentityTest extends TestCase

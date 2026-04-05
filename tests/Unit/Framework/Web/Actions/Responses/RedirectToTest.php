@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Actions\Responses;
+namespace Tests\Unit\Framework\Web\Actions\Responses;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Framework\Actions\Responses\RedirectTo;
-use Framework\Responses\Headers\AccessControlAllowMethods;
-use Framework\Responses\Headers\ContentType;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\StatusCode;
+use Framework\Web\Actions\Responses\RedirectTo;
+use Framework\Web\Responses\Headers\AccessControlAllowMethods;
+use Framework\Web\Responses\Headers\ContentType;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\StatusCode;
 
 final class RedirectToTest extends TestCase
 {

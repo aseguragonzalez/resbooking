@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Assets;
+namespace Tests\Unit\Framework\Web\Assets;
 
-use Framework\Assets\AssetBundleSourceResolver;
-use Framework\Config\AssetRouteGroup;
-use Framework\Config\MvcConfig;
+use Framework\Web\Assets\AssetBundleSourceResolver;
+use Framework\Web\Config\AssetRouteGroup;
+use Framework\Web\Config\MvcConfig;
 use PHPUnit\Framework\TestCase;
 
 final class AssetBundleSourceResolverTest extends TestCase

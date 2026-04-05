@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Controllers;
+namespace Tests\Unit\Framework\Web\Controllers;
 
-use Framework\Actions\Responses\LocalRedirectTo;
-use Framework\Actions\Responses\View;
-use Framework\Responses\Headers\AccessControlAllowMethods;
-use Framework\Responses\Headers\ContentType;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\StatusCode;
+use Framework\Web\Actions\Responses\LocalRedirectTo;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\Responses\Headers\AccessControlAllowMethods;
+use Framework\Web\Responses\Headers\ContentType;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\StatusCode;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Fixtures\Controllers\HomeController;
 use Tests\Unit\Framework\Fixtures\Controllers\SubTestController;

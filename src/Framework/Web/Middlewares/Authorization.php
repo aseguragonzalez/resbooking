@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Framework\Middlewares;
+namespace Framework\Web\Middlewares;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\AuthSettings;
-use Framework\Requests\RequestContext;
-use Framework\Responses\Headers\Location;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Responses\StatusCode;
-use Framework\Routes\AuthenticationRequiredException;
-use Framework\Routes\RouteMethod;
-use Framework\Routes\Router;
+use Framework\Web\AuthSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\Headers\Location;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Web\Responses\StatusCode;
+use Framework\Web\Routes\AuthenticationRequiredException;
+use Framework\Web\Routes\RouteMethod;
+use Framework\Web\Routes\Router;
 
 final class Authorization extends Middleware
 {

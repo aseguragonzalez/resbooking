@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace Framework\Web;
 
 use Framework\Web\AppFilesystemPath;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace Framework\Web;
 
 /** View and HTTP status used when rendering an error page for a mapped exception type. */
 final readonly class ErrorMapping

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Commands;
+namespace Framework\Cli\Commands;
 
-use Framework\Assets\AssetBundleSourceResolver;
-use Framework\Config\MvcConfig;
-use Framework\Tools\CssBuilder;
-use Framework\Tools\JsBuilder;
+use Framework\Web\Assets\AssetBundleSourceResolver;
+use Framework\Web\Config\MvcConfig;
+use Framework\DevTools\Tools\CssBuilder;
+use Framework\DevTools\Tools\JsBuilder;
 
 final class WatchAssetsCommand implements Command
 {

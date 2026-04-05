@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations;
+namespace Framework\Apps\Migrations;
 
 /**
  * MySQL connection parameters registered by the migrations instance bootstrap (PDO + CLI tools).

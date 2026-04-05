@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\Exceptions;
+namespace Framework\Apps\Migrations\Domain\Exceptions;
 
-use Framework\Migrations\Domain\Entities\Script;
+use Framework\Apps\Migrations\Domain\Entities\Script;
 
 final class MigrationException extends \Exception
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\BackgroundTasks\Domain;
+namespace Framework\Apps\BackgroundTasks\Domain;
 
 interface TaskBus
 {

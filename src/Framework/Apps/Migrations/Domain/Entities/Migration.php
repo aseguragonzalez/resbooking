@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\Entities;
+namespace Framework\Apps\Migrations\Domain\Entities;
 
 use DateTimeImmutable;
 

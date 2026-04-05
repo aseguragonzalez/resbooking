@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Framework\Web;
 
 use DI\Container;
-use Framework\Config\PublicApplicationUrl;
-use Framework\Files\DefaultFileManager;
-use Framework\HtmlViewEngineSettings;
-use Framework\LanguageSettings;
-use Framework\Routes\Router;
+use Framework\Web\Config\PublicApplicationUrl;
+use Framework\Module\Files\DefaultFileManager;
+use Framework\Web\HtmlViewEngineSettings;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Routes\Router;
 use Framework\Web\Dependencies;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Nyholm\Psr7\Factory\Psr17Factory;

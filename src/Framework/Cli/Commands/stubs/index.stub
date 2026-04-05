@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/{{autoloadPath}}';
 
 use DI\Container;
-use Framework\Requests\RequestContext;
+use Framework\Web\Requests\RequestContext;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use {{namespace}}\{{name}}App;

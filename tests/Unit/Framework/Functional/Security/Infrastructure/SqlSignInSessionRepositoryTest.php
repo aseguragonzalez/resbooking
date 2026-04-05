@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Infrastructure;
+namespace Tests\Unit\Framework\Module\Security\Infrastructure;
 
-use Framework\Security\Domain\Entities\CurrentIdentity;
-use Framework\Security\Domain\Entities\SignInChallenge;
-use Framework\Security\Domain\Entities\SignInSession;
-use Framework\Security\Infrastructure\SqlSignInSessionRepository;
+use Framework\Module\Security\Domain\Entities\CurrentIdentity;
+use Framework\Module\Security\Domain\Entities\SignInChallenge;
+use Framework\Module\Security\Domain\Entities\SignInSession;
+use Framework\Module\Security\Infrastructure\SqlSignInSessionRepository;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;

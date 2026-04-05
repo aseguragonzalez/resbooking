@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Infrastructure\Adapters;
 
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
-use Framework\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Security\Domain\Entities\SignUpChallenge;
-use Framework\Security\Domain\Services\ChallengeNotificator;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTask;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
+use Framework\Module\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Module\Security\Domain\Entities\SignUpChallenge;
+use Framework\Module\Security\Domain\Services\ChallengeNotificator;
 
 final readonly class BackgroundTaskChallengeNotificator implements ChallengeNotificator
 {

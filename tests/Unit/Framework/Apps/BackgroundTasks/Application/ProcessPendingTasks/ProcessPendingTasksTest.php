@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Application\ProcessPendingTasks;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks;
 
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
-use Framework\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Domain\TaskBus;
-use Framework\BackgroundTasks\Domain\TransactionRunner;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
+use Framework\Apps\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\TaskBus;
+use Framework\Apps\BackgroundTasks\Domain\TransactionRunner;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;

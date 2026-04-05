@@ -2,36 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security;
+namespace Framework\Module\Security;
 
 use DI\Container;
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
-use Framework\Security\Application\ActivateUserIdentity\ActivateUserIdentityHandler;
-use Framework\Security\Application\DefaultIdentityManager;
-use Framework\Security\Application\GetIdentity\GetIdentity;
-use Framework\Security\Application\GetIdentity\GetIdentityHandler;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
-use Framework\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordHandler;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSession;
-use Framework\Security\Application\RefreshSignInSession\RefreshSignInSessionHandler;
-use Framework\Security\Application\RequestResetPassword\RequestResetPassword;
-use Framework\Security\Application\RequestResetPassword\RequestResetPasswordHandler;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
-use Framework\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenHandler;
-use Framework\Security\Application\SignIn\SignIn;
-use Framework\Security\Application\SignIn\SignInHandler;
-use Framework\Security\Application\SignOut\SignOut;
-use Framework\Security\Application\SignOut\SignOutHandler;
-use Framework\Security\Application\SignUp\SignUp;
-use Framework\Security\Application\SignUp\SignUpHandler;
-use Framework\Security\Domain\Repositories\ResetPasswordChallengeRepository;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
-use Framework\Security\Domain\Repositories\SignUpChallengeRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
-use Framework\Security\Infrastructure\SqlResetPasswordChallengeRepository;
-use Framework\Security\Infrastructure\SqlSignInSessionRepository;
-use Framework\Security\Infrastructure\SqlSignUpChallengeRepository;
-use Framework\Security\Infrastructure\SqlUserIdentityRepository;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentity;
+use Framework\Module\Security\Application\ActivateUserIdentity\ActivateUserIdentityHandler;
+use Framework\Module\Security\Application\DefaultIdentityManager;
+use Framework\Module\Security\Application\GetIdentity\GetIdentity;
+use Framework\Module\Security\Application\GetIdentity\GetIdentityHandler;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPassword;
+use Framework\Module\Security\Application\ModifyUserIdentityPassword\ModifyUserIdentityPasswordHandler;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSession;
+use Framework\Module\Security\Application\RefreshSignInSession\RefreshSignInSessionHandler;
+use Framework\Module\Security\Application\RequestResetPassword\RequestResetPassword;
+use Framework\Module\Security\Application\RequestResetPassword\RequestResetPasswordHandler;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromToken;
+use Framework\Module\Security\Application\ResetPasswordFromToken\ResetPasswordFromTokenHandler;
+use Framework\Module\Security\Application\SignIn\SignIn;
+use Framework\Module\Security\Application\SignIn\SignInHandler;
+use Framework\Module\Security\Application\SignOut\SignOut;
+use Framework\Module\Security\Application\SignOut\SignOutHandler;
+use Framework\Module\Security\Application\SignUp\SignUp;
+use Framework\Module\Security\Application\SignUp\SignUpHandler;
+use Framework\Module\Security\Domain\Repositories\ResetPasswordChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\SignUpChallengeRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Infrastructure\SqlResetPasswordChallengeRepository;
+use Framework\Module\Security\Infrastructure\SqlSignInSessionRepository;
+use Framework\Module\Security\Infrastructure\SqlSignUpChallengeRepository;
+use Framework\Module\Security\Infrastructure\SqlUserIdentityRepository;
 
 final class Dependencies
 {

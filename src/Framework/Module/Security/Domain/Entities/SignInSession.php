@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Domain\Entities;
+namespace Framework\Module\Security\Domain\Entities;
 
-use Framework\Security\Challenge;
-use Framework\Security\Identity;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\Identity;
 
 final readonly class SignInSession
 {

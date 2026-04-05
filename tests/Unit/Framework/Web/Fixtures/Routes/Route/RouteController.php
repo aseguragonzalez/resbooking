@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Fixtures\Routes\Route;
 
-use Framework\Actions\MvcAction;
-use Framework\Actions\Responses\ActionResponse;
-use Framework\Controllers\Controller;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Actions\Responses\ActionResponse;
+use Framework\Web\Controllers\Controller;
 
 final class RouteController extends Controller
 {

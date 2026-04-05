@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Application\RequestResetPassword;
+namespace Framework\Module\Security\Application\RequestResetPassword;
 
 final readonly class RequestResetPasswordCommand
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Security\Domain\Entities;
+namespace Framework\Module\Security\Domain\Entities;
 
-use Framework\Security\Identity;
-use Framework\Security\Domain\Exceptions\InvalidCredentialsException;
-use Framework\Security\Domain\Exceptions\UserBlockedException;
-use Framework\Security\Domain\Exceptions\UserIsNotActiveException;
-use Framework\Security\Domain\Exceptions\UsernameIsNotEmailException;
+use Framework\Module\Security\Identity;
+use Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException;
+use Framework\Module\Security\Domain\Exceptions\UserBlockedException;
+use Framework\Module\Security\Domain\Exceptions\UserIsNotActiveException;
+use Framework\Module\Security\Domain\Exceptions\UsernameIsNotEmailException;
 
 final readonly class UserIdentity implements Identity
 {

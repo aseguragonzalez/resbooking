@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Domain;
+namespace Tests\Unit\Framework\Apps\Migrations\Domain;
 
-use Framework\Migrations\Domain\Services\MigrationTestScope;
-use Framework\Migrations\Domain\Services\RollbackExecutor;
-use Framework\Migrations\Domain\Services\SchemaSnapshotExecutor;
-use Framework\Migrations\Domain\Services\TestMigrationExecutor;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScope;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutor;
+use Framework\Apps\Migrations\Domain\Services\SchemaSnapshotExecutor;
+use Framework\Apps\Migrations\Domain\Services\TestMigrationExecutor;
 use PHPUnit\Framework\TestCase;
 
 final class MigrationTestScopeTest extends TestCase

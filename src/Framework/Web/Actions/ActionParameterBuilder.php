@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Actions;
+namespace Framework\Web\Actions;
 
-use Framework\Requests\InputNormalizer;
+use Framework\Web\Requests\InputNormalizer;
 
 final class ActionParameterBuilder
 {

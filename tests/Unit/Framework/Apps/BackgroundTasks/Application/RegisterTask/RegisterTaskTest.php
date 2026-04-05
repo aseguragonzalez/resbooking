@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\BackgroundTasks\Application\RegisterTask;
+namespace Tests\Unit\Framework\Apps\BackgroundTasks\Application\RegisterTask;
 
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
-use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
-use Framework\BackgroundTasks\Domain\Task;
-use Framework\BackgroundTasks\Domain\Repositories\TaskRepository;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTask;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
+use Framework\Apps\BackgroundTasks\Application\RegisterTask\RegisterTaskHandler;
+use Framework\Apps\BackgroundTasks\Domain\Task;
+use Framework\Apps\BackgroundTasks\Domain\Repositories\TaskRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

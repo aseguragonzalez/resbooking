@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Domain\Entities;
+namespace Framework\Apps\Migrations\Domain\Entities;
 
-use Framework\Files\FileManager;
+use Framework\Module\Files\FileManager;
 
 final readonly class Script
 {

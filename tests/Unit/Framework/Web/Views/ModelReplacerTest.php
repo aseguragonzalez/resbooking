@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Views;
+namespace Tests\Unit\Framework\Web\Views;
 
-use Framework\Requests\RequestContext;
-use Framework\Views\ModelReplacer;
-use Framework\Views\ViewValueResolver;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Views\ModelReplacer;
+use Framework\Web\Views\ViewValueResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ModelReplacerTest extends TestCase

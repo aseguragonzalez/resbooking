@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Security\Application\SignIn;
+namespace Tests\Unit\Framework\Module\Security\Application\SignIn;
 
-use Framework\Security\Application\SignIn\SignInCommand;
-use Framework\Security\Application\SignIn\SignInHandler;
-use Framework\Security\ChallengesExpirationTime;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Repositories\SignInSessionRepository;
-use Framework\Security\Domain\Repositories\UserIdentityRepository;
+use Framework\Module\Security\Application\SignIn\SignInCommand;
+use Framework\Module\Security\Application\SignIn\SignInHandler;
+use Framework\Module\Security\ChallengesExpirationTime;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Repositories\SignInSessionRepository;
+use Framework\Module\Security\Domain\Repositories\UserIdentityRepository;
 use PHPUnit\Framework\TestCase;
 
 final class SignInTest extends TestCase

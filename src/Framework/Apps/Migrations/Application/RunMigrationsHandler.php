@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Application;
+namespace Framework\Apps\Migrations\Application;
 
-use Framework\Migrations\Domain\Entities\Migration;
-use Framework\Migrations\Domain\Exceptions\MigrationException;
-use Framework\Migrations\Domain\Repositories\MigrationRepository;
-use Framework\Migrations\Domain\Services\MigrationExecutor;
-use Framework\Migrations\Domain\Services\MigrationFileManager;
-use Framework\Migrations\Domain\Services\RollbackExecutor;
+use Framework\Apps\Migrations\Domain\Entities\Migration;
+use Framework\Apps\Migrations\Domain\Exceptions\MigrationException;
+use Framework\Apps\Migrations\Domain\Repositories\MigrationRepository;
+use Framework\Apps\Migrations\Domain\Services\MigrationExecutor;
+use Framework\Apps\Migrations\Domain\Services\MigrationFileManager;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutor;
 
 final readonly class RunMigrationsHandler implements RunMigrations
 {

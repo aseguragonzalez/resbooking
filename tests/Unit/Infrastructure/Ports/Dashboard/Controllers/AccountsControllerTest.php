@@ -6,18 +6,18 @@ namespace Tests\Unit\Infrastructure\Ports\Dashboard\Controllers;
 
 use Faker\Factory;
 use Faker\Generator;
-use Framework\Actions\Responses\LocalRedirectTo;
-use Framework\Actions\Responses\View;
-use Framework\AuthSettings;
-use Framework\Requests\RequestContext;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Security\Challenge;
-use Framework\Security\Domain\Entities\UserIdentity;
-use Framework\Security\Domain\Exceptions\InvalidCredentialsException;
-use Framework\Security\Domain\Exceptions\ResetPasswordChallengeException;
-use Framework\Security\Domain\Exceptions\SignUpChallengeException;
-use Framework\Security\Domain\Exceptions\UserIsNotActiveException;
-use Framework\Security\IdentityManager;
+use Framework\Web\Actions\Responses\LocalRedirectTo;
+use Framework\Web\Actions\Responses\View;
+use Framework\Web\AuthSettings;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Module\Security\Challenge;
+use Framework\Module\Security\Domain\Entities\UserIdentity;
+use Framework\Module\Security\Domain\Exceptions\InvalidCredentialsException;
+use Framework\Module\Security\Domain\Exceptions\ResetPasswordChallengeException;
+use Framework\Module\Security\Domain\Exceptions\SignUpChallengeException;
+use Framework\Module\Security\Domain\Exceptions\UserIsNotActiveException;
+use Framework\Module\Security\IdentityManager;
 use Infrastructure\Ports\Dashboard\Controllers\AccountsController;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPassword;
 use Infrastructure\Ports\Dashboard\Models\Accounts\Pages\ResetPasswordChallenge;
@@ -646,11 +646,11 @@ final class AccountsControllerTest extends TestCase
         $this->assertInstanceOf(LocalRedirectTo::class, $response);
         $setCookieHeaders = array_filter(
             $response->headers,
-            fn ($header) => $header instanceof \Framework\Responses\Headers\SetCookie
+            fn ($header) => $header instanceof \Framework\Web\Responses\Headers\SetCookie
                 && str_contains($header->value, $this->settings->cookieName)
         );
         $this->assertCount(1, $setCookieHeaders);
-        /** @var \Framework\Responses\Headers\SetCookie $setCookie */
+        /** @var \Framework\Web\Responses\Headers\SetCookie $setCookie */
         $setCookie = reset($setCookieHeaders);
         $this->assertStringContainsString($this->settings->cookieName . '=' . $token, $setCookie->value);
     }

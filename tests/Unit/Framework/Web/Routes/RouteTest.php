@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Routes;
+namespace Tests\Unit\Framework\Web\Routes;
 
-use Framework\Routes\AccessDeniedException;
-use Framework\Routes\AuthenticationRequiredException;
-use Framework\Routes\InvalidAction;
-use Framework\Routes\InvalidController;
-use Framework\Routes\Path;
-use Framework\Routes\Route;
-use Framework\Routes\RouteMethod;
-use Framework\Security\Identity;
+use Framework\Web\Routes\AccessDeniedException;
+use Framework\Web\Routes\AuthenticationRequiredException;
+use Framework\Web\Routes\InvalidAction;
+use Framework\Web\Routes\InvalidController;
+use Framework\Web\Routes\Path;
+use Framework\Web\Routes\Route;
+use Framework\Web\Routes\RouteMethod;
+use Framework\Module\Security\Identity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Framework\Fixtures\Routes\Route\RouteController;

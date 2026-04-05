@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Migrations\Infrastructure;
+namespace Tests\Unit\Framework\Apps\Migrations\Infrastructure;
 
-use Framework\Migrations\Infrastructure\SqlDbClient;
+use Framework\Apps\Migrations\Infrastructure\SqlDbClient;
 use PHPUnit\Framework\TestCase;
 use PDO;
 

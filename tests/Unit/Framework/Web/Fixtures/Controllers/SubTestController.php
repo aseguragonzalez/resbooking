@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Fixtures\Controllers;
 
-use Framework\Actions\MvcAction;
-use Framework\Actions\Responses\ActionResponse;
+use Framework\Web\Actions\MvcAction;
+use Framework\Web\Actions\Responses\ActionResponse;
 
 final class SubTestController extends TestController
 {

@@ -6,9 +6,9 @@ namespace Infrastructure\Ports\Dashboard\Middlewares;
 
 use Domain\Restaurants\Entities\Restaurant;
 use Domain\Restaurants\Repositories\RestaurantRepository;
-use Framework\Middlewares\Middleware;
-use Framework\Requests\RequestContext;
-use Framework\Security\Identity;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Requests\RequestContext;
+use Framework\Module\Security\Identity;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

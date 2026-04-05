@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Apps\Migrations;
 
-use Framework\Migrations\MigrationApp;
+use Framework\Apps\Migrations\MigrationApp;
 use PHPUnit\Framework\TestCase;
 
 final class MigrationAppTest extends TestCase

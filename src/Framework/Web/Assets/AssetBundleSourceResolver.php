@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Assets;
+namespace Framework\Web\Assets;
 
-use Framework\Config\AssetRouteGroup;
-use Framework\Config\MvcConfig;
+use Framework\Web\Config\AssetRouteGroup;
+use Framework\Web\Config\MvcConfig;
 
 /**
  * Resolves merged, deduplicated source paths and output directories for asset bundling CLI.

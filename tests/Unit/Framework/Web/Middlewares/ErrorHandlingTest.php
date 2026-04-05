@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\ErrorMapping;
-use Framework\ErrorSettings;
-use Framework\Middlewares\ErrorHandling;
-use Framework\Middlewares\Middleware;
-use Framework\Requests\RequestContext;
-use Framework\Responses\StatusCode;
-use Framework\Views\ViewEngine;
+use Framework\Web\ErrorMapping;
+use Framework\Web\ErrorSettings;
+use Framework\Web\Middlewares\ErrorHandling;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\StatusCode;
+use Framework\Web\Views\ViewEngine;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

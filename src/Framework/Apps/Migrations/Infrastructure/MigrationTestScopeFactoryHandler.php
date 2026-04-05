@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Migrations\Infrastructure;
+namespace Framework\Apps\Migrations\Infrastructure;
 
-use Framework\Migrations\Domain\Services\MigrationTestScope;
-use Framework\Migrations\Domain\Services\MigrationTestScopeFactory;
-use Framework\Migrations\Domain\Services\RollbackExecutorHandler;
-use Framework\Migrations\Domain\Services\TestMigrationExecutorHandler;
-use Framework\Migrations\MigrationsMysqlConnection;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScope;
+use Framework\Apps\Migrations\Domain\Services\MigrationTestScopeFactory;
+use Framework\Apps\Migrations\Domain\Services\RollbackExecutorHandler;
+use Framework\Apps\Migrations\Domain\Services\TestMigrationExecutorHandler;
+use Framework\Apps\Migrations\MigrationsMysqlConnection;
 use PDO;
 
 final readonly class MigrationTestScopeFactoryHandler implements MigrationTestScopeFactory

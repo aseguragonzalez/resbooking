@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Framework\Middlewares;
+namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\LanguageSettings;
-use Framework\Middlewares\Localization;
-use Framework\Middlewares\Middleware;
-use Framework\Requests\RequestContext;
-use Framework\Responses\Headers\SetCookie;
-use Framework\Responses\StatusCode;
+use Framework\Web\LanguageSettings;
+use Framework\Web\Middlewares\Localization;
+use Framework\Web\Middlewares\Middleware;
+use Framework\Web\Requests\RequestContext;
+use Framework\Web\Responses\Headers\SetCookie;
+use Framework\Web\Responses\StatusCode;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;

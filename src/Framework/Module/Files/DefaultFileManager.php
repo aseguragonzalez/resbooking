@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Files;
+namespace Framework\Module\Files;
 
 final class DefaultFileManager implements FileManager
 {
