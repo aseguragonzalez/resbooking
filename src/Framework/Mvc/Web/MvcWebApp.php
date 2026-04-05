@@ -14,15 +14,17 @@ use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
 use Framework\Mvc\Requests\RequestContext;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * The base class for all MVC Web applications.
+ *
+ * The composition root must register {@see RequestContext::class} on the container for each HTTP request
+ * before calling {@see handleRequest()} or {@see run()}.
  */
 abstract class MvcWebApp extends WebApplication
 {
-    private ?Middleware $middlewareChain = null;
-
     /**
      * @param ContainerInterface $container PSR-11 container.
      * @param string $basePath The base path of the application.
@@ -34,7 +36,6 @@ abstract class MvcWebApp extends WebApplication
     protected function __construct(
         ContainerInterface $container,
         string $basePath,
-        private readonly RequestContext $requestContext,
         private array $middlewares = [],
         private bool $requireAuthentication = false,
         private bool $requireRouteAccessControl = false,
@@ -45,10 +46,38 @@ abstract class MvcWebApp extends WebApplication
 
     public function run(ServerRequestInterface $request): int
     {
-        $this->buildMiddlewareChain();
-        $this->handleRequest($request);
+        $this->emitResponse($this->handleRequest($request));
 
         return 0;
+    }
+
+    /**
+     * Builds the middleware chain, dispatches the request, and returns the PSR-7 response (no SAPI output).
+     *
+     * Use this in integration tests; use {@see emitResponse()} or {@see run()} to send the response to PHP.
+     */
+    public function handleRequest(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var RequestContext $context */
+        $context = $this->container->get(RequestContext::class);
+        $request = $request->withAttribute(RequestContext::class, $context);
+        $chain = $this->buildMiddlewareChain();
+
+        return $chain->handleRequest($request);
+    }
+
+    /**
+     * Sends status, headers, and body to PHP's global HTTP response.
+     */
+    public function emitResponse(ResponseInterface $response): void
+    {
+        http_response_code($response->getStatusCode());
+        foreach ($response->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                header("$name: $value", false);
+            }
+        }
+        echo $response->getBody();
     }
 
     /**
@@ -90,7 +119,7 @@ abstract class MvcWebApp extends WebApplication
         $this->enableCsrfProtection = true;
     }
 
-    private function buildMiddlewareChain(): void
+    private function buildMiddlewareChain(): Middleware
     {
         /** @var RequestHandling $lastMiddleware */
         $lastMiddleware = $this->container->get(RequestHandling::class);
@@ -139,27 +168,7 @@ abstract class MvcWebApp extends WebApplication
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);
         $errorMiddleware->setNext($lastMiddleware);
-        $this->middlewareChain = $errorMiddleware;
-    }
 
-    private function handleRequest(ServerRequestInterface $request): void
-    {
-        if (!$this->middlewareChain instanceof Middleware) {
-            throw new \RuntimeException(
-                'Middleware chain was not built; call buildMiddlewareChain() before handleRequest().'
-            );
-        }
-
-        $response = $this->middlewareChain->handleRequest(
-            $request->withAttribute(RequestContext::class, $this->requestContext)
-        );
-
-        http_response_code($response->getStatusCode());
-        foreach ($response->getHeaders() as $name => $values) {
-            foreach ($values as $value) {
-                header("$name: $value", false);
-            }
-        }
-        echo $response->getBody();
+        return $errorMiddleware;
     }
 }

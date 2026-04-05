@@ -21,5 +21,5 @@ $wrapped->set(RequestContext::class, $requestContext);
 $requestCreator = $wrapped->get(ServerRequestCreator::class);
 $request = $requestCreator->fromGlobals();
 
-$app = new {{name}}App(container: $wrapped, basePath: __DIR__, requestContext: $requestContext);
+$app = new {{name}}App(container: $wrapped, basePath: __DIR__);
 $app->run($request);

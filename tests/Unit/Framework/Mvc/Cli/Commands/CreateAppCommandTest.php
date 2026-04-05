@@ -176,7 +176,8 @@ final class CreateAppCommandTest extends TestCase
         $this->assertStringContainsString('namespace App\\Ports\\MyApp;', $appContent);
         $this->assertStringContainsString('class MyAppApp extends MvcWebApp', $appContent);
         $this->assertStringContainsString('ContainerInterface', $appContent);
-        $this->assertStringContainsString('RequestContext', $appContent);
+        $this->assertStringContainsString('string $basePath', $appContent);
+        $this->assertStringNotContainsString('RequestContext', $appContent);
         $this->assertStringNotContainsString('function router()', $appContent);
     }
 

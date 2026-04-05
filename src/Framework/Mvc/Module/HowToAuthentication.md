@@ -82,7 +82,7 @@ $wrapped->set(RequestContext::class, $requestContext);
 $creator = $wrapped->get(ServerRequestCreator::class);
 $request = $creator->fromGlobals();
 
-$app = new MyApp(container: $wrapped, basePath: __DIR__, requestContext: $requestContext);
+$app = new MyApp(container: $wrapped, basePath: __DIR__);
 
 $config = MvcConfig::load(__DIR__);
 if ($config->isAuthenticationEnabled()) {

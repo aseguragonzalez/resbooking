@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace {{namespace}};
 
 use Framework\Mvc\MvcWebApp;
-use Framework\Mvc\Requests\RequestContext;
 use Psr\Container\ContainerInterface;
 
 final class {{name}}App extends MvcWebApp
 {
-    public function __construct(ContainerInterface $container, string $basePath, RequestContext $requestContext)
+    public function __construct(ContainerInterface $container, string $basePath)
     {
-        parent::__construct($container, $basePath, $requestContext);
+        parent::__construct($container, $basePath);
     }
 }

@@ -21,7 +21,7 @@ It is designed for:
 High-level flow for an HTTP request:
 
 1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Mvc\Web\Dependencies::configure()`).
-2. The HTTP entrypoint creates a per-request `RequestContext`, registers it on the container for controller injection, builds a PSR-7 `ServerRequestInterface` (e.g. `Nyholm\Psr7Server\ServerRequestCreator::fromGlobals()`), then calls `WebApplication::run($request)`. `MvcWebApp` builds the middleware chain and handles that request.
+2. The HTTP entrypoint creates a per-request `RequestContext`, registers it on the container (for controller injection and for `MvcWebApp::handleRequest()`), builds a PSR-7 `ServerRequestInterface` (e.g. `Nyholm\Psr7Server\ServerRequestCreator::fromGlobals()`), then calls `WebApplication::run($request)` (or `handleRequest()` for tests and `emitResponse()` when you want to separate pipeline from SAPI output). `MvcWebApp` builds the middleware chain and returns a PSR-7 response from `handleRequest()`.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → *optional* `AllowedHttpMethodsForHtmlUi` → `Localization` → *optional* `CsrfProtection`
    - *optional* `Authentication` → *optional* route access control (`Middlewares\Authorization`)
@@ -30,7 +30,7 @@ High-level flow for an HTTP request:
    - Builds action parameters from route args, query params, and body
    - Invokes the controller action
    - Converts the `ActionResponse` into a PSR-7 `ResponseInterface`
-5. `MvcWebApp` sends status, headers and body to PHP’s output functions.
+5. `MvcWebApp::emitResponse()` (or `run()`, which calls `handleRequest()` then `emitResponse()`) sends status, headers and body to PHP’s output functions.
 
 ---
 
@@ -47,17 +47,14 @@ Framework\Mvc\Web\Dependencies::configure(new Infrastructure\Container\PhpDiMuta
 ```php
 final class WebApp extends MvcWebApp
 {
-    public function __construct(
-        \Psr\Container\ContainerInterface $container,
-        string $basePath,
-        \Framework\Mvc\Requests\RequestContext $requestContext,
-    ) {
-        parent::__construct($container, $basePath, $requestContext);
+    public function __construct(\Psr\Container\ContainerInterface $container, string $basePath)
+    {
+        parent::__construct($container, $basePath);
     }
 }
 ```
 
-In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Mvc\Web\Dependencies::configure()`**. Use **`Infrastructure\Container\PhpDiMutableContainer`** when your bootstrap calls `Web\Dependencies::configure()` (it requires `MutableContainer`). For each HTTP request, register the same `RequestContext` instance on the container (for PHP-DI constructor injection), build the PSR-7 request, then call `run($request)`:
+In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Mvc\Web\Dependencies::configure()`**. Use **`Infrastructure\Container\PhpDiMutableContainer`** when your bootstrap calls `Web\Dependencies::configure()` (it requires `MutableContainer`). For each HTTP request, register the same `RequestContext` instance on the container (for PHP-DI constructor injection and so `MvcWebApp` can attach it to the PSR-7 request), build the PSR-7 request, then call `run($request)` or `emitResponse($app->handleRequest($request))`:
 
 ```php
 $container = new \DI\Container();
@@ -70,7 +67,7 @@ $wrapped->set(\Framework\Mvc\Requests\RequestContext::class, $requestContext);
 $creator = $wrapped->get(\Nyholm\Psr7Server\ServerRequestCreator::class);
 $request = $creator->fromGlobals();
 
-$app = new WebApp($wrapped, __DIR__ . '/../', $requestContext);
+$app = new WebApp($wrapped, __DIR__ . '/../');
 $app->useAuthentication();
 $app->useRouteAccessControl();
 $app->useCsrfProtection();
@@ -86,6 +83,8 @@ Register **`Framework\Mvc\Config\PublicApplicationUrl`** in the composition root
 
 Public knobs on `MvcWebApp`:
 
+- `handleRequest(ServerRequestInterface $request): ResponseInterface` – run the middleware pipeline; no SAPI output (use in integration tests).
+- `emitResponse(ResponseInterface $response): void` – write status, headers, and body to PHP’s global response.
 - `addMiddleware(string $middleware)` – register custom middlewares (run inside the fixed chain).
 - `useAuthentication()` – run authentication middleware (identity on `RequestContext`).
 - `useRouteAccessControl()` – enforce each route’s `authRequired` / `roles`; **must** be called after `useAuthentication()`.

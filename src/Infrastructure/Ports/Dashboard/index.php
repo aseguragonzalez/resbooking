@@ -15,15 +15,15 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 $container = new Container();
 DashboardBootstrap::register($container, __DIR__);
 $wrapped = new PhpDiMutableContainer($container);
-$requestContext = new RequestContext();
-$wrapped->set(RequestContext::class, $requestContext);
+$wrapped->set(RequestContext::class, new RequestContext());
 
 /** @var ServerRequestCreator $requestCreator */
 $requestCreator = $wrapped->get(ServerRequestCreator::class);
 $request = $requestCreator->fromGlobals();
 
-$app = new DashboardApp(container: $wrapped, basePath: __DIR__, requestContext: $requestContext);
+$app = new DashboardApp(container: $wrapped, basePath: __DIR__);
 $app->addMiddleware(RestaurantContext::class);
 $app->useAuthentication();
 $app->useRouteAccessControl();
-$app->run($request);
+
+exit($app->run(request: $request));
