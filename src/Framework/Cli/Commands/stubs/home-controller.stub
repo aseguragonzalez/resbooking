@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}}\Controllers;
+
+use Framework\Actions\MvcAction;
+use Framework\Actions\Responses\ActionResponse;
+use Framework\Controllers\Controller;
+use Framework\Routes\Path;
+use Framework\Routes\Route;
+use Framework\Routes\RouteMethod;
+
+final class HomeController extends Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    #[MvcAction]
+    public function index(): ActionResponse
+    {
+        return $this->view('Home/index', model: (object)[
+            'pageTitle' => '{{name}}',
+            'model' => (object)[
+                'title' => 'Welcome to {{name}}',
+            ],
+        ]);
+    }
+
+    /**
+     * @return array<Route>
+     */
+    public static function getRoutes(): array
+    {
+        return [
+            Route::create(
+                method: RouteMethod::Get,
+                path: Path::create('/'),
+                controller: self::class,
+                action: 'index',
+            ),
+        ];
+    }
+}

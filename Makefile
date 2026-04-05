@@ -70,22 +70,22 @@ DASHBOARD_APP_PATH := src/Infrastructure/Ports/Dashboard
 
 # CSS / JS build (minified bundles; same as mvc create-bundle for the Dashboard app)
 css-build:
-	@php src/Framework/Mvc/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
+	@php src/Framework/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
 
 js-build:
-	@php src/Framework/Mvc/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
+	@php src/Framework/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
 
 # Watch unminified bundles (JS + CSS in one process; same as mvc watch-assets)
 css-watch:
-	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
+	@php src/Framework/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
 js-watch:
-	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
+	@php src/Framework/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
 watch:
 	@echo "🚀 Watching Dashboard JS and CSS (mvc watch-assets)..."
 	@echo "Press Ctrl+C to stop\n"
-	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
+	@php src/Framework/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
 # Run background tasks (processes pending email and other queued tasks)
 background-tasks:

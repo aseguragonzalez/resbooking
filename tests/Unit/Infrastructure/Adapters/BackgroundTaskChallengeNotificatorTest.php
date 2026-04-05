@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Adapters;
 
-use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask;
-use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
-use Framework\Mvc\Security\Domain\Entities\ResetPasswordChallenge;
-use Framework\Mvc\Security\Domain\Entities\SignUpChallenge;
-use Framework\Mvc\Security\Domain\Entities\UserIdentity;
+use Framework\BackgroundTasks\Application\RegisterTask\RegisterTask;
+use Framework\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;
+use Framework\Security\Domain\Entities\ResetPasswordChallenge;
+use Framework\Security\Domain\Entities\SignUpChallenge;
+use Framework\Security\Domain\Entities\UserIdentity;
 use Infrastructure\Adapters\BackgroundTaskChallengeNotificator;
 use PHPUnit\Framework\TestCase;
 

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Infrastructure\Adapters\Migrations;
 
 use DI\Container;
-use Framework\Mvc\Migrations\Dependencies;
+use Framework\Migrations\Dependencies;
 use Infrastructure\Container\PhpDiMutableContainer;
-use Framework\Mvc\Migrations\MigrationsMysqlConnection;
+use Framework\Migrations\MigrationsMysqlConnection;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;

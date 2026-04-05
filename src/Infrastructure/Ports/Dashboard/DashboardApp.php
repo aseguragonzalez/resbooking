@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\Dashboard;
 
-use Framework\Mvc\MvcWebApp;
+use Framework\MvcWebApp;
 use Psr\Container\ContainerInterface;
 
 final class DashboardApp extends MvcWebApp

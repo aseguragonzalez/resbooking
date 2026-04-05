@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Infrastructure\Ports\BackgroundTasks\Tasks;
 
-use Framework\Mvc\BackgroundTasks\Domain\Task;
+use Framework\BackgroundTasks\Domain\Task;
 
 final readonly class ResetPasswordChallengeEmailTask extends Task
 {

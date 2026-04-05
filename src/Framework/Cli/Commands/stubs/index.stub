@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/{{autoloadPath}}';
+
+use DI\Container;
+use Framework\Requests\RequestContext;
+use Infrastructure\Container\PhpDiMutableContainer;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use {{namespace}}\{{name}}App;
+use {{namespace}}\{{name}}Bootstrap;
+
+$container = new Container();
+{{name}}Bootstrap::register($container, __DIR__);
+$wrapped = new PhpDiMutableContainer($container);
+$requestContext = new RequestContext();
+$wrapped->set(RequestContext::class, $requestContext);
+
+/** @var ServerRequestCreator $requestCreator */
+$requestCreator = $wrapped->get(ServerRequestCreator::class);
+$request = $requestCreator->fromGlobals();
+
+$app = new {{name}}App(container: $wrapped, basePath: __DIR__);
+$app->run($request);

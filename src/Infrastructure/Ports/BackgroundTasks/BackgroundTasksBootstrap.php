@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\BackgroundTasks;
 
 use DI\Container;
-use Framework\Mvc\Files\DefaultFileManager;
-use Framework\Mvc\Files\FileManager;
-use Framework\Mvc\BackgroundTasks\Dependencies;
+use Framework\Files\DefaultFileManager;
+use Framework\Files\FileManager;
+use Framework\BackgroundTasks\Dependencies;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
-use Framework\Mvc\BackgroundTasks\TaskHandlerClassMap;
+use Framework\BackgroundTasks\TaskHandlerClassMap;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendSignUpChallengeEmailHandler;
 use Infrastructure\Ports\BackgroundTasks\Mailer\MailerInterface;

@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Unit\Framework\Fixtures\Controllers;
+
+use Framework\Actions\MvcAction;
+use Framework\Actions\Responses\ActionResponse;
+use Framework\Controllers\Controller;
+
+final class HomeController extends Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    #[MvcAction]
+    public function index(): ActionResponse
+    {
+        return $this->view('Home/index');
+    }
+}

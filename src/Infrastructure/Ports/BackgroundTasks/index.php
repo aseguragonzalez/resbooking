@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
-use Framework\Mvc\BackgroundTasks\BackgroundTasksApp;
+use Framework\BackgroundTasks\BackgroundTasksApp;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Ports\BackgroundTasks\BackgroundTasksBootstrap;
 

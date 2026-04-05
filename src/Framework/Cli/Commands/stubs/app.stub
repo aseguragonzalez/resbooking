@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Framework\MvcWebApp;
+use Psr\Container\ContainerInterface;
+
+final class {{name}}App extends MvcWebApp
+{
+    public function __construct(ContainerInterface $container, string $basePath)
+    {
+        parent::__construct($container, $basePath);
+    }
+}

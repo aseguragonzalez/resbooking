@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Infrastructure\Container;
 
 use DI\Container;
-use Framework\Mvc\Container\MutableContainer;
+use Framework\Container\MutableContainer;
 
 /**
  * Adapts PHP-DI's {@see Container} to {@see MutableContainer} for application entrypoints.
