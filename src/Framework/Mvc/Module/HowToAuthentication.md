@@ -111,7 +111,7 @@ from your composition root (for example a project-level `Dependencies::configure
 
 You must bind `ChallengeNotificator` in your composition root to a concrete implementation: logging, direct mail, a queue, background tasks, and so on—whatever fits your app.
 
-In this repository, the Dashboard port provides `Infrastructure\Ports\Dashboard\BackgroundTaskChallengeNotificator`, which enqueues tasks via `Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask` with types `send_sign_up_challenge_email` and `send_reset_password_challenge_email`. It is wired in `Infrastructure\Ports\Dashboard\DashboardBootstrap` after the shared `Infrastructure\Dependencies::configure` (which registers background tasks and security) so that `RegisterTask` is available.
+In this repository, the infrastructure adapter `Infrastructure\Adapters\BackgroundTaskChallengeNotificator` enqueues tasks via `Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask` with types `send_sign_up_challenge_email` and `send_reset_password_challenge_email`. It is wired in `Infrastructure\Ports\Dashboard\DashboardBootstrap` after the shared `Infrastructure\Dependencies::configure` (which registers background tasks and security) so that `RegisterTask` is available.
 
 ## Custom `IdentityManager` or storage
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Ports\Dashboard;
+namespace Infrastructure\Adapters;
 
 use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask;
 use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTaskCommand;

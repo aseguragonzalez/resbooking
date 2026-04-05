@@ -20,6 +20,7 @@ use Framework\Mvc\Routes\Router;
 use Framework\Mvc\Web\Dependencies as MvcWebDependencies;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\UiAssetsSettings;
+use Infrastructure\Adapters\BackgroundTaskChallengeNotificator;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Dependencies;
 use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
