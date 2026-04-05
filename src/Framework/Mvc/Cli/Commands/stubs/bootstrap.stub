@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace {{namespace}};
 
 use DI\Container;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Framework\Mvc\AuthSettings;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\Config\PublicApplicationUrl;
@@ -16,6 +17,8 @@ use Framework\Mvc\UiAssetsSettings;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
+use Framework\Mvc\Routes\Router;
+use Framework\Mvc\Web\Dependencies as MvcWebDependencies;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -23,6 +26,7 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use PDO;
 use Psr\Log\LoggerInterface;
+use {{namespace}}\Controllers\RouterBuilder;
 
 final class {{name}}Bootstrap
 {
@@ -97,6 +101,9 @@ final class {{name}}Bootstrap
             ]
         );
         $container->set(PDO::class, $connection);
+
+        $container->set(Router::class, RouterBuilder::build());
+        MvcWebDependencies::configure(new PhpDiMutableContainer($container));
     }
 
     private static function errorSettings(): ErrorSettings

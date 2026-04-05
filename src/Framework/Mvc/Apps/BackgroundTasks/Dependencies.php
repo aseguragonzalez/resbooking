@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\BackgroundTasks;
 
-use DI\Container;
+use Framework\Mvc\Container\MutableContainer;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksHandler;
 use Framework\Mvc\BackgroundTasks\Application\RegisterTask\RegisterTask;
@@ -24,7 +24,7 @@ final class Dependencies
      * Registers framework BackgroundTasks bindings. Call after the composition root has set
      * {@see \PDO} and {@see TaskHandlerClassMap} on the container (plus any app-specific services).
      */
-    public static function configure(Container $container): void
+    public static function configure(MutableContainer $container): void
     {
         $container->set(TaskHandlerRegistry::class, $container->get(ContainerTaskHandlerRegistry::class));
         $container->set(TaskRepository::class, $container->get(SqlTaskRepository::class));

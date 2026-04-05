@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Framework\Mvc\Container;
+namespace Infrastructure\Container;
 
 use DI\Container;
+use Framework\Mvc\Container\MutableContainer;
 
 /**
- * Adapts PHP-DI's {@see Container} to {@see ServiceRegistry} for application entrypoints.
+ * Adapts PHP-DI's {@see Container} to {@see MutableContainer} for application entrypoints.
  */
-final readonly class PhpDiServiceRegistry implements ServiceRegistry
+final readonly class PhpDiMutableContainer implements MutableContainer
 {
     public function __construct(private Container $container)
     {

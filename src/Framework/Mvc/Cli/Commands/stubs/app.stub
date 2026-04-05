@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace {{namespace}};
 
-use Framework\Mvc\Container\ServiceRegistry;
 use Framework\Mvc\MvcWebApp;
-use Framework\Mvc\Routes\Router;
-use {{namespace}}\Controllers\RouterBuilder;
+use Psr\Container\ContainerInterface;
 
 final class {{name}}App extends MvcWebApp
 {
-    public function __construct(ServiceRegistry $container, string $basePath)
+    public function __construct(ContainerInterface $container, string $basePath)
     {
         parent::__construct($container, $basePath);
-    }
-
-    protected function router(): Router
-    {
-        return RouterBuilder::build();
     }
 }

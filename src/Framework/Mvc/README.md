@@ -20,7 +20,7 @@ It is designed for:
 
 High-level flow for an HTTP request:
 
-1. The composition root registers services on the DI container; then `MvcWebApp::run()` wires MVC-only services and the middleware chain.
+1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Mvc\Web\Dependencies::configure()`); then `MvcWebApp::run()` builds the middleware chain and handles the request.
 2. `MvcWebApp::handleRequest()` builds a PSR-7 `ServerRequestInterface` from globals.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → *optional* `AllowedHttpMethodsForHtmlUi` → `Localization` → *optional* `CsrfProtection`
@@ -36,42 +36,30 @@ High-level flow for an HTTP request:
 
 ## Bootstrapping an MVC app
 
-Create your application by extending `MvcWebApp` and wiring routes and middlewares through the container:
+Create your application by extending `MvcWebApp`. Register routes and the HTTP view stack in the bootstrap (composition root), not on the app class:
+
+```php
+// In MyAppBootstrap::register() after your domain wiring:
+$container->set(Router::class, RouterBuilder::build());
+Framework\Mvc\Web\Dependencies::configure(new Infrastructure\Container\PhpDiMutableContainer($container));
+```
 
 ```php
 final class WebApp extends MvcWebApp
 {
-    protected function router(): Router
+    public function __construct(\Psr\Container\ContainerInterface $container, string $basePath)
     {
-        $router = new Router();
-
-        $router->register(Route::create(
-            RouteMethod::Get,
-            Path::create('/'),
-            HomeController::class,
-            'index',
-        ));
-
-        $router->register(Route::create(
-            RouteMethod::Post,
-            Path::create('/account/{uuid:id}/update'),
-            AccountController::class,
-            'update',
-            authRequired: true,
-            roles: ['user', 'admin'],
-        ));
-
-        return $router;
+        parent::__construct($container, $basePath);
     }
 }
 ```
 
-In your composition root (e.g. `public/index.php`) register settings, logging, and dependencies on the container, then construct and run the app:
+In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Mvc\Web\Dependencies::configure()`**, then construct and run the app. Pass a container that implements **`Framework\Mvc\Container\MutableContainer`** (in this repository: wrap PHP-DI with **`Infrastructure\Container\PhpDiMutableContainer`**) so `MvcWebApp::run()` can register the per-request `RequestContext` and composed `Middleware` entrypoint:
 
 ```php
 $container = new \DI\Container();
 MyAppBootstrap::register($container, __DIR__ . '/../');
-$app = new WebApp($container, basePath: __DIR__ . '/../');
+$app = new WebApp(new \Infrastructure\Container\PhpDiMutableContainer($container), __DIR__ . '/../');
 
 $app->useAuthentication();
 $app->useRouteAccessControl();
@@ -80,11 +68,11 @@ $app->useCsrfProtection();
 exit($app->run());
 ```
 
-`MvcWebApp::run()` does not populate the container; anything your middlewares and controllers need must already be registered before `run()`.
+Anything your middlewares and controllers need (including `Router`, PSR-17 factories, view pipeline, `RequestHandlerInterface`) must be registered **before** `run()` via the bootstrap.
 
 Register **`Framework\Mvc\Config\PublicApplicationUrl`** in the composition root (absolute `https://` or `http://` origin, no path, no trailing slash). It is used to build **`Location`** headers for `LocalRedirectTo`. Example: `new PublicApplicationUrl(getenv('PUBLIC_APPLICATION_URL') ?: 'http://localhost')` in your bootstrap (read env only outside the framework if you prefer).
 
-`Application` / `MvcWebApp` accept **`Framework\Mvc\Container\ServiceRegistry`** (use **`Framework\Mvc\Container\PhpDiServiceRegistry`** to wrap a PHP-DI `Container` from `index.php`).
+`Application` and its subclasses are typed against **`Psr\Container\ContainerInterface`**. Framework **`Dependencies::configure`** methods take **`Framework\Mvc\Container\MutableContainer`** (extends PSR-11 and adds `set()`).
 
 Public knobs on `MvcWebApp`:
 
@@ -194,7 +182,7 @@ This allows you to keep actions strongly typed and free from manual array plumbi
 
 The views subsystem is documented in detail in `Views/README.md`. Key points for public usage:
 
-- Configure views with `HtmlViewEngineSettings` and `LanguageSettings` in the container; `MvcWebApp` does this in `configureMvc()`.
+- Configure views with `HtmlViewEngineSettings` and `LanguageSettings` in the container; the composition root registers **`Router::class`** and calls **`Framework\Mvc\Web\Dependencies::configure()`** to register the PSR-17 stack, view pipeline, and request handler.
 - Return `View` responses from controller actions, passing:
   - `viewPath` – path relative to the configured views directory, without `.html`.
   - `data` – array or object; merged with request context.

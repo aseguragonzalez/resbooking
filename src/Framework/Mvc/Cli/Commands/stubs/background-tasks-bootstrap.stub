@@ -6,6 +6,7 @@ namespace {{namespace}}\BackgroundTasks;
 
 use DI\Container;
 use Framework\Mvc\BackgroundTasks\Dependencies;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Framework\Mvc\BackgroundTasks\TaskHandlerClassMap;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -65,7 +66,7 @@ final class {{name}}BackgroundTasksBootstrap
 
         // Register app-specific container bindings here before Dependencies::configure().
 
-        Dependencies::configure($container);
+        Dependencies::configure(new PhpDiMutableContainer($container));
     }
 
     private static function logLevelFromSettings(string $logLevel): Level

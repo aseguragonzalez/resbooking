@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Mvc\BackgroundTasks;
 
 use Framework\Mvc\Application;
-use Framework\Mvc\Container\ServiceRegistry;
+use Psr\Container\ContainerInterface;
 use Framework\Mvc\Config\MvcConfig;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasks;
 use Framework\Mvc\BackgroundTasks\Application\ProcessPendingTasks\ProcessPendingTasksCommand;
@@ -15,7 +15,7 @@ final class BackgroundTasksApp extends Application
 {
     private bool $shutdownRequested = false;
 
-    public function __construct(ServiceRegistry $container, string $basePath)
+    public function __construct(ContainerInterface $container, string $basePath)
     {
         parent::__construct($container, $basePath);
     }

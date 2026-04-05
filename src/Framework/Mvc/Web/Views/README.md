@@ -173,4 +173,4 @@ The model may be an associative array (e.g. from an API or JSON); paths work the
 
 **Interfaces and classes:** `ViewEngine`, `HtmlViewEngine`, `ContentReplacer`, `ContentReplacerPipeline`, `ModelReplacer`, `BranchesReplacer`, `I18nReplacer`, `ViewValueResolver`.
 
-**Configuration:** `HtmlViewEngineSettings` (views path), `LanguageSettings` (i18n). The pipeline is wired in `MvcWebApp::configureMvc()`.
+**Configuration:** `HtmlViewEngineSettings` (views path), `LanguageSettings` (i18n). The pipeline is wired in `Framework\Mvc\Web\Dependencies::configure()` from the application bootstrap (after `Router::class` is registered).

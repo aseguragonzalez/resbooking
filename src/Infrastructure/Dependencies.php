@@ -23,10 +23,10 @@ use Application\Restaurants\UpdateSettings\UpdateSettingsHandler;
 use DI\Container;
 use Domain\Restaurants\Repositories\RestaurantRepository;
 use Framework\Mvc\BackgroundTasks\Dependencies as BackgroundTasksDependencies;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Framework\Mvc\Security\Dependencies as SecurityDependencies;
 use Infrastructure\Adapters\PdoUnitOfWork;
 use Infrastructure\Adapters\Repositories\Restaurants\SqlRestaurantRepository;
-use PDO;
 use SeedWork\Application\CommandBus;
 use SeedWork\Application\DomainEventBus;
 use SeedWork\Application\QueryBus;
@@ -64,7 +64,7 @@ final class Dependencies
         $containerQueryBus->register(GetRestaurantByIdQuery::class, GetRestaurantByIdHandler::class);
         $container->set(QueryBus::class, $containerQueryBus);
 
-        BackgroundTasksDependencies::configure($container);
+        BackgroundTasksDependencies::configure(new PhpDiMutableContainer($container));
 
         // Configure security: IdentityManager, repositories, use cases
         SecurityDependencies::configure($container);

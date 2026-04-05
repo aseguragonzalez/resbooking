@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc\Migrations;
 
-use DI\Container;
+use Framework\Mvc\Container\MutableContainer;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\Migrations\Application\RunMigrations;
@@ -41,7 +41,7 @@ final class Dependencies
      * Registers framework migrations bindings. The composition root must register {@see PDO}
      * and {@see MigrationsMysqlConnection} before calling this method.
      */
-    public static function configure(Container $container): void
+    public static function configure(MutableContainer $container): void
     {
         // Infrastructure services
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));

@@ -6,6 +6,7 @@ namespace Infrastructure\Adapters\Migrations;
 
 use DI\Container;
 use Framework\Mvc\Migrations\Dependencies;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Framework\Mvc\Migrations\MigrationsMysqlConnection;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -58,7 +59,7 @@ final class MigrationsBootstrap
 
         $container->set(LoggerInterface::class, $logger);
 
-        Dependencies::configure($container);
+        Dependencies::configure(new PhpDiMutableContainer($container));
     }
 
     private static function logLevelFromSettings(string $logLevel): Level

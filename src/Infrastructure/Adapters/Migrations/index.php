@@ -6,13 +6,13 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 use DI\Container;
 use Framework\Mvc\Migrations\MigrationApp;
-use Framework\Mvc\Container\PhpDiServiceRegistry;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Adapters\Migrations\MigrationsBootstrap;
 
 $container = new Container();
 MigrationsBootstrap::register($container);
 $app = new MigrationApp(
-    container: new PhpDiServiceRegistry($container),
+    container: new PhpDiMutableContainer($container),
     basePath: __DIR__,
 );
 

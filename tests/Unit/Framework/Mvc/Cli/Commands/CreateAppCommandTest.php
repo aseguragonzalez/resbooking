@@ -173,6 +173,26 @@ final class CreateAppCommandTest extends TestCase
         \assert(\is_string($appContent));
         $this->assertStringContainsString('namespace App\\Ports\\MyApp;', $appContent);
         $this->assertStringContainsString('class MyAppApp extends MvcWebApp', $appContent);
+        $this->assertStringContainsString('ContainerInterface', $appContent);
+        $this->assertStringNotContainsString('function router()', $appContent);
+    }
+
+    public function testGeneratedBootstrapRegistersRouterAndMvcWebDependencies(): void
+    {
+        $appPath = vfsStream::url('project/src/Ports/MyApp');
+
+        $this->command->execute([
+            $appPath,
+            '--name=MyApp',
+            '--namespace=App\\Ports\\MyApp',
+        ]);
+
+        $bootstrapContent = file_get_contents($appPath . '/MyAppBootstrap.php');
+        \assert(\is_string($bootstrapContent));
+        $this->assertStringContainsString('Router::class', $bootstrapContent);
+        $this->assertStringContainsString('RouterBuilder::build()', $bootstrapContent);
+        $this->assertStringContainsString('MvcWebDependencies::configure', $bootstrapContent);
+        $this->assertStringContainsString('PhpDiMutableContainer', $bootstrapContent);
     }
 
     public function testGeneratedSettingsContainsCorrectClassName(): void

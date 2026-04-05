@@ -16,9 +16,13 @@ use Framework\Mvc\LanguageSettings;
 use Framework\Mvc\Routes\AccessDeniedException;
 use Framework\Mvc\Routes\AuthenticationRequiredException;
 use Framework\Mvc\Routes\RouteDoesNotFoundException;
+use Framework\Mvc\Routes\Router;
+use Framework\Mvc\Web\Dependencies as MvcWebDependencies;
 use Framework\Mvc\Security\Domain\Services\ChallengeNotificator;
 use Framework\Mvc\UiAssetsSettings;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Dependencies;
+use Infrastructure\Ports\Dashboard\Controllers\RouterBuilder;
 use Infrastructure\Ports\Dashboard\Middlewares\RestaurantContextSettings;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
@@ -103,6 +107,9 @@ final class DashboardBootstrap
         Dependencies::configure($container);
 
         $container->set(ChallengeNotificator::class, $container->get(BackgroundTaskChallengeNotificator::class));
+
+        $container->set(Router::class, RouterBuilder::build());
+        MvcWebDependencies::configure(new PhpDiMutableContainer($container));
     }
 
     private static function errorSettings(): ErrorSettings

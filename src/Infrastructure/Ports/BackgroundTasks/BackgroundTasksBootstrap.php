@@ -8,6 +8,7 @@ use DI\Container;
 use Framework\Mvc\Files\DefaultFileManager;
 use Framework\Mvc\Files\FileManager;
 use Framework\Mvc\BackgroundTasks\Dependencies;
+use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Ports\BackgroundTasks\TemplateEngine;
 use Framework\Mvc\BackgroundTasks\TaskHandlerClassMap;
 use Infrastructure\Ports\BackgroundTasks\Handlers\SendResetPasswordChallengeEmailHandler;
@@ -92,7 +93,7 @@ final class BackgroundTasksBootstrap
         $container->set(TemplateEngine::class, new TemplateEngine());
         $container->set(MailerInterface::class, $container->get(PhpMailerMailer::class));
 
-        Dependencies::configure($container);
+        Dependencies::configure(new PhpDiMutableContainer($container));
     }
 
     private static function logLevelFromSettings(string $logLevel): Level

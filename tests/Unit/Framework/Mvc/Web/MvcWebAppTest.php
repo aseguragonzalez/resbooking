@@ -5,25 +5,19 @@ declare(strict_types=1);
 namespace Tests\Unit\Framework\Mvc\Web;
 
 use DI\Container;
-use Framework\Mvc\Container\PhpDiServiceRegistry;
-use Framework\Mvc\Container\ServiceRegistry;
 use Framework\Mvc\MvcWebApp;
-use Framework\Mvc\Routes\Router;
+use Infrastructure\Container\PhpDiMutableContainer;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 final class MvcWebAppTest extends TestCase
 {
     public function testUseRouteAccessControlWithoutAuthenticationThrows(): void
     {
-        $app = new class (new PhpDiServiceRegistry(new Container()), '/tmp') extends MvcWebApp {
-            public function __construct(ServiceRegistry $container, string $basePath)
+        $app = new class (new PhpDiMutableContainer(new Container()), '/tmp') extends MvcWebApp {
+            public function __construct(ContainerInterface $container, string $basePath)
             {
                 parent::__construct($container, $basePath);
-            }
-
-            protected function router(): Router
-            {
-                return new Router();
             }
         };
 
@@ -34,15 +28,10 @@ final class MvcWebAppTest extends TestCase
 
     public function testUseRouteAccessControlAfterAuthenticationDoesNotThrow(): void
     {
-        $app = new class (new PhpDiServiceRegistry(new Container()), '/tmp') extends MvcWebApp {
-            public function __construct(ServiceRegistry $container, string $basePath)
+        $app = new class (new PhpDiMutableContainer(new Container()), '/tmp') extends MvcWebApp {
+            public function __construct(ContainerInterface $container, string $basePath)
             {
                 parent::__construct($container, $basePath);
-            }
-
-            protected function router(): Router
-            {
-                return new Router();
             }
         };
 

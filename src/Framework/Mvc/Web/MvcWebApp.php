@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
-use Framework\Mvc\Container\ServiceRegistry;
-use Framework\Mvc\Files\DefaultFileManager;
-use Framework\Mvc\Files\FileManager;
+use Framework\Mvc\Container\MutableContainer;
 use Framework\Mvc\Middlewares\AllowedHttpMethodsForHtmlUi;
 use Framework\Mvc\Middlewares\Authentication;
 use Framework\Mvc\Middlewares\Authorization;
@@ -16,21 +14,8 @@ use Framework\Mvc\Middlewares\Localization;
 use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
 use Framework\Mvc\Requests\RequestContext;
-use Framework\Mvc\Requests\RequestHandler;
-use Framework\Mvc\Routes\Router;
-use Framework\Mvc\LanguageSettings;
-use Framework\Mvc\Views\BranchesReplacer;
-use Framework\Mvc\Views\ContentReplacer;
-use Framework\Mvc\Views\ContentReplacerPipeline;
-use Framework\Mvc\Views\HtmlViewEngine;
-use Framework\Mvc\Views\I18nReplacer;
-use Framework\Mvc\Views\ModelReplacer;
-use Framework\Mvc\Views\ViewEngine;
-use Framework\Mvc\Views\ViewValueResolver;
 use Nyholm\Psr7Server\ServerRequestCreator;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * The base class for all MVC Web applications.
@@ -38,7 +23,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 abstract class MvcWebApp extends Application
 {
     /**
-     * @param ServiceRegistry $container The service registry instance.
+     * @param ContainerInterface $container PSR-11 container. For {@see run()}, the instance must also implement
+     *        {@see MutableContainer} so request-scoped services can be registered.
      * @param string $basePath The base path of the application.
      * @param array<class-string<Middleware>> $middlewares The middlewares to use.
      * @param bool $requireAuthentication Whether to require authentication.
@@ -46,7 +32,7 @@ abstract class MvcWebApp extends Application
      * @param bool $enableCsrfProtection Whether to validate CSRF tokens on state-changing requests.
      */
     protected function __construct(
-        ServiceRegistry $container,
+        ContainerInterface $container,
         string $basePath,
         private array $middlewares = [],
         private bool $requireAuthentication = false,
@@ -57,11 +43,6 @@ abstract class MvcWebApp extends Application
     }
 
     /**
-     * Configure the router for the application.
-     */
-    abstract protected function router(): Router;
-
-    /**
      * @param int|null $argc The number of arguments passed to the application. Default is null.
      * @param array<string> $argv The arguments to pass to the application. Default is an empty array.
      * @return int The exit code of the application.
@@ -69,10 +50,10 @@ abstract class MvcWebApp extends Application
     public function run(?int $argc = null, array $argv = []): int
     {
         $requestContext = new RequestContext();
-        $this->container->set(RequestContext::class, $requestContext);
-        $this->configureMvc();
+        $this->mutableContainer()->set(RequestContext::class, $requestContext);
         $this->buildMiddlewareChain();
         $this->handleRequest($requestContext);
+
         return 0;
     }
 
@@ -125,6 +106,7 @@ abstract class MvcWebApp extends Application
             /** @var Middleware $currentMiddleware */
             $currentMiddleware = $this->container->get($middleware);
             $currentMiddleware->setNext($lastMiddleware);
+
             return $currentMiddleware;
         }, $lastMiddleware);
 
@@ -163,38 +145,22 @@ abstract class MvcWebApp extends Application
         /** @var ErrorHandling $errorMiddleware */
         $errorMiddleware = $this->container->get(ErrorHandling::class);
         $errorMiddleware->setNext($lastMiddleware);
-        $this->container->set(Middleware::class, $errorMiddleware);
+        $this->mutableContainer()->set(Middleware::class, $errorMiddleware);
     }
 
-    private function configureMvc(): void
+    /**
+     * @throws \LogicException When the container does not support runtime registration.
+     */
+    private function mutableContainer(): MutableContainer
     {
-        $psr17Factory = new Psr17Factory();
-        $this->container->set(Psr17Factory::class, $psr17Factory);
-        $this->container->set(ResponseFactoryInterface::class, $psr17Factory);
-        $this->container->set(ServerRequestCreator::class, new ServerRequestCreator(
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-        ));
-        $this->container->set(Router::class, $this->router());
-        $this->container->set(FileManager::class, $this->container->get(DefaultFileManager::class));
-        $resolver = new ViewValueResolver();
-        $languageSettings = $this->container->get(LanguageSettings::class);
-        $fileManager = $this->container->get(FileManager::class);
-        if (!$languageSettings instanceof LanguageSettings || !$fileManager instanceof FileManager) {
-            throw new \RuntimeException('LanguageSettings or FileManager not found in container');
+        if (!$this->container instanceof MutableContainer) {
+            throw new \LogicException(
+                'MvcWebApp::run() requires a container implementing ' . MutableContainer::class
+                . ' (e.g. Infrastructure\\Container\\PhpDiMutableContainer).'
+            );
         }
-        $this->container->set(
-            ContentReplacer::class,
-            new ContentReplacerPipeline([
-                new ModelReplacer($resolver),
-                new BranchesReplacer($resolver),
-                new I18nReplacer($languageSettings, $fileManager),
-            ])
-        );
-        $this->container->set(ViewEngine::class, $this->container->get(HtmlViewEngine::class));
-        $this->container->set(RequestHandlerInterface::class, $this->container->get(RequestHandler::class));
+
+        return $this->container;
     }
 
     private function handleRequest(RequestContext $requestContext): void
