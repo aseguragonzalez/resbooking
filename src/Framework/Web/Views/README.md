@@ -10,7 +10,7 @@ Return a view from any controller action:
 return new View($viewPath, $data);
 ```
 
-- **viewPath**: Path relative to the views directory configured in `HtmlViewEngineSettings`, without extension. Example: `'Dashboard/index'` resolves to `{path}/Dashboard/index.html`.
+- **viewPath**: Path relative to `{basePath}/Views/` (the application root passed to `WebApplication` / `MvcWebApp` and to `Framework\Web\Dependencies::configure($mutable, $basePath)`), without extension. Example: `'Dashboard/index'` resolves to `{basePath}/Views/Dashboard/index.html`.
 - **data**: The view model; may be an `array`, an `object`, or `null`. It is merged with the request context (e.g. `user.username`, `user.isAuthenticated`).
 
 The engine always injects into the model:
@@ -173,4 +173,4 @@ The model may be an associative array (e.g. from an API or JSON); paths work the
 
 **Interfaces and classes:** `ViewEngine`, `HtmlViewEngine`, `ContentReplacer`, `ContentReplacerPipeline`, `ModelReplacer`, `BranchesReplacer`, `I18nReplacer`, `ViewValueResolver`.
 
-**Configuration:** `HtmlViewEngineSettings` (views path), `LanguageSettings` (i18n). The pipeline is wired in `Framework\Web\Dependencies::configure()` from the application bootstrap (after `Router::class` is registered).
+**Configuration:** `LanguageSettings` (i18n), optional `UiAssetsSettings`. The pipeline is wired in `Framework\Web\Dependencies::configure($mutable, $basePath)` from the application bootstrap (after `Router::class` is registered). Views always resolve under `{basePath}/Views/`.

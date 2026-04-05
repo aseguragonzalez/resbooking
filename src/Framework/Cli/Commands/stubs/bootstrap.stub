@@ -11,7 +11,6 @@ use Framework\Web\Config\MvcConfig;
 use Framework\Web\Config\PublicApplicationUrl;
 use Framework\Web\ErrorMapping;
 use Framework\Web\ErrorSettings;
-use Framework\Web\HtmlViewEngineSettings;
 use Framework\Web\LanguageSettings;
 use Framework\Web\UiAssetsSettings;
 use Framework\Web\Routes\AccessDeniedException;
@@ -34,13 +33,12 @@ final class {{name}}Bootstrap
     {
         self::registerSettings($container, $basePath);
         self::registerLogging($container);
-        self::registerDependencies($container);
+        self::registerDependencies($container, $basePath);
     }
 
     private static function registerSettings(Container $container, string $basePath): void
     {
         $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
-        $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));
         $config = MvcConfig::load(basePath: $basePath);
         $container->set(LanguageSettings::class, new LanguageSettings(
             basePath: $basePath,
@@ -86,7 +84,7 @@ final class {{name}}Bootstrap
         $container->set(LoggerInterface::class, $logger);
     }
 
-    private static function registerDependencies(Container $container): void
+    private static function registerDependencies(Container $container, string $basePath): void
     {
         /** @var {{name}}Settings $settings */
         $settings = $container->get({{name}}Settings::class);
@@ -102,7 +100,7 @@ final class {{name}}Bootstrap
         $container->set(PDO::class, $connection);
 
         $container->set(Router::class, RouterBuilder::build());
-        MvcWebDependencies::configure(new PhpDiMutableContainer($container));
+        MvcWebDependencies::configure(new PhpDiMutableContainer($container), $basePath);
     }
 
     public static function errorSettings(): ErrorSettings

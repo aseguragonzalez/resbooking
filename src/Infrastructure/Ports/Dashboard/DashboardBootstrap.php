@@ -8,7 +8,6 @@ use DI\Container;
 use Framework\Web\AuthSettings;
 use Framework\Web\Config\MvcConfig;
 use Framework\Web\Config\PublicApplicationUrl;
-use Framework\Web\HtmlViewEngineSettings;
 use Framework\Web\LanguageSettings;
 use Framework\Web\Routes\Router;
 use Framework\Web\Dependencies as MvcWebDependencies;
@@ -33,14 +32,13 @@ final class DashboardBootstrap
     {
         self::registerSettings($container, $basePath);
         self::registerLogging($container);
-        self::registerDependencies($container);
+        self::registerDependencies($container, $basePath);
     }
 
     private static function registerSettings(Container $container, string $basePath): void
     {
         $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in'));
         $container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
-        $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));
         $container->set(LanguageSettings::class, new LanguageSettings(basePath: $basePath));
         $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig(MvcConfig::defaults()));
 
@@ -83,7 +81,7 @@ final class DashboardBootstrap
         $container->set(LoggerInterface::class, $logger);
     }
 
-    private static function registerDependencies(Container $container): void
+    private static function registerDependencies(Container $container, string $basePath): void
     {
         /** @var DashboardSettings $settings */
         $settings = $container->get(DashboardSettings::class);
@@ -103,7 +101,7 @@ final class DashboardBootstrap
         $container->set(ChallengeNotificator::class, $container->get(BackgroundTaskChallengeNotificator::class));
 
         $container->set(Router::class, RouterBuilder::build());
-        MvcWebDependencies::configure(new PhpDiMutableContainer($container));
+        MvcWebDependencies::configure(new PhpDiMutableContainer($container), $basePath);
     }
 
     private static function logLevel(string $logLevel): Level

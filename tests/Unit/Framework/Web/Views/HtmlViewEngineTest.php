@@ -6,7 +6,7 @@ namespace Tests\Unit\Framework\Web\Views;
 
 use Framework\Module\Files\FileManager;
 use Framework\Web\Actions\Responses\View;
-use Framework\Web\HtmlViewEngineSettings;
+use Framework\Web\AppFilesystemPath;
 use Framework\Web\LanguageSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
@@ -25,7 +25,7 @@ use Tests\Unit\Framework\Fixtures\Views\BranchModel;
 
 final class HtmlViewEngineTest extends TestCase
 {
-    private string $basePath = __DIR__ . "/Files/";
+    private string $basePath = __DIR__ . '/Views/';
     private FileManager&Stub $fileManager;
     private HtmlViewEngine $viewEngine;
 
@@ -38,8 +38,8 @@ final class HtmlViewEngineTest extends TestCase
             new BranchesReplacer($resolver),
             new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->fileManager),
         ]);
-        $settings = new HtmlViewEngineSettings(basePath: __DIR__, viewPath: "/Files");
-        $this->viewEngine = new HtmlViewEngine(settings: $settings, contentReplacer: $pipeline);
+        $viewsRoot = AppFilesystemPath::join(__DIR__, 'Views/');
+        $this->viewEngine = new HtmlViewEngine(viewsRoot: $viewsRoot, contentReplacer: $pipeline);
     }
 
     public function testRenderInjectsUiAssetsSettingsPlaceholders(): void
@@ -54,7 +54,7 @@ final class HtmlViewEngineTest extends TestCase
         );
 
         $viewEngine = new HtmlViewEngine(
-            settings: new HtmlViewEngineSettings(basePath: __DIR__, viewPath: '/Files'),
+            viewsRoot: AppFilesystemPath::join(__DIR__, 'Views/'),
             contentReplacer: new ContentReplacerPipeline([
                 new ModelReplacer(new ViewValueResolver()),
                 new BranchesReplacer(new ViewValueResolver()),

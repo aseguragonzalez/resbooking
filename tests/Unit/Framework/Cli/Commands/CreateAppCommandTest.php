@@ -196,6 +196,10 @@ final class CreateAppCommandTest extends TestCase
         $this->assertStringContainsString('Router::class', $bootstrapContent);
         $this->assertStringContainsString('RouterBuilder::build()', $bootstrapContent);
         $this->assertStringContainsString('MvcWebDependencies::configure', $bootstrapContent);
+        $this->assertStringContainsString(
+            'configure(new PhpDiMutableContainer($container), $basePath)',
+            $bootstrapContent,
+        );
         $this->assertStringContainsString('PhpDiMutableContainer', $bootstrapContent);
     }
 

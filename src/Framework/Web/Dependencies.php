@@ -7,7 +7,9 @@ namespace Framework\Web;
 use Framework\Container\MutableContainer;
 use Framework\Module\Files\DefaultFileManager;
 use Framework\Module\Files\FileManager;
+use Framework\Web\AppFilesystemPath;
 use Framework\Web\LanguageSettings;
+use Framework\Web\UiAssetsSettings;
 use Framework\Web\Requests\RequestHandler;
 use Framework\Web\Routes\Router;
 use Framework\Web\Views\BranchesReplacer;
@@ -28,8 +30,11 @@ final class Dependencies
     /**
      * Registers PSR-17, view pipeline, and request handler bindings for the web stack.
      * The composition root must register {@see Router::class} before calling this method.
+     *
+     * @param string $basePath Same application root as {@see \Framework\Web\WebApplication} and
+     *     {@see \Framework\Web\MvcWebApp} (e.g. port `__DIR__`). Templates load from `{basePath}/Views/`.
      */
-    public static function configure(MutableContainer $container): void
+    public static function configure(MutableContainer $container, string $basePath): void
     {
         if (!($container->get(Router::class) instanceof Router)) {
             throw new \RuntimeException(
@@ -53,15 +58,38 @@ final class Dependencies
         if (!$languageSettings instanceof LanguageSettings || !$fileManager instanceof FileManager) {
             throw new \RuntimeException('LanguageSettings or FileManager not found in container');
         }
-        $container->set(
-            ContentReplacer::class,
-            new ContentReplacerPipeline([
-                new ModelReplacer($resolver),
-                new BranchesReplacer($resolver),
-                new I18nReplacer($languageSettings, $fileManager),
-            ])
+        $contentReplacer = new ContentReplacerPipeline([
+            new ModelReplacer($resolver),
+            new BranchesReplacer($resolver),
+            new I18nReplacer($languageSettings, $fileManager),
+        ]);
+        $container->set(ContentReplacer::class, $contentReplacer);
+
+        $viewsRoot = AppFilesystemPath::join($basePath, 'Views/');
+        $uiAssetsSettings = self::optionalUiAssetsSettings($container);
+
+        $htmlViewEngine = new HtmlViewEngine(
+            viewsRoot: $viewsRoot,
+            contentReplacer: $contentReplacer,
+            uiAssetsSettings: $uiAssetsSettings,
         );
-        $container->set(ViewEngine::class, $container->get(HtmlViewEngine::class));
+        $container->set(HtmlViewEngine::class, $htmlViewEngine);
+        $container->set(ViewEngine::class, $htmlViewEngine);
         $container->set(RequestHandlerInterface::class, $container->get(RequestHandler::class));
+    }
+
+    private static function optionalUiAssetsSettings(MutableContainer $container): ?UiAssetsSettings
+    {
+        try {
+            $resolved = $container->get(UiAssetsSettings::class);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        if (!$resolved instanceof UiAssetsSettings) {
+            throw new \RuntimeException('UiAssetsSettings binding is invalid');
+        }
+
+        return $resolved;
     }
 }

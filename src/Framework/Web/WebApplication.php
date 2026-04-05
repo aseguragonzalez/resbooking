@@ -25,5 +25,14 @@ abstract class WebApplication
     ) {
     }
 
+    /**
+     * Application root directory on the filesystem (same value passed to the constructor).
+     * HTML views resolve under {@see \Framework\Web\AppFilesystemPath::join}(`$this->basePath`, `'Views/'`).
+     */
+    public function basePath(): string
+    {
+        return $this->basePath;
+    }
+
     abstract public function run(ServerRequestInterface $request): int;
 }

@@ -7,7 +7,6 @@ namespace Tests\Unit\Framework\Web;
 use DI\Container;
 use Framework\Web\Config\PublicApplicationUrl;
 use Framework\Module\Files\DefaultFileManager;
-use Framework\Web\HtmlViewEngineSettings;
 use Framework\Web\LanguageSettings;
 use Framework\Web\Routes\Router;
 use Framework\Web\Dependencies;
@@ -25,13 +24,12 @@ final class WebDependenciesTest extends TestCase
         $di = new Container();
         $di->set(Router::class, new Router());
         $di->set(LanguageSettings::class, new LanguageSettings($basePath));
-        $di->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings($basePath));
         $di->set(DefaultFileManager::class, new DefaultFileManager());
         $di->set(PublicApplicationUrl::class, new PublicApplicationUrl('http://localhost'));
 
         $mutable = new PhpDiMutableContainer($di);
 
-        Dependencies::configure($mutable);
+        Dependencies::configure($mutable, $basePath);
 
         $this->assertInstanceOf(Psr17Factory::class, $di->get(Psr17Factory::class));
         $this->assertInstanceOf(ServerRequestCreator::class, $di->get(ServerRequestCreator::class));

@@ -20,7 +20,7 @@ It is designed for:
 
 High-level flow for an HTTP request:
 
-1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Web\Dependencies::configure()`).
+1. The composition root registers services on the DI container (including `Router::class` and a call to `Framework\Web\Dependencies::configure($mutableContainer, $basePath)` with the same `$basePath` you pass to `WebApplication` / `MvcWebApp`).
 2. The HTTP entrypoint creates a per-request `RequestContext`, registers it on the container (for controller injection and for `MvcWebApp::handleRequest()`), builds a PSR-7 `ServerRequestInterface` (e.g. `Nyholm\Psr7Server\ServerRequestCreator::fromGlobals()`), then calls `WebApplication::run($request)` (or `handleRequest()` for tests and `emitResponse()` when you want to separate pipeline from SAPI output). `MvcWebApp` builds the middleware chain and returns a PSR-7 response from `handleRequest()`.
 3. Middlewares run in order (outermost first):
    - `ErrorHandling` → *optional* `AllowedHttpMethodsForHtmlUi` → `Localization` → *optional* `CsrfProtection`
@@ -41,7 +41,7 @@ Create your application by extending `MvcWebApp`. Register routes and the HTTP v
 ```php
 // In MyAppBootstrap::register() after your domain wiring:
 $container->set(Router::class, RouterBuilder::build());
-Framework\Web\Dependencies::configure(new Infrastructure\Container\PhpDiMutableContainer($container));
+Framework\Web\Dependencies::configure(new Infrastructure\Container\PhpDiMutableContainer($container), $basePath);
 ```
 
 ```php
@@ -54,7 +54,7 @@ final class WebApp extends MvcWebApp
 }
 ```
 
-In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Web\Dependencies::configure()`**. Use **`Infrastructure\Container\PhpDiMutableContainer`** when your bootstrap calls `Web\Dependencies::configure()` (it requires `MutableContainer`). For each HTTP request, register the same `RequestContext` instance on the container (for PHP-DI constructor injection and so `MvcWebApp` can attach it to the PSR-7 request), build the PSR-7 request, then call `run($request)` or `emitResponse($app->handleRequest($request))`:
+In your composition root (e.g. `public/index.php`) register settings, logging, dependencies, **router**, and **`Framework\Web\Dependencies::configure($mutable, $basePath)`** (pass the same application root directory as for `WebApp`). Use **`Infrastructure\Container\PhpDiMutableContainer`** when your bootstrap calls `Web\Dependencies::configure()` (it requires `MutableContainer`). For each HTTP request, register the same `RequestContext` instance on the container (for PHP-DI constructor injection and so `MvcWebApp` can attach it to the PSR-7 request), build the PSR-7 request, then call `run($request)` or `emitResponse($app->handleRequest($request))`:
 
 ```php
 $container = new \DI\Container();
@@ -192,9 +192,9 @@ This allows you to keep actions strongly typed and free from manual array plumbi
 
 The views subsystem is documented in detail in `Views/README.md`. Key points for public usage:
 
-- Configure views with `HtmlViewEngineSettings` and `LanguageSettings` in the container; the composition root registers **`Router::class`** and calls **`Framework\Web\Dependencies::configure()`** to register the PSR-17 stack, view pipeline, and request handler.
+- Register **`LanguageSettings`** (and optional **`UiAssetsSettings`**) in the container; the composition root registers **`Router::class`** and calls **`Framework\Web\Dependencies::configure($mutable, $basePath)`** to register the PSR-17 stack, view pipeline, and request handler. HTML templates load from **`{basePath}/Views/`** (same `$basePath` as `WebApplication::basePath()`).
 - Return `View` responses from controller actions, passing:
-  - `viewPath` – path relative to the configured views directory, without `.html`.
+  - `viewPath` – path relative to `{basePath}/Views/`, without `.html`.
   - `data` – array or object; merged with request context.
 - Use the template language:
   - Interpolation: `{{path}}` (now **HTML-escaped by default**).

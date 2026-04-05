@@ -7,7 +7,7 @@ namespace Tests\Unit\Framework\Web\Requests;
 use Framework\Module\Files\FileManager;
 use Framework\Web\Actions\ActionParameterBuilder;
 use Framework\Web\Config\PublicApplicationUrl;
-use Framework\Web\HtmlViewEngineSettings;
+use Framework\Web\AppFilesystemPath;
 use Framework\Web\LanguageSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
@@ -39,7 +39,6 @@ final class RequestHandlerTest extends TestCase
     private Psr17Factory $requestFactory;
     private ResponseFactoryInterface $responseFactory;
     private Router $router;
-    private HtmlViewEngineSettings $settings;
     private ViewEngine $viewEngine;
     private RequestHandler $requestHandler;
 
@@ -84,14 +83,16 @@ final class RequestHandlerTest extends TestCase
                 'getFromRequest'
             ),
         ]);
-        $this->settings = new HtmlViewEngineSettings(basePath: __DIR__);
         $resolver = new ViewValueResolver();
         $pipeline = new ContentReplacerPipeline([
             new ModelReplacer($resolver),
             new BranchesReplacer($resolver),
             new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->createStub(FileManager::class)),
         ]);
-        $this->viewEngine = new HtmlViewEngine($this->settings, $pipeline);
+        $this->viewEngine = new HtmlViewEngine(
+            viewsRoot: AppFilesystemPath::join(__DIR__, 'Views/'),
+            contentReplacer: $pipeline,
+        );
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,
             $this->container,

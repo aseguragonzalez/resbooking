@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Framework\Web\Views;
 
 use Framework\Web\Actions\Responses\View;
-use Framework\Web\HtmlViewEngineSettings;
 use Framework\Web\UiAssetsSettings;
 use Framework\Web\Requests\RequestContext;
 
@@ -15,7 +14,7 @@ final class HtmlViewEngine implements ViewEngine
     private static array $templateCache = [];
 
     public function __construct(
-        private readonly HtmlViewEngineSettings $settings,
+        private readonly string $viewsRoot,
         private readonly ContentReplacer $contentReplacer,
         private readonly ?UiAssetsSettings $uiAssetsSettings = null,
     ) {
@@ -23,7 +22,7 @@ final class HtmlViewEngine implements ViewEngine
 
     public function render(View $view, RequestContext $context): string
     {
-        $viewPath = "{$this->settings->path}/{$view->viewPath}.html";
+        $viewPath = "{$this->viewsRoot}/{$view->viewPath}.html";
         if (!file_exists($viewPath)) {
             throw new \RuntimeException("Template not found: {$viewPath}");
         }
@@ -69,7 +68,7 @@ final class HtmlViewEngine implements ViewEngine
         preg_match("/\{\{#layout (.*?):\}\}/", $template, $matches);
         if ($matches) {
             $layoutFilename = $matches[1];
-            $layoutPath = "{$this->settings->path}/{$layoutFilename}.html";
+            $layoutPath = "{$this->viewsRoot}/{$layoutFilename}.html";
             if (!file_exists($layoutPath)) {
                 throw new \RuntimeException("Layout not found: {$layoutFilename}");
             }
