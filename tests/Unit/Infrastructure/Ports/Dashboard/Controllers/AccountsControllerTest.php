@@ -47,10 +47,7 @@ final class AccountsControllerTest extends TestCase
         $this->requestContext->setIdentity(UserIdentity::anonymous());
         $this->commandBus = $this->createMock(CommandBus::class);
         $this->identityManager = $this->createMock(IdentityManager::class);
-        $this->settings = new AuthSettings(
-            signInPath: '/accounts/sign-in',
-            signOutPath: '/accounts/sign-out',
-        );
+        $this->settings = new AuthSettings(signInPath: '/accounts/sign-in');
         $this->controller = new AccountsController(
             $this->commandBus,
             $this->identityManager,
@@ -433,7 +430,9 @@ final class AccountsControllerTest extends TestCase
     {
         $token = $this->faker->uuid();
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(['auth' => $token]);
+        $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(
+            [$this->settings->cookieName => $token]
+        );
         $this->identityManager->expects($this->once())->method('signOut')->with($token);
         $this->commandBus->expects($this->never())->method('dispatch');
 
@@ -660,7 +659,9 @@ final class AccountsControllerTest extends TestCase
     {
         $token = $this->faker->uuid();
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(['auth' => $token]);
+        $request->expects($this->exactly(2))->method('getCookieParams')->willReturn(
+            [$this->settings->cookieName => $token]
+        );
         $this->identityManager->expects($this->once())->method('signOut')->with($token);
         $this->commandBus->expects($this->never())->method('dispatch');
 
@@ -674,7 +675,7 @@ final class AccountsControllerTest extends TestCase
         );
         $this->assertCount(1, $setCookieHeaders);
         $this->assertEquals('Set-Cookie', $setCookieHeaders[0]->name);
-        $this->assertStringContainsString('auth=', $setCookieHeaders[0]->value);
+        $this->assertStringContainsString($this->settings->cookieName . '=', $setCookieHeaders[0]->value);
         $this->assertStringContainsString('Expires=Thu, 01 Jan 1970 00:00:00 GMT', $setCookieHeaders[0]->value);
         $this->assertStringContainsString('Max-Age=0', $setCookieHeaders[0]->value);
         $this->assertStringContainsString('Path=/', $setCookieHeaders[0]->value);
@@ -713,7 +714,9 @@ final class AccountsControllerTest extends TestCase
     public function testSignOutWithNonStringToken(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
-        $request->expects($this->once())->method('getCookieParams')->willReturn(['auth' => ['invalid' => 'array']]);
+        $request->expects($this->once())->method('getCookieParams')->willReturn(
+            [$this->settings->cookieName => ['invalid' => 'array']]
+        );
         $this->commandBus->expects($this->never())->method('dispatch');
         $this->identityManager->expects($this->never())->method('signOut');
 

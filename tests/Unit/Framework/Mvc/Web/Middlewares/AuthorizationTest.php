@@ -34,9 +34,8 @@ final class AuthorizationTest extends TestCase
     protected function setUp(): void
     {
         $this->settings = new AuthSettings(
-            cookieName: 'auth_token',
             signInPath: '/login',
-            signOutPath: '/logout',
+            cookieName: 'auth_token',
         );
         $this->middleware = new Authorization(
             settings: $this->settings,

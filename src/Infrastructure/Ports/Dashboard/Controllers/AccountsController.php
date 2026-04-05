@@ -85,7 +85,7 @@ final class AccountsController extends Controller
     #[MvcAction]
     public function signOut(ServerRequestInterface $request): ActionResponse
     {
-        $token = $request->getCookieParams()['auth'] ?? '';
+        $token = $request->getCookieParams()[$this->settings->cookieName] ?? '';
         if (!is_string($token) || empty($token)) {
             return $this->redirectToAction('signIn', AccountsController::class);
         }

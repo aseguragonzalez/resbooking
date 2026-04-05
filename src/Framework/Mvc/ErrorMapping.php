@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
+/** View and HTTP status used when rendering an error page for a mapped exception type. */
 final readonly class ErrorMapping
 {
     public function __construct(

@@ -43,7 +43,7 @@ final class DashboardBootstrap
 
     private static function registerSettings(Container $container, string $basePath): void
     {
-        $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in', '/accounts/sign-out'));
+        $container->set(AuthSettings::class, new AuthSettings('/accounts/sign-in'));
         $container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
         $container->set(ErrorSettings::class, self::errorSettings());
         $container->set(HtmlViewEngineSettings::class, new HtmlViewEngineSettings(basePath: $basePath));

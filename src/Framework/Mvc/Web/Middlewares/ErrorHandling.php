@@ -14,6 +14,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Outermost middleware: catches throwables, logs them, and renders an HTML error view.
+ *
+ * {@see ErrorSettings} maps exception types to status code and template. Resolution walks the
+ * exception class hierarchy (concrete class first, then each parent) and uses the first mapping
+ * found; if none match, {@see ErrorSettings::$errorsMappingDefaultValue} is used.
+ */
 final class ErrorHandling extends Middleware
 {
     public function __construct(
@@ -35,11 +42,26 @@ final class ErrorHandling extends Middleware
         try {
             return $this->next->handleRequest($request);
         } catch (\Throwable $exception) {
-            $errorMapping = $this->settings->errorsMapping[get_class($exception)] ?? null;
-            return $errorMapping === null
-                ? $this->handleException($this->settings->errorsMappingDefaultValue, $request, $exception)
-                : $this->handleException($errorMapping, $request, $exception);
+            $errorMapping = $this->resolveErrorMapping($exception);
+
+            return $this->handleException($errorMapping, $request, $exception);
         }
+    }
+
+    private function resolveErrorMapping(\Throwable $exception): ErrorMapping
+    {
+        for (
+            $class = $exception::class;
+            $class !== false;
+            $class = get_parent_class($class)
+        ) {
+            $mapping = $this->settings->errorsMapping[$class] ?? null;
+            if ($mapping !== null) {
+                return $mapping;
+            }
+        }
+
+        return $this->settings->errorsMappingDefaultValue;
     }
 
     private function handleException(

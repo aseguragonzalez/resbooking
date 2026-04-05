@@ -83,4 +83,22 @@ final class ErrorHandlingTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(StatusCode::InternalServerError->value, $response->getStatusCode());
     }
+
+    public function testHandlesExceptionUsingParentClassMapping(): void
+    {
+        $this->logger
+            ->expects($this->once())
+            ->method('error')
+            ->with('Error handling middleware: {message}', ['message' => 'Subclass']);
+        $next = $this->createStub(Middleware::class);
+        $next->method('handleRequest')->willThrowException(
+            new MappedInvalidArgumentException('Subclass')
+        );
+        $this->middleware->setNext($next);
+
+        $response = $this->middleware->handleRequest($this->request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(StatusCode::BadRequest->value, $response->getStatusCode());
+    }
 }

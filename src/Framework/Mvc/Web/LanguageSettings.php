@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
+use Framework\Mvc\Web\AppFilesystemPath;
+
+/**
+ * Localization cookie, allowed languages, and filesystem path to i18n JSON assets.
+ */
 final readonly class LanguageSettings
 {
     public string $i18nPath;
@@ -19,6 +24,6 @@ final readonly class LanguageSettings
         public string $defaultValue = 'en',
         public string $setUrl = '/set-language',
     ) {
-        $this->i18nPath = "{$basePath}/{$assetsPath}";
+        $this->i18nPath = AppFilesystemPath::join($basePath, $assetsPath);
     }
 }

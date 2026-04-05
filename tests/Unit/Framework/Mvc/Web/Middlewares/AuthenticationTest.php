@@ -28,9 +28,8 @@ final class AuthenticationTest extends TestCase
     {
         $this->psrFactory = new Psr17Factory();
         $this->settings = new AuthSettings(
-            cookieName: 'auth_token',
             signInPath: '/login',
-            signOutPath: '/logout',
+            cookieName: 'auth_token',
         );
         $this->context = new RequestContext();
         $this->identityManager = $this->createStub(IdentityManager::class);

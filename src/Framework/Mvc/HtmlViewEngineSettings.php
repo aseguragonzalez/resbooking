@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Framework\Mvc;
 
+use Framework\Mvc\Web\AppFilesystemPath;
+
+/**
+ * Filesystem root for HTML templates resolved by {@see \Framework\Mvc\Views\HtmlViewEngine}.
+ */
 final readonly class HtmlViewEngineSettings
 {
     public string $path;
 
     public function __construct(string $basePath, string $viewPath = 'Views/')
     {
-        $this->path = "{$basePath}/{$viewPath}";
+        $this->path = AppFilesystemPath::join($basePath, $viewPath);
     }
 }
