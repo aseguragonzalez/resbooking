@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Web\Views;
 
 use Framework\Web\Actions\Responses\View;
-use Framework\Web\UiAssetsSettings;
+use Framework\Web\Config\UiAssetsSettings;
 use Framework\Web\Requests\RequestContext;
 
 final class HtmlViewEngine implements ViewEngine
@@ -16,7 +16,7 @@ final class HtmlViewEngine implements ViewEngine
     public function __construct(
         private readonly string $viewsRoot,
         private readonly ContentReplacer $contentReplacer,
-        private readonly ?UiAssetsSettings $uiAssetsSettings = null,
+        private readonly UiAssetsSettings $uiAssetsSettings,
     ) {
     }
 
@@ -41,17 +41,12 @@ final class HtmlViewEngine implements ViewEngine
             'user' => (object)[
                 'username' => $currentIdentity->username(),
                 'isAuthenticated' => $currentIdentity->isAuthenticated(),
-            ]
+            ],
+            'jsAssetsPathUrl' => $this->uiAssetsSettings->jsAssetsPathUrl,
+            'mainJsBundler' => $this->uiAssetsSettings->mainJsBundler,
+            'cssAssetsPathUrl' => $this->uiAssetsSettings->cssAssetsPathUrl,
+            'mainCssBundler' => $this->uiAssetsSettings->mainCssBundler,
         ];
-
-        if ($this->uiAssetsSettings !== null) {
-            $contextModel = array_merge($contextModel, [
-                'jsAssetsPathUrl' => $this->uiAssetsSettings->jsAssetsPathUrl,
-                'mainJsBundler' => $this->uiAssetsSettings->mainJsBundler,
-                'cssAssetsPathUrl' => $this->uiAssetsSettings->cssAssetsPathUrl,
-                'mainCssBundler' => $this->uiAssetsSettings->mainCssBundler,
-            ]);
-        }
         $viewData = $view->data;
         /** @var array<string, mixed> $model */
         $model = array_merge(is_array($viewData) ? $viewData : (array) $viewData, $contextModel);

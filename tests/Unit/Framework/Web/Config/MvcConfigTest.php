@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web\Config;
 
-use Framework\Web\AuthSettings;
+use Framework\Web\Config\AuthSettings;
+use Framework\Web\Config\LanguageSettings;
 use Framework\Web\Config\MvcConfig;
 use Framework\Web\Config\PublicApplicationUrl;
-use Framework\Web\LanguageSettings;
-use Framework\Web\UiAssetsSettings;
+use Framework\Web\Config\UiAssetsSettings;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
@@ -216,7 +216,9 @@ final class MvcConfigTest extends TestCase
         $base = vfsStream::url('app');
         $config = MvcConfig::load($base);
 
-        $lang = $config->languageSettings($base);
+        $this->assertSame(rtrim($base, '/'), $config->basePath);
+
+        $lang = $config->languageSettings();
         $this->assertInstanceOf(LanguageSettings::class, $lang);
         $this->assertSame(['en', 'es'], $lang->languages);
         $this->assertSame('locale', $lang->cookieName);

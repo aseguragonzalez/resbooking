@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Infrastructure\Ports\Dashboard;
 
 use DI\Container;
-use Framework\Web\AuthSettings;
-use Framework\Web\Config\MvcConfig;
-use Framework\Web\Config\PublicApplicationUrl;
-use Framework\Web\LanguageSettings;
 use Framework\Web\Routes\Router;
 use Framework\Web\Dependencies as MvcWebDependencies;
 use Framework\Module\Security\Domain\Services\ChallengeNotificator;
-use Framework\Web\UiAssetsSettings;
 use Infrastructure\Adapters\BackgroundTaskChallengeNotificator;
 use Infrastructure\Container\PhpDiMutableContainer;
 use Infrastructure\Dependencies;
@@ -30,20 +25,14 @@ final class DashboardBootstrap
 {
     public static function register(Container $container, string $basePath): void
     {
-        self::registerSettings($container, $basePath);
+        self::registerSettings($container);
         self::registerLogging($container);
         self::registerDependencies($container, $basePath);
     }
 
-    private static function registerSettings(Container $container, string $basePath): void
+    private static function registerSettings(Container $container): void
     {
-        $mvcConfig = MvcConfig::load($basePath);
-        $container->set(MvcConfig::class, $mvcConfig);
         $container->set(RestaurantContextSettings::class, new RestaurantContextSettings());
-        $container->set(LanguageSettings::class, $mvcConfig->languageSettings($basePath));
-        $container->set(AuthSettings::class, $mvcConfig->authSettings());
-        $container->set(PublicApplicationUrl::class, $mvcConfig->publicApplicationUrl());
-        $container->set(UiAssetsSettings::class, UiAssetsSettings::fromConfig($mvcConfig));
 
         $container->set(
             DashboardSettings::class,

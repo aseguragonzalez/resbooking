@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Framework\Web\Views;
 
 use Framework\Module\Files\FileManager;
-use Framework\Web\LanguageSettings;
+use Framework\Web\Config\LanguageSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
 

@@ -7,7 +7,7 @@ namespace Tests\Unit\Framework\Web\Views;
 use Framework\Module\Files\FileManager;
 use Framework\Web\Actions\Responses\View;
 use Framework\Web\AppFilesystemPath;
-use Framework\Web\LanguageSettings;
+use Framework\Web\Config\LanguageSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
 use Framework\Web\Responses\StatusCode;
@@ -17,7 +17,7 @@ use Framework\Web\Views\BranchesReplacer;
 use Framework\Web\Views\HtmlViewEngine;
 use Framework\Web\Views\I18nReplacer;
 use Framework\Web\Views\ModelReplacer;
-use Framework\Web\UiAssetsSettings;
+use Framework\Web\Config\UiAssetsSettings;
 use Framework\Web\Views\ViewValueResolver;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -39,7 +39,16 @@ final class HtmlViewEngineTest extends TestCase
             new I18nReplacer(new LanguageSettings(basePath: __DIR__), $this->fileManager),
         ]);
         $viewsRoot = AppFilesystemPath::join(__DIR__, 'Views/');
-        $this->viewEngine = new HtmlViewEngine(viewsRoot: $viewsRoot, contentReplacer: $pipeline);
+        $this->viewEngine = new HtmlViewEngine(
+            viewsRoot: $viewsRoot,
+            contentReplacer: $pipeline,
+            uiAssetsSettings: new UiAssetsSettings(
+                jsAssetsPathUrl: '/assets/scripts',
+                mainJsBundler: 'main.min.js',
+                cssAssetsPathUrl: '/assets/styles',
+                mainCssBundler: 'main.min.css',
+            ),
+        );
     }
 
     public function testRenderInjectsUiAssetsSettingsPlaceholders(): void

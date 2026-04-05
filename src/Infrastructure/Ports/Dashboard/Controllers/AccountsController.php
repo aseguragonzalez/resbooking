@@ -8,7 +8,7 @@ use Framework\Web\Actions\MvcAction;
 use Application\Restaurants\CreateNewRestaurant\CreateNewRestaurantCommand;
 use Framework\Web\Actions\Responses\ActionResponse;
 use SeedWork\Application\CommandBus;
-use Framework\Web\AuthSettings;
+use Framework\Web\Config\AuthSettings;
 use Framework\Web\Controllers\Controller;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Responses\Headers\SetCookie;

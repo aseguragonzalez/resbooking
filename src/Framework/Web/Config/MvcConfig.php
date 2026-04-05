@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Framework\Web\Config;
 
-use Framework\Web\AuthSettings;
-use Framework\Web\LanguageSettings;
 use RuntimeException;
 
 final readonly class MvcConfig
@@ -13,10 +11,13 @@ final readonly class MvcConfig
     public const CONFIG_FILENAME = 'mvc.config.json';
 
     /**
+     * Application root passed to {@see self::load()} (not read from JSON).
+     *
      * @param list<AssetRouteGroup> $assetRoutes
      * @param list<string> $languages
      */
     public function __construct(
+        public string $basePath,
         public string $jsAssetsPath,
         public string $mainJsBundler,
         public string $cssAssetsPath,
@@ -42,9 +43,10 @@ final readonly class MvcConfig
     ) {
     }
 
-    public static function defaults(): self
+    public static function defaults(string $basePath = ''): self
     {
         return new self(
+            basePath: $basePath,
             jsAssetsPath: './assets/scripts',
             mainJsBundler: 'main.min.js',
             cssAssetsPath: './assets/styles',
@@ -72,9 +74,10 @@ final readonly class MvcConfig
 
     public static function load(string $basePath, string $configFilename = self::CONFIG_FILENAME): self
     {
-        $configPath = rtrim($basePath, '/') . '/' . ltrim($configFilename, '/');
+        $normalizedBasePath = rtrim($basePath, '/');
+        $configPath = $normalizedBasePath . '/' . ltrim($configFilename, '/');
         if (!is_file($configPath)) {
-            return self::defaults();
+            return self::defaults($normalizedBasePath);
         }
 
         $content = file_get_contents($configPath);
@@ -89,15 +92,15 @@ final readonly class MvcConfig
             throw new RuntimeException("Failed to decode JSON config: {$configPath}: {$e->getMessage()}");
         }
 
-        return self::fromArray($data);
+        return self::fromArray($data, $normalizedBasePath);
     }
 
     /**
      * @param array<string, mixed> $data
      */
-    private static function fromArray(array $data): self
+    private static function fromArray(array $data, string $basePath): self
     {
-        $defaults = self::defaults();
+        $defaults = self::defaults('');
         [$languages, $defaultLanguage] = self::normalizeLanguagesFromArray($data, $defaults);
         $publicApplicationOrigin = self::getString(
             $data,
@@ -109,6 +112,7 @@ final readonly class MvcConfig
         }
 
         return new self(
+            basePath: $basePath,
             jsAssetsPath: self::getString($data, 'jsAssetsPath', $defaults->jsAssetsPath),
             mainJsBundler: self::getString($data, 'mainJsBundler', $defaults->mainJsBundler),
             cssAssetsPath: self::getString($data, 'cssAssetsPath', $defaults->cssAssetsPath),
@@ -419,10 +423,10 @@ final readonly class MvcConfig
         return $value;
     }
 
-    public function languageSettings(string $basePath): LanguageSettings
+    public function languageSettings(): LanguageSettings
     {
         return new LanguageSettings(
-            basePath: $basePath,
+            basePath: $this->basePath,
             assetsPath: $this->normalizedI18nAssetsPathForLanguageSettings(),
             languages: $this->languages,
             cookieName: $this->languageCookieName,

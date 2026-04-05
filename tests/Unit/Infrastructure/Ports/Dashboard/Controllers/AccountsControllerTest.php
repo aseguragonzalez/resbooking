@@ -8,7 +8,7 @@ use Faker\Factory;
 use Faker\Generator;
 use Framework\Web\Actions\Responses\LocalRedirectTo;
 use Framework\Web\Actions\Responses\View;
-use Framework\Web\AuthSettings;
+use Framework\Web\Config\AuthSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Responses\Headers\SetCookie;
 use Framework\Module\Security\Challenge;

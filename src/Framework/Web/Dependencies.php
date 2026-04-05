@@ -8,8 +8,11 @@ use Framework\Container\MutableContainer;
 use Framework\Module\Files\DefaultFileManager;
 use Framework\Module\Files\FileManager;
 use Framework\Web\AppFilesystemPath;
-use Framework\Web\LanguageSettings;
-use Framework\Web\UiAssetsSettings;
+use Framework\Web\Config\AuthSettings;
+use Framework\Web\Config\LanguageSettings;
+use Framework\Web\Config\MvcConfig;
+use Framework\Web\Config\PublicApplicationUrl;
+use Framework\Web\Config\UiAssetsSettings;
 use Framework\Web\Requests\RequestHandler;
 use Framework\Web\Routes\Router;
 use Framework\Web\Views\BranchesReplacer;
@@ -42,6 +45,12 @@ final class Dependencies
             );
         }
 
+        $mvcConfig = MvcConfig::load($basePath);
+        $languageSettings = $mvcConfig->languageSettings();
+        $container->set(LanguageSettings::class, $languageSettings);
+        $container->set(AuthSettings::class, $mvcConfig->authSettings());
+        $container->set(PublicApplicationUrl::class, $mvcConfig->publicApplicationUrl());
+
         $psr17Factory = new Psr17Factory();
         $container->set(Psr17Factory::class, $psr17Factory);
         $container->set(ResponseFactoryInterface::class, $psr17Factory);
@@ -53,10 +62,9 @@ final class Dependencies
         ));
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));
         $resolver = new ViewValueResolver();
-        $languageSettings = $container->get(LanguageSettings::class);
         $fileManager = $container->get(FileManager::class);
-        if (!$languageSettings instanceof LanguageSettings || !$fileManager instanceof FileManager) {
-            throw new \RuntimeException('LanguageSettings or FileManager not found in container');
+        if (!$fileManager instanceof FileManager) {
+            throw new \RuntimeException('FileManager not found in container');
         }
         $contentReplacer = new ContentReplacerPipeline([
             new ModelReplacer($resolver),
@@ -66,7 +74,7 @@ final class Dependencies
         $container->set(ContentReplacer::class, $contentReplacer);
 
         $viewsRoot = AppFilesystemPath::join($basePath, 'Views/');
-        $uiAssetsSettings = self::optionalUiAssetsSettings($container);
+        $uiAssetsSettings = UiAssetsSettings::fromConfig($mvcConfig);
 
         $htmlViewEngine = new HtmlViewEngine(
             viewsRoot: $viewsRoot,
@@ -76,20 +84,5 @@ final class Dependencies
         $container->set(HtmlViewEngine::class, $htmlViewEngine);
         $container->set(ViewEngine::class, $htmlViewEngine);
         $container->set(RequestHandlerInterface::class, $container->get(RequestHandler::class));
-    }
-
-    private static function optionalUiAssetsSettings(MutableContainer $container): ?UiAssetsSettings
-    {
-        try {
-            $resolved = $container->get(UiAssetsSettings::class);
-        } catch (\Throwable) {
-            return null;
-        }
-
-        if (!$resolved instanceof UiAssetsSettings) {
-            throw new \RuntimeException('UiAssetsSettings binding is invalid');
-        }
-
-        return $resolved;
     }
 }

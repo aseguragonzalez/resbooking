@@ -7,7 +7,7 @@ namespace Framework\Web\Middlewares;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\Web\AuthSettings;
+use Framework\Web\Config\AuthSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Responses\Headers\Location;
 use Framework\Web\Responses\Headers\SetCookie;

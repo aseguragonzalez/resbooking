@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Web;
-
-use Framework\Web\Config\MvcConfig;
+namespace Framework\Web\Config;
 
 final readonly class UiAssetsSettings
 {

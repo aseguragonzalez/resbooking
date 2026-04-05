@@ -8,7 +8,8 @@ use Framework\Module\Files\FileManager;
 use Framework\Web\Actions\ActionParameterBuilder;
 use Framework\Web\Config\PublicApplicationUrl;
 use Framework\Web\AppFilesystemPath;
-use Framework\Web\LanguageSettings;
+use Framework\Web\Config\LanguageSettings;
+use Framework\Web\Config\UiAssetsSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
 use Framework\Web\Requests\RequestHandler;
@@ -92,6 +93,12 @@ final class RequestHandlerTest extends TestCase
         $this->viewEngine = new HtmlViewEngine(
             viewsRoot: AppFilesystemPath::join(__DIR__, 'Views/'),
             contentReplacer: $pipeline,
+            uiAssetsSettings: new UiAssetsSettings(
+                jsAssetsPathUrl: '/assets/scripts',
+                mainJsBundler: 'main.min.js',
+                cssAssetsPathUrl: '/assets/styles',
+                mainCssBundler: 'main.min.css',
+            ),
         );
         $this->requestHandler = new RequestHandler(
             $this->actionParameterBuilder,

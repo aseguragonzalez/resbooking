@@ -25,6 +25,7 @@ final class AssetBundleSourceResolverTest extends TestCase
     public function testAbsolutePathsFromAppRoot(): void
     {
         $config = new MvcConfig(
+            basePath: '/app/root',
             jsAssetsPath: './out/js',
             mainJsBundler: 'm.js',
             cssAssetsPath: 'out/css',

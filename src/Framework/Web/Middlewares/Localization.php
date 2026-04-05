@@ -7,7 +7,7 @@ namespace Framework\Web\Middlewares;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Framework\Web\LanguageSettings;
+use Framework\Web\Config\LanguageSettings;
 use Framework\Web\Requests\RequestContext;
 use Framework\Web\Requests\RequestContextKeys;
 use Framework\Web\Responses\Headers\ContentLanguage;

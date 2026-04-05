@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\Web\AuthSettings;
+use Framework\Web\Config\AuthSettings;
 use Framework\Web\Middlewares\Authorization;
 use Framework\Web\Middlewares\Middleware;
 use Framework\Web\Requests\RequestContext;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Framework\Web\Middlewares;
 
-use Framework\Web\LanguageSettings;
+use Framework\Web\Config\LanguageSettings;
 use Framework\Web\Middlewares\Localization;
 use Framework\Web\Middlewares\Middleware;
 use Framework\Web\Requests\RequestContext;
