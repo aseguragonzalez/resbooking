@@ -14,6 +14,7 @@ use Framework\Mvc\Middlewares\Middleware;
 use Framework\Mvc\Middlewares\RequestHandling;
 use Framework\Mvc\Requests\RequestContext;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,11 +45,42 @@ abstract class MvcWebApp extends WebApplication
         parent::__construct($container, $basePath);
     }
 
+    /**
+     * Handles the request, emits the HTTP response, and returns a process exit code.
+     *
+     * Exit codes for uncaught errors (exceptions that escape {@see handleRequest()} or {@see emitResponse()}):
+     * 0 — success; 1 — other {@see \Throwable}; 2 — {@see NotFoundExceptionInterface} (container binding);
+     * 3 — {@see \InvalidArgumentException}; 4 — {@see \LogicException}; 5 — {@see \RuntimeException}.
+     *
+     * Errors converted to HTTP responses by {@see ErrorHandling} still yield 0.
+     */
     public function run(ServerRequestInterface $request): int
     {
-        $this->emitResponse($this->handleRequest($request));
+        try {
+            $this->emitResponse($this->handleRequest($request));
 
-        return 0;
+            return 0;
+        } catch (\Throwable $e) {
+            return $this->exitCodeForThrowable($e);
+        }
+    }
+
+    private function exitCodeForThrowable(\Throwable $e): int
+    {
+        if ($e instanceof NotFoundExceptionInterface) {
+            return 2;
+        }
+        if ($e instanceof \InvalidArgumentException) {
+            return 3;
+        }
+        if ($e instanceof \LogicException) {
+            return 4;
+        }
+        if ($e instanceof \RuntimeException) {
+            return 5;
+        }
+
+        return 1;
     }
 
     /**
