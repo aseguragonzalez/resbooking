@@ -303,7 +303,8 @@ These are transparent to consumers; no configuration is required.
 
 ## Where to look next
 
-- `src/Framework/Mvc/WebApplication.php` – HTTP app base (`run(ServerRequestInterface)`).
+- `src/Framework/Mvc/Web/WebApplication.php` – HTTP app base (`run(ServerRequestInterface)`).
+- `src/Framework/Mvc/Apps/Application.php` – CLI / long-running process app base (`run($argc, $argv)`).
 - `src/Framework/Mvc/Web/MvcWebApp.php` – MVC bootstrap and middleware wiring.
 - `src/Framework/Mvc/Web/Requests/RequestHandler.php` – routing + action invocation contract.
 - `src/Framework/Mvc/Web/Views/README.md` – full template language reference.
