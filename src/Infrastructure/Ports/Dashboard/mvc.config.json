@@ -1,0 +1,21 @@
+{
+  "assetRoutes": [
+    {
+      "css": [
+        "assets/styles/root.css",
+        "assets/styles/layout.css",
+        "assets/styles/main.css"
+      ],
+      "js": [
+        "assets/scripts/main.js"
+      ],
+      "label": "dashboard"
+    }
+  ],
+  "cssAssetsPath": "./assets/styles",
+  "devMainCssBundler": "app.css",
+  "devMainJsBundler": "app.js",
+  "jsAssetsPath": "./assets/scripts",
+  "mainCssBundler": "app.min.css",
+  "mainJsBundler": "app.min.js"
+}

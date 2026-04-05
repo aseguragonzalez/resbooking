@@ -65,28 +65,27 @@ setup-ssl-all:
 	@echo ""
 	@echo "✅ SSL certificate generation complete!"
 
-# CSS Build
+# Dashboard asset bundles (see src/Infrastructure/Ports/Dashboard/mvc.config.json)
+DASHBOARD_APP_PATH := src/Infrastructure/Ports/Dashboard
+
+# CSS / JS build (minified bundles; same as mvc create-bundle for the Dashboard app)
 css-build:
-	@php src/Infrastructure/Ports/Dashboard/build-css.php
+	@php src/Framework/Mvc/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
 
-css-watch:
-	@php src/Infrastructure/Ports/Dashboard/build-css.php watch
-
-# JavaScript Build
 js-build:
-	@php src/Infrastructure/Ports/Dashboard/build-js.php
+	@php src/Framework/Mvc/Cli/bin/mvc create-bundle --app-path=$(DASHBOARD_APP_PATH)
+
+# Watch unminified bundles (JS + CSS in one process; same as mvc watch-assets)
+css-watch:
+	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
 js-watch:
-	@php src/Infrastructure/Ports/Dashboard/build-js.php watch
+	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
-# Combined watchers for development
 watch:
-	@echo "🚀 Starting CSS and JavaScript watchers..."
-	@echo "Press Ctrl+C to stop both watchers\n"
-	@trap 'kill 0' EXIT; \
-	make css-watch & \
-	make js-watch & \
-	wait
+	@echo "🚀 Watching Dashboard JS and CSS (mvc watch-assets)..."
+	@echo "Press Ctrl+C to stop\n"
+	@php src/Framework/Mvc/Cli/bin/mvc watch-assets --app-path=$(DASHBOARD_APP_PATH)
 
 # Run background tasks (processes pending email and other queued tasks)
 background-tasks:
