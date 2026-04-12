@@ -23,9 +23,6 @@ use Framework\Web\Views\I18nReplacer;
 use Framework\Web\Views\ModelReplacer;
 use Framework\Web\Views\ViewEngine;
 use Framework\Web\Views\ViewValueResolver;
-use Nyholm\Psr7Server\ServerRequestCreator;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 final class Dependencies
@@ -50,18 +47,9 @@ final class Dependencies
         $container->set(LanguageSettings::class, $languageSettings);
         $container->set(AuthSettings::class, $mvcConfig->authSettings());
         $container->set(PublicApplicationUrl::class, $mvcConfig->publicApplicationUrl());
-
-        $psr17Factory = new Psr17Factory();
-        $container->set(Psr17Factory::class, $psr17Factory);
-        $container->set(ResponseFactoryInterface::class, $psr17Factory);
-        $container->set(ServerRequestCreator::class, new ServerRequestCreator(
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-            $psr17Factory,
-        ));
         $container->set(FileManager::class, $container->get(DefaultFileManager::class));
         $resolver = new ViewValueResolver();
+
         $fileManager = $container->get(FileManager::class);
         if (!$fileManager instanceof FileManager) {
             throw new \RuntimeException('FileManager not found in container');
